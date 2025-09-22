@@ -1,0 +1,77 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-02-07 09:05:32.105605",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "tracking_doc_doctype",
+  "document_id",
+  "status_selected_datetime",
+  "column_break_ygvx",
+  "status",
+  "status_changed_datetime"
+ ],
+ "fields": [
+  {
+   "fieldname": "document_id",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Document ID"
+  },
+  {
+   "fieldname": "status_selected_datetime",
+   "fieldtype": "Datetime",
+   "in_list_view": 1,
+   "label": "Status Selected Date/Time"
+  },
+  {
+   "fieldname": "column_break_ygvx",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Status"
+  },
+  {
+   "fieldname": "status_changed_datetime",
+   "fieldtype": "Datetime",
+   "in_list_view": 1,
+   "label": "Status Changed Date/Time"
+  },
+  {
+   "fieldname": "tracking_doc_doctype",
+   "fieldtype": "Data",
+   "label": "DocType"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2025-02-07 10:36:33.950204",
+ "modified_by": "Administrator",
+ "module": "Edp Online Vehicles",
+ "name": "Vehicle Status Tracking",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}

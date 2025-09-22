@@ -1,0 +1,173 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-01-06 14:57:38.943820",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_kgxf",
+  "vin_serial_no",
+  "model",
+  "colour",
+  "column_break_hdol",
+  "engine_no",
+  "microdot_no",
+  "microdot_fitted_by",
+  "section_break_wfhz",
+  "column_break_cikj",
+  "ho_invoice_no",
+  "ho_invoice_date",
+  "ho_invoice_amount",
+  "column_break_gepq",
+  "customer_invoice_no",
+  "customer_invoice_date",
+  "retail_amount",
+  "section_break_wzfi",
+  "profit_loss_",
+  "column_break_ziee",
+  "profit_loss_amount"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_kgxf",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "vin_serial_no",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "VIN/ Serial No",
+   "link_filters": "[[\"Vehicle Stock\",\"availability_status\",\"=\",\"Available\"]]",
+   "options": "Vehicle Stock"
+  },
+  {
+   "fetch_from": "vin_serial_no.model",
+   "fieldname": "model",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Model",
+   "options": "Model Administration",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "vin_serial_no.colour",
+   "fieldname": "colour",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Colour",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "model.suggested_retail_excl",
+   "fetch_if_empty": 1,
+   "fieldname": "retail_amount",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Customer Retail Amount",
+   "precision": "2"
+  },
+  {
+   "fieldname": "customer_invoice_no",
+   "fieldtype": "Data",
+   "label": "Customer Invoice No"
+  },
+  {
+   "fieldname": "customer_invoice_date",
+   "fieldtype": "Data",
+   "label": "Customer Invoice Date"
+  },
+  {
+   "fieldname": "section_break_wfhz",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_cikj",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_hdol",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "vin_serial_no.engine_no",
+   "fieldname": "engine_no",
+   "fieldtype": "Data",
+   "label": "Engine No"
+  },
+  {
+   "fetch_from": "vin_serial_no.microdot",
+   "fetch_if_empty": 1,
+   "fieldname": "microdot_no",
+   "fieldtype": "Link",
+   "label": "Microdot No",
+   "link_filters": "[[\"Vehicles Microdots\",\"status\",\"=\",\"Received\"]]",
+   "options": "Vehicles Microdots"
+  },
+  {
+   "fetch_from": "vin_serial_no.microdot_fitted_by",
+   "fetch_if_empty": 1,
+   "fieldname": "microdot_fitted_by",
+   "fieldtype": "Link",
+   "label": "Microdot Fitted By",
+   "options": "User"
+  },
+  {
+   "fieldname": "column_break_gepq",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_wzfi",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "profit_loss_",
+   "fieldtype": "Percent",
+   "label": "Dealer Profit/ Loss (%)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_ziee",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "profit_loss_amount",
+   "fieldtype": "Currency",
+   "label": "Dealer Profit/ Loss Amount",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "vin_serial_no.ho_invoice_no",
+   "fieldname": "ho_invoice_no",
+   "fieldtype": "Data",
+   "label": "HO Invoice No",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "vin_serial_no.ho_invoice_date",
+   "fieldname": "ho_invoice_date",
+   "fieldtype": "Date",
+   "label": "HO Invoice Date",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "vin_serial_no.ho_invoice_amt",
+   "fieldname": "ho_invoice_amount",
+   "fieldtype": "Currency",
+   "label": "HO Invoice Amount",
+   "read_only": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2025-01-06 14:57:38.943820",
+ "modified_by": "Administrator",
+ "module": "Edp Online Vehicles",
+ "name": "Vehicle Sale Items",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

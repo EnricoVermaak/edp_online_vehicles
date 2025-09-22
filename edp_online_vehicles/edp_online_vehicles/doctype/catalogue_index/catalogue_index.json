@@ -1,0 +1,67 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "field:index_category",
+ "creation": "2025-02-28 11:43:50.389131",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "index_category",
+  "description",
+  "subindex_section",
+  "table_jirl"
+ ],
+ "fields": [
+  {
+   "fieldname": "description",
+   "fieldtype": "Small Text",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Description"
+  },
+  {
+   "fieldname": "index_category",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Index",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "subindex_section",
+   "fieldtype": "Section Break",
+   "label": "Sub Index"
+  },
+  {
+   "fieldname": "table_jirl",
+   "fieldtype": "Table",
+   "options": "Catalogue Subindex"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2025-02-28 11:50:56.707288",
+ "modified_by": "Administrator",
+ "module": "Edp Online Vehicles",
+ "name": "Catalogue Index",
+ "naming_rule": "By fieldname",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}

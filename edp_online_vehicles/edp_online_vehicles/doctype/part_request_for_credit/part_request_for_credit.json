@@ -1,0 +1,247 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-02-26 15:49:03.098726",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "request_for_credit_information_section",
+  "column_break_cqwv",
+  "dealer",
+  "account_no",
+  "column_break_ylwl",
+  "status",
+  "return_basket_section",
+  "table_cxdf",
+  "section_break_jblo",
+  "column_break_fapt",
+  "total_parts",
+  "total_excl",
+  "column_break_btzo",
+  "total_qty_parts_return_approved",
+  "total_excl_return_approved",
+  "confirmation_tab",
+  "dealer_section",
+  "requested_by",
+  "requested_by_date_time",
+  "requested_by_signature",
+  "column_break_ubas",
+  "authorised_by",
+  "authorised_date_time",
+  "authorised_signature",
+  "company_section",
+  "approved_by_hq",
+  "requested_date_time_hq",
+  "approved_by_signature_hq",
+  "column_break_ehfg",
+  "authorised_by_hq",
+  "authorised_date_time_hq",
+  "authorised_by_signature_hq",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "column_break_ylwl",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "dealer",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Dealer",
+   "link_filters": "[[\"Company\",\"custom_active\",\"=\",1]]",
+   "options": "Company",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_cqwv",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "account_no",
+   "fieldtype": "Data",
+   "label": "Account No",
+   "read_only": 1
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Status",
+   "options": "Pending\nIn Progress\nCompleted\nCancelled",
+   "reqd": 1
+  },
+  {
+   "fieldname": "return_basket_section",
+   "fieldtype": "Section Break",
+   "label": "Return Basket"
+  },
+  {
+   "fieldname": "table_cxdf",
+   "fieldtype": "Table",
+   "options": "Part Request For Credit Item"
+  },
+  {
+   "fieldname": "request_for_credit_information_section",
+   "fieldtype": "Section Break",
+   "label": "Request for Credit Information"
+  },
+  {
+   "fieldname": "section_break_jblo",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_fapt",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_btzo",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "total_excl",
+   "fieldtype": "Currency",
+   "label": "Total (Excl) Return Requested"
+  },
+  {
+   "fieldname": "total_parts",
+   "fieldtype": "Int",
+   "label": "Total Qty Parts Return Requested"
+  },
+  {
+   "fieldname": "total_qty_parts_return_approved",
+   "fieldtype": "Int",
+   "label": "Total Qty Parts Return Approved"
+  },
+  {
+   "fieldname": "total_excl_return_approved",
+   "fieldtype": "Currency",
+   "label": "Total (Excl) Return Approved"
+  },
+  {
+   "fieldname": "confirmation_tab",
+   "fieldtype": "Tab Break",
+   "label": "Confirmation"
+  },
+  {
+   "fieldname": "dealer_section",
+   "fieldtype": "Section Break",
+   "label": "Dealer"
+  },
+  {
+   "fieldname": "requested_by",
+   "fieldtype": "Link",
+   "label": "Requested By",
+   "options": "User"
+  },
+  {
+   "fieldname": "requested_by_date_time",
+   "fieldtype": "Datetime",
+   "label": "Requested By Date/ Time"
+  },
+  {
+   "fieldname": "requested_by_signature",
+   "fieldtype": "Signature",
+   "label": "Requested By Signature"
+  },
+  {
+   "fieldname": "column_break_ubas",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "authorised_by",
+   "fieldtype": "Link",
+   "label": "Authorised By",
+   "options": "User"
+  },
+  {
+   "fieldname": "authorised_date_time",
+   "fieldtype": "Datetime",
+   "label": "Authorised Date/ Time"
+  },
+  {
+   "fieldname": "authorised_signature",
+   "fieldtype": "Signature",
+   "label": "Authorised Signature"
+  },
+  {
+   "fieldname": "company_section",
+   "fieldtype": "Section Break",
+   "label": "Company"
+  },
+  {
+   "fieldname": "approved_by_hq",
+   "fieldtype": "Link",
+   "label": "Approved By (HQ)",
+   "options": "User"
+  },
+  {
+   "fieldname": "requested_date_time_hq",
+   "fieldtype": "Datetime",
+   "label": "Requested Date/ Time (HQ)"
+  },
+  {
+   "fieldname": "approved_by_signature_hq",
+   "fieldtype": "Signature",
+   "label": "Approved By Signature (HQ)"
+  },
+  {
+   "fieldname": "column_break_ehfg",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "authorised_by_hq",
+   "fieldtype": "Link",
+   "label": "Authorised By (HQ)",
+   "options": "User"
+  },
+  {
+   "fieldname": "authorised_date_time_hq",
+   "fieldtype": "Datetime",
+   "label": "Authorised Date/ Time (HQ)"
+  },
+  {
+   "fieldname": "authorised_by_signature_hq",
+   "fieldtype": "Signature",
+   "label": "Authorised By Signature (HQ)"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Part Request For Credit",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2025-02-28 12:06:00.795340",
+ "modified_by": "Administrator",
+ "module": "Edp Online Vehicles",
+ "name": "Part Request For Credit",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}

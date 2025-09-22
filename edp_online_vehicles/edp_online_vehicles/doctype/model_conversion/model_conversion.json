@@ -1,0 +1,153 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "format:MC-{MM}{YY}-{#########}",
+ "creation": "2024-09-19 13:46:48.951193",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "conversion_date",
+  "column_break_bsow",
+  "status",
+  "section_break_nnds",
+  "convert_from_column",
+  "model",
+  "series_description",
+  "brand",
+  "column_break_tlgc",
+  "convert_to_model",
+  "convert_to_description",
+  "convert_to_brand",
+  "convert_vehicles_section",
+  "table_fgif",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "model",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Convert From Model",
+   "options": "Model Administration",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "model.brand",
+   "fieldname": "brand",
+   "fieldtype": "Data",
+   "label": "Brand",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "model.series_description",
+   "fieldname": "series_description",
+   "fieldtype": "Data",
+   "label": "Convert From Series Description",
+   "read_only": 1
+  },
+  {
+   "fieldname": "convert_to_model",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Convert To Model",
+   "mandatory_depends_on": "eval:doc.status == \"Approved\""
+  },
+  {
+   "fieldname": "convert_to_description",
+   "fieldtype": "Data",
+   "label": "Convert From Series Description",
+   "read_only": 1
+  },
+  {
+   "fieldname": "convert_to_brand",
+   "fieldtype": "Data",
+   "label": "Brand",
+   "read_only": 1
+  },
+  {
+   "fieldname": "convert_vehicles_section",
+   "fieldtype": "Section Break",
+   "label": "Convert Vehicles"
+  },
+  {
+   "fieldname": "table_fgif",
+   "fieldtype": "Table",
+   "options": "Vehicles Item"
+  },
+  {
+   "fieldname": "section_break_nnds",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_tlgc",
+   "fieldtype": "Column Break",
+   "label": "Convert To"
+  },
+  {
+   "fieldname": "convert_from_column",
+   "fieldtype": "Column Break",
+   "label": "Convert From"
+  },
+  {
+   "default": "Today",
+   "fieldname": "conversion_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Conversion Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_bsow",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Status",
+   "options": "Pending\nApproved\nDeclined",
+   "reqd": 1
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Model Conversion",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2024-12-11 10:59:21.001663",
+ "modified_by": "Administrator",
+ "module": "Edp Online Vehicles",
+ "name": "Model Conversion",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}

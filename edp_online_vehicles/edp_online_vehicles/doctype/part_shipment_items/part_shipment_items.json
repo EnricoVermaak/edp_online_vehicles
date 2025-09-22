@@ -1,0 +1,100 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-04-02 12:43:00.420659",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "part_no",
+  "description",
+  "target_warehouse",
+  "column_break_ndzf",
+  "qty",
+  "price_per_part_excl",
+  "total_excl",
+  "status"
+ ],
+ "fields": [
+  {
+   "columns": 2,
+   "fieldname": "part_no",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Part No",
+   "link_filters": "[[\"Item\",\"item_group\",\"=\",\"Parts\"]]",
+   "options": "Item",
+   "reqd": 1
+  },
+  {
+   "columns": 2,
+   "fetch_from": "part_no.description",
+   "fieldname": "description",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Description",
+   "read_only": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_ndzf",
+   "fieldtype": "Column Break"
+  },
+  {
+   "columns": 1,
+   "fieldname": "qty",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Qty",
+   "non_negative": 1,
+   "reqd": 1
+  },
+  {
+   "columns": 1,
+   "fieldname": "price_per_part_excl",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Price Per Part (Excl)",
+   "non_negative": 1,
+   "reqd": 1
+  },
+  {
+   "columns": 2,
+   "fieldname": "total_excl",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Total (Excl)",
+   "non_negative": 1,
+   "read_only": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "target_warehouse",
+   "fieldtype": "Link",
+   "label": "Target Warehouse",
+   "options": "Warehouse"
+  },
+  {
+   "columns": 2,
+   "default": "Not Received",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Status",
+   "options": "Not Received\nReceived",
+   "read_only": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2025-04-02 13:08:10.778641",
+ "modified_by": "Administrator",
+ "module": "Edp Online Vehicles",
+ "name": "Part Shipment Items",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

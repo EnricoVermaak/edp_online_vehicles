@@ -1,0 +1,72 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2024-03-14 02:20:38.801164",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_ji5f",
+  "labour_code",
+  "description",
+  "duration",
+  "price",
+  "total_excl"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_ji5f",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "labour_code",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Labour Code",
+   "options": "Item"
+  },
+  {
+   "fetch_from": "labour_code.item_name",
+   "fetch_if_empty": 1,
+   "fieldname": "description",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Description"
+  },
+  {
+   "default": "1",
+   "fieldname": "duration",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Duration",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "labour_code.standard_rate",
+   "fieldname": "price",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Price Per Item (Excl)",
+   "reqd": 1
+  },
+  {
+   "fieldname": "total_excl",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Total (Excl)",
+   "read_only": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2024-08-07 10:27:32.625403",
+ "modified_by": "Administrator",
+ "module": "Edp Online Vehicles",
+ "name": "Warranty Labour Item",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

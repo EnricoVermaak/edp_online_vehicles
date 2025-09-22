@@ -1,0 +1,110 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2024-05-01 20:25:36.116178",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_yxbl",
+  "model",
+  "model_year",
+  "column_break_k3sa",
+  "catalogue_index",
+  "sub_index",
+  "section_break_iwte",
+  "image",
+  "image_name",
+  "parts"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_yxbl",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "model",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Model",
+   "options": "Model Administration",
+   "search_index": 1
+  },
+  {
+   "fetch_from": "model.model_year",
+   "fieldname": "model_year",
+   "fieldtype": "Data",
+   "label": "Model Year",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_k3sa",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "sub_index",
+   "fieldtype": "Select",
+   "in_filter": 1,
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Sub Index"
+  },
+  {
+   "fieldname": "section_break_iwte",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "image",
+   "fieldtype": "Image",
+   "label": "Image",
+   "options": "image_name"
+  },
+  {
+   "fieldname": "image_name",
+   "fieldtype": "Attach",
+   "label": "Image Name"
+  },
+  {
+   "fieldname": "parts",
+   "fieldtype": "Table",
+   "label": "Parts",
+   "options": "Catalogue part list"
+  },
+  {
+   "fieldname": "catalogue_index",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Index",
+   "options": "Catalogue Index"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2025-02-28 11:52:34.271407",
+ "modified_by": "Administrator",
+ "module": "Edp Online Vehicles",
+ "name": "Catalogue",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "search_fields": "model",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "model",
+ "track_changes": 1,
+ "translated_doctype": 1
+}

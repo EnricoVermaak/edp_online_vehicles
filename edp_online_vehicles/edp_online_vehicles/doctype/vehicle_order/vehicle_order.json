@@ -1,0 +1,252 @@
+{
+ "actions": [],
+ "creation": "2025-01-06 16:04:36.075275",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "floorplan_section",
+  "floorplan_table",
+  "section_break_mvkh",
+  "dealer",
+  "dealer_order_no",
+  "regional_manager",
+  "column_break_aub4",
+  "finance_option",
+  "floorplan",
+  "column_break_hlgq",
+  "order_date_time",
+  "requested_delivery_date",
+  "section_break_pvgp",
+  "forecast_invoice_month",
+  "column_break_sgiz",
+  "forecast_customer",
+  "column_break_vzbe",
+  "forecast_customer_email",
+  "section_break_9fes",
+  "vehicles_basket",
+  "section_break_htfm",
+  "column_break_ulbo",
+  "column_break_vbmf",
+  "total_excl",
+  "section_break_tcfb",
+  "deliver_to_dealer",
+  "delivery_location",
+  "documents_tab",
+  "documents_section",
+  "mandatory_documents",
+  "additional_documents",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_mvkh",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "dealer",
+   "fieldtype": "Link",
+   "in_standard_filter": 1,
+   "label": "Dealer",
+   "options": "Company",
+   "reqd": 1
+  },
+  {
+   "fieldname": "dealer_order_no",
+   "fieldtype": "Data",
+   "in_filter": 1,
+   "in_standard_filter": 1,
+   "label": "Dealer Reference No",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "regional_manager",
+   "fieldtype": "Data",
+   "label": "Regional Manager",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_aub4",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "delivery_location",
+   "fieldtype": "Text",
+   "in_list_view": 1,
+   "label": "Delivery Location",
+   "read_only": 1
+  },
+  {
+   "fieldname": "requested_delivery_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Requested Delivery Date"
+  },
+  {
+   "fieldname": "column_break_hlgq",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "forecast_invoice_month",
+   "fieldtype": "Data",
+   "label": "Forecast Invoice Month"
+  },
+  {
+   "fieldname": "forecast_customer",
+   "fieldtype": "Data",
+   "label": "Forecast Customer"
+  },
+  {
+   "fieldname": "forecast_customer_email",
+   "fieldtype": "Data",
+   "label": "Forecast Customer Email"
+  },
+  {
+   "fieldname": "section_break_9fes",
+   "fieldtype": "Section Break",
+   "label": "Vehicles Basket"
+  },
+  {
+   "fieldname": "vehicles_basket",
+   "fieldtype": "Table",
+   "ignore_user_permissions": 1,
+   "options": "Vehicles Order Item",
+   "reqd": 1
+  },
+  {
+   "fieldname": "section_break_tcfb",
+   "fieldtype": "Section Break"
+  },
+  {
+   "depends_on": "eval:doc.finance_option == \"Floorplan\"",
+   "fieldname": "floorplan",
+   "fieldtype": "Select",
+   "label": "Floorplan",
+   "mandatory_depends_on": "eval:doc.finance_option == \"Floorplan\""
+  },
+  {
+   "fieldname": "finance_option",
+   "fieldtype": "Select",
+   "in_standard_filter": 1,
+   "label": "Finance Option",
+   "options": "\nCash\nFloorplan",
+   "reqd": 1
+  },
+  {
+   "collapsible": 1,
+   "fieldname": "section_break_pvgp",
+   "fieldtype": "Section Break",
+   "label": "Forecast Customer"
+  },
+  {
+   "fieldname": "column_break_sgiz",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_vzbe",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_htfm",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_ulbo",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_vbmf",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "total_excl",
+   "fieldtype": "Currency",
+   "label": "Order Total (Excl)",
+   "precision": "2",
+   "read_only": 1
+  },
+  {
+   "fieldname": "floorplan_section",
+   "fieldtype": "Section Break",
+   "label": "Floorplan"
+  },
+  {
+   "fieldname": "floorplan_table",
+   "fieldtype": "HTML",
+   "hidden": 1,
+   "label": "Floorplan "
+  },
+  {
+   "default": "Now",
+   "fieldname": "order_date_time",
+   "fieldtype": "Datetime",
+   "label": "Order Date/ Time"
+  },
+  {
+   "fieldname": "documents_tab",
+   "fieldtype": "Tab Break",
+   "label": "Documents"
+  },
+  {
+   "fieldname": "documents_section",
+   "fieldtype": "Section Break",
+   "label": "Documents"
+  },
+  {
+   "fieldname": "mandatory_documents",
+   "fieldtype": "Table",
+   "label": "Mandatory Documents",
+   "options": "Order Documents"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Vehicle Order",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "additional_documents",
+   "fieldtype": "Table",
+   "label": "Additional Documents",
+   "options": "DocType Documents"
+  },
+  {
+   "fieldname": "deliver_to_dealer",
+   "fieldtype": "Select",
+   "label": "Deliver to Dealer",
+   "reqd": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2025-05-09 16:10:23.568802",
+ "modified_by": "Administrator",
+ "module": "Edp Online Vehicles",
+ "name": "Vehicle Order",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}

@@ -1,0 +1,28 @@
+{
+ "add_total_row": 1,
+ "columns": [],
+ "creation": "2024-05-16 09:56:43.848120",
+ "disabled": 0,
+ "docstatus": 0,
+ "doctype": "Report",
+ "filters": [],
+ "idx": 0,
+ "is_standard": "Yes",
+ "json": "{}",
+ "letter_head": "HQ Letterhead",
+ "letterhead": null,
+ "modified": "2024-07-03 18:07:21.984105",
+ "modified_by": "Administrator",
+ "module": "Edp Online Vehicles",
+ "name": "Po Tracker",
+ "owner": "Administrator",
+ "prepared_report": 0,
+ "ref_doctype": "Request for Service",
+ "report_name": "Po Tracker",
+ "report_type": "Report Builder",
+ "roles": [
+  {
+   "role": "System Manager"
+  }
+ ]
+}

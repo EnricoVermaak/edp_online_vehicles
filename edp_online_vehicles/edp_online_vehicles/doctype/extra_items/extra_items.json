@@ -1,0 +1,108 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2024-08-07 08:56:41.092675",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "item_no",
+  "description",
+  "document_no",
+  "document_date",
+  "qty",
+  "price_per_item_excl",
+  "total_excl",
+  "status",
+  "date_paid",
+  "amount_paid",
+  "document",
+  "comment"
+ ],
+ "fields": [
+  {
+   "fieldname": "document_no",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Document No"
+  },
+  {
+   "fetch_from": "item_no.item_name",
+   "fetch_if_empty": 1,
+   "fieldname": "description",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Description"
+  },
+  {
+   "fieldname": "qty",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Qty"
+  },
+  {
+   "fieldname": "price_per_item_excl",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Price Per Item (Excl)"
+  },
+  {
+   "fieldname": "total_excl",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Total (Excl)"
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "\nApproved\nDeclined"
+  },
+  {
+   "fieldname": "document_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Document Date"
+  },
+  {
+   "fieldname": "date_paid",
+   "fieldtype": "Date",
+   "label": "Date Paid"
+  },
+  {
+   "fieldname": "amount_paid",
+   "fieldtype": "Currency",
+   "label": "Amount Paid"
+  },
+  {
+   "fieldname": "comment",
+   "fieldtype": "Small Text",
+   "label": "Comment"
+  },
+  {
+   "fieldname": "document",
+   "fieldtype": "Attach",
+   "label": "Document"
+  },
+  {
+   "fieldname": "item_no",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Item No",
+   "link_filters": "[[\"Item\",\"item_group\",\"=\",\"Other\"]]",
+   "options": "Item"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2024-08-14 10:25:16.800752",
+ "modified_by": "Administrator",
+ "module": "Edp Online Vehicles",
+ "name": "Extra Items",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

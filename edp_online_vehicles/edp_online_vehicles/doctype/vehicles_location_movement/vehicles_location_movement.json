@@ -1,0 +1,115 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2024-07-16 10:57:27.133360",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_ibrr",
+  "vinserial_no",
+  "reference_doctype",
+  "status",
+  "column_break_zdpr",
+  "date_of_request",
+  "reference_name",
+  "section_break_m2pb",
+  "prev_customer",
+  "prev_location",
+  "column_break_oojr",
+  "new_customer",
+  "new_location"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_ibrr",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "date_of_request",
+   "fieldtype": "Date",
+   "label": "Date of Request"
+  },
+  {
+   "fieldname": "column_break_zdpr",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "Pending\nApproved\nDeclined"
+  },
+  {
+   "fieldname": "section_break_m2pb",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "prev_customer",
+   "fieldtype": "Link",
+   "label": "Prev Customer",
+   "options": "Dealer Customer"
+  },
+  {
+   "fieldname": "prev_location",
+   "fieldtype": "Data",
+   "label": "Prev Location"
+  },
+  {
+   "fieldname": "column_break_oojr",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "new_customer",
+   "fieldtype": "Link",
+   "label": "New Customer",
+   "options": "Dealer Customer"
+  },
+  {
+   "fieldname": "new_location",
+   "fieldtype": "Data",
+   "label": "New Location"
+  },
+  {
+   "fieldname": "reference_doctype",
+   "fieldtype": "Link",
+   "label": "Reference DocType",
+   "options": "DocType"
+  },
+  {
+   "fieldname": "reference_name",
+   "fieldtype": "Dynamic Link",
+   "label": "Reference Name",
+   "options": "reference_doctype"
+  },
+  {
+   "fieldname": "vinserial_no",
+   "fieldtype": "Link",
+   "label": "Vehicle VIN No/ Serial No",
+   "options": "Vehicle Stock"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2025-01-24 15:05:16.411836",
+ "modified_by": "Administrator",
+ "module": "Edp Online Vehicles",
+ "name": "Vehicles Location Movement",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

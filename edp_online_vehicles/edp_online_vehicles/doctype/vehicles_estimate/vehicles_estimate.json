@@ -1,0 +1,205 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "format:EE{MM}{YY}-{#######}",
+ "creation": "2024-08-26 14:43:09.761728",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_mvcr",
+  "company",
+  "column_break_el7k",
+  "sales_person",
+  "sales_person_full_names",
+  "financed_by",
+  "status",
+  "section_break_jr9n",
+  "vehicles_items",
+  "total_item_price_excl",
+  "vehicles_extras_section",
+  "vehicles_extras",
+  "total_exstra_price_excl",
+  "tradein_items",
+  "trade_in_items",
+  "total_trade_in_price_excl",
+  "connections_section",
+  "rental_enquiry",
+  "tab_break_f4vv",
+  "customer",
+  "customer_name",
+  "column_break_qicq",
+  "phone",
+  "email",
+  "address"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_mvcr",
+   "fieldtype": "Section Break",
+   "label": "Deal Information"
+  },
+  {
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Company",
+   "options": "Company",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_el7k",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "customer",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Customer",
+   "options": "Customer",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "customer.customer_name",
+   "fieldname": "customer_name",
+   "fieldtype": "Data",
+   "label": "Customer Name"
+  },
+  {
+   "fieldname": "section_break_jr9n",
+   "fieldtype": "Section Break",
+   "label": "Vehicle Items"
+  },
+  {
+   "fieldname": "vehicles_items",
+   "fieldtype": "Table",
+   "options": "Vehicles Estimate Items"
+  },
+  {
+   "fieldname": "vehicles_extras_section",
+   "fieldtype": "Section Break",
+   "label": "Vehicle Extras"
+  },
+  {
+   "fieldname": "vehicles_extras",
+   "fieldtype": "Table",
+   "options": "Vehicles Estimate Extras"
+  },
+  {
+   "fieldname": "connections_section",
+   "fieldtype": "Section Break",
+   "label": "Connections"
+  },
+  {
+   "fieldname": "rental_enquiry",
+   "fieldtype": "Link",
+   "label": "Rental Enquiry",
+   "options": "Vehicles Rental Enquiry",
+   "search_index": 1
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "Work In Progress\nConclude Deal\nDeliver Vehicle\nCompleted\nCancelled\nLost Sale"
+  },
+  {
+   "fieldname": "sales_person",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Sales Person",
+   "options": "User",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "sales_person.full_name",
+   "fieldname": "sales_person_full_names",
+   "fieldtype": "Data",
+   "label": "Sales Person Full Names"
+  },
+  {
+   "fieldname": "financed_by",
+   "fieldtype": "Link",
+   "label": "Financed By",
+   "options": "Financed By"
+  },
+  {
+   "fieldname": "tradein_items",
+   "fieldtype": "Section Break",
+   "label": "Trade-In Items"
+  },
+  {
+   "fieldname": "total_item_price_excl",
+   "fieldtype": "Currency",
+   "label": "Total Price (Excl)"
+  },
+  {
+   "fieldname": "total_exstra_price_excl",
+   "fieldtype": "Currency",
+   "label": "Total Price (Excl)"
+  },
+  {
+   "fieldname": "tab_break_f4vv",
+   "fieldtype": "Tab Break",
+   "label": "Customer"
+  },
+  {
+   "fieldname": "column_break_qicq",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "customer.mobile_no",
+   "fetch_if_empty": 1,
+   "fieldname": "phone",
+   "fieldtype": "Data",
+   "label": "Phone"
+  },
+  {
+   "fetch_from": "customer.email_id",
+   "fieldname": "email",
+   "fieldtype": "Data",
+   "label": "Email"
+  },
+  {
+   "fetch_from": "customer.primary_address",
+   "fieldname": "address",
+   "fieldtype": "Small Text",
+   "label": "Address"
+  },
+  {
+   "fieldname": "total_trade_in_price_excl",
+   "fieldtype": "Currency",
+   "label": "Total Price (Excl)"
+  },
+  {
+   "fieldname": "trade_in_items",
+   "fieldtype": "Table",
+   "options": "Vehicles Estimate TradeIn Items"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2024-09-12 15:36:45.168671",
+ "modified_by": "Administrator",
+ "module": "Edp Online Vehicles",
+ "name": "Vehicles Estimate",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}

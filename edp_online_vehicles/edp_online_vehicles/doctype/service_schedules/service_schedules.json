@@ -1,0 +1,99 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "format:SS-{model_code}-{interval}",
+ "creation": "2024-03-13 23:16:03.210532",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_tisn",
+  "model_code",
+  "model_description",
+  "interval",
+  "period_months",
+  "parts_tab",
+  "service_parts_items",
+  "labour_tab",
+  "service_labour_items"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_tisn",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "model_code",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Model Code",
+   "options": "Model Administration"
+  },
+  {
+   "fetch_from": "model_code.model_description",
+   "fieldname": "model_description",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Model Description"
+  },
+  {
+   "fieldname": "interval",
+   "fieldtype": "Data",
+   "label": "Interval  (KM/ Hours)"
+  },
+  {
+   "fieldname": "parts_tab",
+   "fieldtype": "Tab Break",
+   "label": "Parts"
+  },
+  {
+   "fieldname": "service_parts_items",
+   "fieldtype": "Table",
+   "label": "Service Parts Items",
+   "options": "Service Schedules Parts Items"
+  },
+  {
+   "fieldname": "labour_tab",
+   "fieldtype": "Tab Break",
+   "label": "Labour"
+  },
+  {
+   "fieldname": "service_labour_items",
+   "fieldtype": "Table",
+   "label": "Service Labour Items",
+   "options": "Service Schedules Labour Items"
+  },
+  {
+   "fieldname": "period_months",
+   "fieldtype": "Int",
+   "label": "Period (Months)"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2025-04-23 12:14:47.137129",
+ "modified_by": "Administrator",
+ "module": "Edp Online Vehicles",
+ "name": "Service Schedules",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "show_title_field_in_link": 1,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "interval",
+ "track_changes": 1
+}

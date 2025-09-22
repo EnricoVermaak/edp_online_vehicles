@@ -1,0 +1,828 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "format:INSP-{######}",
+ "creation": "2024-04-21 14:56:19.951967",
+ "default_view": "List",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "deal_information_section",
+  "af_cf_invoice_no",
+  "inspection_status",
+  "inspector",
+  "invoice_no",
+  "column_break_mfbb",
+  "requested_by",
+  "requested_by_date",
+  "f_and_i",
+  "inspection_details_section",
+  "client_name",
+  "bank",
+  "inspection_contact_name",
+  "seller_name",
+  "column_break_ctsg",
+  "client_number",
+  "bank_reference_number",
+  "inspection_contact_number",
+  "seller_number",
+  "section_break_iowj",
+  "inspection_address",
+  "inspection_at_seller_address",
+  "please_specify_reason_why_inspection_is_not_at_seller_premises",
+  "asset_details",
+  "make",
+  "model",
+  "registration_no",
+  "mm_code",
+  "invoice_value",
+  "column_break_bstl",
+  "engine_no",
+  "vin_no",
+  "colour",
+  "mileage",
+  "retail_price",
+  "section_break_bxh3",
+  "natis_attached",
+  "why_is_the_natis_document_not_attached",
+  "af_cf_invoice_attached",
+  "why_is_the_af_cf_invoice_not_attachhed",
+  "seller_invoice_attached",
+  "why_is_the_seller_invoice_not_attached",
+  "general_information_section",
+  "inspection_notes",
+  "assessor_notes",
+  "seller_present",
+  "asset_detail_confirmation",
+  "asset_detail_not_accurate",
+  "market_related",
+  "not_market_related",
+  "condition_report_tab",
+  "inspection_report_section",
+  "inspection_template",
+  "condition",
+  "photos_tab",
+  "vehicles_section",
+  "vehicles_identifying_no",
+  "hours_mileage",
+  "license_disk",
+  "column_break_6sck",
+  "asset_front_view",
+  "asset_left_view",
+  "asset_rear_view",
+  "asset_right_view",
+  "interior_images_section",
+  "int_img",
+  "column_break_jzol",
+  "int_img1",
+  "defects_section",
+  "defect_image_1",
+  "defect_image_2",
+  "column_break_prom",
+  "defect_image_3",
+  "defect_image_4",
+  "section_break_bqqq",
+  "engine_started_no_visible_warning_lights_image",
+  "registration_plate",
+  "additional_image",
+  "column_break_zwyn",
+  "accident_damaged",
+  "chassis_damaged",
+  "add_image_1",
+  "documents_section",
+  "natis_document",
+  "af_cf_invoice_document",
+  "column_break_volr",
+  "seller_invoice_document",
+  "acknowledgement_tab",
+  "acknowledgement_section",
+  "inspection_confirmation",
+  "finance_agreement_cannot_proceed",
+  "column_break_xk4k",
+  "date_of_inspection",
+  "section_break_j5uh",
+  "assessor_full_names",
+  "inspector_signed_date",
+  "inspector_signature",
+  "km_travelled",
+  "column_break_kmps",
+  "fandi_fullnames",
+  "fandi_signed_date",
+  "f_and_i_signature",
+  "seller_representative_section",
+  "seller_representative_name",
+  "designation_of_representative",
+  "seller_representative_signature_date",
+  "column_break_qaix",
+  "seller_representative_signature",
+  "amended_from",
+  "section_break_kwk6",
+  "seller_unable_sign_reason"
+ ],
+ "fields": [
+  {
+   "fieldname": "deal_information_section",
+   "fieldtype": "Section Break",
+   "label": "Deal Information"
+  },
+  {
+   "fieldname": "af_cf_invoice_no",
+   "fieldtype": "Link",
+   "label": "AF/ CF Invoice No",
+   "options": "Vehicles Deals",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_mfbb",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "requested_by",
+   "fieldtype": "Link",
+   "label": "Requested By",
+   "options": "User",
+   "reqd": 1
+  },
+  {
+   "default": "Today",
+   "fieldname": "requested_by_date",
+   "fieldtype": "Date",
+   "label": "Requested By Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "inspection_details_section",
+   "fieldtype": "Section Break",
+   "label": "Inspection Details"
+  },
+  {
+   "fetch_from": "af_cf_invoice_no.deliver_on_behalf_of",
+   "fieldname": "client_name",
+   "fieldtype": "Data",
+   "in_filter": 1,
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Client Name"
+  },
+  {
+   "fetch_from": "af_cf_invoice_no.admin_bank",
+   "fieldname": "bank",
+   "fieldtype": "Data",
+   "label": "Bank"
+  },
+  {
+   "fieldname": "inspection_contact_name",
+   "fieldtype": "Data",
+   "label": "Inspection Contact Name"
+  },
+  {
+   "fetch_from": "af_cf_invoice_no.seller",
+   "fetch_if_empty": 1,
+   "fieldname": "seller_name",
+   "fieldtype": "Data",
+   "label": "Seller Name"
+  },
+  {
+   "fieldname": "column_break_ctsg",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "af_cf_invoice_no.contact_no",
+   "fieldname": "client_number",
+   "fieldtype": "Data",
+   "label": "Client Number"
+  },
+  {
+   "fetch_from": "af_cf_invoice_no.ref_no",
+   "fieldname": "bank_reference_number",
+   "fieldtype": "Data",
+   "label": "Bank Reference Number"
+  },
+  {
+   "fieldname": "inspection_contact_number",
+   "fieldtype": "Data",
+   "label": "Inspection Contact Number"
+  },
+  {
+   "fieldname": "seller_number",
+   "fieldtype": "Data",
+   "label": "Seller Number"
+  },
+  {
+   "fieldname": "section_break_iowj",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "inspection_address",
+   "fieldtype": "Small Text",
+   "label": "Inspection Address"
+  },
+  {
+   "fieldname": "inspection_at_seller_address",
+   "fieldtype": "Select",
+   "label": "Is the inspection taking place at the seller premises?",
+   "options": "\nYes\nNo"
+  },
+  {
+   "depends_on": "eval:doc.inspection_at_seller_address == \"No\"",
+   "fieldname": "please_specify_reason_why_inspection_is_not_at_seller_premises",
+   "fieldtype": "Small Text",
+   "label": "Please specify reason why inspection is not at seller premises",
+   "mandatory_depends_on": "eval:doc.inspection_at_seller_address == \"No\""
+  },
+  {
+   "fieldname": "asset_details",
+   "fieldtype": "Section Break",
+   "label": "Asset Details"
+  },
+  {
+   "fetch_from": "af_cf_invoice_no.make",
+   "fetch_if_empty": 1,
+   "fieldname": "make",
+   "fieldtype": "Data",
+   "label": "Make",
+   "mandatory_depends_on": "eval:doc.inspection_status == \"Inspected\""
+  },
+  {
+   "fetch_from": "af_cf_invoice_no.model",
+   "fetch_if_empty": 1,
+   "fieldname": "model",
+   "fieldtype": "Data",
+   "label": "Model",
+   "mandatory_depends_on": "eval:doc.inspection_status == \"Inspected\""
+  },
+  {
+   "fetch_from": "af_cf_invoice_no.registration_no",
+   "fetch_if_empty": 1,
+   "fieldname": "registration_no",
+   "fieldtype": "Data",
+   "label": "Registration No"
+  },
+  {
+   "fetch_from": "af_cf_invoice_no.mmcode",
+   "fetch_if_empty": 1,
+   "fieldname": "mm_code",
+   "fieldtype": "Data",
+   "label": "MM Code"
+  },
+  {
+   "fetch_from": "af_cf_invoice_no.total_incl",
+   "fetch_if_empty": 1,
+   "fieldname": "invoice_value",
+   "fieldtype": "Currency",
+   "label": "Invoice Value"
+  },
+  {
+   "fieldname": "column_break_bstl",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "af_cf_invoice_no.engine_no",
+   "fetch_if_empty": 1,
+   "fieldname": "engine_no",
+   "fieldtype": "Data",
+   "label": "Engine No",
+   "mandatory_depends_on": "eval:doc.inspection_status == \"Inspected\""
+  },
+  {
+   "fetch_from": "af_cf_invoice_no.chassis_no",
+   "fetch_if_empty": 1,
+   "fieldname": "vin_no",
+   "fieldtype": "Data",
+   "in_filter": 1,
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "VIN No",
+   "mandatory_depends_on": "eval:doc.inspection_status == \"Inspected\""
+  },
+  {
+   "fetch_from": "af_cf_invoice_no.colour",
+   "fetch_if_empty": 1,
+   "fieldname": "colour",
+   "fieldtype": "Data",
+   "label": "Colour"
+  },
+  {
+   "fetch_from": "af_cf_invoice_no.mileage",
+   "fetch_if_empty": 1,
+   "fieldname": "mileage",
+   "fieldtype": "Data",
+   "label": "Mileage"
+  },
+  {
+   "fetch_from": "af_cf_invoice_no.price",
+   "fetch_if_empty": 1,
+   "fieldname": "retail_price",
+   "fieldtype": "Currency",
+   "label": "Retail Price"
+  },
+  {
+   "fieldname": "section_break_bxh3",
+   "fieldtype": "Section Break",
+   "label": "Documentation"
+  },
+  {
+   "fieldname": "natis_attached",
+   "fieldtype": "Select",
+   "label": "Is the NATIS document attached?",
+   "options": "\nYes\nNo"
+  },
+  {
+   "depends_on": "eval:doc.natis_attached == \"No\"",
+   "fieldname": "why_is_the_natis_document_not_attached",
+   "fieldtype": "Data",
+   "label": "Why is the NATIS document not attached?",
+   "mandatory_depends_on": "eval:doc.natis_attached == \"No\""
+  },
+  {
+   "fieldname": "af_cf_invoice_attached",
+   "fieldtype": "Select",
+   "label": "Is the AF/ CF invoice attached?",
+   "options": "\nYes\nNo"
+  },
+  {
+   "depends_on": "eval:doc.af_cf_invoice_attached == \"No\"",
+   "fieldname": "why_is_the_af_cf_invoice_not_attachhed",
+   "fieldtype": "Data",
+   "label": "Why is the AF/ CF invoice not attached?",
+   "mandatory_depends_on": "eval:doc.af_cf_invoice_attached == \"No\""
+  },
+  {
+   "fieldname": "seller_invoice_attached",
+   "fieldtype": "Select",
+   "label": "Is the seller invoice attached?",
+   "options": "\nYes\nNo"
+  },
+  {
+   "depends_on": "eval:doc.seller_invoice_attached == \"No\"",
+   "fieldname": "why_is_the_seller_invoice_not_attached",
+   "fieldtype": "Data",
+   "label": "Why is the seller invoice not attached?",
+   "mandatory_depends_on": "eval:doc.seller_invoice_attached == \"No\""
+  },
+  {
+   "fieldname": "general_information_section",
+   "fieldtype": "Section Break",
+   "label": "General Information"
+  },
+  {
+   "fieldname": "inspection_notes",
+   "fieldtype": "Small Text",
+   "label": "Inspection Notes"
+  },
+  {
+   "fieldname": "seller_present",
+   "fieldtype": "Select",
+   "label": " Is the seller present at the inspection?",
+   "options": "\nYes\nNo"
+  },
+  {
+   "fieldname": "asset_detail_confirmation",
+   "fieldtype": "Select",
+   "label": "Confirm if the asset details above for the inspection is accurate",
+   "options": "\nYes\nNo"
+  },
+  {
+   "depends_on": "eval:doc.asset_detail_confirmation == \"No\"",
+   "fieldname": "asset_detail_not_accurate",
+   "fieldtype": "Small Text",
+   "label": "Please specify why asset details is not accurate",
+   "mandatory_depends_on": "eval:doc.asset_detail_confirmation == \"No\""
+  },
+  {
+   "fieldname": "market_related",
+   "fieldtype": "Select",
+   "label": " Value of asset at the time of transaction: Is the selling price market related?",
+   "options": "\nYes\nNo"
+  },
+  {
+   "depends_on": "eval:doc.market_related == \"No\"",
+   "fieldname": "not_market_related",
+   "fieldtype": "Data",
+   "label": "Please specify why selling price is not market related",
+   "mandatory_depends_on": "eval:doc.market_related == \"No\""
+  },
+  {
+   "fieldname": "condition_report_tab",
+   "fieldtype": "Tab Break",
+   "label": "Condition"
+  },
+  {
+   "fieldname": "inspection_report_section",
+   "fieldtype": "Section Break",
+   "label": "Inspection Report"
+  },
+  {
+   "fieldname": "inspection_template",
+   "fieldtype": "Link",
+   "label": "Inspection Template",
+   "mandatory_depends_on": "eval:doc.inspection_status == \"Inspected\"",
+   "options": "Inspection Condition Template"
+  },
+  {
+   "fieldname": "condition",
+   "fieldtype": "Table",
+   "options": "Inspection Condition List"
+  },
+  {
+   "fieldname": "photos_tab",
+   "fieldtype": "Tab Break",
+   "label": "Photos & Documents"
+  },
+  {
+   "fieldname": "vehicles_section",
+   "fieldtype": "Section Break",
+   "label": "Vehicles Images"
+  },
+  {
+   "fieldname": "vehicles_identifying_no",
+   "fieldtype": "Attach Image",
+   "label": "Vehicles Identifying No",
+   "mandatory_depends_on": "eval:doc.inspection_status == \"Completed\""
+  },
+  {
+   "fieldname": "hours_mileage",
+   "fieldtype": "Attach Image",
+   "label": "Hours/ Mileage",
+   "mandatory_depends_on": "eval:doc.inspection_status == \"Completed\""
+  },
+  {
+   "fieldname": "license_disk",
+   "fieldtype": "Attach Image",
+   "label": "License Disk",
+   "mandatory_depends_on": "eval:doc.inspection_status == \"Completed\"",
+   "max_height": "500px",
+   "print_width": "500px"
+  },
+  {
+   "fieldname": "column_break_6sck",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "asset_front_view",
+   "fieldtype": "Attach Image",
+   "label": "Asset Front View",
+   "mandatory_depends_on": "eval:doc.inspection_status == \"Completed\""
+  },
+  {
+   "fieldname": "asset_left_view",
+   "fieldtype": "Attach Image",
+   "label": "Asset Left View",
+   "mandatory_depends_on": "eval:doc.inspection_status == \"Completed\""
+  },
+  {
+   "fieldname": "asset_rear_view",
+   "fieldtype": "Attach Image",
+   "label": "Asset Rear View",
+   "mandatory_depends_on": "eval:doc.inspection_status == \"Completed\""
+  },
+  {
+   "fieldname": "asset_right_view",
+   "fieldtype": "Attach Image",
+   "label": "Asset Right View",
+   "mandatory_depends_on": "eval:doc.inspection_status == \"Completed\""
+  },
+  {
+   "fieldname": "interior_images_section",
+   "fieldtype": "Section Break",
+   "label": "Interior Images"
+  },
+  {
+   "fieldname": "int_img",
+   "fieldtype": "Attach Image",
+   "label": "Interior Image"
+  },
+  {
+   "fieldname": "column_break_jzol",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "int_img1",
+   "fieldtype": "Attach Image",
+   "label": "Interior Image"
+  },
+  {
+   "fieldname": "defects_section",
+   "fieldtype": "Section Break",
+   "label": "Defect Images"
+  },
+  {
+   "fieldname": "defect_image_1",
+   "fieldtype": "Attach Image",
+   "label": "Defect Image 1"
+  },
+  {
+   "fieldname": "defect_image_2",
+   "fieldtype": "Attach Image",
+   "label": "Defect Image 2"
+  },
+  {
+   "fieldname": "column_break_prom",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "defect_image_3",
+   "fieldtype": "Attach Image",
+   "label": "Defect Image 3"
+  },
+  {
+   "fieldname": "defect_image_4",
+   "fieldtype": "Attach Image",
+   "label": "Defect Image 4"
+  },
+  {
+   "fieldname": "section_break_bqqq",
+   "fieldtype": "Section Break",
+   "label": "Additional Images"
+  },
+  {
+   "fieldname": "engine_started_no_visible_warning_lights_image",
+   "fieldtype": "Attach Image",
+   "label": "Engine Started/ No visible warning lights Image"
+  },
+  {
+   "fieldname": "registration_plate",
+   "fieldtype": "Attach Image",
+   "label": "Registration Plate"
+  },
+  {
+   "fieldname": "additional_image",
+   "fieldtype": "Attach Image",
+   "label": "Additional Image"
+  },
+  {
+   "fieldname": "column_break_zwyn",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "accident_damaged",
+   "fieldtype": "Attach Image",
+   "label": "Accident Damaged"
+  },
+  {
+   "fieldname": "chassis_damaged",
+   "fieldtype": "Attach Image",
+   "label": "Chassis Damaged"
+  },
+  {
+   "fieldname": "add_image_1",
+   "fieldtype": "Attach Image",
+   "label": "Additional Image"
+  },
+  {
+   "fieldname": "documents_section",
+   "fieldtype": "Section Break",
+   "label": "Documents"
+  },
+  {
+   "fieldname": "natis_document",
+   "fieldtype": "Attach",
+   "label": "NATIS Document",
+   "mandatory_depends_on": "eval:doc.natis_attached == \"Yes\""
+  },
+  {
+   "fieldname": "af_cf_invoice_document",
+   "fieldtype": "Attach",
+   "label": "AF/ CF Invoice Document",
+   "mandatory_depends_on": "eval:doc.af_cf_invoice_attached == \"Yes\""
+  },
+  {
+   "fieldname": "column_break_volr",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "seller_invoice_document",
+   "fieldtype": "Attach",
+   "label": "Seller Invoice Document",
+   "mandatory_depends_on": "eval:doc.seller_invoice_attached == \"Yes\""
+  },
+  {
+   "fieldname": "acknowledgement_tab",
+   "fieldtype": "Tab Break",
+   "label": "Acknowledgement"
+  },
+  {
+   "fieldname": "acknowledgement_section",
+   "fieldtype": "Section Break",
+   "label": "Acknowledgement"
+  },
+  {
+   "fieldname": "inspection_confirmation",
+   "fieldtype": "Select",
+   "label": "The asset was inspected, and I confirm that the asset is fit for resale and finance facilitation. I am not aware of any defects.",
+   "options": "\nYes\nNo"
+  },
+  {
+   "depends_on": "eval:doc.inspection_confirmation == \"No\"",
+   "fieldname": "finance_agreement_cannot_proceed",
+   "fieldtype": "Data",
+   "label": "Please specify reason why finance agreement cannot proceed",
+   "mandatory_depends_on": "eval:doc.inspection_confirmation == \"No\""
+  },
+  {
+   "fieldname": "column_break_xk4k",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "date_of_inspection",
+   "fieldtype": "Date",
+   "label": "Date of Inspection",
+   "mandatory_depends_on": "eval:doc.inspection_status == \"Inspected\""
+  },
+  {
+   "fieldname": "section_break_j5uh",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "inspector",
+   "fieldtype": "Link",
+   "label": "Assessor",
+   "mandatory_depends_on": "eval:doc.inspection_status == \"Inspected\"",
+   "options": "User"
+  },
+  {
+   "fieldname": "inspector_signed_date",
+   "fieldtype": "Date",
+   "label": "Signed Date",
+   "mandatory_depends_on": "eval:doc.inspection_status == \"Inspected\""
+  },
+  {
+   "fieldname": "inspector_signature",
+   "fieldtype": "Signature",
+   "label": "Assessor Signature",
+   "mandatory_depends_on": "eval:doc.inspection_status == \"Inspected\""
+  },
+  {
+   "fieldname": "column_break_kmps",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "f_and_i",
+   "fieldtype": "Link",
+   "label": "F&I",
+   "options": "User",
+   "reqd": 1
+  },
+  {
+   "fieldname": "fandi_signed_date",
+   "fieldtype": "Date",
+   "label": "Signed Date"
+  },
+  {
+   "fieldname": "f_and_i_signature",
+   "fieldtype": "Signature",
+   "label": "F&I Signature"
+  },
+  {
+   "fieldname": "seller_representative_section",
+   "fieldtype": "Section Break",
+   "label": "Seller/ Representative"
+  },
+  {
+   "fieldname": "seller_representative_name",
+   "fieldtype": "Data",
+   "label": "Seller/ Representative Name"
+  },
+  {
+   "fieldname": "designation_of_representative",
+   "fieldtype": "Data",
+   "label": "Designation of Representative"
+  },
+  {
+   "fieldname": "seller_representative_signature_date",
+   "fieldtype": "Date",
+   "label": "Seller/ Representative Signature Date"
+  },
+  {
+   "fieldname": "column_break_qaix",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "seller_representative_signature",
+   "fieldtype": "Signature",
+   "label": "Seller/ Representative Signature"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "hidden": 1,
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Inspection FSP",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "inspection_status",
+   "fieldtype": "Select",
+   "label": "Inspection Status",
+   "options": "Draft\nInspected\nCompleted and Approved\nCompleted and Declined"
+  },
+  {
+   "fieldname": "section_break_kwk6",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "seller_unable_sign_reason",
+   "fieldtype": "Small Text",
+   "label": "Please provide a reason if seller/representative unable or unwilling to sign."
+  },
+  {
+   "fetch_from": "inspector.full_name",
+   "fieldname": "assessor_full_names",
+   "fieldtype": "Data",
+   "label": "Assessor Full Names"
+  },
+  {
+   "fetch_from": "f_and_i.full_name",
+   "fieldname": "fandi_fullnames",
+   "fieldtype": "Data",
+   "label": "F&I Full Names"
+  },
+  {
+   "fieldname": "assessor_notes",
+   "fieldtype": "Small Text",
+   "label": "Assessor Notes"
+  },
+  {
+   "fieldname": "km_travelled",
+   "fieldtype": "Float",
+   "label": "KM Travelled"
+  },
+  {
+   "fetch_from": "af_cf_invoice_no.invoice_no",
+   "fieldname": "invoice_no",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "Invoice No"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2024-09-11 13:33:27.275299",
+ "modified_by": "Administrator",
+ "module": "Edp Online Vehicles",
+ "name": "Inspection FSP",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "amend": 1,
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Inspection Administrator",
+   "select": 1,
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "amend": 1,
+   "create": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "F&I",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Assessor",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "search_fields": "vin_no,af_cf_invoice_no",
+ "show_title_field_in_link": 1,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "vin_no",
+ "track_changes": 1
+}

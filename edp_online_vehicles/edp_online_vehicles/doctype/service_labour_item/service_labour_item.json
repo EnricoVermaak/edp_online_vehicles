@@ -1,0 +1,77 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2024-03-14 00:34:15.006860",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_bcah",
+  "labour_code",
+  "description",
+  "column_break_2dsd",
+  "duration_hour",
+  "rate_hour",
+  "total"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_bcah",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "labour_code",
+   "fieldtype": "Data",
+   "label": "Labour Code"
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Data",
+   "label": "Description"
+  },
+  {
+   "fieldname": "column_break_2dsd",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "duration_hour",
+   "fieldtype": "Int",
+   "label": "Duration (Hour)"
+  },
+  {
+   "fieldname": "rate_hour",
+   "fieldtype": "Int",
+   "label": "Rate/ Hour"
+  },
+  {
+   "fieldname": "total",
+   "fieldtype": "Currency",
+   "label": "Total"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2024-07-03 16:58:36.112998",
+ "modified_by": "Administrator",
+ "module": "Edp Online Vehicles",
+ "name": "Service Labour Item",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "labour_code",
+ "track_seen": 1
+}

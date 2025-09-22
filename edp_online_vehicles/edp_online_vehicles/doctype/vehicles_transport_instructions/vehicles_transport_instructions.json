@@ -1,0 +1,180 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2024-03-19 15:01:24.193228",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_vptg",
+  "transport_company",
+  "type",
+  "vin_no",
+  "collect_from",
+  "collect_from_code",
+  "deliver_to",
+  "deliver_to_code",
+  "date_to_be_collected",
+  "eta_date",
+  "column_break_odfr",
+  "order_no",
+  "vds_invoice_no",
+  "invoice_amount",
+  "reference_no",
+  "date_time_sent",
+  "request",
+  "request_status",
+  "status"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_vptg",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "type",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Type",
+   "options": "Transport Instruction Types",
+   "reqd": 1
+  },
+  {
+   "fieldname": "vin_no",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "VIN No",
+   "options": "Vehicle Stock",
+   "reqd": 1
+  },
+  {
+   "fieldname": "collect_from_code",
+   "fieldtype": "Data",
+   "label": "Collect From Code",
+   "read_only": 1
+  },
+  {
+   "fieldname": "deliver_to_code",
+   "fieldtype": "Data",
+   "label": "Deliver To Code",
+   "read_only": 1
+  },
+  {
+   "fieldname": "date_to_be_collected",
+   "fieldtype": "Date",
+   "label": "Date to be collected"
+  },
+  {
+   "fieldname": "eta_date",
+   "fieldtype": "Date",
+   "label": "ETA date"
+  },
+  {
+   "fieldname": "column_break_odfr",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "order_no",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Order No"
+  },
+  {
+   "fieldname": "vds_invoice_no",
+   "fieldtype": "Data",
+   "label": "VDS Invoice No"
+  },
+  {
+   "fieldname": "invoice_amount",
+   "fieldtype": "Data",
+   "label": "Invoice amount"
+  },
+  {
+   "fieldname": "reference_no",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Reference No",
+   "read_only": 1
+  },
+  {
+   "fieldname": "date_time_sent",
+   "fieldtype": "Datetime",
+   "label": "Date time sent",
+   "read_only": 1
+  },
+  {
+   "fieldname": "request",
+   "fieldtype": "Long Text",
+   "label": "Request",
+   "read_only": 1
+  },
+  {
+   "fieldname": "request_status",
+   "fieldtype": "Data",
+   "label": "Request status",
+   "read_only": 1
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Status",
+   "read_only": 1
+  },
+  {
+   "fieldname": "transport_company",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Transport Company",
+   "options": "Transporters",
+   "reqd": 1
+  },
+  {
+   "fieldname": "collect_from",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Collect From",
+   "options": "Company"
+  },
+  {
+   "fieldname": "deliver_to",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Deliver To",
+   "options": "Company"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2025-01-03 14:42:50.952161",
+ "modified_by": "Administrator",
+ "module": "Edp Online Vehicles",
+ "name": "Vehicles Transport Instructions",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "search_fields": "vin_no",
+ "show_title_field_in_link": 1,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "vin_no"
+}

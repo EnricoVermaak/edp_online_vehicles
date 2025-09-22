@@ -1,0 +1,116 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-01-06 15:57:31.811609",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_vfle",
+  "allow_user_to_create_material_request_from_vehicles_service",
+  "allow_user_to_create_sales_order_from_vehicles_service",
+  "show_prices_on_vehicles_services",
+  "show_prices_on_request_for_services",
+  "allow_service_odo_reading_roll_back",
+  "allow_additional_parts_any_service",
+  "default_service_type_max_allowance",
+  "default_service_type_minimum_allowance",
+  "allow_auto_job_card_no",
+  "auto_job_card_no_prefix",
+  "last_auto_job_card_no"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_vfle",
+   "fieldtype": "Section Break",
+   "label": "General Settings"
+  },
+  {
+   "default": "1",
+   "fieldname": "allow_user_to_create_material_request_from_vehicles_service",
+   "fieldtype": "Check",
+   "label": "Allow user to create Material Request from Vehicles Service"
+  },
+  {
+   "default": "1",
+   "fieldname": "allow_user_to_create_sales_order_from_vehicles_service",
+   "fieldtype": "Check",
+   "label": "Allow user to create Sales Order from Vehicles Service"
+  },
+  {
+   "default": "0",
+   "fieldname": "show_prices_on_vehicles_services",
+   "fieldtype": "Check",
+   "label": "Show prices on Vehicles Services"
+  },
+  {
+   "default": "0",
+   "fieldname": "show_prices_on_request_for_services",
+   "fieldtype": "Check",
+   "label": "Show Prices on Request for Services"
+  },
+  {
+   "default": "0",
+   "fieldname": "allow_service_odo_reading_roll_back",
+   "fieldtype": "Check",
+   "label": "Allow Service Odo Reading Roll Back"
+  },
+  {
+   "default": "0",
+   "fieldname": "allow_additional_parts_any_service",
+   "fieldtype": "Check",
+   "label": "Allow Users to add additional parts and labour to any service type"
+  },
+  {
+   "fieldname": "default_service_type_max_allowance",
+   "fieldtype": "Int",
+   "label": "Default Service Type Max Allowance"
+  },
+  {
+   "fieldname": "default_service_type_minimum_allowance",
+   "fieldtype": "Int",
+   "label": "Default Service Type Minimum Allowance"
+  },
+  {
+   "depends_on": "eval: doc.allow_auto_job_card_no == 1",
+   "fieldname": "auto_job_card_no_prefix",
+   "fieldtype": "Data",
+   "label": "Auto Job Card No Prefix"
+  },
+  {
+   "depends_on": "eval: doc.allow_auto_job_card_no == 1",
+   "fieldname": "last_auto_job_card_no",
+   "fieldtype": "Data",
+   "label": "Last Auto Job Card No"
+  },
+  {
+   "default": "0",
+   "fieldname": "allow_auto_job_card_no",
+   "fieldtype": "Check",
+   "label": "Allow Auto Job Card No"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "issingle": 1,
+ "links": [],
+ "modified": "2025-09-11 07:55:31.587279",
+ "modified_by": "Administrator",
+ "module": "Edp Online Vehicles",
+ "name": "Vehicle Service Settings",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}

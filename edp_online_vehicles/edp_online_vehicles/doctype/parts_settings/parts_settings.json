@@ -1,0 +1,59 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-02-26 08:03:40.745096",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "general_tab",
+  "part_order_tab",
+  "part_order_no_prefix",
+  "air_freight_cost_"
+ ],
+ "fields": [
+  {
+   "fieldname": "general_tab",
+   "fieldtype": "Tab Break",
+   "label": "General"
+  },
+  {
+   "fieldname": "part_order_tab",
+   "fieldtype": "Tab Break",
+   "label": "Part Order"
+  },
+  {
+   "fieldname": "part_order_no_prefix",
+   "fieldtype": "Data",
+   "label": "Part Order No Prefix"
+  },
+  {
+   "description": "Automatically calculated based on the percentage entered in this field of the Dealer Billing Price (Excl).",
+   "fieldname": "air_freight_cost_",
+   "fieldtype": "Percent",
+   "label": "Air Freight Cost (%)"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "issingle": 1,
+ "links": [],
+ "modified": "2025-03-05 07:58:21.643719",
+ "modified_by": "Administrator",
+ "module": "Edp Online Vehicles",
+ "name": "Parts Settings",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

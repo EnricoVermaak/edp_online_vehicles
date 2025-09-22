@@ -1,0 +1,781 @@
+{
+ "actions": [],
+ "allow_events_in_timeline": 1,
+ "allow_import": 1,
+ "autoname": "field:vin_serial_no",
+ "creation": "2025-01-06 14:14:57.652914",
+ "default_view": "List",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_fokt",
+  "vin_serial_no",
+  "brand",
+  "catagory",
+  "range",
+  "series",
+  "engine_no",
+  "stock_no",
+  "alternative_stock_no",
+  "control_no",
+  "column_break_uikn",
+  "model",
+  "description",
+  "microdot",
+  "microdot_fitted_by",
+  "colour",
+  "model_year",
+  "register_no",
+  "natis_release_date",
+  "fleet_no",
+  "column_break_1tyr",
+  "dealer",
+  "type",
+  "status",
+  "availability_status",
+  "condition",
+  "current_location",
+  "mm_code",
+  "section_break_yxlt",
+  "reserve_reason",
+  "shipment_information_section",
+  "vessel_name",
+  "shipment_file_no",
+  "target_warehouse",
+  "column_break_epiv",
+  "eta_harbour",
+  "eta_warehouse",
+  "ho_date_received",
+  "order_details_section",
+  "hq_order_no",
+  "dealer_to_dealer_order_no",
+  "original_purchasing_dealer",
+  "column_break_alie",
+  "ho_invoice_no",
+  "ho_invoice_amt",
+  "ho_invoice_date",
+  "contract_details_section",
+  "contract_no",
+  "contract_status",
+  "column_break_smzt",
+  "contract_start_date",
+  "contract_end_date",
+  "section_break_ssxz",
+  "shipment_id",
+  "customer_card_tab",
+  "retail_date",
+  "customer",
+  "customer_full_name",
+  "email",
+  "company_reg_no",
+  "fleet_customer",
+  "fleet_customer_name",
+  "fleet_customer_email",
+  "column_break_nnnj",
+  "phone",
+  "mobile",
+  "address",
+  "fleet_code",
+  "fleet_customer_phone",
+  "fleet_customer_mobile",
+  "fleet_customer_address",
+  "section_break_eern",
+  "import_customer_name",
+  "import_customer_surname",
+  "import_customer_email_address",
+  "warranty_tab",
+  "warranty_period_years",
+  "warranty_km_hours_limit",
+  "column_break_sg8w",
+  "warranty_start_date",
+  "warranty_end_date",
+  "service_tab",
+  "service_interval",
+  "service_period_years",
+  "service_km_hours_limit",
+  "last_service_hours",
+  "last_service_date",
+  "next_service_due_date",
+  "column_break_7e9z",
+  "service_start_date",
+  "service_end_date",
+  "image",
+  "attached_documents_tab",
+  "attached_documents",
+  "connections_tab"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_fokt",
+   "fieldtype": "Section Break"
+  },
+  {
+   "allow_in_quick_entry": 1,
+   "fieldname": "vin_serial_no",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "VIN/ Serial No",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "stock_no",
+   "fieldtype": "Data",
+   "label": "Stock No",
+   "read_only": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "alternative_stock_no",
+   "fieldtype": "Data",
+   "label": "Alternative Stock No",
+   "unique": 1
+  },
+  {
+   "fieldname": "fleet_no",
+   "fieldtype": "Data",
+   "label": "Fleet No",
+   "mandatory_depends_on": "eval: (doc.dealer == 'Jungheinrich SA' && in_list(['63101610', '63100654'], doc.customer));"
+  },
+  {
+   "fieldname": "engine_no",
+   "fieldtype": "Data",
+   "label": "Engine No"
+  },
+  {
+   "allow_in_quick_entry": 1,
+   "fieldname": "colour",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Colour",
+   "options": "Model Colour"
+  },
+  {
+   "fieldname": "column_break_uikn",
+   "fieldtype": "Column Break"
+  },
+  {
+   "allow_in_quick_entry": 1,
+   "fieldname": "model",
+   "fieldtype": "Link",
+   "in_standard_filter": 1,
+   "label": "Model",
+   "options": "Model Administration",
+   "search_index": 1
+  },
+  {
+   "fetch_from": "model.model_description",
+   "fieldname": "description",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Description",
+   "read_only": 1
+  },
+  {
+   "allow_in_quick_entry": 1,
+   "fetch_from": "model.brand",
+   "fieldname": "brand",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Brand",
+   "options": "Brand",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "model.model_year",
+   "fieldname": "model_year",
+   "fieldtype": "Data",
+   "label": "Model Year",
+   "read_only": 1
+  },
+  {
+   "fieldname": "register_no",
+   "fieldtype": "Data",
+   "label": "Register No"
+  },
+  {
+   "fieldname": "control_no",
+   "fieldtype": "Data",
+   "label": "Control No"
+  },
+  {
+   "fieldname": "column_break_1tyr",
+   "fieldtype": "Column Break"
+  },
+  {
+   "allow_in_quick_entry": 1,
+   "fieldname": "dealer",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Dealer",
+   "options": "Company",
+   "reqd": 1
+  },
+  {
+   "fieldname": "customer",
+   "fieldtype": "Link",
+   "label": "Customer",
+   "options": "Dealer Customer",
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "allow_in_quick_entry": 1,
+   "default": "Excellent",
+   "fieldname": "condition",
+   "fieldtype": "Select",
+   "label": "Condition",
+   "options": "\nExcellent\nGood\nAverage\nPoor"
+  },
+  {
+   "fieldname": "current_location",
+   "fieldtype": "Data",
+   "label": "Current Location"
+  },
+  {
+   "default": "Used",
+   "fieldname": "type",
+   "fieldtype": "Link",
+   "label": "Type",
+   "options": "Vehicles Type",
+   "read_only_depends_on": "eval: doc.type == 'New' && !frappe.user.has_role('System Manager')"
+  },
+  {
+   "default": "Operational",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Operational Status",
+   "options": "Operational\nService Pending\nService In Progress\nRepairs In Progress\nBreakdown\nNon- Operational",
+   "read_only": 1
+  },
+  {
+   "fieldname": "ho_invoice_no",
+   "fieldtype": "Data",
+   "label": "HO Invoice No"
+  },
+  {
+   "fieldname": "ho_invoice_amt",
+   "fieldtype": "Currency",
+   "label": "HO Invoice Amt"
+  },
+  {
+   "fieldname": "ho_invoice_date",
+   "fieldtype": "Datetime",
+   "label": "HO Invoice Date"
+  },
+  {
+   "collapsible": 1,
+   "fieldname": "shipment_information_section",
+   "fieldtype": "Section Break",
+   "label": "Shipment Information"
+  },
+  {
+   "fieldname": "vessel_name",
+   "fieldtype": "Data",
+   "label": "Vessel Name"
+  },
+  {
+   "fieldname": "eta_harbour",
+   "fieldtype": "Date",
+   "label": "ETA Harbour"
+  },
+  {
+   "fieldname": "column_break_epiv",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "eta_warehouse",
+   "fieldtype": "Date",
+   "label": "ETA Warehouse"
+  },
+  {
+   "fieldname": "ho_date_received",
+   "fieldtype": "Date",
+   "label": "HO Date Received"
+  },
+  {
+   "fieldname": "warranty_tab",
+   "fieldtype": "Tab Break",
+   "label": "Warranty"
+  },
+  {
+   "fetch_from": "model.warranty_period",
+   "fieldname": "warranty_period_years",
+   "fieldtype": "Int",
+   "label": "Warranty Period (Years)"
+  },
+  {
+   "fetch_from": "model.warranty_limit_km_hours",
+   "fieldname": "warranty_km_hours_limit",
+   "fieldtype": "Int",
+   "label": "Warranty KM/ Hours Limit"
+  },
+  {
+   "fieldname": "column_break_sg8w",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "warranty_start_date",
+   "fieldtype": "Date",
+   "label": "Warranty Start Date"
+  },
+  {
+   "fieldname": "warranty_end_date",
+   "fieldtype": "Date",
+   "label": "Warranty End Date"
+  },
+  {
+   "fieldname": "service_tab",
+   "fieldtype": "Tab Break",
+   "label": "Service"
+  },
+  {
+   "fetch_from": "model.service_period",
+   "fieldname": "service_period_years",
+   "fieldtype": "Int",
+   "label": "Service Period Limit (Months)"
+  },
+  {
+   "fetch_from": "model.service_limit_km_hours",
+   "fieldname": "service_km_hours_limit",
+   "fieldtype": "Int",
+   "label": "Service KM/ Hours Limit"
+  },
+  {
+   "fieldname": "last_service_hours",
+   "fieldtype": "Float",
+   "label": "Last Service Hours",
+   "read_only": 1
+  },
+  {
+   "fieldname": "last_service_date",
+   "fieldtype": "Date",
+   "label": "Last Service Date"
+  },
+  {
+   "fieldname": "next_service_due_date",
+   "fieldtype": "Date",
+   "label": "Next Service Due Date"
+  },
+  {
+   "fieldname": "column_break_7e9z",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "service_start_date",
+   "fieldtype": "Date",
+   "label": "Service Start Date"
+  },
+  {
+   "fieldname": "service_end_date",
+   "fieldtype": "Date",
+   "label": "Service End Date"
+  },
+  {
+   "fetch_from": "model.model_default_image",
+   "fieldname": "image",
+   "fieldtype": "Attach Image",
+   "hidden": 1,
+   "label": "Image"
+  },
+  {
+   "fieldname": "customer_card_tab",
+   "fieldtype": "Tab Break",
+   "label": "Customer Card"
+  },
+  {
+   "fetch_from": "customer.customer_name",
+   "fieldname": "customer_full_name",
+   "fieldtype": "Data",
+   "label": "Full Name",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_nnnj",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "customer.phone",
+   "fieldname": "phone",
+   "fieldtype": "Phone",
+   "label": "Phone",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "customer.email",
+   "fieldname": "email",
+   "fieldtype": "Data",
+   "label": "Email",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "customer.address",
+   "fieldname": "address",
+   "fieldtype": "Small Text",
+   "label": "Address",
+   "read_only": 1
+  },
+  {
+   "allow_in_quick_entry": 1,
+   "fieldname": "target_warehouse",
+   "fieldtype": "Link",
+   "label": "Target Warehouse",
+   "options": "Warehouse"
+  },
+  {
+   "fieldname": "contract_no",
+   "fieldtype": "Data",
+   "label": "Contract No",
+   "read_only": 1
+  },
+  {
+   "fieldname": "contract_start_date",
+   "fieldtype": "Date",
+   "label": "Contract Start Date",
+   "read_only": 1
+  },
+  {
+   "fieldname": "contract_end_date",
+   "fieldtype": "Date",
+   "label": "Contract End Date",
+   "read_only": 1
+  },
+  {
+   "collapsible": 1,
+   "fieldname": "contract_details_section",
+   "fieldtype": "Section Break",
+   "label": "Contract Details"
+  },
+  {
+   "fieldname": "contract_status",
+   "fieldtype": "Data",
+   "label": "Contract Status",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_smzt",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "availability_status",
+   "fieldtype": "Select",
+   "in_standard_filter": 1,
+   "label": "Availability Status",
+   "options": "Available\nStolen\nSold\nActive Contract\nExpired Contract\nReserved\nPending Sale",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "model.mm_code",
+   "fieldname": "mm_code",
+   "fieldtype": "Data",
+   "label": "M&M Code",
+   "read_only": 1
+  },
+  {
+   "fieldname": "microdot",
+   "fieldtype": "Link",
+   "label": "Microdot",
+   "link_filters": "[[\"Vehicles Microdots\",\"status\",\"=\",\"Received\"]]",
+   "options": "Vehicles Microdots"
+  },
+  {
+   "depends_on": "eval: (doc.microdot)",
+   "fieldname": "microdot_fitted_by",
+   "fieldtype": "Link",
+   "label": "Microdot Fitted By",
+   "mandatory_depends_on": "eval: (doc.microdot)",
+   "options": "User"
+  },
+  {
+   "fieldname": "attached_documents",
+   "fieldtype": "Table",
+   "label": "Attached Documents",
+   "options": "Attached Documents"
+  },
+  {
+   "fieldname": "attached_documents_tab",
+   "fieldtype": "Tab Break",
+   "hidden": 1,
+   "label": "Attached Documents"
+  },
+  {
+   "fetch_from": "model.service_interval_months",
+   "fieldname": "service_interval",
+   "fieldtype": "Int",
+   "label": "Service Interval"
+  },
+  {
+   "fetch_from": "model.category",
+   "fieldname": "catagory",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Category",
+   "options": "Vehicles Category",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_ssxz",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "shipment_id",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "Shipment ID"
+  },
+  {
+   "fieldname": "natis_release_date",
+   "fieldtype": "Date",
+   "label": "Natis Release Date"
+  },
+  {
+   "fieldname": "section_break_eern",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "import_customer_name",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "Import Customer Name"
+  },
+  {
+   "fieldname": "import_customer_surname",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "Import Customer Surname"
+  },
+  {
+   "fieldname": "import_customer_email_address",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "Import Customer Email Address"
+  },
+  {
+   "fetch_from": "fleet_customer.company_reg_no",
+   "fieldname": "company_reg_no",
+   "fieldtype": "Data",
+   "label": "Company Registration No",
+   "read_only": 1
+  },
+  {
+   "fieldname": "fleet_customer",
+   "fieldtype": "Link",
+   "label": "Customer",
+   "options": "Fleet Customer",
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fetch_from": "company_reg_no.customer_name",
+   "fieldname": "fleet_customer_name",
+   "fieldtype": "Data",
+   "label": "Full Name",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "fleet_customer.phone",
+   "fieldname": "fleet_customer_phone",
+   "fieldtype": "Phone",
+   "label": "Phone",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "fleet_customer.email",
+   "fieldname": "fleet_customer_email",
+   "fieldtype": "Data",
+   "label": "Email",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "fleet_customer.address",
+   "fieldname": "fleet_customer_address",
+   "fieldtype": "Small Text",
+   "label": "Address",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "customer.mobile",
+   "fieldname": "mobile",
+   "fieldtype": "Phone",
+   "label": "Mobile",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "fleet_customer.mobile",
+   "fieldname": "fleet_customer_mobile",
+   "fieldtype": "Phone",
+   "label": "Mobile",
+   "read_only": 1
+  },
+  {
+   "fieldname": "hq_order_no",
+   "fieldtype": "Link",
+   "label": "HQ Order No",
+   "options": "Head Office Vehicle Orders",
+   "read_only": 1
+  },
+  {
+   "fieldname": "dealer_to_dealer_order_no",
+   "fieldtype": "Link",
+   "label": "Dealer to Dealer Order No",
+   "options": "Vehicles Dealer to Dealer Order",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "fleet_customer.fleet_code",
+   "fieldname": "fleet_code",
+   "fieldtype": "Data",
+   "label": "Fleet Code",
+   "read_only": 1
+  },
+  {
+   "fieldname": "original_purchasing_dealer",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "Original Purchasing Dealer"
+  },
+  {
+   "fetch_from": "model.range",
+   "fieldname": "range",
+   "fieldtype": "Data",
+   "label": "Range",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "model.series_code",
+   "fieldname": "series",
+   "fieldtype": "Data",
+   "label": "Series",
+   "read_only": 1
+  },
+  {
+   "fieldname": "shipment_file_no",
+   "fieldtype": "Data",
+   "in_standard_filter": 1,
+   "label": "Shipment File No"
+  },
+  {
+   "fieldname": "connections_tab",
+   "fieldtype": "Tab Break",
+   "label": "Connections",
+   "show_dashboard": 1
+  },
+  {
+   "fieldname": "order_details_section",
+   "fieldtype": "Section Break",
+   "label": "Order Details"
+  },
+  {
+   "fieldname": "column_break_alie",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_yxlt",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "reserve_reason",
+   "fieldtype": "Small Text",
+   "label": "Reserve Reason",
+   "read_only": 1
+  },
+  {
+   "fieldname": "retail_date",
+   "fieldtype": "Date",
+   "label": "Retail Date",
+   "read_only": 1
+  }
+ ],
+ "image_field": "image",
+ "index_web_pages_for_search": 1,
+ "links": [
+  {
+   "group": "Warranty and Service",
+   "link_doctype": "Vehicles Service",
+   "link_fieldname": "vin_serial_no"
+  },
+  {
+   "group": "Warranty and Service",
+   "link_doctype": "Vehicles Warranty Claims",
+   "link_fieldname": "vin_serial_no"
+  },
+  {
+   "group": "Warranty and Service",
+   "link_doctype": "Vehicles Warranty Plan",
+   "link_fieldname": "vin_serial_no"
+  },
+  {
+   "group": "Inspections and Tests",
+   "link_doctype": "Vehicles PDI Inspection",
+   "link_fieldname": "vin_serial_no"
+  },
+  {
+   "group": "Inspections and Tests",
+   "link_doctype": "Vehicles Service Inspection",
+   "link_fieldname": "vin_serial_no"
+  },
+  {
+   "group": "Incidents",
+   "link_doctype": "Vehicles Breakdown",
+   "link_fieldname": "vin_serial_no"
+  },
+  {
+   "group": "Incidents",
+   "link_doctype": "Vehicles Incidents",
+   "link_fieldname": "vin_serial_no"
+  },
+  {
+   "group": "Issues",
+   "link_doctype": "Issue",
+   "link_fieldname": "custom_vinserial_no"
+  },
+  {
+   "group": "Tracking",
+   "link_doctype": "Vehicle Tracking",
+   "link_fieldname": "vin_serial_no"
+  }
+ ],
+ "modified": "2025-07-09 09:00:31.236865",
+ "modified_by": "Administrator",
+ "module": "Edp Online Vehicles",
+ "name": "Vehicle Stock",
+ "naming_rule": "By fieldname",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Vehicles Administrator",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "quick_entry": 1,
+ "search_fields": "customer, model, colour, stock_no, alternative_stock_no",
+ "show_title_field_in_link": 1,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "vin_serial_no",
+ "track_changes": 1
+}

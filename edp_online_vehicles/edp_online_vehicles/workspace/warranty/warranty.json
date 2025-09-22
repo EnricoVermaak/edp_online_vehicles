@@ -1,0 +1,136 @@
+{
+ "charts": [
+  {
+   "chart_name": "Vehicles Warranty Claims",
+   "label": "Warranty Claims"
+  }
+ ],
+ "content": "[{\"id\":\"kFwVKkYBiG\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Warranty</span>\",\"col\":12}},{\"id\":\"P0dmP5lh8-\",\"type\":\"chart\",\"data\":{\"chart_name\":\"Warranty Claims\",\"col\":12}},{\"id\":\"v6Rf34ULTD\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"zlyrf7Gwrz\",\"type\":\"card\",\"data\":{\"card_name\":\"Warranty\",\"col\":4}},{\"id\":\"iG56F-Utb4\",\"type\":\"card\",\"data\":{\"card_name\":\"Administration\",\"col\":4}},{\"id\":\"Pfkk0mXKEw\",\"type\":\"card\",\"data\":{\"card_name\":\"Report\",\"col\":4}}]",
+ "creation": "2024-11-27 11:30:47.866375",
+ "custom_blocks": [],
+ "docstatus": 0,
+ "doctype": "Workspace",
+ "for_user": "",
+ "hide_custom": 1,
+ "icon": "arrow-up-right",
+ "idx": 0,
+ "indicator_color": "green",
+ "is_hidden": 0,
+ "label": "Warranty",
+ "links": [
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Warranty",
+   "link_count": 2,
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Warranty Claims",
+   "link_count": 0,
+   "link_to": "Vehicles Warranty Claims",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Breakdown",
+   "link_count": 0,
+   "link_to": "Vehicles Breakdown",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Administration",
+   "link_count": 1,
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Warranty Plans",
+   "link_count": 0,
+   "link_to": "Vehicles Warranty Plan",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Report",
+   "link_count": 4,
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "Claims Per Model",
+   "link_count": 0,
+   "link_to": "Warranty Claims Per Model Report",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "Claims Per Part",
+   "link_count": 0,
+   "link_to": "Warranty Claims Per Part Report",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "Warranty Submissions",
+   "link_count": 0,
+   "link_to": "Warranty Claims Report",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "Recurring Part Claims",
+   "link_count": 0,
+   "link_to": "Recurring Part Claims",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  }
+ ],
+ "modified": "2025-09-11 07:52:35.854783",
+ "modified_by": "Administrator",
+ "module": "Edp Online Vehicles",
+ "name": "Warranty",
+ "number_cards": [],
+ "owner": "Administrator",
+ "parent_page": "",
+ "public": 1,
+ "quick_lists": [],
+ "roles": [
+  {
+   "role": "System Administrator"
+  }
+ ],
+ "sequence_id": 17.0,
+ "shortcuts": [],
+ "title": "Warranty"
+}

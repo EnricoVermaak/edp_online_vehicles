@@ -1,0 +1,127 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2024-06-06 14:25:49.720913",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_kqxu",
+  "vin_serial_no",
+  "model",
+  "description",
+  "engine_no",
+  "colour",
+  "model_year",
+  "mmcode",
+  "registration_no",
+  "column_break_bfcw",
+  "odo_reading",
+  "condition",
+  "suggested_retail_excl"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_kqxu",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "vin_serial_no",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "VIN/ Serial No",
+   "options": "Vehicle Stock",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "vin_serial_no.description",
+   "fieldname": "description",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Description",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "vin_serial_no.model",
+   "fieldname": "model",
+   "fieldtype": "Data",
+   "label": "Model",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "vin_serial_no.engine_no",
+   "fieldname": "engine_no",
+   "fieldtype": "Data",
+   "label": "Engine No",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "vin_serial_no.colour",
+   "fieldname": "colour",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Colour",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "vin_serial_no.model_year",
+   "fieldname": "model_year",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Model Year",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "vin_serial_no.mm_code",
+   "fieldname": "mmcode",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "M&M Code",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "vin_serial_no.register_no",
+   "fieldname": "registration_no",
+   "fieldtype": "Data",
+   "label": "Registration No",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_bfcw",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "odo_reading",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Odo Reading",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "vin_serial_no.condition",
+   "fieldname": "condition",
+   "fieldtype": "Select",
+   "label": "Condition",
+   "options": "\nExcellent\nGood\nAverage\nPoor"
+  },
+  {
+   "fieldname": "suggested_retail_excl",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Suggested Retail (Excl)",
+   "precision": "2"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2025-05-14 12:37:30.910639",
+ "modified_by": "Administrator",
+ "module": "Edp Online Vehicles",
+ "name": "Vehicles Deal Builder Vehicle",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

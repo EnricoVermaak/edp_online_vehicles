@@ -1,0 +1,139 @@
+{
+ "actions": [],
+ "allow_import": 1,
+ "allow_rename": 1,
+ "creation": "2025-05-02 10:01:32.964143",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "owner_province",
+  "owner_ra",
+  "owner_office_name",
+  "th_ra",
+  "th_officename",
+  "make",
+  "series",
+  "model_derivitive",
+  "nature_of_owner",
+  "engine_displacement",
+  "month",
+  "new_registrations",
+  "class",
+  "month_name",
+  "year"
+ ],
+ "fields": [
+  {
+   "fieldname": "owner_province",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Owner Province"
+  },
+  {
+   "fieldname": "owner_ra",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Owner RA"
+  },
+  {
+   "fieldname": "owner_office_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Owner Office name"
+  },
+  {
+   "fieldname": "th_ra",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "TH RA"
+  },
+  {
+   "fieldname": "make",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Make"
+  },
+  {
+   "fieldname": "series",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Series"
+  },
+  {
+   "fieldname": "model_derivitive",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Model Derivitive"
+  },
+  {
+   "fieldname": "nature_of_owner",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Nature Of Owner"
+  },
+  {
+   "fieldname": "engine_displacement",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Engine Displacement"
+  },
+  {
+   "fieldname": "month",
+   "fieldtype": "Data",
+   "label": "Month"
+  },
+  {
+   "fieldname": "new_registrations",
+   "fieldtype": "Int",
+   "label": "New Registrations"
+  },
+  {
+   "fieldname": "class",
+   "fieldtype": "Data",
+   "label": "Class"
+  },
+  {
+   "fieldname": "month_name",
+   "fieldtype": "Data",
+   "label": "Month Name"
+  },
+  {
+   "fieldname": "year",
+   "fieldtype": "Data",
+   "label": "Year"
+  },
+  {
+   "fieldname": "th_officename",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "TH Officename"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2025-05-02 10:27:20.409640",
+ "modified_by": "Administrator",
+ "module": "Edp Online Vehicles",
+ "name": "AmidNatisData",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

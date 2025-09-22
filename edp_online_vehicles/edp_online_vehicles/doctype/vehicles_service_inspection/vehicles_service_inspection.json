@@ -1,0 +1,209 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "format:SI-{YY}{MM}-{#####}",
+ "creation": "2024-03-14 01:02:42.718504",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_9j3z",
+  "vin_serial_no",
+  "odo_reading",
+  "model",
+  "model_description",
+  "column_break_aqki",
+  "inspection_date",
+  "customer",
+  "customer_address",
+  "column_break_sawh",
+  "technician",
+  "inspection_status",
+  "vehicles_status",
+  "check_list_tab",
+  "inspection_template",
+  "inspection_items",
+  "confirmation_tab",
+  "technician_signature",
+  "technician_full_name",
+  "customer_signature",
+  "customer_full_name",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_9j3z",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "customer",
+   "fieldtype": "Link",
+   "label": "Customer",
+   "options": "Customer",
+   "reqd": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "fetch_from": "customer.customer_primary_address",
+   "fieldname": "customer_address",
+   "fieldtype": "Data",
+   "label": "Customer Address"
+  },
+  {
+   "fieldname": "column_break_aqki",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "vin_serial_no",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "VIN/ Serial No",
+   "options": "Vehicle Stock",
+   "reqd": 1,
+   "search_index": 1
+  },
+  {
+   "fetch_from": "vin_serial_no.model",
+   "fieldname": "model",
+   "fieldtype": "Data",
+   "label": "Model"
+  },
+  {
+   "fetch_from": "vin_serial_no.description",
+   "fieldname": "model_description",
+   "fieldtype": "Data",
+   "label": "Model Description"
+  },
+  {
+   "fieldname": "odo_reading",
+   "fieldtype": "Data",
+   "label": "Odo Reading",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_sawh",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "technician",
+   "fieldtype": "Link",
+   "label": "Technician",
+   "options": "User",
+   "reqd": 1
+  },
+  {
+   "fieldname": "inspection_status",
+   "fieldtype": "Select",
+   "label": "Inspection Status",
+   "options": "Pending\nCompleted"
+  },
+  {
+   "fieldname": "check_list_tab",
+   "fieldtype": "Tab Break",
+   "label": "Inspection"
+  },
+  {
+   "fieldname": "confirmation_tab",
+   "fieldtype": "Tab Break",
+   "label": "Confirmation"
+  },
+  {
+   "fieldname": "technician_signature",
+   "fieldtype": "Signature",
+   "label": "Technician Signature"
+  },
+  {
+   "fetch_from": "technician.full_name",
+   "fieldname": "technician_full_name",
+   "fieldtype": "Data",
+   "label": "Technician Full Name"
+  },
+  {
+   "fieldname": "customer_signature",
+   "fieldtype": "Signature",
+   "label": "Customer Signature"
+  },
+  {
+   "fieldname": "customer_full_name",
+   "fieldtype": "Data",
+   "label": "Customer Full Name"
+  },
+  {
+   "fieldname": "inspection_items",
+   "fieldtype": "Table",
+   "label": "Inspection Items",
+   "options": "Vehicles Service Inspection Items"
+  },
+  {
+   "fieldname": "inspection_template",
+   "fieldtype": "Link",
+   "label": "Inspection Template",
+   "options": "Vehicles Inspection Template",
+   "reqd": 1
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "hidden": 1,
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Vehicles Service Inspection",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "default": "Today",
+   "fieldname": "inspection_date",
+   "fieldtype": "Date",
+   "label": "Inspection Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "vehicles_status",
+   "fieldtype": "Select",
+   "label": "Vehicles Status",
+   "mandatory_depends_on": "eval:doc.inspection_status == \"Completed\"",
+   "options": "\nPassed\nFailed"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2025-01-03 14:42:37.734206",
+ "modified_by": "Administrator",
+ "module": "Edp Online Vehicles",
+ "name": "Vehicles Service Inspection",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Aftersales Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "show_title_field_in_link": 1,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "vin_serial_no",
+ "track_changes": 1
+}

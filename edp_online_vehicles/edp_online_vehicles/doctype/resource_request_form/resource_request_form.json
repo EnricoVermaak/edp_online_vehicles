@@ -1,0 +1,229 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2024-10-06 10:21:40.798591",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_et1e",
+  "request_date",
+  "column_break_pgom",
+  "required_by",
+  "section_break_gamj",
+  "employee",
+  "employee_full_names",
+  "column_break_lhkb",
+  "department",
+  "designation",
+  "section_break_zdxy",
+  "physical_work_location",
+  "hardware_requested_section",
+  "hardware_items",
+  "software_requested_section",
+  "software_items",
+  "confirmation_tab",
+  "employee_signature",
+  "employee_signed_on",
+  "employee_full_name",
+  "section_break_bdzg",
+  "manager_signature",
+  "manager_signed_on",
+  "manager",
+  "manager_full_name",
+  "column_break_pfmv",
+  "senior_manager_signature",
+  "senior_manager_signed_on",
+  "senior_manager",
+  "senior_manager_full_name"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_et1e",
+   "fieldtype": "Section Break"
+  },
+  {
+   "default": "Today",
+   "fieldname": "request_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Request Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_pgom",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "required_by",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Required By",
+   "reqd": 1
+  },
+  {
+   "fieldname": "section_break_gamj",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "employee",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Employee",
+   "options": "Employee",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "employee.employee_name",
+   "fieldname": "employee_full_names",
+   "fieldtype": "Data",
+   "label": "Employee Full Names",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_lhkb",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "employee.department",
+   "fieldname": "department",
+   "fieldtype": "Data",
+   "label": "Department",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "employee.designation",
+   "fieldname": "designation",
+   "fieldtype": "Data",
+   "label": "Designation",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_zdxy",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "physical_work_location",
+   "fieldtype": "Small Text",
+   "label": "Physical Work Location"
+  },
+  {
+   "fieldname": "hardware_requested_section",
+   "fieldtype": "Section Break",
+   "label": "Hardware Requested"
+  },
+  {
+   "fieldname": "software_requested_section",
+   "fieldtype": "Section Break",
+   "label": "Software Requested"
+  },
+  {
+   "fieldname": "hardware_items",
+   "fieldtype": "Table",
+   "options": "Employee Hardware List"
+  },
+  {
+   "fieldname": "software_items",
+   "fieldtype": "Table",
+   "options": "Employee Software List"
+  },
+  {
+   "fieldname": "confirmation_tab",
+   "fieldtype": "Tab Break",
+   "label": "Confirmation"
+  },
+  {
+   "fieldname": "employee_signature",
+   "fieldtype": "Signature",
+   "label": "Employee Signature"
+  },
+  {
+   "fieldname": "employee_signed_on",
+   "fieldtype": "Date",
+   "label": "Employee Signed On"
+  },
+  {
+   "fetch_from": "employee.employee_name",
+   "fieldname": "employee_full_name",
+   "fieldtype": "Data",
+   "label": "Employee Full Name"
+  },
+  {
+   "fieldname": "section_break_bdzg",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "manager_signature",
+   "fieldtype": "Signature",
+   "label": "Manager Signature"
+  },
+  {
+   "fieldname": "manager_signed_on",
+   "fieldtype": "Date",
+   "label": "Manager Signed On"
+  },
+  {
+   "fieldname": "manager",
+   "fieldtype": "Link",
+   "label": "Manager",
+   "options": "User"
+  },
+  {
+   "fieldname": "column_break_pfmv",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "senior_manager_signature",
+   "fieldtype": "Signature",
+   "label": "Senior Manager Signature"
+  },
+  {
+   "fieldname": "senior_manager_signed_on",
+   "fieldtype": "Date",
+   "label": "Senior Manager Signed On"
+  },
+  {
+   "fieldname": "senior_manager",
+   "fieldtype": "Link",
+   "label": "Senior Manager",
+   "options": "User"
+  },
+  {
+   "fetch_from": "manager.full_name",
+   "fieldname": "manager_full_name",
+   "fieldtype": "Data",
+   "label": "Manager Full Name",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "senior_manager.full_name",
+   "fieldname": "senior_manager_full_name",
+   "fieldtype": "Data",
+   "label": "Senior Manager Full Name",
+   "read_only": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2024-10-06 11:09:51.416663",
+ "modified_by": "Administrator",
+ "module": "Edp Online Vehicles",
+ "name": "Resource Request Form",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

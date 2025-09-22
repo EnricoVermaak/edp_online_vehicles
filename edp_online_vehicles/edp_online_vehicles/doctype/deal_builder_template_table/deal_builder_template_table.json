@@ -1,0 +1,41 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-05-14 09:00:33.644507",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "description",
+  "disable_delete_function"
+ ],
+ "fields": [
+  {
+   "fieldname": "description",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Description",
+   "options": "Vehicle Deal Builder OTP Item Options",
+   "reqd": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "disable_delete_function",
+   "fieldtype": "Check",
+   "in_list_view": 1,
+   "label": "Disable Delete Function"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2025-05-14 10:04:22.173391",
+ "modified_by": "Administrator",
+ "module": "Edp Online Vehicles",
+ "name": "Deal Builder Template Table",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

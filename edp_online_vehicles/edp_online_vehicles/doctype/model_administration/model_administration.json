@@ -1,0 +1,775 @@
+{
+ "actions": [],
+ "allow_import": 1,
+ "autoname": "field:model_code",
+ "creation": "2024-03-13 21:22:29.523416",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_9stn",
+  "model_code",
+  "model_code_common",
+  "model_year",
+  "proper_name",
+  "nsc_no",
+  "naamsa_code",
+  "naamsa_colour_code",
+  "column_break_pvcv",
+  "model_description",
+  "series_code",
+  "make_code",
+  "derivitive",
+  "column_break_ojyb",
+  "brand",
+  "series_description",
+  "mm_code",
+  "co2_emission",
+  "category",
+  "range",
+  "class_",
+  "pricing_tab",
+  "cost_price_excl",
+  "dealer_billing_excl",
+  "suggested_retail_excl",
+  "column_break_iykt",
+  "rental_price_excl",
+  "export_price_excl",
+  "discount_tolerance_",
+  "section_break_jrap",
+  "territory_export_prices",
+  "colours_tab",
+  "model_colours",
+  "model_pictures_tab",
+  "front_image",
+  "left_image",
+  "column_break_ezbe",
+  "rear_image",
+  "right_image",
+  "tab_break_jpsx",
+  "tyre_specifications_section",
+  "tyre_size_front",
+  "tyre_weight_front",
+  "column_break_bvoq",
+  "tyre_size_rear",
+  "tyre_weight_rear",
+  "column_break_jnid",
+  "load_capacity",
+  "column_break_iger",
+  "lift_mm",
+  "general_specifications_section",
+  "natis_code",
+  "drivetrain",
+  "differential",
+  "transmission",
+  "gearbox",
+  "fuel_type",
+  "total_no_of_axles",
+  "driving_axles",
+  "column_break_vwau",
+  "engine_displacement",
+  "engine_capacity",
+  "net_power",
+  "no_of_wheels",
+  "gvm",
+  "gcm",
+  "tare",
+  "mast_reach_mm",
+  "column_break_grty",
+  "sitting_capacity",
+  "standing_capacity",
+  "overall_length",
+  "overall_height",
+  "overall_width",
+  "country_of_export",
+  "country_of_import",
+  "section_break_wqtn",
+  "additional_specifications",
+  "settings_tab",
+  "additional_settings_section",
+  "show_on_vehicles_stock_availability",
+  "mark_as_discontinued",
+  "automatically_reserve_model",
+  "column_break_mzfn",
+  "manuals_available",
+  "enable_enatis_registration",
+  "model_default_image",
+  "default_templates_section",
+  "service_t_and_c_template",
+  "service_terms_and_conditions",
+  "service_warranty_tab",
+  "service_info_section",
+  "service_inspection_interval_km_hours",
+  "service_inspection_interval_months",
+  "column_break_rxij",
+  "service_interval_months",
+  "service_period",
+  "service_limit_km_hours",
+  "service_type_max_allowance",
+  "service_type_minimum_allowance",
+  "warranty_info_section",
+  "warranty_period",
+  "column_break_q3q1",
+  "warranty_limit_km_hours",
+  "load_test_section",
+  "pass_requirement",
+  "column_break_h40v",
+  "load_test_interval",
+  "load_test_interval_months",
+  "conversion_options_tab",
+  "convert_to_models_options_section",
+  "table_fqry"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_9stn",
+   "fieldtype": "Section Break"
+  },
+  {
+   "allow_in_quick_entry": 1,
+   "fieldname": "brand",
+   "fieldtype": "Link",
+   "label": "Brand",
+   "options": "Brand",
+   "reqd": 1
+  },
+  {
+   "fieldname": "model_code_common",
+   "fieldtype": "Data",
+   "label": "Model Code Common"
+  },
+  {
+   "fieldname": "model_year",
+   "fieldtype": "Data",
+   "label": "Model Year"
+  },
+  {
+   "fieldname": "proper_name",
+   "fieldtype": "Data",
+   "label": "Proper Name"
+  },
+  {
+   "fieldname": "nsc_no",
+   "fieldtype": "Data",
+   "label": "NSC No"
+  },
+  {
+   "fieldname": "column_break_pvcv",
+   "fieldtype": "Column Break"
+  },
+  {
+   "allow_in_quick_entry": 1,
+   "fieldname": "model_code",
+   "fieldtype": "Data",
+   "in_filter": 1,
+   "in_global_search": 1,
+   "in_list_view": 1,
+   "in_preview": 1,
+   "in_standard_filter": 1,
+   "label": "Model Code",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "series_code",
+   "fieldtype": "Data",
+   "label": "Series Code"
+  },
+  {
+   "fieldname": "naamsa_code",
+   "fieldtype": "Data",
+   "label": "NaamSA Code"
+  },
+  {
+   "fieldname": "make_code",
+   "fieldtype": "Data",
+   "label": "Make Code"
+  },
+  {
+   "fieldname": "derivitive",
+   "fieldtype": "Data",
+   "label": "Derivitive"
+  },
+  {
+   "allow_in_quick_entry": 1,
+   "fieldname": "model_description",
+   "fieldtype": "Data",
+   "label": "Model Description",
+   "reqd": 1
+  },
+  {
+   "fieldname": "series_description",
+   "fieldtype": "Data",
+   "label": "Series Description"
+  },
+  {
+   "fieldname": "naamsa_colour_code",
+   "fieldtype": "Data",
+   "label": "NaamSA Colour Code"
+  },
+  {
+   "fieldname": "mm_code",
+   "fieldtype": "Data",
+   "label": "M&M Code"
+  },
+  {
+   "fieldname": "co2_emission",
+   "fieldtype": "Data",
+   "label": "CO2 Emission"
+  },
+  {
+   "fieldname": "drivetrain",
+   "fieldtype": "Link",
+   "label": "Drivetrain",
+   "options": "Vehicles Drivetrain"
+  },
+  {
+   "fieldname": "differential",
+   "fieldtype": "Data",
+   "label": "Differential"
+  },
+  {
+   "fieldname": "transmission",
+   "fieldtype": "Link",
+   "label": "Transmission",
+   "mandatory_depends_on": "eval: doc.enable_enatis_registration == 1;",
+   "options": "Vehicles Transmission Type"
+  },
+  {
+   "fieldname": "gearbox",
+   "fieldtype": "Data",
+   "label": "Gearbox"
+  },
+  {
+   "fieldname": "fuel_type",
+   "fieldtype": "Link",
+   "label": "Fuel Type",
+   "options": "Vehicles Fuel Type"
+  },
+  {
+   "fieldname": "total_no_of_axles",
+   "fieldtype": "Data",
+   "label": "Total No of Axles"
+  },
+  {
+   "fieldname": "driving_axles",
+   "fieldtype": "Data",
+   "label": "Driving Axles"
+  },
+  {
+   "fieldname": "net_power",
+   "fieldtype": "Data",
+   "label": "Net Power"
+  },
+  {
+   "fieldname": "no_of_wheels",
+   "fieldtype": "Data",
+   "label": "No of Wheels"
+  },
+  {
+   "fieldname": "gvm",
+   "fieldtype": "Data",
+   "label": "GVM"
+  },
+  {
+   "fieldname": "gcm",
+   "fieldtype": "Data",
+   "label": "GCM"
+  },
+  {
+   "fieldname": "tare",
+   "fieldtype": "Data",
+   "label": "Tare",
+   "mandatory_depends_on": "eval: doc.enable_enatis_registration == 1;"
+  },
+  {
+   "fieldname": "mast_reach_mm",
+   "fieldtype": "Float",
+   "label": "Mast Reach (mm)"
+  },
+  {
+   "fieldname": "sitting_capacity",
+   "fieldtype": "Data",
+   "label": "Sitting Capacity"
+  },
+  {
+   "fieldname": "standing_capacity",
+   "fieldtype": "Data",
+   "label": "Standing Capacity"
+  },
+  {
+   "fieldname": "overall_length",
+   "fieldtype": "Data",
+   "label": "Overall Length"
+  },
+  {
+   "fieldname": "overall_height",
+   "fieldtype": "Data",
+   "label": "Overall Height"
+  },
+  {
+   "fieldname": "overall_width",
+   "fieldtype": "Data",
+   "label": "Overall Width"
+  },
+  {
+   "fieldname": "country_of_export",
+   "fieldtype": "Link",
+   "label": "Country of Export",
+   "mandatory_depends_on": "eval: doc.enable_enatis_registration == 1;",
+   "options": "Country"
+  },
+  {
+   "fieldname": "country_of_import",
+   "fieldtype": "Link",
+   "label": "Country of Import",
+   "mandatory_depends_on": "eval: doc.enable_enatis_registration == 1;",
+   "options": "Country"
+  },
+  {
+   "depends_on": "eval: frappe.user.has_role(\"Vehicles Administrator\");",
+   "fieldname": "pricing_tab",
+   "fieldtype": "Tab Break",
+   "label": "Pricing"
+  },
+  {
+   "fieldname": "cost_price_excl",
+   "fieldtype": "Currency",
+   "label": "Cost Price (Excl)"
+  },
+  {
+   "fieldname": "dealer_billing_excl",
+   "fieldtype": "Currency",
+   "label": "Dealer Billing (Excl)"
+  },
+  {
+   "fieldname": "suggested_retail_excl",
+   "fieldtype": "Currency",
+   "label": "Suggested Retail (Excl)"
+  },
+  {
+   "fieldname": "column_break_iykt",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "rental_price_excl",
+   "fieldtype": "Currency",
+   "label": "Rental Price (Excl)"
+  },
+  {
+   "fieldname": "export_price_excl",
+   "fieldtype": "Currency",
+   "label": "Export Price (Excl)"
+  },
+  {
+   "fieldname": "discount_tolerance_",
+   "fieldtype": "Currency",
+   "label": "Discount Tolerance (%)"
+  },
+  {
+   "fieldname": "colours_tab",
+   "fieldtype": "Tab Break",
+   "label": "Colours"
+  },
+  {
+   "fieldname": "model_colours",
+   "fieldtype": "Table",
+   "label": "Model Colours",
+   "options": "Model Colours"
+  },
+  {
+   "fieldname": "model_pictures_tab",
+   "fieldtype": "Tab Break",
+   "label": "Model Pictures"
+  },
+  {
+   "fieldname": "front_image",
+   "fieldtype": "Attach Image",
+   "label": "Front Image"
+  },
+  {
+   "fieldname": "left_image",
+   "fieldtype": "Attach Image",
+   "label": "Left Image"
+  },
+  {
+   "fieldname": "column_break_ezbe",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "rear_image",
+   "fieldtype": "Attach Image",
+   "label": "Rear Image"
+  },
+  {
+   "fieldname": "right_image",
+   "fieldtype": "Attach Image",
+   "label": "Right Image"
+  },
+  {
+   "fieldname": "tab_break_jpsx",
+   "fieldtype": "Tab Break",
+   "label": "Specifications"
+  },
+  {
+   "fieldname": "tyre_size_front",
+   "fieldtype": "Data",
+   "label": "Tyre Size Front"
+  },
+  {
+   "fieldname": "tyre_weight_front",
+   "fieldtype": "Float",
+   "label": "Tyre Weight Front"
+  },
+  {
+   "fieldname": "column_break_bvoq",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "tyre_size_rear",
+   "fieldtype": "Data",
+   "label": "Tyre Size Rear"
+  },
+  {
+   "fieldname": "tyre_weight_rear",
+   "fieldtype": "Float",
+   "label": "Tyre Weight Rear"
+  },
+  {
+   "fieldname": "load_capacity",
+   "fieldtype": "Float",
+   "label": "Load Capacity"
+  },
+  {
+   "fieldname": "column_break_iger",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "lift_mm",
+   "fieldtype": "Float",
+   "label": "Lift (mm)"
+  },
+  {
+   "depends_on": "eval: frappe.user.has_role(\"Vehicles Administrator\");",
+   "fieldname": "settings_tab",
+   "fieldtype": "Tab Break",
+   "label": "Settings"
+  },
+  {
+   "allow_in_quick_entry": 1,
+   "fieldname": "category",
+   "fieldtype": "Link",
+   "in_standard_filter": 1,
+   "label": "Category",
+   "options": "Vehicles Category",
+   "reqd": 1
+  },
+  {
+   "fieldname": "additional_settings_section",
+   "fieldtype": "Section Break",
+   "label": "Additional Settings"
+  },
+  {
+   "default": "0",
+   "fieldname": "show_on_vehicles_stock_availability",
+   "fieldtype": "Check",
+   "label": "Show on Vehicle Stock Availability"
+  },
+  {
+   "default": "0",
+   "fieldname": "mark_as_discontinued",
+   "fieldtype": "Check",
+   "in_standard_filter": 1,
+   "label": "Mark as Discontinued"
+  },
+  {
+   "fieldname": "column_break_mzfn",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "manuals_available",
+   "fieldtype": "Check",
+   "label": "Manuals Available"
+  },
+  {
+   "default": "0",
+   "fieldname": "enable_enatis_registration",
+   "fieldtype": "Check",
+   "label": "Enable ENatis Registration"
+  },
+  {
+   "fieldname": "model_default_image",
+   "fieldtype": "Attach Image",
+   "hidden": 1,
+   "label": "Model Default Image"
+  },
+  {
+   "fieldname": "default_templates_section",
+   "fieldtype": "Section Break",
+   "label": "Default Templates"
+  },
+  {
+   "fieldname": "service_t_and_c_template",
+   "fieldtype": "Link",
+   "label": "Service T and C Template",
+   "options": "Terms and Conditions"
+  },
+  {
+   "fetch_from": "service_t_and_c_template.terms",
+   "fieldname": "service_terms_and_conditions",
+   "fieldtype": "Text Editor",
+   "label": "Service Terms and Conditions"
+  },
+  {
+   "fieldname": "service_warranty_tab",
+   "fieldtype": "Tab Break",
+   "label": "Service & Warranty"
+  },
+  {
+   "fieldname": "service_period",
+   "fieldtype": "Int",
+   "label": "Service Period Limit (Months)"
+  },
+  {
+   "fieldname": "service_info_section",
+   "fieldtype": "Section Break",
+   "label": "Service Info"
+  },
+  {
+   "fieldname": "column_break_rxij",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "service_limit_km_hours",
+   "fieldtype": "Int",
+   "label": "Service Odo Limit (KM/ Hours)"
+  },
+  {
+   "fieldname": "warranty_info_section",
+   "fieldtype": "Section Break",
+   "label": "Warranty Info"
+  },
+  {
+   "fieldname": "warranty_period",
+   "fieldtype": "Int",
+   "label": "Warranty Period"
+  },
+  {
+   "fieldname": "column_break_q3q1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "warranty_limit_km_hours",
+   "fieldtype": "Int",
+   "label": "Warranty Limit (KM/ Hours)"
+  },
+  {
+   "fieldname": "load_test_section",
+   "fieldtype": "Section Break",
+   "label": "Load Test"
+  },
+  {
+   "fieldname": "pass_requirement",
+   "fieldtype": "Percent",
+   "label": "Pass (%) Requirement"
+  },
+  {
+   "fieldname": "column_break_h40v",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "load_test_interval",
+   "fieldtype": "Data",
+   "label": "Load Test Interval (KM/ Hours)"
+  },
+  {
+   "fieldname": "load_test_interval_months",
+   "fieldtype": "Int",
+   "label": "Load Test Interval (Months)"
+  },
+  {
+   "fieldname": "service_inspection_interval_km_hours",
+   "fieldtype": "Int",
+   "label": "Service Inspection Interval (KM/ Hours)"
+  },
+  {
+   "fieldname": "service_inspection_interval_months",
+   "fieldtype": "Int",
+   "label": "Service Inspection Interval (Months)"
+  },
+  {
+   "fieldname": "service_interval_months",
+   "fieldtype": "Int",
+   "label": "Service Interval (Months)"
+  },
+  {
+   "fieldname": "tyre_specifications_section",
+   "fieldtype": "Section Break",
+   "label": "Tyre Specifications"
+  },
+  {
+   "fieldname": "general_specifications_section",
+   "fieldtype": "Section Break",
+   "label": "General Specifications"
+  },
+  {
+   "fieldname": "natis_code",
+   "fieldtype": "Data",
+   "label": "NATIS Code",
+   "mandatory_depends_on": "eval: doc.enable_enatis_registration == 1;"
+  },
+  {
+   "fieldname": "column_break_vwau",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_grty",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "class_",
+   "fieldtype": "Data",
+   "label": "Class"
+  },
+  {
+   "fieldname": "section_break_wqtn",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "additional_specifications",
+   "fieldtype": "Table",
+   "label": "Additional Specifications",
+   "options": "Vehicles Model Specifications"
+  },
+  {
+   "fieldname": "column_break_jnid",
+   "fieldtype": "Column Break"
+  },
+  {
+   "depends_on": "eval: frappe.user.has_role(\"Vehicles Administrator\");",
+   "fieldname": "conversion_options_tab",
+   "fieldtype": "Tab Break",
+   "label": "Conversion Options"
+  },
+  {
+   "fieldname": "convert_to_models_options_section",
+   "fieldtype": "Section Break",
+   "label": "Convert To Models Options"
+  },
+  {
+   "fieldname": "table_fqry",
+   "fieldtype": "Table",
+   "options": "Model Items"
+  },
+  {
+   "fieldname": "column_break_ojyb",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "engine_capacity",
+   "fieldtype": "Data",
+   "label": "Engine Capacity"
+  },
+  {
+   "fieldname": "range",
+   "fieldtype": "Link",
+   "label": "Range",
+   "options": "Vehicle Range"
+  },
+  {
+   "fieldname": "engine_displacement",
+   "fieldtype": "Data",
+   "label": "Engine Displacement",
+   "mandatory_depends_on": "eval: doc.enable_enatis_registration == 1;"
+  },
+  {
+   "fieldname": "service_type_max_allowance",
+   "fieldtype": "Int",
+   "label": "Service Type Max Allowance (Km/Hours)"
+  },
+  {
+   "fieldname": "service_type_minimum_allowance",
+   "fieldtype": "Int",
+   "label": "Service Type Minimum Allowance (Km/Hours)"
+  },
+  {
+   "fieldname": "section_break_jrap",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "territory_export_prices",
+   "fieldtype": "Table",
+   "label": "Territory Export Prices",
+   "options": "Territory Pricing"
+  },
+  {
+   "default": "0",
+   "fieldname": "automatically_reserve_model",
+   "fieldtype": "Check",
+   "label": "Automatically Reserve Model"
+  }
+ ],
+ "image_field": "model_default_image",
+ "index_web_pages_for_search": 1,
+ "links": [
+  {
+   "group": "Vehicles",
+   "link_doctype": "Vehicle Stock",
+   "link_fieldname": "model"
+  },
+  {
+   "group": "Warranties and Services",
+   "link_doctype": "Vehicles Warranty Claims",
+   "link_fieldname": "model"
+  },
+  {
+   "group": "Warranties and Services",
+   "link_doctype": "Vehicles Service",
+   "link_fieldname": "model"
+  },
+  {
+   "group": "Vehicles",
+   "link_doctype": "Catalogue",
+   "link_fieldname": "model"
+  }
+ ],
+ "modified": "2025-05-13 12:23:13.980002",
+ "modified_by": "Administrator",
+ "module": "Edp Online Vehicles",
+ "name": "Model Administration",
+ "naming_rule": "By fieldname",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Vehicles Administrator",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "quick_entry": 1,
+ "search_fields": "model_code,model_description,mm_code,model_year,category",
+ "show_title_field_in_link": 1,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "model_code",
+ "track_changes": 1
+}

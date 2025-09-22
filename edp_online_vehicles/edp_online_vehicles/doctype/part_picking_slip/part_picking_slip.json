@@ -1,0 +1,138 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-03-04 16:39:39.185061",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "information_section",
+  "part_order_no",
+  "ordered_bydealer",
+  "ordered_on_datetime",
+  "column_break_srkq",
+  "status",
+  "part_basket_section",
+  "table_qoik",
+  "section_break_fngw",
+  "total_qty_ordered",
+  "column_break_fjub",
+  "total_qty_picked",
+  "section_break_xxfw",
+  "hq_part_order",
+  "d2d_part_order"
+ ],
+ "fields": [
+  {
+   "fieldname": "information_section",
+   "fieldtype": "Section Break",
+   "label": "Information"
+  },
+  {
+   "fieldname": "ordered_bydealer",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Ordered By(Dealer)",
+   "link_filters": "[[\"Company\",\"custom_active\",\"=\",1]]",
+   "options": "Company"
+  },
+  {
+   "default": "now",
+   "fieldname": "ordered_on_datetime",
+   "fieldtype": "Datetime",
+   "in_list_view": 1,
+   "label": "Ordered On Date/Time"
+  },
+  {
+   "fieldname": "column_break_srkq",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "In Progress",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Status",
+   "options": "In Progress\nCompleted"
+  },
+  {
+   "fieldname": "part_basket_section",
+   "fieldtype": "Section Break",
+   "label": "Part Basket"
+  },
+  {
+   "fieldname": "table_qoik",
+   "fieldtype": "Table",
+   "options": "Part Picking Slip Items"
+  },
+  {
+   "fieldname": "section_break_fngw",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "total_qty_ordered",
+   "fieldtype": "Int",
+   "label": "Total Qty Ordered"
+  },
+  {
+   "fieldname": "column_break_fjub",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "total_qty_picked",
+   "fieldtype": "Int",
+   "label": "Total Qty Picked"
+  },
+  {
+   "fieldname": "section_break_xxfw",
+   "fieldtype": "Section Break",
+   "hidden": 1
+  },
+  {
+   "fieldname": "hq_part_order",
+   "fieldtype": "Link",
+   "label": "HQ Part Order",
+   "options": "HQ Part Order",
+   "search_index": 1
+  },
+  {
+   "fieldname": "part_order_no",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Part Order No",
+   "options": "HQ Part Order"
+  },
+  {
+   "fieldname": "d2d_part_order",
+   "fieldtype": "Link",
+   "label": "D2D Part Order",
+   "options": "D2D Part Order"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2025-03-10 15:15:43.668778",
+ "modified_by": "Administrator",
+ "module": "Edp Online Vehicles",
+ "name": "Part Picking Slip",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

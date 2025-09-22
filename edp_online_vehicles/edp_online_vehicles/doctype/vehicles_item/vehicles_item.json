@@ -1,0 +1,103 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2024-09-19 12:12:07.452540",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "vin_serial_no",
+  "stock_no",
+  "model",
+  "model_series",
+  "engine_no",
+  "colour",
+  "vehicle_type",
+  "column_break_ccfi",
+  "microdot",
+  "microdot_fitted_by"
+ ],
+ "fields": [
+  {
+   "fieldname": "vin_serial_no",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "VIN/ Serial No",
+   "options": "Vehicle Stock",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "vin_serial_no.model",
+   "fieldname": "model",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Model",
+   "options": "Model Administration",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "model.series_description",
+   "fieldname": "model_series",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Model Series"
+  },
+  {
+   "fetch_from": "vin_serial_no.colour",
+   "fetch_if_empty": 1,
+   "fieldname": "colour",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Colour",
+   "options": "Model Colour",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "vin_serial_no.stock_no",
+   "fieldname": "stock_no",
+   "fieldtype": "Data",
+   "label": "Stock No"
+  },
+  {
+   "fetch_from": "vin_serial_no.engine_no",
+   "fieldname": "engine_no",
+   "fieldtype": "Data",
+   "label": "Engine No"
+  },
+  {
+   "fieldname": "column_break_ccfi",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "microdot",
+   "fieldtype": "Link",
+   "label": "Microdot",
+   "link_filters": "[[\"Vehicles Microdots\",\"status\",\"=\",\"Received\"]]",
+   "options": "Vehicles Microdots"
+  },
+  {
+   "fieldname": "microdot_fitted_by",
+   "fieldtype": "Link",
+   "label": "Microdot Fitted By",
+   "options": "User"
+  },
+  {
+   "fetch_from": "vin_serial_no.type",
+   "fieldname": "vehicle_type",
+   "fieldtype": "Data",
+   "label": "Vehicles Type"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2025-02-06 14:16:27.576667",
+ "modified_by": "Administrator",
+ "module": "Edp Online Vehicles",
+ "name": "Vehicles Item",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

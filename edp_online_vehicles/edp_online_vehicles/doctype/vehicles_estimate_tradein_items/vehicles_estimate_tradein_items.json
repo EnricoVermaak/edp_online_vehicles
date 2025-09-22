@@ -1,0 +1,119 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2024-09-12 14:57:48.442136",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_fgcf",
+  "vin_serial_no",
+  "model",
+  "description",
+  "mm_code",
+  "price_excl",
+  "column_break_divu",
+  "model_year",
+  "colour",
+  "engine_no",
+  "registration_no",
+  "condition"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_fgcf",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "vin_serial_no",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "VIN/ Serial No",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "vin_serial_no.model",
+   "fieldname": "model",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Model",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "vin_serial_no.description",
+   "fieldname": "description",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Description",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "vin_serial_no.mm_code",
+   "fieldname": "mm_code",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "M&M Code",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "vin_serial_no.rental_amt_excl",
+   "fieldname": "price_excl",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Price (Excl)",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_divu",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "vin_serial_no.model_year",
+   "fieldname": "model_year",
+   "fieldtype": "Data",
+   "label": "Model Year",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "vin_serial_no.engine_no",
+   "fieldname": "engine_no",
+   "fieldtype": "Data",
+   "label": "Engine No",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "vin_serial_no.registration_no",
+   "fieldname": "registration_no",
+   "fieldtype": "Data",
+   "label": "Registration No",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "vin_serial_no.condition",
+   "fieldname": "condition",
+   "fieldtype": "Data",
+   "label": "Condition",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "vin_serial_no.colour",
+   "fieldname": "colour",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Colour",
+   "reqd": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2024-09-12 15:02:08.759788",
+ "modified_by": "Administrator",
+ "module": "Edp Online Vehicles",
+ "name": "Vehicles Estimate TradeIn Items",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

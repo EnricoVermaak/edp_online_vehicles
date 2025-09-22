@@ -1,0 +1,27 @@
+{
+ "add_total_row": 0,
+ "columns": [],
+ "creation": "2024-03-14 12:57:20.796860",
+ "disabled": 0,
+ "docstatus": 0,
+ "doctype": "Report",
+ "filters": [],
+ "idx": 73,
+ "is_standard": "Yes",
+ "json": "{\"filters\":[],\"fields\":[[\"name\",\"Vehicle Stock\"],[\"docstatus\",\"Vehicle Stock\"],[\"vin_serial_no\",\"Vehicle Stock\"],[\"model\",\"Vehicle Stock\"],[\"current_location\",\"Vehicle Stock\"],[\"status\",\"Vehicle Stock\"],[\"alternative_stock_no\",\"Vehicle Stock\"],[\"amt_paid\",\"Vehicle Stock\"],[\"_assign\",\"Vehicle Stock\"],[\"brand\",\"Vehicle Stock\"],[\"colour\",\"Vehicle Stock\"],[\"condition\",\"Vehicle Stock\"],[\"control_no\",\"Vehicle Stock\"],[\"cost_price_excl\",\"Vehicle Stock\"],[\"owner\",\"Vehicle Stock\"],[\"creation\",\"Vehicle Stock\"],[\"service_period_years\",\"Vehicle Stock\"],[\"service_km_hours_limit\",\"Vehicle Stock\"],[\"service_start_date\",\"Vehicle Stock\"],[\"service_end_date\",\"Vehicle Stock\"],[\"rental_amt_excl\",\"Vehicle Stock\"],[\"register_no\",\"Vehicle Stock\"],[\"next_service_due_date\",\"Vehicle Stock\"],[\"model_year\",\"Vehicle Stock\"],[\"_liked_by\",\"Vehicle Stock\"],[\"modified_by\",\"Vehicle Stock\"],[\"modified\",\"Vehicle Stock\"],[\"customer\",\"Vehicle Stock\"],[\"date_paid\",\"Vehicle Stock\"],[\"dealer\",\"Vehicle Stock\"],[\"dealer_billing_excl\",\"Vehicle Stock\"],[\"description\",\"Vehicle Stock\"],[\"engine_no\",\"Vehicle Stock\"],[\"eta_harbour\",\"Vehicle Stock\"],[\"eta_warehouse\",\"Vehicle Stock\"],[\"ho_date_received\",\"Vehicle Stock\"],[\"ho_invoice_amt\",\"Vehicle Stock\"],[\"ho_invoice_date\",\"Vehicle Stock\"],[\"warranty_period_years\",\"Vehicle Stock\"],[\"warranty_km_hours_limit\",\"Vehicle Stock\"],[\"warranty_end_date\",\"Vehicle Stock\"],[\"vessel_name\",\"Vehicle Stock\"],[\"type\",\"Vehicle Stock\"],[\"_user_tags\",\"Vehicle Stock\"],[\"suggested_retail_excl\",\"Vehicle Stock\"],[\"stock_no\",\"Vehicle Stock\"],[\"warranty_start_date\",\"Vehicle Stock\"],[\"ho_invoice_no\",\"Vehicle Stock\"],[\"idx\",\"Vehicle Stock\"]],\"order_by\":\"`tabVehicle Stock`.`modified` desc\",\"page_length\":20,\"column_widths\":{\"name\":120,\"vin_serial_no\":120,\"model\":120,\"current_location\":120,\"status\":120,\"alternative_stock_no\":120,\"amt_paid\":120,\"_assign\":120,\"brand\":120,\"colour\":120,\"condition\":120,\"control_no\":120,\"cost_price_excl\":120,\"owner\":120,\"creation\":120,\"service_period_years\":120,\"service_km_hours_limit\":120,\"service_start_date\":120,\"service_end_date\":120,\"rental_amt_excl\":120,\"register_no\":120,\"next_service_due_date\":120,\"model_year\":120,\"_liked_by\":120,\"modified_by\":120,\"modified\":120,\"customer\":120,\"date_paid\":120,\"dealer\":120,\"dealer_billing_excl\":120,\"description\":120,\"engine_no\":120,\"eta_harbour\":120,\"eta_warehouse\":120,\"ho_date_received\":120,\"ho_invoice_amt\":120,\"ho_invoice_date\":120,\"warranty_period_years\":120,\"warranty_km_hours_limit\":120,\"warranty_end_date\":120,\"vessel_name\":120,\"type\":120,\"_user_tags\":120,\"suggested_retail_excl\":120,\"stock_no\":120,\"warranty_start_date\":120,\"ho_invoice_no\":120,\"idx\":120},\"group_by\":null}",
+ "letterhead": null,
+ "modified": "2024-07-03 18:10:29.070141",
+ "modified_by": "Administrator",
+ "module": "Edp Online Vehicles",
+ "name": "Vehicles Detailed",
+ "owner": "Administrator",
+ "prepared_report": 0,
+ "ref_doctype": "Vehicle Stock",
+ "report_name": "Vehicles Detailed",
+ "report_type": "Report Builder",
+ "roles": [
+  {
+   "role": "System Manager"
+  }
+ ]
+}

@@ -1,0 +1,144 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-02-28 11:19:02.083895",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "information_section",
+  "part_no",
+  "column_break_zhzb",
+  "description",
+  "section_break_afae",
+  "qty_ordered",
+  "outstanding_qty",
+  "column_break_enhe",
+  "qty_delivered",
+  "despatch_section",
+  "despatch_start_date_time",
+  "despatch_end_date_time",
+  "column_break_zoli",
+  "despatch_time",
+  "despatcher",
+  "section_break_qaen",
+  "dealer"
+ ],
+ "fields": [
+  {
+   "fieldname": "part_no",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Part No",
+   "options": "Item",
+   "read_only": 1,
+   "reqd": 1
+  },
+  {
+   "fetch_from": "part_no.description",
+   "fetch_if_empty": 1,
+   "fieldname": "description",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Description",
+   "read_only": 1
+  },
+  {
+   "fieldname": "qty_ordered",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Qty Ordered",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "qty_delivered",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Qty Delivered"
+  },
+  {
+   "fieldname": "column_break_zhzb",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "despatch_section",
+   "fieldtype": "Section Break",
+   "label": "Despatch"
+  },
+  {
+   "fieldname": "despatch_start_date_time",
+   "fieldtype": "Datetime",
+   "label": "Despatch Start Date/ Time",
+   "read_only": 1
+  },
+  {
+   "fieldname": "despatch_end_date_time",
+   "fieldtype": "Datetime",
+   "label": "Despatch End Date/ Time",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_zoli",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "despatcher",
+   "fieldtype": "Link",
+   "label": "Despatcher",
+   "options": "User",
+   "read_only": 1
+  },
+  {
+   "fieldname": "information_section",
+   "fieldtype": "Section Break",
+   "label": "Information"
+  },
+  {
+   "fieldname": "despatch_time",
+   "fieldtype": "Data",
+   "label": "Despatch (HH:MM:SS)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_afae",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_enhe",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "outstanding_qty",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Outstanding Qty",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_qaen",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "dealer",
+   "fieldtype": "Data",
+   "label": "Dealer",
+   "print_hide": 1,
+   "read_only": 1,
+   "report_hide": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2025-03-12 13:00:29.617885",
+ "modified_by": "Administrator",
+ "module": "Edp Online Vehicles",
+ "name": "Parts Delivery Note Items",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

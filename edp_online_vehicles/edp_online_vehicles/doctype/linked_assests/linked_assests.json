@@ -1,0 +1,60 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2024-10-08 10:43:56.523054",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "item_code",
+  "asset_category",
+  "location",
+  "gross_purchase_amount"
+ ],
+ "fields": [
+  {
+   "fetch_from": "item_code.asset_category",
+   "fetch_if_empty": 1,
+   "fieldname": "asset_category",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Asset Category",
+   "read_only": 1
+  },
+  {
+   "fieldname": "item_code",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Item Code",
+   "options": "Asset"
+  },
+  {
+   "fetch_from": "item_code.location",
+   "fieldname": "location",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Location",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "item_code.gross_purchase_amount",
+   "fieldname": "gross_purchase_amount",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Gross Purchase Amount",
+   "read_only": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2024-10-08 10:49:26.598008",
+ "modified_by": "Administrator",
+ "module": "Edp Online Vehicles",
+ "name": "Linked Assests",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

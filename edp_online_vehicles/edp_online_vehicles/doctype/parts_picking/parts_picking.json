@@ -1,0 +1,171 @@
+{
+ "actions": [],
+ "creation": "2025-04-08 08:41:51.277922",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "scan_part_tab",
+  "section_break_wopz",
+  "ordered_part_details_column",
+  "bin_location",
+  "part_no",
+  "description",
+  "qty_ordered",
+  "picked_part_details_column",
+  "scanned_bin_location",
+  "scanned_part_no",
+  "qty_picked",
+  "part_picked",
+  "scan",
+  "section_break_lhga",
+  "amended_from",
+  "last_part_idx",
+  "parts_picked_tab",
+  "parts_picked",
+  "parts_ordered_tab",
+  "parts_ordered"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_wopz",
+   "fieldtype": "Section Break",
+   "label": "Details"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Parts Picking",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "bin_location",
+   "fieldtype": "Data",
+   "label": "Bin Location"
+  },
+  {
+   "fieldname": "part_no",
+   "fieldtype": "Data",
+   "label": "Part No"
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Data",
+   "label": "Description"
+  },
+  {
+   "fieldname": "qty_ordered",
+   "fieldtype": "Int",
+   "label": "Qty Ordered",
+   "non_negative": 1
+  },
+  {
+   "fieldname": "scanned_bin_location",
+   "fieldtype": "Data",
+   "label": "Bin Location"
+  },
+  {
+   "fieldname": "scanned_part_no",
+   "fieldtype": "Data",
+   "label": "Part No",
+   "link_filters": "[[\"Item\",\"item_group\",\"=\",\"Parts\"]]"
+  },
+  {
+   "fieldname": "qty_picked",
+   "fieldtype": "Int",
+   "label": "Qty Picked",
+   "non_negative": 1
+  },
+  {
+   "fieldname": "part_picked",
+   "fieldtype": "Button",
+   "label": "Part Picked"
+  },
+  {
+   "fieldname": "section_break_lhga",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "scan_part_tab",
+   "fieldtype": "Tab Break",
+   "label": "Pick Part"
+  },
+  {
+   "fieldname": "parts_picked_tab",
+   "fieldtype": "Tab Break",
+   "label": "Parts Picked"
+  },
+  {
+   "fieldname": "parts_picked",
+   "fieldtype": "Table",
+   "label": "Parts Picked",
+   "options": "Parts Picking Table",
+   "read_only": 1
+  },
+  {
+   "fieldname": "parts_ordered_tab",
+   "fieldtype": "Tab Break",
+   "label": "Parts Ordered"
+  },
+  {
+   "fieldname": "parts_ordered",
+   "fieldtype": "Table",
+   "label": "Parts Ordered",
+   "options": "Parts Picking Table",
+   "read_only": 1
+  },
+  {
+   "fieldname": "last_part_idx",
+   "fieldtype": "Int",
+   "hidden": 1,
+   "label": "Last Part Idx",
+   "non_negative": 1,
+   "print_hide": 1,
+   "report_hide": 1
+  },
+  {
+   "fieldname": "scan",
+   "fieldtype": "Button",
+   "label": "Access Camera"
+  },
+  {
+   "fieldname": "ordered_part_details_column",
+   "fieldtype": "Column Break",
+   "label": "Ordered Part Details"
+  },
+  {
+   "fieldname": "picked_part_details_column",
+   "fieldtype": "Column Break",
+   "label": "Picked Part Details"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2025-04-08 13:52:00.041638",
+ "modified_by": "Administrator",
+ "module": "Edp Online Vehicles",
+ "name": "Parts Picking",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

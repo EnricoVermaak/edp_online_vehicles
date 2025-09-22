@@ -1,0 +1,72 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-01-10 07:29:35.845093",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "vin_serial_no",
+  "description",
+  "colour",
+  "warranty_end_date",
+  "service_end_date",
+  "retail_date"
+ ],
+ "fields": [
+  {
+   "fieldname": "vin_serial_no",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "VIN/ Serial No",
+   "read_only": 1
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Description",
+   "read_only": 1
+  },
+  {
+   "fieldname": "colour",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Colour",
+   "read_only": 1
+  },
+  {
+   "fieldname": "warranty_end_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Warranty End Date",
+   "read_only": 1
+  },
+  {
+   "fieldname": "service_end_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Service End Date",
+   "read_only": 1
+  },
+  {
+   "fieldname": "retail_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Retail Date",
+   "read_only": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2025-01-10 07:33:53.134507",
+ "modified_by": "Administrator",
+ "module": "Edp Online Vehicles",
+ "name": "Linked Vehicles",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

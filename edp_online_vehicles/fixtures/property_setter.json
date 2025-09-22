@@ -1,0 +1,18 @@
+[
+ {
+  "default_value": null,
+  "doc_type": "Delivery Trip",
+  "docstatus": 0,
+  "doctype": "Property Setter",
+  "doctype_or_field": "DocField",
+  "field_name": "departure_time",
+  "is_system_generated": 0,
+  "modified": "2024-10-01 13:39:50.409260",
+  "module": null,
+  "name": "Delivery Trip-departure_time-reqd",
+  "property": "reqd",
+  "property_type": "Check",
+  "row_name": null,
+  "value": "0"
+ }
+]

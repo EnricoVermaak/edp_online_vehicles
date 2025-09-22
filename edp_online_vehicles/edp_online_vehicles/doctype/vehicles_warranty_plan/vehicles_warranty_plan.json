@@ -1,0 +1,152 @@
+{
+ "actions": [],
+ "creation": "2024-04-25 10:23:31.804095",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_bx2b",
+  "plan_description",
+  "warranty_type",
+  "status",
+  "column_break_krx3",
+  "warranty_period_years",
+  "warranty_period_months",
+  "start_date",
+  "end_date",
+  "warranty_odo_limit",
+  "warranty_company_section",
+  "warranty_plan_administrator",
+  "column_break_qgj8",
+  "warranty_dealer_billingexcl",
+  "retail_price_excl",
+  "vehicles_tab",
+  "model",
+  "vehicles"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_bx2b",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "plan_description",
+   "fieldtype": "Link",
+   "label": "Plan Description",
+   "options": "Vehicles Warranty Plan Administration"
+  },
+  {
+   "fetch_from": "plan_description.warranty_type",
+   "fieldname": "warranty_type",
+   "fieldtype": "Data",
+   "label": "Warranty Type"
+  },
+  {
+   "fetch_from": "plan_description.status",
+   "fieldname": "status",
+   "fieldtype": "Data",
+   "label": "Status"
+  },
+  {
+   "fieldname": "column_break_krx3",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "plan_description.warranty_period_years",
+   "fieldname": "warranty_period_years",
+   "fieldtype": "Float",
+   "label": "Warranty Period (Years)"
+  },
+  {
+   "fetch_from": "plan_description.warranty_period_months",
+   "fieldname": "warranty_period_months",
+   "fieldtype": "Float",
+   "label": "Warranty Period (Months)"
+  },
+  {
+   "fieldname": "start_date",
+   "fieldtype": "Date",
+   "label": "Start Date"
+  },
+  {
+   "fieldname": "end_date",
+   "fieldtype": "Date",
+   "label": "End Date"
+  },
+  {
+   "fetch_from": "plan_description.warranty_odo_limit",
+   "fieldname": "warranty_odo_limit",
+   "fieldtype": "Float",
+   "label": "Warranty Odo Limit"
+  },
+  {
+   "fieldname": "warranty_company_section",
+   "fieldtype": "Section Break",
+   "label": "Warranty Company"
+  },
+  {
+   "fetch_from": "plan_description.warranty_plan_administrator",
+   "fieldname": "warranty_plan_administrator",
+   "fieldtype": "Data",
+   "label": "Warranty Plan Administrator"
+  },
+  {
+   "fieldname": "column_break_qgj8",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "plan_description.warranty_dealer_billing_excl",
+   "fieldname": "warranty_dealer_billingexcl",
+   "fieldtype": "Data",
+   "label": "Warranty Dealer Billing(Excl)"
+  },
+  {
+   "fetch_from": "plan_description.retail_price_excl",
+   "fieldname": "retail_price_excl",
+   "fieldtype": "Data",
+   "label": "Retail Price (Excl)"
+  },
+  {
+   "fieldname": "vehicles_tab",
+   "fieldtype": "Tab Break",
+   "label": "Vehicles"
+  },
+  {
+   "fieldname": "vehicles",
+   "fieldtype": "Table",
+   "label": "Vehicles",
+   "options": "Warranty and Service plan Vehicles Table",
+   "read_only": 1
+  },
+  {
+   "fieldname": "model",
+   "fieldtype": "Link",
+   "label": "Model",
+   "options": "Model Administration"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2025-04-15 16:46:18.875143",
+ "modified_by": "Administrator",
+ "module": "Edp Online Vehicles",
+ "name": "Vehicles Warranty Plan",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}

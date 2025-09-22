@@ -1,0 +1,123 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-04-15 16:01:41.312519",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "vin_serial_no",
+  "stock_no",
+  "model",
+  "model_series",
+  "engine_no",
+  "colour",
+  "vehicles_type",
+  "column_break_xwnh",
+  "microdot",
+  "microdot_fitted_by",
+  "retail_date",
+  "sales_card_capture_date"
+ ],
+ "fields": [
+  {
+   "fieldname": "vin_serial_no",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "VIN/ Serial No",
+   "options": "Vehicle Stock",
+   "read_only": 1,
+   "reqd": 1
+  },
+  {
+   "fetch_from": "vin_serial_no.stock_no",
+   "fieldname": "stock_no",
+   "fieldtype": "Data",
+   "label": "Stock No",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "vin_serial_no.model",
+   "fieldname": "model",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Model",
+   "options": "Model Administration",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "model.series_description",
+   "fieldname": "model_series",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Model Series",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "vin_serial_no.engine_no",
+   "fieldname": "engine_no",
+   "fieldtype": "Data",
+   "label": "Engine No",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "vin_serial_no.colour",
+   "fieldname": "colour",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Colour",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "vin_serial_no.type",
+   "fieldname": "vehicles_type",
+   "fieldtype": "Data",
+   "label": "Vehicles Type",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_xwnh",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "vin_serial_no.microdot",
+   "fieldname": "microdot",
+   "fieldtype": "Data",
+   "label": "Microdot",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "vin_serial_no.microdot_fitted_by",
+   "fieldname": "microdot_fitted_by",
+   "fieldtype": "Data",
+   "label": "Microdot Fitted By",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "vin_serial_no.ho_invoice_date",
+   "fieldname": "retail_date",
+   "fieldtype": "Datetime",
+   "label": "Retail Date",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "vin_serial_no.date_paid",
+   "fieldname": "sales_card_capture_date",
+   "fieldtype": "Datetime",
+   "label": "Sales Card Capture Date",
+   "read_only": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2025-04-15 16:12:01.503938",
+ "modified_by": "Administrator",
+ "module": "Edp Online Vehicles",
+ "name": "Warranty and Service plan Vehicles Table",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

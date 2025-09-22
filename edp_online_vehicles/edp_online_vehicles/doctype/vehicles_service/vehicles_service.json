@@ -1,0 +1,845 @@
+{
+ "actions": [],
+ "autoname": "format:S-{YY}{MM}-{######}",
+ "creation": "2024-03-13 22:25:14.747000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "vehicles_tab",
+  "section_break_mdlp",
+  "requested_booking_date_time",
+  "service_date",
+  "service_completed",
+  "column_break_mvt2",
+  "dealer",
+  "billing_category",
+  "service_type",
+  "service_status",
+  "vor",
+  "eta_date",
+  "vehicles_information_section",
+  "vin_serial_no",
+  "engine_no",
+  "model",
+  "brand",
+  "licence_no",
+  "licence_expiry_date",
+  "vehicle_registration_number",
+  "column_break_jy4l",
+  "odo_reading_hours",
+  "colour",
+  "model_year",
+  "bought_from_dealer",
+  "column_break_izfh",
+  "warranty_start_date",
+  "warranty_end_date",
+  "warranty_period_years",
+  "section_break_gdbj",
+  "service_reason",
+  "breakdown_link",
+  "vehicles_incidents",
+  "service_booking",
+  "customer_tab",
+  "customer",
+  "customer_name",
+  "price_list",
+  "column_break_ojgd",
+  "phone",
+  "mobile",
+  "customer_address",
+  "job_card_information_section",
+  "job_card_no",
+  "dms_approval_no",
+  "technician",
+  "submitted_to_dms",
+  "column_break_7fue",
+  "service_start_date",
+  "service_end_date",
+  "service_period",
+  "technician_summary_section",
+  "start_date",
+  "column_break_fabh",
+  "end_date",
+  "inspection_tab",
+  "inspection_template",
+  "inspection_items",
+  "parts_tab",
+  "scan_disk",
+  "service_parts_items",
+  "part_schedule_date",
+  "section_break_aeza",
+  "column_break_evat",
+  "edit_parts",
+  "column_break_tcqf",
+  "parts_total_excl",
+  "labour_tab",
+  "service_labour_items",
+  "section_break_ufqr",
+  "column_break_tbni",
+  "edit_labour",
+  "column_break_jliu",
+  "duration_total",
+  "labours_total_excl",
+  "transactions_tab",
+  "transaction_list",
+  "amended_from",
+  "section_break_havn",
+  "column_break_qudi",
+  "column_break_udkg",
+  "extra_cost_total_excl",
+  "history_tab",
+  "service_history",
+  "warranty_history",
+  "breakdown_history",
+  "incident_history",
+  "documents_tab",
+  "sticker",
+  "odo_reading",
+  "column_break_cr3g",
+  "dealer_invoice",
+  "confirmation_tab",
+  "terms_and_conditions",
+  "technician_and_customer_section",
+  "tecnician_signature",
+  "technician_full_names",
+  "additional_repairs_required",
+  "column_break_ddxj",
+  "customer_signature",
+  "customer_full_names",
+  "authorised_section",
+  "authorised_by_signature",
+  "authorised_by",
+  "authorised_by_full_names",
+  "column_break_yqr6",
+  "total_parts_excl",
+  "total_labour_excl",
+  "total_extras_excl",
+  "show_prices_for_vehicles_service",
+  "attach_document_tab",
+  "attach_documents"
+ ],
+ "fields": [
+  {
+   "fieldname": "vehicles_tab",
+   "fieldtype": "Tab Break",
+   "label": "Info"
+  },
+  {
+   "fieldname": "section_break_mdlp",
+   "fieldtype": "Section Break",
+   "label": "Service Information"
+  },
+  {
+   "fieldname": "service_date",
+   "fieldtype": "Date",
+   "label": "Service Date",
+   "mandatory_depends_on": "eval:doc.status == \"Accepted\""
+  },
+  {
+   "fieldname": "service_completed",
+   "fieldtype": "Datetime",
+   "label": "Service Completed Date",
+   "mandatory_depends_on": "eval:doc.status == \"Executed\""
+  },
+  {
+   "fieldname": "column_break_mvt2",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "job_card_no",
+   "fieldtype": "Data",
+   "in_standard_filter": 1,
+   "label": "Job Card No",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "vinserial_no.customer",
+   "fetch_if_empty": 1,
+   "fieldname": "customer",
+   "fieldtype": "Link",
+   "in_standard_filter": 1,
+   "label": "Customer",
+   "options": "Dealer Customer",
+   "reqd": 1,
+   "search_index": 1
+  },
+  {
+   "fetch_from": "vin_serial_no.original_purchasing_dealer",
+   "fieldname": "bought_from_dealer",
+   "fieldtype": "Data",
+   "label": "Bought From Dealer"
+  },
+  {
+   "fieldname": "service_type",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Service Type",
+   "options": "Service Schedules",
+   "reqd": 1
+  },
+  {
+   "fieldname": "vehicles_information_section",
+   "fieldtype": "Section Break",
+   "label": "Vehicle Information"
+  },
+  {
+   "fetch_from": "vin_serial_no.model",
+   "fieldname": "model",
+   "fieldtype": "Link",
+   "label": "Model",
+   "options": "Model Administration",
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fetch_from": "vin_serial_no.engine_no",
+   "fetch_if_empty": 1,
+   "fieldname": "engine_no",
+   "fieldtype": "Data",
+   "label": "Engine No"
+  },
+  {
+   "fetch_from": "vin_serial_no.brand",
+   "fieldname": "brand",
+   "fieldtype": "Data",
+   "label": "Brand"
+  },
+  {
+   "fieldname": "column_break_jy4l",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "vin_serial_no.colour",
+   "fieldname": "colour",
+   "fieldtype": "Data",
+   "label": "Colour"
+  },
+  {
+   "fetch_from": "vin_serial_no.model_year",
+   "fieldname": "model_year",
+   "fieldtype": "Data",
+   "label": "Model Year"
+  },
+  {
+   "fieldname": "licence_no",
+   "fieldtype": "Data",
+   "label": "Licence No"
+  },
+  {
+   "fieldname": "licence_expiry_date",
+   "fieldtype": "Date",
+   "label": "Licence Expiry Date"
+  },
+  {
+   "fieldname": "column_break_izfh",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "vin_serial_no.warranty_end_date",
+   "fieldname": "warranty_end_date",
+   "fieldtype": "Date",
+   "label": "Warranty End Date"
+  },
+  {
+   "fetch_from": "vin_serial_no.warranty_start_date",
+   "fieldname": "warranty_start_date",
+   "fieldtype": "Date",
+   "label": "Warranty Start Date"
+  },
+  {
+   "fetch_from": "vin_serial_no.warranty_period_years",
+   "fieldname": "warranty_period_years",
+   "fieldtype": "Int",
+   "label": "Warranty Period (Years)"
+  },
+  {
+   "fieldname": "job_card_information_section",
+   "fieldtype": "Tab Break",
+   "label": "Job Card Information"
+  },
+  {
+   "default": "0",
+   "fieldname": "odo_reading_hours",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Odo Reading/ Hours",
+   "mandatory_depends_on": "eval:doc.status == \"Executed\";",
+   "non_negative": 1,
+   "reqd": 1
+  },
+  {
+   "fetch_from": "model.service_period",
+   "fieldname": "service_period",
+   "fieldtype": "Int",
+   "label": "Service Plan Period"
+  },
+  {
+   "fetch_from": "vinserial_no.service_start_date",
+   "fieldname": "service_start_date",
+   "fieldtype": "Date",
+   "label": "Service Plan Start Date"
+  },
+  {
+   "fetch_from": "vinserial_no.service_end_date",
+   "fieldname": "service_end_date",
+   "fieldtype": "Date",
+   "label": "Service Plan End Date"
+  },
+  {
+   "fieldname": "column_break_7fue",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "dms_approval_no",
+   "fieldtype": "Data",
+   "label": "DMS Approval No"
+  },
+  {
+   "fieldname": "parts_tab",
+   "fieldtype": "Tab Break",
+   "label": "Parts"
+  },
+  {
+   "fieldname": "service_parts_items",
+   "fieldtype": "Table",
+   "label": "Service Parts Items",
+   "options": "Service Parts Items",
+   "read_only_depends_on": "eval: doc.edit_parts == 0"
+  },
+  {
+   "fieldname": "labour_tab",
+   "fieldtype": "Tab Break",
+   "label": "Labour"
+  },
+  {
+   "fieldname": "service_labour_items",
+   "fieldtype": "Table",
+   "label": "Service Labour Items",
+   "options": "Service Labour Items",
+   "read_only_depends_on": "eval: doc.edit_labour == 0"
+  },
+  {
+   "fieldname": "documents_tab",
+   "fieldtype": "Tab Break",
+   "label": "Documents"
+  },
+  {
+   "fieldname": "sticker",
+   "fieldtype": "Attach Image",
+   "label": "Sticker"
+  },
+  {
+   "fieldname": "odo_reading",
+   "fieldtype": "Attach Image",
+   "label": "Odo Reading"
+  },
+  {
+   "fieldname": "column_break_cr3g",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "dealer_invoice",
+   "fieldtype": "Attach",
+   "label": "Dealer Invoice"
+  },
+  {
+   "fieldname": "confirmation_tab",
+   "fieldtype": "Tab Break",
+   "label": "Confirmation"
+  },
+  {
+   "fieldname": "terms_and_conditions",
+   "fieldtype": "Text Editor",
+   "label": "Terms and Conditions"
+  },
+  {
+   "fieldname": "technician_and_customer_section",
+   "fieldtype": "Section Break",
+   "label": "Technician and Customer"
+  },
+  {
+   "fieldname": "tecnician_signature",
+   "fieldtype": "Signature",
+   "label": "Tecnician Signature"
+  },
+  {
+   "fetch_from": "technician.full_name",
+   "fieldname": "technician_full_names",
+   "fieldtype": "Data",
+   "label": "Technician Full Names"
+  },
+  {
+   "fieldname": "column_break_ddxj",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "customer_signature",
+   "fieldtype": "Signature",
+   "label": "Customer Signature"
+  },
+  {
+   "fieldname": "customer_full_names",
+   "fieldtype": "Data",
+   "label": "Customer Full Names"
+  },
+  {
+   "fieldname": "authorised_section",
+   "fieldtype": "Section Break",
+   "label": "Authorised"
+  },
+  {
+   "fieldname": "authorised_by_signature",
+   "fieldtype": "Signature",
+   "label": "Authorised By Signature"
+  },
+  {
+   "fetch_from": "authorised_by.full_name",
+   "fieldname": "authorised_by_full_names",
+   "fieldtype": "Data",
+   "label": "Authorised By Full Names"
+  },
+  {
+   "fieldname": "transactions_tab",
+   "fieldtype": "Tab Break",
+   "label": "Extras"
+  },
+  {
+   "fieldname": "transaction_list",
+   "fieldtype": "Table",
+   "label": "Extra List",
+   "options": "Extra Items"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "hidden": 1,
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Vehicles Service",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fetch_from": "customer.default_price_list",
+   "fetch_if_empty": 1,
+   "fieldname": "price_list",
+   "fieldtype": "Link",
+   "label": "Price List",
+   "options": "Price List"
+  },
+  {
+   "fieldname": "section_break_aeza",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_evat",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_tcqf",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "parts_total_excl",
+   "fieldtype": "Currency",
+   "label": "Parts Total (Excl)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_ufqr",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_tbni",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_jliu",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "labours_total_excl",
+   "fieldtype": "Currency",
+   "label": "Labours Total (Excl)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "inspection_tab",
+   "fieldtype": "Tab Break",
+   "label": "Inspection"
+  },
+  {
+   "fieldname": "inspection_template",
+   "fieldtype": "Link",
+   "label": "Inspection Template",
+   "mandatory_depends_on": "eval:doc.status == \"Executed\";",
+   "options": "Vehicles Inspection Template"
+  },
+  {
+   "fieldname": "inspection_items",
+   "fieldtype": "Table",
+   "label": "Inspection Items",
+   "options": "Vehicles Service Inspection Items"
+  },
+  {
+   "default": "0",
+   "fieldname": "additional_repairs_required",
+   "fieldtype": "Check",
+   "label": "Additional Repairs Required"
+  },
+  {
+   "fetch_from": "customer.customer_name",
+   "fieldname": "customer_name",
+   "fieldtype": "Data",
+   "label": "Customer Name",
+   "read_only": 1
+  },
+  {
+   "fieldname": "duration_total",
+   "fieldtype": "Int",
+   "label": "Duration Total"
+  },
+  {
+   "fieldname": "technician",
+   "fieldtype": "Link",
+   "label": "Technician",
+   "options": "User"
+  },
+  {
+   "fieldname": "authorised_by",
+   "fieldtype": "Link",
+   "label": "Authorised By",
+   "options": "User"
+  },
+  {
+   "fieldname": "section_break_havn",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_qudi",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_udkg",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "extra_cost_total_excl",
+   "fieldtype": "Currency",
+   "label": "Extra Cost Total (Excl)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_gdbj",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "service_reason",
+   "fieldtype": "Small Text",
+   "label": "Service Reason"
+  },
+  {
+   "fieldname": "column_break_yqr6",
+   "fieldtype": "Column Break",
+   "label": "Summary"
+  },
+  {
+   "fieldname": "total_parts_excl",
+   "fieldtype": "Data",
+   "label": "Total Parts (Excl)"
+  },
+  {
+   "fieldname": "total_labour_excl",
+   "fieldtype": "Data",
+   "label": "Total Labour (Excl)"
+  },
+  {
+   "fieldname": "total_extras_excl",
+   "fieldtype": "Data",
+   "label": "Total Extras (Excl)"
+  },
+  {
+   "fieldname": "part_schedule_date",
+   "fieldtype": "Date",
+   "label": "Schedule Part Delivery Date"
+  },
+  {
+   "fieldname": "dealer",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Dealer",
+   "options": "Company",
+   "reqd": 1
+  },
+  {
+   "fieldname": "service_status",
+   "fieldtype": "Link",
+   "in_standard_filter": 1,
+   "label": "Status",
+   "options": "Service Status",
+   "reqd": 1
+  },
+  {
+   "fieldname": "attach_document_tab",
+   "fieldtype": "Tab Break",
+   "label": "Attach Document"
+  },
+  {
+   "fieldname": "attach_documents",
+   "fieldtype": "Table",
+   "label": "Attach Documents",
+   "options": "Attached Documents"
+  },
+  {
+   "fieldname": "breakdown_link",
+   "fieldtype": "Link",
+   "hidden": 1,
+   "label": "Vehicles Breakdown",
+   "options": "Vehicles Breakdown",
+   "print_hide": 1,
+   "report_hide": 1,
+   "search_index": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "show_prices_for_vehicles_service",
+   "fieldtype": "Check",
+   "hidden": 1,
+   "label": " Show prices for Vehicles Service"
+  },
+  {
+   "fieldname": "scan_disk",
+   "fieldtype": "Data",
+   "label": "Scan Disk",
+   "options": "Barcode"
+  },
+  {
+   "default": "1",
+   "fieldname": "edit_parts",
+   "fieldtype": "Check",
+   "hidden": 1,
+   "label": "Edit Parts"
+  },
+  {
+   "default": "0",
+   "fieldname": "edit_labour",
+   "fieldtype": "Check",
+   "hidden": 1,
+   "label": "Edit Labour"
+  },
+  {
+   "fieldname": "vehicle_registration_number",
+   "fieldtype": "Data",
+   "label": "Vehicle Registration Number"
+  },
+  {
+   "fieldname": "technician_summary_section",
+   "fieldtype": "Section Break",
+   "label": "Technician Summary"
+  },
+  {
+   "fieldname": "start_date",
+   "fieldtype": "Datetime",
+   "label": "Start Date",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_fabh",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "end_date",
+   "fieldtype": "Datetime",
+   "label": "End Date",
+   "read_only": 1
+  },
+  {
+   "fieldname": "vin_serial_no",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "VIN/Serial No",
+   "options": "Vehicle Stock",
+   "reqd": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "customer_tab",
+   "fieldtype": "Tab Break",
+   "label": "Customer"
+  },
+  {
+   "fieldname": "requested_booking_date_time",
+   "fieldtype": "Datetime",
+   "label": "Requested Booking Date/ Time"
+  },
+  {
+   "fieldname": "column_break_ojgd",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "customer.phone",
+   "fieldname": "phone",
+   "fieldtype": "Data",
+   "label": "Phone"
+  },
+  {
+   "fetch_from": "customer.mobile",
+   "fieldname": "mobile",
+   "fieldtype": "Phone",
+   "label": "Mobile"
+  },
+  {
+   "fetch_from": "customer.address",
+   "fieldname": "customer_address",
+   "fieldtype": "Small Text",
+   "label": "Customer Address"
+  },
+  {
+   "fieldname": "history_tab",
+   "fieldtype": "Tab Break",
+   "label": "History"
+  },
+  {
+   "fieldname": "service_history",
+   "fieldtype": "Table",
+   "label": "Service History",
+   "options": "Service History",
+   "read_only": 1
+  },
+  {
+   "fieldname": "warranty_history",
+   "fieldtype": "Table",
+   "label": "Warranty History",
+   "options": "Warranty History",
+   "read_only": 1
+  },
+  {
+   "fieldname": "breakdown_history",
+   "fieldtype": "Table",
+   "label": "Breakdown History",
+   "options": "Breakdown History",
+   "read_only": 1
+  },
+  {
+   "fieldname": "incident_history",
+   "fieldtype": "Table",
+   "label": "Incident History",
+   "options": "Incident History",
+   "read_only": 1
+  },
+  {
+   "fieldname": "vehicles_incidents",
+   "fieldtype": "Link",
+   "hidden": 1,
+   "label": "Vehicles Incidents",
+   "options": "Vehicles Incidents",
+   "print_hide": 1,
+   "report_hide": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "service_booking",
+   "fieldtype": "Link",
+   "hidden": 1,
+   "label": "Service Booking",
+   "options": "Vehicle Service Booking",
+   "print_hide": 1,
+   "report_hide": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "billing_category",
+   "fieldtype": "Link",
+   "label": "Billing Category",
+   "options": "Service Billing Category"
+  },
+  {
+   "default": "0",
+   "fieldname": "vor",
+   "fieldtype": "Check",
+   "label": "VOR"
+  },
+  {
+   "depends_on": "eval: doc.vor == 1",
+   "fieldname": "eta_date",
+   "fieldtype": "Date",
+   "label": "ETA Date"
+  },
+  {
+   "fieldname": "submitted_to_dms",
+   "fieldtype": "Datetime",
+   "label": "Submitted To DMS"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "is_calendar_and_gantt": 1,
+ "is_submittable": 1,
+ "links": [
+  {
+   "link_doctype": "Material Request",
+   "link_fieldname": "custom_linked_service_id"
+  },
+  {
+   "link_doctype": "Sales Order",
+   "link_fieldname": "custom_linked_service_id"
+  },
+  {
+   "link_doctype": "Internal Docs and Notes",
+   "link_fieldname": "services"
+  }
+ ],
+ "modified": "2025-05-23 10:32:11.655725",
+ "modified_by": "Administrator",
+ "module": "Edp Online Vehicles",
+ "name": "Vehicles Service",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Aftersales Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Customer",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "show_title_field_in_link": 1,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "vin_serial_no",
+ "track_changes": 1
+}

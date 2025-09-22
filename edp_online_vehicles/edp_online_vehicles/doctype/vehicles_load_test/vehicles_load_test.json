@@ -1,0 +1,326 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "format:LT-{YY}{MM}-{#####}",
+ "creation": "2024-03-14 03:01:49.934316",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_dvha",
+  "vin_serial_no",
+  "customer",
+  "customer_name",
+  "current_location",
+  "dealer",
+  "column_break_duqg",
+  "hour_meter",
+  "tested_on",
+  "tested_by",
+  "lt_status",
+  "job_card_no",
+  "column_break_6vjz",
+  "load_tested_at",
+  "next_load_test",
+  "requested_booking_date",
+  "booking_date",
+  "vehicles_information_section",
+  "model_description",
+  "model_year",
+  "brand",
+  "model",
+  "column_break_3szg",
+  "forks_serial_no",
+  "mast_model_mm",
+  "standard_capacity",
+  "rated_capacity_kg",
+  "column_break_l0tz",
+  "next_inspection_date",
+  "required_load_test_pass_rate",
+  "load_test_at",
+  "test_info_tab",
+  "load_test_template",
+  "load_test_items",
+  "confirmation_tab",
+  "tested_by_signature",
+  "tested_by_full_name",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_dvha",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "vin_serial_no",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "VIN/ Serial No",
+   "options": "Vehicle Stock",
+   "reqd": 1,
+   "search_index": 1
+  },
+  {
+   "fetch_from": "vin_serial_no.brand",
+   "fieldname": "brand",
+   "fieldtype": "Data",
+   "label": "Brand"
+  },
+  {
+   "fetch_from": "vin_serial_no.model",
+   "fieldname": "model",
+   "fieldtype": "Link",
+   "label": "Model",
+   "options": "Model Administration"
+  },
+  {
+   "fetch_from": "vin_serial_no.description",
+   "fieldname": "model_description",
+   "fieldtype": "Data",
+   "label": "Model Description"
+  },
+  {
+   "fetch_from": "vin_serial_no.model_year",
+   "fieldname": "model_year",
+   "fieldtype": "Data",
+   "label": "Model Year"
+  },
+  {
+   "fieldname": "column_break_duqg",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "forks_serial_no",
+   "fieldtype": "Data",
+   "label": "Forks Description"
+  },
+  {
+   "fieldname": "mast_model_mm",
+   "fieldtype": "Data",
+   "label": "Mast Model (MM)"
+  },
+  {
+   "fieldname": "standard_capacity",
+   "fieldtype": "Data",
+   "label": "Standard Capacity"
+  },
+  {
+   "fieldname": "rated_capacity_kg",
+   "fieldtype": "Float",
+   "label": "Rated Capacity (KG)"
+  },
+  {
+   "default": "0",
+   "fieldname": "load_test_at",
+   "fieldtype": "Percent",
+   "label": "Testing Pass Rate"
+  },
+  {
+   "fieldname": "hour_meter",
+   "fieldtype": "Int",
+   "label": "Odo Reading / Hours",
+   "mandatory_depends_on": "eval:in_list([\"Pass\",\"Failed: Job Card Required\", \"Failed: Retest Required\", \"Job Card Sent\"],doc.lt_status);"
+  },
+  {
+   "fieldname": "column_break_l0tz",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "tested_on",
+   "fieldtype": "Date",
+   "label": "Tested On",
+   "mandatory_depends_on": "eval:in_list([\"Pass\",\"Fail\"],doc.lt_status);"
+  },
+  {
+   "fieldname": "tested_by",
+   "fieldtype": "Link",
+   "label": "Tested By",
+   "mandatory_depends_on": "eval: in_list([\"Pass\", \"Failed: Job Card Required\", \"Failed: Retest Required\"],doc.lt_status)",
+   "options": "Supplier"
+  },
+  {
+   "fieldname": "next_load_test",
+   "fieldtype": "Date",
+   "label": "Next Load Test Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "next_inspection_date",
+   "fieldtype": "Date",
+   "label": "Next Inspection Date"
+  },
+  {
+   "fieldname": "test_info_tab",
+   "fieldtype": "Tab Break",
+   "label": "Test Info"
+  },
+  {
+   "fieldname": "confirmation_tab",
+   "fieldtype": "Tab Break",
+   "label": "Confirmation"
+  },
+  {
+   "fieldname": "tested_by_signature",
+   "fieldtype": "Signature",
+   "label": "Tested By Signature"
+  },
+  {
+   "fieldname": "tested_by_full_name",
+   "fieldtype": "Data",
+   "label": "Tested By Full Name"
+  },
+  {
+   "default": "0",
+   "fetch_from": "model.pass_requirement",
+   "fieldname": "required_load_test_pass_rate",
+   "fieldtype": "Percent",
+   "label": "Required Load Test Pass Rate"
+  },
+  {
+   "fieldname": "load_test_items",
+   "fieldtype": "Table",
+   "label": "Load Test Items",
+   "options": "Vehicles Load Test Items"
+  },
+  {
+   "fieldname": "load_test_template",
+   "fieldtype": "Link",
+   "label": "Load Test Template",
+   "options": "Vehicles Inspection Template"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "hidden": 1,
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Vehicles Load Test",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "default": "100",
+   "fieldname": "load_tested_at",
+   "fieldtype": "Percent",
+   "label": "Load Tested At(%)",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "vin_serial_no.customer",
+   "fetch_if_empty": 1,
+   "fieldname": "customer",
+   "fieldtype": "Link",
+   "in_standard_filter": 1,
+   "label": "Customer",
+   "options": "Customer",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "customer.customer_name",
+   "fieldname": "customer_name",
+   "fieldtype": "Data",
+   "label": "Customer Name"
+  },
+  {
+   "fetch_from": "vin_serial_no.current_location",
+   "fetch_if_empty": 1,
+   "fieldname": "current_location",
+   "fieldtype": "Data",
+   "label": "Current Location",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_6vjz",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_3szg",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "lt_status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "LT Status",
+   "options": "Pending\nRequest Booking\nBooked\nPass\nFailed: Job Card Required\nFailed: Retest Required\nReview Required\nReviewed\nJob In Progress\nJob Card Sent",
+   "reqd": 1
+  },
+  {
+   "fieldname": "booking_date",
+   "fieldtype": "Datetime",
+   "label": "Booking Date",
+   "mandatory_depends_on": "eval:doc.lt_status == \"Booked\""
+  },
+  {
+   "fieldname": "requested_booking_date",
+   "fieldtype": "Datetime",
+   "label": "Requested Booking Date",
+   "mandatory_depends_on": "eval:doc.lt_status == \"Request Booking\""
+  },
+  {
+   "fieldname": "job_card_no",
+   "fieldtype": "Data",
+   "in_standard_filter": 1,
+   "label": "Job Card No"
+  },
+  {
+   "fieldname": "dealer",
+   "fieldtype": "Link",
+   "label": "Dealer",
+   "options": "Company",
+   "reqd": 1
+  },
+  {
+   "fieldname": "vehicles_information_section",
+   "fieldtype": "Section Break",
+   "label": "Vehicles Information"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [
+  {
+   "link_doctype": "Internal Docs and Notes",
+   "link_fieldname": "load_test"
+  }
+ ],
+ "modified": "2025-02-04 08:32:54.220582",
+ "modified_by": "Administrator",
+ "module": "Edp Online Vehicles",
+ "name": "Vehicles Load Test",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Aftersales Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "show_title_field_in_link": 1,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "vin_serial_no",
+ "track_changes": 1
+}

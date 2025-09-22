@@ -1,0 +1,527 @@
+<style>
+    th.rotate {
+        height: 120px;
+        white-space: nowrap;
+    }
+
+    th.rotate > div {
+        transform:
+            /* Magic Numbers */
+            translate(25px, 0px)
+            /* 45 is really 360 - 45 */
+            rotate(315deg);
+        width: 30px;
+    }
+
+    th.rotate > div > span {
+        border-bottom: 1px solid darkgray;
+        padding: 5px 10px;
+    }
+
+    tbody td {
+        border-left: 1px solid darkgray;
+        border-right: 1px solid darkgray;
+    }
+
+    .button-wrapper {
+        position: relative;
+    }
+
+    .btn-order {
+        position: absolute;
+        right: -5.5em;
+        background-color: #056fa6;
+        color: white;
+    }
+
+    tr.category {
+        background-color: rgba(211, 211, 211, 0.829);
+    }
+</style>
+
+{% if hide_dealer_stock == 1 %}
+  <style>
+    .hide-column {
+      display: none;
+    }
+  </style>
+{% endif %}
+
+{% if hide_unconfirmed_shipments == 1 %}
+  <style>
+    .hide-ship-column {
+      display: none;
+    }
+  </style>
+{% endif %}
+
+<div>
+    <table class="table">
+        <thead>
+            <tr>
+                {% for header in headers %}
+                    {% if header == "Range" %}
+                        <th><div><span>{{ __(header) }}</span></div></th>
+                    {% else %}
+                        {% if header == "Model Code" %}
+                            <th><div><span>{{ __(header) }}</span></div></th>
+                        {% else %}
+                            {% if header == "Description" %}
+                                <th><div><span>{{ __(header) }}</span></div></th>
+                            {% else %}
+                                {% if header == "Dealers" %}
+                                    <th class="hide-column rotate"><div><span>{{ __(header) }}</span></div></th>
+                                {% else %}
+                                    <th class="rotate"><div><span>{{ __(header) }}</span></div></th>
+                                {% endif %}
+                            {% endif %}
+                        {% endif %}
+                    {% endif %}
+                {% endfor %}
+                <th class="rotate"><div><span>Total</span></div></th>
+                <th class="hide-ship-column rotate"><div><span>Unconfirmed</span></div></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for d in data %}
+                <tr class="category">
+                    <td>
+                        <a data-type="model_range" data-name="{{ d.model_range }}">{{ d.model_range }}</a>
+                    </td>
+                    <td>
+
+                    </td>
+                    <td>
+
+                    </td>
+
+                    {% if d.hq_company_total == 0 %}
+                        <td>
+                            <a data-type="hq_company_total" data-name="{{ d.hq_company_total }}"></a>
+                        </td>
+                    {% else %}
+                        <td>
+                            <a data-type="hq_company_total" data-name="{{ d.hq_company_total }}">{{ d.hq_company_total }}</a>
+                        </td>
+                    {% endif %}
+
+                    {% if d.dealers_total == 0 %}
+                        <td class="hide-column">
+                            <a data-type="dealers_total" data-name="{{ d.dealers_total }}"></a>
+                        </td>
+                    {% else %}
+                        <td class="hide-column">
+                            <a data-type="dealers_total" data-name="{{ d.dealers_total }}">{{ d.dealers_total }}</a>
+                        </td>
+                    {% endif %}
+
+                    {% if d.pipeline_total == 0 %}
+                        <td>
+                            <a data-type="pipeline_total" data-name="{{ d.pipeline_total }}"></a>
+                        </td>
+                    {% else %}
+                        <td>
+                            <a data-type="pipeline_total" data-name="{{ d.pipeline_total }}">{{ d.pipeline_total }}</a>
+                        </td>
+                    {% endif %}
+
+                    {% if d.date_1_total == 0 %}
+                        <td>
+                            <a data-type="date_1_total" data-name="{{ d.date_1_total }}"></a>
+                        </td>
+                    {% else %}
+                        <td>
+                            <a data-type="date_1_total" data-name="{{ d.date_1_total }}">{{ d.date_1_total }}</a>
+                        </td>
+                    {% endif %}
+
+                    {% if d.date_2_total == 0 %}
+                        <td>
+                            <a data-type="date_2_total" data-name="{{ d.date_2_total }}"></a>
+                        </td>
+                    {% else %}
+                        <td>
+                            <a data-type="date_2_total" data-name="{{ d.date_2_total }}">{{ d.date_2_total }}</a>
+                        </td>
+                    {% endif %}
+
+                    {% if d.date_3_total == 0 %}
+                        <td>
+                            <a data-type="date_3_total" data-name="{{ d.date_3_total }}"></a>
+                        </td>
+                    {% else %}
+                        <td>
+                            <a data-type="date_3_total" data-name="{{ d.date_3_total }}">{{ d.date_3_total }}</a>
+                        </td>
+                    {% endif %}
+
+                    {% if d.date_4_total == 0 %}
+                        <td>
+                            <a data-type="date_4_total" data-name="{{ d.date_4_total }}"></a>
+                        </td>
+                    {% else %}
+                        <td>
+                            <a data-type="date_4_total" data-name="{{ d.date_4_total }}">{{ d.date_4_total }}</a>
+                        </td>
+                    {% endif %}
+
+                    {% if d.date_5_total == 0 %}
+                        <td>
+                            <a data-type="date_5_total" data-name="{{ d.date_5_total }}"></a>
+                        </td>
+                    {% else %}
+                        <td>
+                            <a data-type="date_5_total" data-name="{{ d.date_5_total }}">{{ d.date_5_total }}</a>
+                        </td>
+                    {% endif %}
+
+                    {% if d.date_6_total == 0 %}
+                        <td>
+                            <a data-type="date_6_total" data-name="{{ d.date_6_total }}"></a>
+                        </td>
+                    {% else %}
+                        <td>
+                            <a data-type="date_6_total" data-name="{{ d.date_6_total }}">{{ d.date_6_total }}</a>
+                        </td>
+                    {% endif %}
+
+                    {% if d.date_7_total == 0 %}
+                        <td>
+                            <a data-type="date_7_total" data-name="{{ d.date_7_total }}"></a>
+                        </td>
+                    {% else %}
+                        <td>
+                            <a data-type="date_7_total" data-name="{{ d.date_7_total }}">{{ d.date_7_total }}</a>
+                        </td>
+                    {% endif %}
+
+                    {% if d.date_8_total == 0 %}
+                        <td>
+                            <a data-type="date_8_total" data-name="{{ d.date_8_total }}"></a>
+                        </td>
+                    {% else %}
+                        <td>
+                            <a data-type="date_8_total" data-name="{{ d.date_8_total }}">{{ d.date_8_total }}</a>
+                        </td>
+                    {% endif %}
+
+                    {% if d.date_9_total == 0 %}
+                        <td>
+                            <a data-type="date_9_total" data-name="{{ d.date_9_total }}"></a>
+                        </td>
+                    {% else %}
+                        <td>
+                            <a data-type="date_9_total" data-name="{{ d.date_9_total }}">{{ d.date_9_total }}</a>
+                        </td>
+                    {% endif %}
+
+                    {% if d.date_10_total == 0 %}
+                        <td>
+                            <a data-type="date_10_total" data-name="{{ d.date_10_total }}"></a>
+                        </td>
+                    {% else %}
+                        <td>
+                            <a data-type="date_10_total" data-name="{{ d.date_10_total }}">{{ d.date_10_total }}</a>
+                        </td>
+                    {% endif %}
+
+                    {% if d.date_11_total == 0 %}
+                        <td>
+                            <a data-type="date_11_total" data-name="{{ d.date_11_total }}"></a>
+                        </td>
+                    {% else %}
+                        <td>
+                            <a data-type="date_11_total" data-name="{{ d.date_11_total }}">{{ d.date_11_total }}</a>
+                        </td>
+                    {% endif %}
+
+                    {% if d.date_12_total == 0 %}
+                        <td>
+                            <a data-type="date_12_total" data-name="{{ d.date_12_total }}"></a>
+                        </td>
+                    {% else %}
+                        <td>
+                            <a data-type="date_12_total" data-name="{{ d.date_12_total }}">{{ d.date_12_total }}</a>
+                        </td>
+                    {% endif %}
+
+                    {% if d.models_total == 0 %}
+                        <td>
+                            <a data-type="models_total" data-name="{{ d.models_total }}"></a>
+                        </td>
+                    {% else %}
+                        <td>
+                            <a data-type="models_total" data-name="{{ d.models_total }}">{{ d.models_total }}</a>
+                        </td>
+                    {% endif %}
+
+                    {% if d.unconfirmed_shipments_total == 0 %}
+                        <td class="hide-ship-column">
+                            <a data-type="unconfirmed_shipments_total" data-name="{{ d.unconfirmed_shipments_total }}"></a>
+                        </td>
+                    {% else %}
+                        <td class="hide-ship-column">
+                            <a data-type="unconfirmed_shipments_total" data-name="{{ d.unconfirmed_shipments_total }}">{{ d.unconfirmed_shipments_total }}</a>
+                        </td>
+                    {% endif %}
+                </tr>
+
+                {% for model in d.models %}
+
+                    <tr>
+                        <td>
+
+                        </td>
+                        <td>
+                            <a data-type="model_code" data-name="{{ model.model_code }}">
+                                {{ model.model_code }}
+                            </a>
+                        </td>
+                        <td>
+                            <a data-type="model" data-name="{{ model.model }}">{{ model.model }}</a>
+                        </td>
+
+                        {% if model.hq_company == 0 %}
+                            <td>
+                                <a class="hq_click" data-model_code="{{ model.model_code }}" data-name="{{ model.hq_company }}"></a>
+                            </td>
+                        {% else %}
+                            <td>
+                                <a class="hq_click" data-model_code="{{ model.model_code }}" data-name="{{ model.hq_company }}">{{ model.hq_company }}</a>
+                            </td>
+                        {% endif %}
+
+
+                        {% if model.dealers == 0 %}
+                            <td class="hide-column">
+                                <a class="dealer_click" data-model_code="{{ model.model_code }}" data-name="{{ model.dealers }}"></a>
+                            </td>
+                        {% else %}
+                            <td class="hide-column">
+                                <a class="dealer_click" data-model_code="{{ model.model_code }}" data-name="{{ model.dealers }}">{{ model.dealers }}</a>
+                            </td>
+                        {% endif %}
+
+
+                        {% if model.pipeline == 0 %}
+                            <td>
+                                <a class="pipeline_click" data-model_code="{{ model.model_code }}" data-name="{{ model.pipeline }}"></a>
+                            </td>
+                        {% else %}
+                            <td>
+                                <a class="pipeline_click" data-model_code="{{ model.model_code }}" data-name="{{ model.pipeline }}">{{ model.pipeline }}</a>
+                            </td>
+                        {% endif %}
+
+
+                        {% if model.date_1 == 0 %}
+                            <td>
+                                <a class="date_1_click" data-model_code="{{ model.model_code }}" data-name="{{ model.date_1 }}"></a>
+                            </td>
+                        {% else %}
+                            <td>
+                                <a class="date_1_click" data-model_code="{{ model.model_code }}" data-name="{{ model.date_1 }}">{{ model.date_1 }}</a>
+                            </td>
+                        {% endif %}
+
+
+                        {% if model.date_2 == 0 %}
+                            <td>
+                                <a class="date_2_click" data-model_code="{{ model.model_code }}" data-name="{{ model.date_2 }}"></a>
+                            </td>
+                        {% else %}
+                            <td>
+                                <a class="date_2_click" data-model_code="{{ model.model_code }}" data-name="{{ model.date_2 }}">{{ model.date_2 }}</a>
+                            </td>
+                        {% endif %}
+
+
+                        {% if model.date_3 == 0 %}
+                            <td>
+                                <a class="date_3_click" data-model_code="{{ model.model_code }}" data-name="{{ model.date_3 }}"></a>
+                            </td>
+                        {% else %}
+                            <td>
+                                <a class="date_3_click" data-model_code="{{ model.model_code }}" data-name="{{ model.date_3 }}">{{ model.date_3 }}</a>
+                            </td>
+                        {% endif %}
+
+
+                        {% if model.date_4 == 0 %}
+                            <td>
+                                <a class="date_4_click" data-model_code="{{ model.model_code }}" data-name="{{ model.date_4 }}"></a>
+                            </td>
+                        {% else %}
+                            <td>
+                                <a class="date_4_click" data-model_code="{{ model.model_code }}" data-name="{{ model.date_4 }}">{{ model.date_4 }}</a>
+                            </td>
+                        {% endif %}
+
+
+                        {% if model.date_5 == 0 %}
+                            <td>
+                                <a class="date_5_click" data-model_code="{{ model.model_code }}" data-name="{{ model.date_5 }}"></a>
+                            </td>
+                        {% else %}
+                            <td>
+                                <a class="date_5_click" data-model_code="{{ model.model_code }}" data-name="{{ model.date_5 }}">{{ model.date_5 }}</a>
+                            </td>
+                        {% endif %}
+
+
+                        {% if model.date_6 == 0 %}
+                            <td>
+                                <a class="date_6_click" data-model_code="{{ model.model_code }}" data-name="{{ model.date_6 }}"></a>
+                            </td>
+                        {% else %}
+                            <td>
+                                <a class="date_6_click" data-model_code="{{ model.model_code }}" data-name="{{ model.date_6 }}">{{ model.date_6 }}</a>
+                            </td>
+                        {% endif %}
+
+
+                        {% if model.date_7 == 0 %}
+                            <td>
+                                <a class="date_7_click" data-model_code="{{ model.model_code }}" data-name="{{ model.date_7 }}"></a>
+                            </td>
+                        {% else %}
+                            <td>
+                                <a class="date_7_click" data-model_code="{{ model.model_code }}" data-name="{{ model.date_7 }}">{{ model.date_7 }}</a>
+                            </td>
+                        {% endif %}
+
+
+                        {% if model.date_8 == 0 %}
+                            <td>
+                                <a class="date_8_click" data-model_code="{{ model.model_code }}" data-name="{{ model.date_8 }}"></a>
+                            </td>
+                        {% else %}
+                            <td>
+                                <a class="date_8_click" data-model_code="{{ model.model_code }}" data-name="{{ model.date_8 }}">{{ model.date_8 }}</a>
+                            </td>
+                        {% endif %}
+
+
+                        {% if model.date_9 == 0 %}
+                            <td>
+                                <a class="date_9_click" data-model_code="{{ model.model_code }}" data-name="{{ model.date_9 }}"></a>
+                            </td>
+                        {% else %}
+                            <td>
+                                <a class="date_9_click" data-model_code="{{ model.model_code }}" data-name="{{ model.date_9 }}">{{ model.date_9 }}</a>
+                            </td>
+                        {% endif %}
+
+
+                        {% if model.date_10 == 0 %}
+                            <td>
+                                <a class="date_10_click" data-model_code="{{ model.model_code }}" data-name="{{ model.date_10 }}"></a>
+                            </td>
+                        {% else %}
+                            <td>
+                                <a class="date_10_click" data-model_code="{{ model.model_code }}" data-name="{{ model.date_10 }}">{{ model.date_10 }}</a>
+                            </td>
+                        {% endif %}
+
+
+                        {% if model.date_11 == 0 %}
+                            <td>
+                                <a class="date_11_click" data-model_code="{{ model.model_code }}" data-name="{{ model.date_11 }}"></a>
+                            </td>
+                        {% else %}
+                            <td>
+                                <a class="date_11_click" data-model_code="{{ model.model_code }}" data-name="{{ model.date_11 }}">{{ model.date_11 }}</a>
+                            </td>
+                        {% endif %}
+
+
+                        {% if model.date_12 == 0 %}
+                            <td>
+                                <a class="date_12_click" data-model_code="{{ model.model_code }}" data-name="{{ model.date_12 }}"></a>
+                            </td>
+                        {% else %}
+                            <td>
+                                <a class="date_12_click" data-model_code="{{ model.model_code }}" data-name="{{ model.date_12 }}">{{ model.date_12 }}</a>
+                            </td>
+                        {% endif %}
+
+
+                        {% if hide_unconfirmed_shipments == 1 %}
+
+                            {% if model.models_total == 0 %}
+                                <td>
+                                    <div class="button-wrapper">
+                                        <button class="btn btn-xs btn-order"
+                                            data-disable_quick_entry="{{ d.disable_quick_entry }}"
+                                            data-model_code="{{ model.model_code }}"
+                                            data-actual_qty="{{ model.actual_qty }}"
+                                            data-model="{{ model.model }}">{{ __("Order") }}</button>
+                                    </div>
+                                    <a class="total_click" data-model_code="{{ model.model_code }}" data-name="{{ model.total }}"></a>
+                                </td>
+                            {% else %}
+                                <td>
+                                    <div class="button-wrapper">
+                                        <button class="btn btn-xs btn-order"
+                                            data-disable_quick_entry="{{ d.disable_quick_entry }}"
+                                            data-model_code="{{ model.model_code }}"
+                                            data-actual_qty="{{ model.actual_qty }}"
+                                            data-model="{{ model.model }}">{{ __("Order") }}</button>
+                                    </div>
+                                    <a class="total_click" data-model_code="{{ model.model_code }}" data-name="{{ model.total }}">{{ model.total }}</a>
+                                </td>
+                            {% endif %}
+
+                            {% if model.unconfirmed_shipments == 0 %}
+                                <td class="hide-ship-column">
+                                    <a data-name="{{ model.unconfirmed_shipments }}"></a>
+                                </td>
+                            {% else %}
+                                <td class="hide-ship-column">
+                                    <a data-name="{{ model.unconfirmed_shipments }}">{{ model.unconfirmed_shipments }}</a>
+                                </td>
+                            {% endif %}
+
+                        {% else %}
+
+                            {% if model.total == 0 %}
+                                <td>
+                                    <a class="total_click" data-model_code="{{ model.model_code }}" data-name="{{ model.total }}"></a>
+                                </td>
+                            {% else %}
+                                <td>
+                                    <a class="total_click" data-model_code="{{ model.model_code }}" data-name="{{ model.total }}">{{ model.total }}</a>
+                                </td>
+                            {% endif %}
+
+                            {% if model.unconfirmed_shipments == 0 %}
+                                <td>
+                                    <div class="button-wrapper">
+                                        <button class="btn btn-xs btn-order"
+                                            data-disable_quick_entry="{{ d.disable_quick_entry }}"
+                                            data-model_code="{{ model.model_code }}"
+                                            data-actual_qty="{{ model.actual_qty }}"
+                                            data-model="{{ model.model }}">{{ __("Order") }}</button>
+                                    </div>
+                                    <a class="unconfirmed_click" data-model_code="{{ model.model_code }}" data-name="{{ model.unconfirmed_shipments }}"></a>
+                                </td>
+                            {% else %}
+                                <td>
+                                    <div class="button-wrapper">
+                                        <button class="btn btn-xs btn-order"
+                                            data-disable_quick_entry="{{ d.disable_quick_entry }}"
+                                            data-model_code="{{ model.model_code }}"
+                                            data-actual_qty="{{ model.actual_qty }}"
+                                            data-model="{{ model.model }}">{{ __("Order") }}</button>
+                                    </div>
+                                    <a class="unconfirmed_click" data-model_code="{{ model.model_code }}" data-model_code="{{ model.model_code }}" data-name="{{ model.unconfirmed_shipments }}">{{ model.unconfirmed_shipments }}</a>
+                                </td>
+                            {% endif %}
+
+                        {% endif %}
+                    </tr>
+                {% endfor %}
+            {% endfor %}
+        </tbody>
+    </table>
+</div>

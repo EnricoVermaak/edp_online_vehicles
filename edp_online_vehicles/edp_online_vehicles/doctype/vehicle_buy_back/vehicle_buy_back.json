@@ -1,0 +1,259 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "format:BB{#####}",
+ "creation": "2025-03-05 07:20:36.280084",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "information_section",
+  "buy_back_date_time",
+  "column_break_lztx",
+  "buy_from",
+  "dealer",
+  "customer",
+  "customer_full_names",
+  "status",
+  "vehicle_section",
+  "vin_serial_no",
+  "model",
+  "colour",
+  "column_break_akst",
+  "description",
+  "engine_no",
+  "condition",
+  "operational_status",
+  "pricing_section",
+  "cost_price_excl",
+  "dealer_billing_excl",
+  "suggested_retail_excl",
+  "column_break_ygpp",
+  "ho_invoice_no",
+  "ho_invoice_amt",
+  "ho_invoice_date_time",
+  "offer_section",
+  "column_break_gfjr",
+  "column_break_ccnc",
+  "offer_price_excl",
+  "vat",
+  "offer_price_incl"
+ ],
+ "fields": [
+  {
+   "default": "Now",
+   "fieldname": "buy_back_date_time",
+   "fieldtype": "Datetime",
+   "label": "Buy Back Date/ Time",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_lztx",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Status",
+   "options": "Pending\nApproved\nDeclined\nSeller Accepted\nSeller Declined\nCompleted\nCancelled"
+  },
+  {
+   "depends_on": "eval:doc.buy_from == \"Dealer\"",
+   "fieldname": "dealer",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Dealer",
+   "mandatory_depends_on": "eval:doc.buy_from == \"Dealer\"",
+   "options": "Company"
+  },
+  {
+   "depends_on": "eval:doc.buy_from == \"Customer\"",
+   "fieldname": "customer",
+   "fieldtype": "Link",
+   "label": "Customer",
+   "mandatory_depends_on": "eval:doc.buy_from == \"Customer\"",
+   "options": "Dealer Customer"
+  },
+  {
+   "depends_on": "eval:doc.buy_from == \"Customer\"",
+   "fieldname": "customer_full_names",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Customer Full Names",
+   "mandatory_depends_on": "eval:doc.buy_from == \"Customer\""
+  },
+  {
+   "fieldname": "information_section",
+   "fieldtype": "Section Break",
+   "label": "Information"
+  },
+  {
+   "fieldname": "vehicle_section",
+   "fieldtype": "Section Break",
+   "label": "Vehicle"
+  },
+  {
+   "fieldname": "vin_serial_no",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "VIN/ Serial No",
+   "options": "Vehicle Stock"
+  },
+  {
+   "fetch_from": "vin_serial_no.model",
+   "fieldname": "model",
+   "fieldtype": "Link",
+   "label": "Model",
+   "options": "Model Administration"
+  },
+  {
+   "fetch_from": "vin_serial_no.colour",
+   "fieldname": "colour",
+   "fieldtype": "Data",
+   "label": "Colour"
+  },
+  {
+   "fieldname": "column_break_akst",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "vin_serial_no.description",
+   "fieldname": "description",
+   "fieldtype": "Data",
+   "label": "Description"
+  },
+  {
+   "fetch_from": "vin_serial_no.engine_no",
+   "fieldname": "engine_no",
+   "fieldtype": "Data",
+   "label": "Engine No"
+  },
+  {
+   "fetch_from": "vin_serial_no.condition",
+   "fieldname": "condition",
+   "fieldtype": "Data",
+   "label": "Condition"
+  },
+  {
+   "fetch_from": "vin_serial_no.status",
+   "fieldname": "operational_status",
+   "fieldtype": "Data",
+   "label": "Operational Status"
+  },
+  {
+   "fieldname": "pricing_section",
+   "fieldtype": "Section Break",
+   "label": "Pricing"
+  },
+  {
+   "fetch_from": "vin_serial_no.cost_price_excl",
+   "fieldname": "cost_price_excl",
+   "fieldtype": "Currency",
+   "label": "Cost Price (Excl)"
+  },
+  {
+   "fetch_from": "vin_serial_no.dealer_billing_excl",
+   "fieldname": "dealer_billing_excl",
+   "fieldtype": "Currency",
+   "label": "Dealer Billing (Excl)"
+  },
+  {
+   "fetch_from": "vin_serial_no.suggested_retail_excl",
+   "fieldname": "suggested_retail_excl",
+   "fieldtype": "Currency",
+   "label": "Suggested Retail (Excl)"
+  },
+  {
+   "fieldname": "column_break_ygpp",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "vin_serial_no.ho_invoice_no",
+   "fieldname": "ho_invoice_no",
+   "fieldtype": "Data",
+   "label": "HO Invoice No"
+  },
+  {
+   "fetch_from": "vin_serial_no.ho_invoice_amt",
+   "fieldname": "ho_invoice_amt",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "HO Invoice Amt"
+  },
+  {
+   "fetch_from": "vin_serial_no.ho_invoice_date",
+   "fieldname": "ho_invoice_date_time",
+   "fieldtype": "Datetime",
+   "label": "HO Invoice Date/ Time"
+  },
+  {
+   "fieldname": "offer_section",
+   "fieldtype": "Section Break",
+   "label": "Offer"
+  },
+  {
+   "fieldname": "column_break_gfjr",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_ccnc",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "offer_price_excl",
+   "fieldtype": "Currency",
+   "label": "Offer Price (Excl)"
+  },
+  {
+   "fieldname": "vat",
+   "fieldtype": "Currency",
+   "label": "VAT",
+   "precision": "2"
+  },
+  {
+   "fieldname": "offer_price_incl",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Offer Price (Incl)"
+  },
+  {
+   "fieldname": "buy_from",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Buy From",
+   "options": "\nDealer\nCustomer",
+   "reqd": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2025-03-05 07:41:00.511349",
+ "modified_by": "Administrator",
+ "module": "Edp Online Vehicles",
+ "name": "Vehicle Buy Back",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}

@@ -1,0 +1,27 @@
+# Copyright (c) 2024, NexTash and contributors
+# For license information, please see license.txt
+
+import frappe
+from frappe.model.document import Document
+
+
+class InspectionFSP(Document):
+	pass
+
+
+@frappe.whitelist()
+def inspection_template(template):
+	inspection_items_sql = f"""
+		SELECT
+			description
+		FROM
+			`tabInspection Template Condition List`
+		WHERE
+			parent='{template}'
+	"""
+
+	inspection_items = frappe.db.sql(inspection_items_sql, as_dict=True)
+
+	print(f"\n\n\n {inspection_items} \n\n\n")
+
+	return inspection_items

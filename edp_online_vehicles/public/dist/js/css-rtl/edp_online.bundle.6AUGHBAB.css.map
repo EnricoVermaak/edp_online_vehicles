@@ -1,0 +1,7 @@
+{
+    "version": 3,
+    "sources": ["../../../../../../../../tmp/tmp-2955617-tIdC4iLuemQi/edp_online/edp_online/public/scss/edp_online.bundle.css"],
+    "sourcesContent": [".red-dot {\n  display: inline-block;\n  width: 10px;\n  height: 10px;\n  background: red;\n  border-radius: 50%;\n  margin-left: 5px;\n}\n\n[data-page-route=\"List/Head Office Equipment Orders/List\"] .list-subject,\n[data-page-route=\"List/Equipment Dealer to Dealer Order/List\"] .list-subject {\n  max-width: 25px;\n}\n[data-page-route=\"List/Head Office Equipment Orders/List\"] .list-subject span:not(.select-like),\n[data-page-route=\"List/Equipment Dealer to Dealer Order/List\"] .list-subject span:not(.select-like) {\n  display: none;\n}"],
+    "mappings": ";AAAA;AACE;AACA;AACA;AACA;AACA;AACA;AAAA;AAGF;AAAA;AAEE;AAAA;AAEF;AAAA;AAEE;AAAA;",
+    "names": []
+}

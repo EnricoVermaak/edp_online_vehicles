@@ -1,0 +1,267 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2024-11-01 11:25:30.183568",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "details_tab",
+  "job_applicant",
+  "job_offer",
+  "column_break_dmti",
+  "company",
+  "status",
+  "project",
+  "employee_details_section",
+  "employee_name",
+  "department",
+  "designation",
+  "employee_grade",
+  "holiday_list",
+  "column_break_fhba",
+  "date_of_joining",
+  "onboarding_begins_on",
+  "employment_type",
+  "onboarding_activities_section",
+  "activities",
+  "confirmation_tab",
+  "employee_section",
+  "employee_signature",
+  "employee_signed_on",
+  "management_section",
+  "authorised_signature",
+  "authorised_person_signed_on",
+  "authorised_person",
+  "full_names",
+  "column_break_iwbv",
+  "senior_manager_signature",
+  "senior_manager_signed_on",
+  "senior_manager",
+  "senior_manager_full_names",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "job_applicant",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Job Applicant",
+   "options": "Job Applicant",
+   "reqd": 1
+  },
+  {
+   "fieldname": "job_offer",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Job Offer",
+   "options": "Job Offer",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_dmti",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Company",
+   "options": "Company",
+   "reqd": 1
+  },
+  {
+   "default": "Pending",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "Pending\nIn Process\nCompleted"
+  },
+  {
+   "fieldname": "project",
+   "fieldtype": "Link",
+   "label": "Project",
+   "options": "Project",
+   "read_only": 1
+  },
+  {
+   "fieldname": "employee_details_section",
+   "fieldtype": "Section Break",
+   "label": "Employee Details"
+  },
+  {
+   "fieldname": "employee_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Employee Name",
+   "reqd": 1
+  },
+  {
+   "fieldname": "department",
+   "fieldtype": "Link",
+   "label": "Department",
+   "options": "Department"
+  },
+  {
+   "fieldname": "designation",
+   "fieldtype": "Link",
+   "label": "Designation",
+   "options": "Designation"
+  },
+  {
+   "fieldname": "employee_grade",
+   "fieldtype": "Link",
+   "label": "Employee Grade",
+   "options": "Employee Grade"
+  },
+  {
+   "fieldname": "holiday_list",
+   "fieldtype": "Link",
+   "label": "Holiday List",
+   "options": "Holiday List"
+  },
+  {
+   "fieldname": "column_break_fhba",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "date_of_joining",
+   "fieldtype": "Date",
+   "label": "Date of Joining",
+   "reqd": 1
+  },
+  {
+   "fieldname": "onboarding_begins_on",
+   "fieldtype": "Date",
+   "label": "Onboarding Begins On",
+   "reqd": 1
+  },
+  {
+   "fieldname": "employment_type",
+   "fieldtype": "Link",
+   "label": "Employment Type",
+   "options": "Employment Type"
+  },
+  {
+   "fieldname": "details_tab",
+   "fieldtype": "Tab Break",
+   "label": "Details"
+  },
+  {
+   "fieldname": "confirmation_tab",
+   "fieldtype": "Tab Break",
+   "label": "Confirmation"
+  },
+  {
+   "fieldname": "onboarding_activities_section",
+   "fieldtype": "Section Break",
+   "label": "Onboarding Activities"
+  },
+  {
+   "fieldname": "activities",
+   "fieldtype": "Table",
+   "label": "Activities",
+   "options": "Employee Boarding Activity"
+  },
+  {
+   "fieldname": "employee_section",
+   "fieldtype": "Section Break",
+   "label": "Employee"
+  },
+  {
+   "fieldname": "employee_signature",
+   "fieldtype": "Signature",
+   "label": "Employee Signature"
+  },
+  {
+   "fieldname": "employee_signed_on",
+   "fieldtype": "Datetime",
+   "label": "Employee Signed On"
+  },
+  {
+   "fieldname": "management_section",
+   "fieldtype": "Section Break",
+   "label": "Management"
+  },
+  {
+   "fieldname": "authorised_signature",
+   "fieldtype": "Signature",
+   "label": "Authorised Signature"
+  },
+  {
+   "fieldname": "authorised_person_signed_on",
+   "fieldtype": "Datetime",
+   "label": "Authorised Person Signed On"
+  },
+  {
+   "fieldname": "authorised_person",
+   "fieldtype": "Link",
+   "label": "Authorised Person",
+   "options": "User"
+  },
+  {
+   "fieldname": "full_names",
+   "fieldtype": "Data",
+   "label": "Full Names"
+  },
+  {
+   "fieldname": "column_break_iwbv",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "senior_manager_signature",
+   "fieldtype": "Signature",
+   "label": "Senior Manager Signature"
+  },
+  {
+   "fieldname": "senior_manager_signed_on",
+   "fieldtype": "Datetime",
+   "label": "Senior Manager Signed On"
+  },
+  {
+   "fieldname": "senior_manager",
+   "fieldtype": "Link",
+   "label": "Senior Manager",
+   "options": "User"
+  },
+  {
+   "fieldname": "senior_manager_full_names",
+   "fieldtype": "Data",
+   "label": "Senior Manager Full Names"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Final Employee Onboarding",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2024-11-01 12:57:54.168727",
+ "modified_by": "Administrator",
+ "module": "Edp Online Vehicles",
+ "name": "Final Employee Onboarding",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

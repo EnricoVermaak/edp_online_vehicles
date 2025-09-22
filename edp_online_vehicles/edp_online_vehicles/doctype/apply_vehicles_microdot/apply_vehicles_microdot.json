@@ -1,0 +1,115 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "field:microdot",
+ "creation": "2025-01-06 16:27:45.698789",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_iosx",
+  "dealer",
+  "microdot",
+  "microdot_fitted_by",
+  "status",
+  "date_received",
+  "date_applied",
+  "vin_serial_no",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_iosx",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "dealer",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Dealer",
+   "no_copy": 1,
+   "options": "Company",
+   "print_hide": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "microdot",
+   "fieldtype": "Link",
+   "label": "Microdot",
+   "options": "Vehicles Microdots",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "default": "Used",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Status",
+   "options": "Received\nUsed",
+   "read_only": 1
+  },
+  {
+   "fieldname": "date_received",
+   "fieldtype": "Date",
+   "label": "Date Received",
+   "read_only": 1
+  },
+  {
+   "fieldname": "date_applied",
+   "fieldtype": "Datetime",
+   "label": "Date Applied",
+   "reqd": 1
+  },
+  {
+   "fieldname": "vin_serial_no",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Vin/ Serial No",
+   "options": "Vehicle Stock",
+   "reqd": 1
+  },
+  {
+   "fieldname": "microdot_fitted_by",
+   "fieldtype": "Link",
+   "label": "Microdot Fitted By",
+   "options": "User",
+   "reqd": 1
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Apply Vehicles Microdot",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2025-01-31 08:12:12.824836",
+ "modified_by": "Administrator",
+ "module": "Edp Online Vehicles",
+ "name": "Apply Vehicles Microdot",
+ "naming_rule": "By fieldname",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}

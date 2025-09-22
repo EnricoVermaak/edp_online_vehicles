@@ -1,0 +1,211 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "format:ESHP-{MM}{YY}-{##########}",
+ "creation": "2024-05-24 11:29:02.718015",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_6u7m",
+  "supplier",
+  "shipment_file_no",
+  "batch_no",
+  "vessel_name",
+  "exchange_rate",
+  "column_break_ifk7",
+  "factory_order_date",
+  "production_date",
+  "shipment_date",
+  "eta_harbour",
+  "eta_warehouse",
+  "column_break_an3o",
+  "dealer",
+  "target_warehouse",
+  "status",
+  "hide_on_stock_availability",
+  "shipment_items_tab",
+  "vehicles_shipment_items",
+  "section_break_vsgr",
+  "column_break_rhrs",
+  "column_break_dvnm",
+  "column_break_swtx",
+  "total_excl",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_6u7m",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "supplier",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Supplier",
+   "options": "Supplier",
+   "reqd": 1
+  },
+  {
+   "fieldname": "vessel_name",
+   "fieldtype": "Data",
+   "in_standard_filter": 1,
+   "label": "Vessel Name"
+  },
+  {
+   "fieldname": "shipment_file_no",
+   "fieldtype": "Data",
+   "label": "Shipment File No",
+   "reqd": 1
+  },
+  {
+   "fieldname": "exchange_rate",
+   "fieldtype": "Currency",
+   "label": "Exchange Rate"
+  },
+  {
+   "fieldname": "target_warehouse",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Target Warehouse",
+   "options": "Warehouse",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_ifk7",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "factory_order_date",
+   "fieldtype": "Date",
+   "label": "Factory Order Date"
+  },
+  {
+   "fieldname": "production_date",
+   "fieldtype": "Date",
+   "label": "Production Date"
+  },
+  {
+   "fieldname": "shipment_date",
+   "fieldtype": "Date",
+   "label": "Shipment Date"
+  },
+  {
+   "fieldname": "eta_harbour",
+   "fieldtype": "Date",
+   "label": "ETA Harbour"
+  },
+  {
+   "description": "Stock arrival at warehouse. Visible to dealers on back orders.",
+   "fieldname": "eta_warehouse",
+   "fieldtype": "Date",
+   "label": "ETA Warehouse"
+  },
+  {
+   "fieldname": "column_break_an3o",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_standard_filter": 1,
+   "label": "Status",
+   "options": "In Progress\nPartially Received\nCompleted",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "hide_on_stock_availability",
+   "fieldtype": "Check",
+   "label": "Hide on Stock Availability"
+  },
+  {
+   "fieldname": "shipment_items_tab",
+   "fieldtype": "Tab Break",
+   "label": "Shipment Items"
+  },
+  {
+   "fieldname": "vehicles_shipment_items",
+   "fieldtype": "Table",
+   "in_standard_filter": 1,
+   "options": "Vehicles Shipment Items",
+   "reqd": 1
+  },
+  {
+   "fieldname": "dealer",
+   "fieldtype": "Link",
+   "label": "Dealer",
+   "options": "Company",
+   "read_only": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "section_break_vsgr",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_rhrs",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_dvnm",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "total_excl",
+   "fieldtype": "Currency",
+   "label": "Total (Excl)",
+   "precision": "2",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_swtx",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Vehicles Shipment",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "batch_no",
+   "fieldtype": "Data",
+   "label": "Batch No"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2025-05-22 17:08:45.002839",
+ "modified_by": "Administrator",
+ "module": "Edp Online Vehicles",
+ "name": "Vehicles Shipment",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "search_fields": "shipment_file_no",
+ "show_title_field_in_link": 1,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "shipment_file_no",
+ "track_changes": 1
+}

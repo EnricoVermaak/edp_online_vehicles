@@ -1,0 +1,229 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-05-08 10:29:09.212636",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "details_section",
+  "date_time",
+  "type",
+  "access_type",
+  "vehicle_information_section",
+  "vin_serial_no",
+  "engine_no",
+  "description",
+  "colour",
+  "column_break_oxjz",
+  "make",
+  "model",
+  "vehicle_expiration_date",
+  "section_break_ccav",
+  "scan_drivers_license",
+  "scan_drivers_license_text",
+  "barcode_photo",
+  "driver_information_section",
+  "driver",
+  "driver_photo",
+  "column_break_qfjm",
+  "driver_full_names",
+  "date_of_birth",
+  "license_number",
+  "issue_date",
+  "expiration_date",
+  "mobile_no",
+  "barcode"
+ ],
+ "fields": [
+  {
+   "fieldname": "vehicle_information_section",
+   "fieldtype": "Section Break",
+   "label": "Vehicle Information"
+  },
+  {
+   "fieldname": "vin_serial_no",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "VIN/ Serial No",
+   "read_only": 1
+  },
+  {
+   "fieldname": "driver_information_section",
+   "fieldtype": "Section Break",
+   "label": "Driver Information"
+  },
+  {
+   "fieldname": "driver",
+   "fieldtype": "Image",
+   "label": "Driver"
+  },
+  {
+   "fieldname": "column_break_qfjm",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "driver_full_names",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Driver Full Names",
+   "read_only": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "date_of_birth",
+   "fieldtype": "Date",
+   "label": "Date of Birth",
+   "read_only": 1
+  },
+  {
+   "fieldname": "license_number",
+   "fieldtype": "Data",
+   "label": "License Number",
+   "read_only": 1
+  },
+  {
+   "fieldname": "issue_date",
+   "fieldtype": "Date",
+   "label": "Issue Date",
+   "read_only": 1
+  },
+  {
+   "fieldname": "expiration_date",
+   "fieldtype": "Date",
+   "label": "Expiration Date",
+   "read_only": 1
+  },
+  {
+   "fieldname": "mobile_no",
+   "fieldtype": "Phone",
+   "label": "Mobile No",
+   "read_only": 1
+  },
+  {
+   "fieldname": "barcode",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "Barcode",
+   "read_only": 1
+  },
+  {
+   "fieldname": "details_section",
+   "fieldtype": "Section Break",
+   "label": "Details"
+  },
+  {
+   "default": "Now",
+   "fieldname": "date_time",
+   "fieldtype": "Datetime",
+   "in_list_view": 1,
+   "label": "Date/ Time",
+   "read_only": 1
+  },
+  {
+   "fieldname": "type",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Type",
+   "options": "\nVehicle\nPedestrian",
+   "reqd": 1
+  },
+  {
+   "fieldname": "driver_photo",
+   "fieldtype": "Attach Image",
+   "label": "Driver Photo"
+  },
+  {
+   "fieldname": "engine_no",
+   "fieldtype": "Data",
+   "label": "Engine No",
+   "read_only": 1
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Data",
+   "label": "Description",
+   "read_only": 1
+  },
+  {
+   "fieldname": "colour",
+   "fieldtype": "Data",
+   "label": "Colour",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_oxjz",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "make",
+   "fieldtype": "Data",
+   "label": "Make",
+   "read_only": 1
+  },
+  {
+   "fieldname": "model",
+   "fieldtype": "Data",
+   "label": "Model",
+   "read_only": 1
+  },
+  {
+   "fieldname": "vehicle_expiration_date",
+   "fieldtype": "Date",
+   "label": "Expiration Date",
+   "read_only": 1
+  },
+  {
+   "fieldname": "access_type",
+   "fieldtype": "Select",
+   "label": "Access Type",
+   "options": "\nIn\nOut",
+   "reqd": 1
+  },
+  {
+   "fieldname": "section_break_ccav",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "scan_drivers_license",
+   "fieldtype": "Button",
+   "label": "Scan Drivers License"
+  },
+  {
+   "fieldname": "scan_drivers_license_text",
+   "fieldtype": "Small Text",
+   "label": "Scan Drivers License Text"
+  },
+  {
+   "fieldname": "barcode_photo",
+   "fieldtype": "Attach Image",
+   "label": "Barcode Photo"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2025-07-01 16:19:42.675885",
+ "modified_by": "Administrator",
+ "module": "Edp Online Vehicles",
+ "name": "Security Check",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

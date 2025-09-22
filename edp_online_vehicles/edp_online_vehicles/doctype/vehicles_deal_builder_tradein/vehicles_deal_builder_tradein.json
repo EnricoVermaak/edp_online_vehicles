@@ -1,0 +1,176 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2024-06-06 14:50:35.166929",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_3c5w",
+  "vin_serial_no",
+  "make",
+  "description",
+  "mm_code",
+  "engine_no",
+  "reg_no",
+  "model_year",
+  "colour",
+  "mileage",
+  "condition",
+  "column_break_cbog",
+  "tradein_price",
+  "allowance_on_ti",
+  "customer_cash",
+  "stand_in_price",
+  "tradein_price_bank",
+  "settlement",
+  "cash_back",
+  "subtotal",
+  "total_deposit"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_3c5w",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "make",
+   "fieldtype": "Data",
+   "label": "Make",
+   "reqd": 1
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Description",
+   "reqd": 1
+  },
+  {
+   "fieldname": "mm_code",
+   "fieldtype": "Data",
+   "label": "MM Code",
+   "reqd": 1
+  },
+  {
+   "fieldname": "vin_serial_no",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "VIN/Serial No",
+   "reqd": 1
+  },
+  {
+   "fieldname": "engine_no",
+   "fieldtype": "Data",
+   "label": "Engine No"
+  },
+  {
+   "fieldname": "reg_no",
+   "fieldtype": "Data",
+   "label": "Reg No"
+  },
+  {
+   "fieldname": "model_year",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Model year",
+   "reqd": 1
+  },
+  {
+   "fieldname": "colour",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Colour",
+   "reqd": 1
+  },
+  {
+   "fieldname": "mileage",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Mileage",
+   "reqd": 1
+  },
+  {
+   "fieldname": "condition",
+   "fieldtype": "Select",
+   "label": "Condition",
+   "options": "Poor\nGood\nExcellent"
+  },
+  {
+   "description": "This is the valuation the dealer places on your used vehicle. It's not necessarily the same as the vehicle's market value and can be influenced by factors like mileage, condition, and dealer inventory. ",
+   "fieldname": "tradein_price",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Tradein Price",
+   "precision": "2"
+  },
+  {
+   "description": "This is the amount deducted from the price of the new car, representing the trade-in value. It's the money that comes from the dealer for your old car. ",
+   "fieldname": "allowance_on_ti",
+   "fieldtype": "Currency",
+   "label": "Allowance On Trade In",
+   "precision": "2"
+  },
+  {
+   "description": "This is the amount deducted from the price of the new car, representing the trade-in value. It's the money that comes from the dealer for your old car. ",
+   "fieldname": "customer_cash",
+   "fieldtype": "Currency",
+   "label": "Customer Cash",
+   "precision": "2"
+  },
+  {
+   "fieldname": "stand_in_price",
+   "fieldtype": "Currency",
+   "label": "Stand In Price",
+   "precision": "2"
+  },
+  {
+   "fieldname": "tradein_price_bank",
+   "fieldtype": "Currency",
+   "label": "Tradein Price Bank",
+   "precision": "2"
+  },
+  {
+   "fieldname": "settlement",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Settlement",
+   "precision": "2"
+  },
+  {
+   "fieldname": "cash_back",
+   "fieldtype": "Currency",
+   "label": "Cash back",
+   "precision": "2"
+  },
+  {
+   "fieldname": "subtotal",
+   "fieldtype": "Currency",
+   "label": "Sub Total",
+   "precision": "2"
+  },
+  {
+   "fieldname": "column_break_cbog",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "total_deposit",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Total Deposit",
+   "precision": "2"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2025-04-29 11:58:22.877461",
+ "modified_by": "Administrator",
+ "module": "Edp Online Vehicles",
+ "name": "Vehicles Deal Builder Tradein",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

@@ -1,0 +1,339 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "format:VS{MM}{YY}{######}",
+ "creation": "2025-01-06 16:10:59.655056",
+ "default_view": "Report",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "vehicles_tab",
+  "sale_section",
+  "dealer",
+  "column_break_72m8",
+  "status",
+  "image",
+  "vehicles_section",
+  "vehicles_sale_items",
+  "sale_information_section",
+  "sale_type",
+  "finance_method",
+  "financed_by",
+  "sales_person",
+  "sales_person_full_names",
+  "column_break_bttl",
+  "sales_card_capture_date",
+  "retail_date",
+  "natis_release_date",
+  "payment_date",
+  "delivery_date",
+  "customer_information_tab",
+  "customer",
+  "customer_name",
+  "customer_email",
+  "company_reg_no",
+  "search",
+  "add_fleet_customer",
+  "fleet_customer",
+  "fleet_customer_name",
+  "fleet_customer_email",
+  "column_break_zkwp",
+  "customer_phone",
+  "customer_mobile",
+  "customer_address",
+  "fleet_customer_phone",
+  "fleet_customer_mobile",
+  "fleet_customer_address",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "vehicles_tab",
+   "fieldtype": "Tab Break",
+   "label": "Vehicles"
+  },
+  {
+   "fetch_from": "vin_serial_no.image",
+   "fieldname": "image",
+   "fieldtype": "Attach Image",
+   "hidden": 1,
+   "label": "Image"
+  },
+  {
+   "fieldname": "column_break_72m8",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "sale_information_section",
+   "fieldtype": "Tab Break",
+   "label": "Sale Information"
+  },
+  {
+   "depends_on": "eval:doc.finance_method == \"Bank\"",
+   "fieldname": "financed_by",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Financed By",
+   "mandatory_depends_on": "eval:doc.finance_method == \"Bank\"",
+   "options": "Financed By"
+  },
+  {
+   "fieldname": "sales_person",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Sales Person",
+   "options": "User",
+   "reqd": 1
+  },
+  {
+   "default": "Today",
+   "fieldname": "payment_date",
+   "fieldtype": "Date",
+   "label": "Payment Date"
+  },
+  {
+   "default": "Today",
+   "fieldname": "delivery_date",
+   "fieldtype": "Date",
+   "label": "Delivery Date"
+  },
+  {
+   "allow_on_submit": 1,
+   "default": "Today",
+   "fieldname": "retail_date",
+   "fieldtype": "Date",
+   "label": "Retail Date"
+  },
+  {
+   "fieldname": "sale_type",
+   "fieldtype": "Link",
+   "label": "Sale Type",
+   "options": "Vehicle Sale Type",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_bttl",
+   "fieldtype": "Column Break"
+  },
+  {
+   "depends_on": "eval: doc.sale_type != 'Fleet';",
+   "fieldname": "customer",
+   "fieldtype": "Link",
+   "in_standard_filter": 1,
+   "label": "Customer",
+   "mandatory_depends_on": "eval: doc.sale_type != 'Fleet';",
+   "options": "Dealer Customer"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "status",
+   "fieldtype": "Link",
+   "label": "Status",
+   "options": "Vehicle Sale Status",
+   "reqd": 1
+  },
+  {
+   "fieldname": "customer_information_tab",
+   "fieldtype": "Tab Break",
+   "label": "Customer Card"
+  },
+  {
+   "fieldname": "customer_name",
+   "fieldtype": "Data",
+   "label": "Customer Full Name",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_zkwp",
+   "fieldtype": "Column Break"
+  },
+  {
+   "depends_on": "eval: doc.customer",
+   "fetch_from": "customer.phone",
+   "fetch_if_empty": 1,
+   "fieldname": "customer_phone",
+   "fieldtype": "Phone",
+   "label": "Customer Phone"
+  },
+  {
+   "depends_on": "eval: doc.customer",
+   "fetch_from": "customer.email",
+   "fetch_if_empty": 1,
+   "fieldname": "customer_email",
+   "fieldtype": "Data",
+   "label": "Customer Email"
+  },
+  {
+   "depends_on": "eval: doc.customer",
+   "fetch_from": "customer.address",
+   "fetch_if_empty": 1,
+   "fieldname": "customer_address",
+   "fieldtype": "Small Text",
+   "label": "Customer Address"
+  },
+  {
+   "fetch_from": "sales_person.full_name",
+   "fieldname": "sales_person_full_names",
+   "fieldtype": "Data",
+   "label": "Sales Person Full Names",
+   "read_only": 1
+  },
+  {
+   "fieldname": "dealer",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Dealer",
+   "options": "Company",
+   "reqd": 1
+  },
+  {
+   "fieldname": "finance_method",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Finance Method",
+   "options": "\nBank\nCash",
+   "reqd": 1
+  },
+  {
+   "fieldname": "sale_section",
+   "fieldtype": "Section Break",
+   "label": "Sale Information"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Vehicle Retail",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "vehicles_section",
+   "fieldtype": "Section Break",
+   "label": "Vehicles"
+  },
+  {
+   "fieldname": "vehicles_sale_items",
+   "fieldtype": "Table",
+   "in_standard_filter": 1,
+   "options": "Vehicles Sale Items",
+   "search_index": 1
+  },
+  {
+   "fieldname": "fleet_customer",
+   "fieldtype": "Link",
+   "label": "Fleet Customer",
+   "options": "Fleet Customer",
+   "read_only": 1
+  },
+  {
+   "depends_on": "eval: doc.sale_type == 'Fleet';",
+   "fieldname": "company_reg_no",
+   "fieldtype": "Data",
+   "label": "Company Registration No",
+   "mandatory_depends_on": "eval: doc.sale_type == 'Fleet';"
+  },
+  {
+   "depends_on": "eval: doc.sale_type == 'Fleet';",
+   "fieldname": "search",
+   "fieldtype": "Button",
+   "label": "Search"
+  },
+  {
+   "fieldname": "fleet_customer_name",
+   "fieldtype": "Data",
+   "label": "Fleet Customer Name",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "fleet_customer.phone",
+   "fieldname": "fleet_customer_phone",
+   "fieldtype": "Phone",
+   "label": "Fleet Customer Phone",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "fleet_customer.email",
+   "fieldname": "fleet_customer_email",
+   "fieldtype": "Data",
+   "label": "Fleet Customer Email",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "fleet_customer.address",
+   "fieldname": "fleet_customer_address",
+   "fieldtype": "Small Text",
+   "label": "Fleet Customer Address",
+   "read_only": 1
+  },
+  {
+   "depends_on": "eval: doc.customer",
+   "fetch_from": "customer.mobile",
+   "fetch_if_empty": 1,
+   "fieldname": "customer_mobile",
+   "fieldtype": "Phone",
+   "label": "Customer Mobile"
+  },
+  {
+   "fetch_from": "fleet_customer.mobile",
+   "fetch_if_empty": 1,
+   "fieldname": "fleet_customer_mobile",
+   "fieldtype": "Phone",
+   "label": "Fleet Customer Mobile",
+   "read_only": 1
+  },
+  {
+   "default": "Now",
+   "fieldname": "sales_card_capture_date",
+   "fieldtype": "Datetime",
+   "label": "Sales Card Capture Date",
+   "read_only": 1
+  },
+  {
+   "depends_on": "eval: doc.sale_type == 'Fleet';",
+   "fieldname": "add_fleet_customer",
+   "fieldtype": "Button",
+   "label": "Add Fleet Customer"
+  },
+  {
+   "fieldname": "natis_release_date",
+   "fieldtype": "Datetime",
+   "label": "Natis Release Date",
+   "read_only": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2025-07-09 09:32:27.333398",
+ "modified_by": "Administrator",
+ "module": "Edp Online Vehicles",
+ "name": "Vehicle Retail",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}

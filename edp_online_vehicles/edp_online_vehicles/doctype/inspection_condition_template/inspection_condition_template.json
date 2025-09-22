@@ -1,0 +1,74 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "field:condition_template_description",
+ "creation": "2024-04-27 13:43:06.258630",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_w92y",
+  "condition_template_description",
+  "condition_list"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_w92y",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "condition_template_description",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Condition Template Description",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "condition_list",
+   "fieldtype": "Table",
+   "label": "Condition List",
+   "options": "Inspection Template Condition List"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2024-07-03 16:51:20.245688",
+ "modified_by": "Administrator",
+ "module": "Edp Online Vehicles",
+ "name": "Inspection Condition Template",
+ "naming_rule": "By fieldname",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Inspection Administrator",
+   "select": 1,
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "search_fields": "condition_template_description",
+ "show_title_field_in_link": 1,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "condition_template_description"
+}

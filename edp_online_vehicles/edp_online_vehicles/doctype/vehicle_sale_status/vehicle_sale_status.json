@@ -1,0 +1,94 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "field:status",
+ "creation": "2025-01-06 16:47:02.284393",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_bark",
+  "status",
+  "description",
+  "automatically_submit_document",
+  "availability_status",
+  "default",
+  "active"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_bark",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Status",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Small Text",
+   "label": "Description"
+  },
+  {
+   "default": "0",
+   "description": "Once this document's status is updated to the specified status, this document will be submitted and no changes can be made to it.",
+   "fieldname": "automatically_submit_document",
+   "fieldtype": "Check",
+   "label": "Automatically submit document"
+  },
+  {
+   "description": "The vehicle's availability status will be updated accordingly when the sale is submitted. If 'Sold' is selected, the vehicle will be removed from stock.",
+   "fieldname": "availability_status",
+   "fieldtype": "Select",
+   "label": "Availability Status",
+   "options": "Available\nStolen\nSold\nActive Contract\nExpired Contract\nReserved\nPending Sale",
+   "reqd": 1
+  },
+  {
+   "default": "0",
+   "depends_on": "eval: doc.active == 1 && !doc.name.startsWith('new-vehicle-sale-status')\r\n",
+   "description": "If this option is selected, the system will automatically set this status as the default when processing a sale.",
+   "fieldname": "default",
+   "fieldtype": "Check",
+   "label": "Default",
+   "read_only_depends_on": "eval: doc.default == 1\r\n"
+  },
+  {
+   "default": "1",
+   "depends_on": "eval: !doc.name.startsWith('new-vehicle-sale-status')\r\n",
+   "fieldname": "active",
+   "fieldtype": "Check",
+   "label": "Active",
+   "read_only_depends_on": "eval: doc.default == 1"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2025-01-15 13:34:28.014714",
+ "modified_by": "Administrator",
+ "module": "Edp Online Vehicles",
+ "name": "Vehicle Sale Status",
+ "naming_rule": "By fieldname",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}

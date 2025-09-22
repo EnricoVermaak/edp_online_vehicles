@@ -1,0 +1,206 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "format:ERI-{MM}{YY}-{######}",
+ "creation": "2024-08-23 11:13:23.397639",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_pfjp",
+  "fuel_type",
+  "weight_capacity",
+  "lift_height",
+  "requested_contract_period_months",
+  "column_break_rd7v",
+  "dealer",
+  "customer",
+  "customer_name",
+  "status",
+  "quote",
+  "start_billing",
+  "billing_document",
+  "section_break_vx83",
+  "delivery_requirements",
+  "transport_section",
+  "transport_booked_by",
+  "transport_booked_on",
+  "column_break_rcys",
+  "transport_company"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_pfjp",
+   "fieldtype": "Section Break",
+   "label": "Enquiry"
+  },
+  {
+   "fieldname": "fuel_type",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Fuel Type",
+   "options": "Electric\nDiesel\nPetrol\nDoes not matter",
+   "reqd": 1
+  },
+  {
+   "fieldname": "weight_capacity",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Weight Capacity (KG)",
+   "reqd": 1
+  },
+  {
+   "fieldname": "lift_height",
+   "fieldtype": "Float",
+   "label": "Lift Height (CM)",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_rd7v",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "Pending\nQuote Approved\nQuote Declined\nIn Transit\nCompleted"
+  },
+  {
+   "fieldname": "delivery_requirements",
+   "fieldtype": "Small Text",
+   "label": "Delivery Requirements"
+  },
+  {
+   "fieldname": "section_break_vx83",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "requested_contract_period_months",
+   "fieldtype": "Int",
+   "label": "Requested Contract Period (Months)",
+   "reqd": 1
+  },
+  {
+   "fieldname": "customer",
+   "fieldtype": "Link",
+   "label": "Customer",
+   "options": "Customer",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "customer.customer_name",
+   "fieldname": "customer_name",
+   "fieldtype": "Data",
+   "label": "Customer Name"
+  },
+  {
+   "depends_on": "eval:doc.status == \"Quote Approved\"",
+   "fieldname": "quote",
+   "fieldtype": "Attach",
+   "label": "Quote Document",
+   "mandatory_depends_on": "eval:doc.status == \"Quote Approved\""
+  },
+  {
+   "fieldname": "transport_section",
+   "fieldtype": "Section Break",
+   "label": "Transport"
+  },
+  {
+   "fieldname": "transport_booked_by",
+   "fieldtype": "Link",
+   "label": "Transport Booked By",
+   "options": "User"
+  },
+  {
+   "fieldname": "transport_booked_on",
+   "fieldtype": "Datetime",
+   "label": "Transport Booked On"
+  },
+  {
+   "fieldname": "transport_company",
+   "fieldtype": "Data",
+   "label": "Transport Company"
+  },
+  {
+   "fieldname": "column_break_rcys",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "start_billing",
+   "fieldtype": "Check",
+   "label": "Start Billing"
+  },
+  {
+   "depends_on": "eval:doc.start_billing == \"1\"",
+   "fieldname": "billing_document",
+   "fieldtype": "Attach",
+   "label": "Billing Document",
+   "mandatory_depends_on": "eval:doc.start_billing == \"1\""
+  },
+  {
+   "fieldname": "dealer",
+   "fieldtype": "Link",
+   "label": "Dealer",
+   "options": "Company",
+   "reqd": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [
+  {
+   "link_doctype": "Quotation",
+   "link_fieldname": "custom_vehicles_rental_enquiry"
+  },
+  {
+   "link_doctype": "Contract",
+   "link_fieldname": "custom_rental_enquiry"
+  },
+  {
+   "group": "Delivery",
+   "link_doctype": "Vehicles PDI Inspection",
+   "link_fieldname": "vehicles_rental_enquiry"
+  },
+  {
+   "group": "Delivery",
+   "link_doctype": "Delivery Note",
+   "link_fieldname": "custom_rental_enquiry"
+  }
+ ],
+ "modified": "2024-09-30 10:37:50.417143",
+ "modified_by": "Administrator",
+ "module": "Edp Online Vehicles",
+ "name": "Vehicles Rental Enquiry",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Customer",
+   "select": 1,
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}

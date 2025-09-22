@@ -1,0 +1,26 @@
+{
+ "add_total_row": 0,
+ "columns": [],
+ "creation": "2024-12-17 14:18:04.536282",
+ "disabled": 0,
+ "docstatus": 0,
+ "doctype": "Report",
+ "filters": [],
+ "idx": 0,
+ "is_standard": "Yes",
+ "letterhead": null,
+ "modified": "2024-12-17 14:18:04.536282",
+ "modified_by": "Administrator",
+ "module": "Edp Online Vehicles",
+ "name": "Wholesale Report Between Dates",
+ "owner": "Administrator",
+ "prepared_report": 0,
+ "ref_doctype": "Head Office Vehicle Orders",
+ "report_name": "Wholesale Report Between Dates",
+ "report_type": "Script Report",
+ "roles": [
+  {
+   "role": "System Manager"
+  }
+ ]
+}

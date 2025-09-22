@@ -1,0 +1,42 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-05-14 16:16:33.072885",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "setup_role_doctype",
+  "permission_level"
+ ],
+ "fields": [
+  {
+   "fieldname": "setup_role_doctype",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Doctype",
+   "options": "DocType",
+   "reqd": 1
+  },
+  {
+   "fieldname": "permission_level",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Permission Level",
+   "options": "Basic\nIntermediate\nFull",
+   "reqd": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2025-05-14 16:19:14.914332",
+ "modified_by": "Administrator",
+ "module": "Edp Online Vehicles",
+ "name": "Setup Role Table",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

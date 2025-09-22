@@ -1,0 +1,446 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-02-28 10:55:29.727568",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_61wr",
+  "part_order_no",
+  "d2d_part_order",
+  "ordered_by_user",
+  "part_order_date_time",
+  "column_break_lmhj",
+  "deliver_to",
+  "dealer",
+  "delivery_time",
+  "status",
+  "parts_delivered_section",
+  "delivery_note_item",
+  "section_break_vrbi",
+  "column_break_qlmf",
+  "total_qty_ordered",
+  "column_break_kjkr",
+  "total_qty_delivered",
+  "section_break_cfgd",
+  "delivery_remarks",
+  "address_and_contact_tab",
+  "contact_info",
+  "address",
+  "col_break21",
+  "contact_person",
+  "contact_mobile",
+  "contact_email",
+  "customer_information_tab",
+  "customer",
+  "customer_name",
+  "customer_email",
+  "fleet_customer",
+  "fleet_customer_name",
+  "fleet_customer_email",
+  "column_break_zkwp",
+  "customer_phone",
+  "customer_mobile",
+  "customer_address",
+  "amended_from",
+  "fleet_code",
+  "fleet_customer_phone",
+  "fleet_customer_mobile",
+  "fleet_customer_address",
+  "confirmation_tab",
+  "despatch_signature_date_time",
+  "despatcher",
+  "despatch_full_names",
+  "despatch_signature",
+  "column_break_ckmo",
+  "received_on_date_time",
+  "received_by",
+  "received_by_full_names",
+  "received_by_signature",
+  "section_break_ttal",
+  "hq_part_order"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_61wr",
+   "fieldtype": "Section Break",
+   "label": "Information"
+  },
+  {
+   "fieldname": "delivery_note_item",
+   "fieldtype": "Table",
+   "options": "Parts Delivery Note Items"
+  },
+  {
+   "fieldname": "section_break_vrbi",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_qlmf",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_kjkr",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "total_qty_delivered",
+   "fieldtype": "Int",
+   "label": "Total Qty Delivered",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_cfgd",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "delivery_remarks",
+   "fieldtype": "Text Editor",
+   "label": "Delivery Remarks"
+  },
+  {
+   "fieldname": "address_and_contact_tab",
+   "fieldtype": "Tab Break",
+   "label": "Address & Contact"
+  },
+  {
+   "depends_on": "customer",
+   "fieldname": "contact_info",
+   "fieldtype": "Section Break",
+   "label": "Delivery Address",
+   "options": "fa fa-bullhorn"
+  },
+  {
+   "fieldname": "col_break21",
+   "fieldtype": "Column Break",
+   "print_width": "50%",
+   "width": "50%"
+  },
+  {
+   "fieldname": "contact_person",
+   "fieldtype": "Link",
+   "label": "Contact Person",
+   "options": "Contact",
+   "print_hide": 1
+  },
+  {
+   "fieldname": "contact_mobile",
+   "fieldtype": "Phone",
+   "hidden": 1,
+   "label": "Mobile No",
+   "options": "Phone",
+   "read_only": 1
+  },
+  {
+   "fieldname": "contact_email",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "Contact Email",
+   "options": "Email",
+   "print_hide": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "customer_information_tab",
+   "fieldtype": "Tab Break",
+   "label": "Customer Card"
+  },
+  {
+   "depends_on": "eval: doc.deliver_to == 'Customer';",
+   "fieldname": "customer",
+   "fieldtype": "Link",
+   "in_standard_filter": 1,
+   "label": "Customer",
+   "mandatory_depends_on": "eval: doc.deliver_to == 'Customer';",
+   "options": "Dealer Customer",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "customer.customer_full_name",
+   "fetch_if_empty": 1,
+   "fieldname": "customer_name",
+   "fieldtype": "Data",
+   "in_standard_filter": 1,
+   "label": "Full Name",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "customer.email",
+   "fetch_if_empty": 1,
+   "fieldname": "customer_email",
+   "fieldtype": "Data",
+   "label": "Email",
+   "read_only": 1
+  },
+  {
+   "depends_on": "eval: doc.customer",
+   "fetch_from": "customer.phone",
+   "fetch_if_empty": 1,
+   "fieldname": "customer_phone",
+   "fieldtype": "Data",
+   "label": "Phone",
+   "read_only": 1
+  },
+  {
+   "depends_on": "eval: doc.customer",
+   "fetch_from": "customer.mobile",
+   "fetch_if_empty": 1,
+   "fieldname": "customer_mobile",
+   "fieldtype": "Phone",
+   "label": "Mobile",
+   "read_only": 1
+  },
+  {
+   "depends_on": "eval: doc.customer",
+   "fetch_from": "customer.address",
+   "fetch_if_empty": 1,
+   "fieldname": "customer_address",
+   "fieldtype": "Small Text",
+   "label": "Address",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_zkwp",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Parts Delivery Note",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "part_order_no",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Part Order No",
+   "options": "HQ Part Order",
+   "read_only": 1
+  },
+  {
+   "fieldname": "part_order_date_time",
+   "fieldtype": "Datetime",
+   "label": "Part Order Date/ Time",
+   "read_only": 1
+  },
+  {
+   "fieldname": "ordered_by_user",
+   "fieldtype": "Link",
+   "label": "Ordered By User",
+   "options": "User",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_lmhj",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "parts_delivered_section",
+   "fieldtype": "Section Break",
+   "label": "Parts Delivered"
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Status",
+   "options": "Pending\nDelivered"
+  },
+  {
+   "default": "Now",
+   "fieldname": "delivery_time",
+   "fieldtype": "Datetime",
+   "label": "Delivery Time"
+  },
+  {
+   "fieldname": "deliver_to",
+   "fieldtype": "Select",
+   "label": "Deliver To",
+   "options": "Dealer\nCustomer"
+  },
+  {
+   "depends_on": "eval:doc.deliver_to == \"Dealer\"",
+   "fieldname": "dealer",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Dealer",
+   "mandatory_depends_on": "eval:doc.deliver_to == \"Dealer\"",
+   "options": "Company"
+  },
+  {
+   "fieldname": "address",
+   "fieldtype": "Small Text",
+   "label": "Address"
+  },
+  {
+   "fieldname": "total_qty_ordered",
+   "fieldtype": "Int",
+   "label": "Total Qty Ordered",
+   "read_only": 1
+  },
+  {
+   "fieldname": "confirmation_tab",
+   "fieldtype": "Tab Break",
+   "label": "Confirmation"
+  },
+  {
+   "fieldname": "despatch_signature_date_time",
+   "fieldtype": "Datetime",
+   "label": "Despatch Signature Date/ Time"
+  },
+  {
+   "fieldname": "despatcher",
+   "fieldtype": "Link",
+   "label": "Despatched By",
+   "options": "User"
+  },
+  {
+   "fieldname": "despatch_full_names",
+   "fieldtype": "Data",
+   "label": "Despatch Full Names"
+  },
+  {
+   "fieldname": "despatch_signature",
+   "fieldtype": "Signature",
+   "label": "Despatch Signature"
+  },
+  {
+   "fieldname": "column_break_ckmo",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "received_on_date_time",
+   "fieldtype": "Datetime",
+   "label": "Received On Date/ Time"
+  },
+  {
+   "fieldname": "received_by",
+   "fieldtype": "Link",
+   "label": "Received By",
+   "options": "User"
+  },
+  {
+   "fieldname": "received_by_full_names",
+   "fieldtype": "Data",
+   "label": "Received By Full Names"
+  },
+  {
+   "fieldname": "received_by_signature",
+   "fieldtype": "Signature",
+   "label": "Received By Signature"
+  },
+  {
+   "fieldname": "section_break_ttal",
+   "fieldtype": "Section Break",
+   "hidden": 1
+  },
+  {
+   "fieldname": "hq_part_order",
+   "fieldtype": "Link",
+   "label": "HQ Part Order",
+   "options": "HQ Part Order",
+   "search_index": 1
+  },
+  {
+   "fieldname": "d2d_part_order",
+   "fieldtype": "Link",
+   "label": "Part Order No",
+   "options": "D2D Part Order",
+   "read_only": 1
+  },
+  {
+   "depends_on": "eval: doc.deliver_to == 'Customer';",
+   "fieldname": "fleet_customer",
+   "fieldtype": "Link",
+   "in_standard_filter": 1,
+   "label": "Customer",
+   "mandatory_depends_on": "eval: doc.deliver_to == 'Customer';",
+   "options": "Fleet Customer",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "fleet_customer.customer_full_name",
+   "fetch_if_empty": 1,
+   "fieldname": "fleet_customer_name",
+   "fieldtype": "Data",
+   "in_standard_filter": 1,
+   "label": "Full Name",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "fleet_customer.email",
+   "fetch_if_empty": 1,
+   "fieldname": "fleet_customer_email",
+   "fieldtype": "Data",
+   "label": "Email",
+   "read_only": 1
+  },
+  {
+   "depends_on": "eval: doc.customer",
+   "fetch_from": "fleet_customer.email",
+   "fetch_if_empty": 1,
+   "fieldname": "fleet_customer_phone",
+   "fieldtype": "Data",
+   "label": "Phone",
+   "read_only": 1
+  },
+  {
+   "depends_on": "eval: doc.customer",
+   "fetch_from": "fleet_customer.mobile",
+   "fetch_if_empty": 1,
+   "fieldname": "fleet_customer_mobile",
+   "fieldtype": "Phone",
+   "label": "Mobile",
+   "read_only": 1
+  },
+  {
+   "depends_on": "eval: doc.customer",
+   "fetch_from": "fleet_customer.address",
+   "fetch_if_empty": 1,
+   "fieldname": "fleet_customer_address",
+   "fieldtype": "Small Text",
+   "label": "Address",
+   "read_only": 1
+  },
+  {
+   "fieldname": "fleet_code",
+   "fieldtype": "Data",
+   "label": "Fleet Code",
+   "read_only": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2025-03-12 12:29:17.539522",
+ "modified_by": "Administrator",
+ "module": "Edp Online Vehicles",
+ "name": "Parts Delivery Note",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}

@@ -1,0 +1,48 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-04-29 20:26:25.582433",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "status_from",
+  "status_to",
+  "days_between_statuses"
+ ],
+ "fields": [
+  {
+   "fieldname": "status_from",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Status From",
+   "read_only": 1
+  },
+  {
+   "fieldname": "status_to",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Status To",
+   "read_only": 1
+  },
+  {
+   "fieldname": "days_between_statuses",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Days Between Statuses",
+   "read_only": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2025-04-29 20:29:01.703700",
+ "modified_by": "Administrator",
+ "module": "Edp Online Vehicles",
+ "name": "Dealer Claims Ageing",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

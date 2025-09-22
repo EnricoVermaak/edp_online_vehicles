@@ -1,0 +1,221 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2024-06-11 12:50:11.962249",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "vehicles_information_section",
+  "vornumber",
+  "entrycreatedon",
+  "vinno",
+  "modelcode",
+  "unit",
+  "dealer",
+  "sapcode",
+  "status",
+  "vehiclesusage",
+  "regno",
+  "odoreading",
+  "section_break_ckbt",
+  "reason",
+  "reasonforrepair",
+  "failuredate",
+  "market",
+  "modifiedon",
+  "etr",
+  "tr",
+  "jobtype",
+  "column_break_2emt",
+  "ownername",
+  "productseries",
+  "unitofmeasure",
+  "warrantycoveragefrom",
+  "dealercode",
+  "daysinworkshop",
+  "loadref",
+  "incidenttriplocationdescription",
+  "policyno"
+ ],
+ "fields": [
+  {
+   "fieldname": "vehicles_information_section",
+   "fieldtype": "Section Break",
+   "label": "Vehicle information"
+  },
+  {
+   "fieldname": "vornumber",
+   "fieldtype": "Data",
+   "label": "vornumber"
+  },
+  {
+   "fieldname": "entrycreatedon",
+   "fieldtype": "Datetime",
+   "label": "Entry created on"
+  },
+  {
+   "fieldname": "vinno",
+   "fieldtype": "Link",
+   "label": "Vin number",
+   "options": "Vehicle Stock"
+  },
+  {
+   "fieldname": "modelcode",
+   "fieldtype": "Data",
+   "label": "Model code"
+  },
+  {
+   "fieldname": "unit",
+   "fieldtype": "Data",
+   "label": "Unit"
+  },
+  {
+   "fieldname": "dealer",
+   "fieldtype": "Data",
+   "label": "Dealer"
+  },
+  {
+   "fieldname": "sapcode",
+   "fieldtype": "Data",
+   "label": "Sap code"
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Data",
+   "label": "Status"
+  },
+  {
+   "fieldname": "vehiclesusage",
+   "fieldtype": "Data",
+   "label": "Vehicle usage"
+  },
+  {
+   "fieldname": "regno",
+   "fieldtype": "Data",
+   "label": "Registration number"
+  },
+  {
+   "fieldname": "odoreading",
+   "fieldtype": "Data",
+   "label": "Odo reading"
+  },
+  {
+   "fieldname": "section_break_ckbt",
+   "fieldtype": "Section Break",
+   "label": "Break down information"
+  },
+  {
+   "fieldname": "reason",
+   "fieldtype": "Data",
+   "label": "Reason"
+  },
+  {
+   "fieldname": "reasonforrepair",
+   "fieldtype": "Data",
+   "label": "Reason for repair"
+  },
+  {
+   "fieldname": "failuredate",
+   "fieldtype": "Data",
+   "label": "Failure date"
+  },
+  {
+   "fieldname": "market",
+   "fieldtype": "Data",
+   "label": "Market"
+  },
+  {
+   "fieldname": "modifiedon",
+   "fieldtype": "Datetime",
+   "label": "Modified on"
+  },
+  {
+   "fieldname": "etr",
+   "fieldtype": "Data",
+   "label": "Estimated time of repair"
+  },
+  {
+   "fieldname": "tr",
+   "fieldtype": "Data",
+   "label": "Time of repair"
+  },
+  {
+   "fieldname": "jobtype",
+   "fieldtype": "Data",
+   "label": "Job type"
+  },
+  {
+   "fieldname": "column_break_2emt",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "ownername",
+   "fieldtype": "Data",
+   "label": "Owner namer"
+  },
+  {
+   "fieldname": "productseries",
+   "fieldtype": "Data",
+   "label": "Product series"
+  },
+  {
+   "fieldname": "unitofmeasure",
+   "fieldtype": "Data",
+   "label": "Unit of measure"
+  },
+  {
+   "fieldname": "warrantycoveragefrom",
+   "fieldtype": "Data",
+   "label": "Warranty coverage from"
+  },
+  {
+   "fieldname": "dealercode",
+   "fieldtype": "Data",
+   "label": "Dealer code"
+  },
+  {
+   "fieldname": "daysinworkshop",
+   "fieldtype": "Data",
+   "label": "Days in workshop"
+  },
+  {
+   "fieldname": "loadref",
+   "fieldtype": "Data",
+   "label": "Load reference"
+  },
+  {
+   "fieldname": "incidenttriplocationdescription",
+   "fieldtype": "Data",
+   "label": "Incident trip location description"
+  },
+  {
+   "fieldname": "policyno",
+   "fieldtype": "Data",
+   "label": "Policy number"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2024-07-03 16:57:30.785554",
+ "modified_by": "Administrator",
+ "module": "Edp Online Vehicles",
+ "name": "vortrackerdata",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

@@ -1,0 +1,27 @@
+{
+ "add_total_row": 0,
+ "columns": [],
+ "creation": "2024-03-14 10:45:16.196284",
+ "disabled": 0,
+ "docstatus": 0,
+ "doctype": "Report",
+ "filters": [],
+ "idx": 84,
+ "is_standard": "Yes",
+ "json": "{\"filters\":[],\"fields\":[[\"name\",\"Vehicles Service\"],[\"docstatus\",\"Vehicles Service\"],[\"vinserial_no\",\"Vehicles Service\"],[\"booking_datetime\",\"Vehicles Service\"],[\"model\",\"Vehicles Service\"],[\"status\",\"Vehicles Service\"],[\"technician\",\"Vehicles Service\"],[\"odo_reading_hours\",\"Vehicles Service\"],[\"amt_paid\",\"Vehicles Service\"],[\"_assign\",\"Vehicles Service\"],[\"authorised_by_full_names\",\"Vehicles Service\"],[\"authorised_by_signature\",\"Vehicles Service\"],[\"authorized_by\",\"Vehicles Service\"],[\"odo_reading\",\"Vehicles Service\"],[\"model_year\",\"Vehicles Service\"],[\"_liked_by\",\"Vehicles Service\"],[\"service_type\",\"Vehicles Service\"],[\"service_start_date\",\"Vehicles Service\"],[\"service_period\",\"Vehicles Service\"],[\"service_end_date\",\"Vehicles Service\"],[\"service_date\",\"Vehicles Service\"],[\"engine_no\",\"Vehicles Service\"],[\"dms_approval_no\",\"Vehicles Service\"],[\"dealer_invoice\",\"Vehicles Service\"],[\"dealer\",\"Vehicles Service\"],[\"date_paid\",\"Vehicles Service\"],[\"customer\",\"Vehicles Service\"],[\"creation\",\"Vehicles Service\"],[\"owner\",\"Vehicles Service\"],[\"colour\",\"Vehicles Service\"],[\"brand\",\"Vehicles Service\"],[\"bought_from_dealer\",\"Vehicles Service\"],[\"_user_tags\",\"Vehicles Service\"],[\"sticker\",\"Vehicles Service\"],[\"warranty_start_date\",\"Vehicles Service\"],[\"warranty_period_years\",\"Vehicles Service\"],[\"warranty_end_date\",\"Vehicles Service\"],[\"third_party_invoice_no\",\"Vehicles Service\"],[\"third_party_invoice_amt\",\"Vehicles Service\"],[\"tecnician_signature\",\"Vehicles Service\"],[\"technician_full_names\",\"Vehicles Service\"],[\"modified\",\"Vehicles Service\"],[\"modified_by\",\"Vehicles Service\"],[\"job_card_no\",\"Vehicles Service\"],[\"idx\",\"Vehicles Service\"],[\"description\",\"Service Parts Items\"],[\"idx\",\"Service Parts Items\"],[\"item\",\"Service Parts Items\"],[\"qty\",\"Service Parts Items\"],[\"price_excl\",\"Service Parts Items\"],[\"total_excl\",\"Service Labour Items\"],[\"rate_hour\",\"Service Labour Items\"],[\"labour_code\",\"Service Labour Items\"],[\"idx\",\"Service Labour Items\"],[\"duration_hours\",\"Service Labour Items\"],[\"description\",\"Service Labour Items\"]],\"order_by\":\"`tabVehicles Service`.`modified` desc\",\"page_length\":20,\"column_widths\":{\"name\":120,\"vinserial_no\":120,\"booking_datetime\":120,\"model\":120,\"status\":120,\"technician\":120,\"odo_reading_hours\":120,\"amt_paid\":120,\"_assign\":120,\"authorised_by_full_names\":120,\"authorised_by_signature\":120,\"authorized_by\":120,\"odo_reading\":120,\"model_year\":120,\"_liked_by\":120,\"service_type\":120,\"service_start_date\":120,\"service_period\":120,\"service_end_date\":120,\"service_date\":120,\"engine_no\":120,\"dms_approval_no\":120,\"dealer_invoice\":120,\"dealer\":120,\"date_paid\":120,\"customer\":120,\"creation\":120,\"owner\":120,\"colour\":120,\"brand\":120,\"bought_from_dealer\":120,\"_user_tags\":120,\"sticker\":120,\"warranty_start_date\":120,\"warranty_period_years\":120,\"warranty_end_date\":120,\"third_party_invoice_no\":120,\"third_party_invoice_amt\":120,\"tecnician_signature\":120,\"technician_full_names\":120,\"modified\":120,\"modified_by\":120,\"job_card_no\":120,\"idx\":120,\"Service Parts Items:description\":120,\"Service Parts Items:idx\":120,\"Service Parts Items:item\":120,\"Service Parts Items:qty\":120,\"Service Parts Items:price_excl\":120,\"Service Labour Items:total_excl\":120,\"Service Labour Items:rate_hour\":120,\"Service Labour Items:labour_code\":120,\"Service Labour Items:idx\":120,\"Service Labour Items:duration_hours\":120,\"Service Labour Items:description\":120},\"group_by\":null}",
+ "letterhead": null,
+ "modified": "2024-07-03 18:08:30.510426",
+ "modified_by": "Administrator",
+ "module": "Edp Online Vehicles",
+ "name": "Vehicles Services Detailed",
+ "owner": "Administrator",
+ "prepared_report": 0,
+ "ref_doctype": "Vehicles Service",
+ "report_name": "Vehicles Services Detailed",
+ "report_type": "Report Builder",
+ "roles": [
+  {
+   "role": "System Manager"
+  }
+ ]
+}

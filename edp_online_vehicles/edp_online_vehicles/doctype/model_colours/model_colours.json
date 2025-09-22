@@ -1,0 +1,66 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2024-03-13 22:59:03.843189",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_htu8",
+  "colour",
+  "oem_colour_code",
+  "naamsa_colour_code",
+  "natis_colour_code",
+  "discontinued"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_htu8",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "colour",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Colour",
+   "reqd": 1
+  },
+  {
+   "fieldname": "oem_colour_code",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "OEM Colour Code"
+  },
+  {
+   "fieldname": "naamsa_colour_code",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "NaamSA Colour Code"
+  },
+  {
+   "fieldname": "natis_colour_code",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "NATIS Colour Code"
+  },
+  {
+   "default": "0",
+   "fieldname": "discontinued",
+   "fieldtype": "Check",
+   "in_list_view": 1,
+   "label": "Discontinued"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2024-09-12 12:13:51.825535",
+ "modified_by": "Administrator",
+ "module": "Edp Online Vehicles",
+ "name": "Model Colours",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

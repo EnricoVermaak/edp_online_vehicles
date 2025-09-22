@@ -1,0 +1,461 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "format:{MM}{YY}-{######}",
+ "creation": "2025-02-26 07:44:15.051733",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "order_information_section",
+  "order_date_time",
+  "order_type",
+  "delivery_method",
+  "sales_person",
+  "column_break_rzqq",
+  "dealer",
+  "dealer_order_no",
+  "delivery_date",
+  "section_break_kdes",
+  "table_avsu",
+  "section_break_hpra",
+  "column_break_sayn",
+  "column_break_fugx",
+  "total_excl",
+  "vat",
+  "total_incl",
+  "customer_tab",
+  "customer",
+  "full_name",
+  "email",
+  "company_reg_no",
+  "search",
+  "fleet_customer",
+  "fleet_customer_name",
+  "fleet_customer_email",
+  "column_break_aaqn",
+  "phone",
+  "mobile",
+  "address",
+  "fleet_code",
+  "fleet_customer_phone",
+  "fleet_customer_mobile",
+  "fleet_customer_address",
+  "summary_tab",
+  "overview_section",
+  "total_parts_ordered",
+  "_order_delivered",
+  "column_break_yrfx",
+  "total_parts_delivered",
+  "order_delivery_time",
+  "undelivered_parts_section",
+  "table_eaco",
+  "section_break_durw",
+  "column_break_ktrl",
+  "column_break_hozn",
+  "total_undelivered_parts_qty",
+  "total_undelivered_parts_dealer_billing",
+  "delivered_parts_section",
+  "table_poxl",
+  "section_break_onbm",
+  "column_break_jwxt",
+  "column_break_mage",
+  "total_delivered_parts_qty",
+  "total_delivered_parts_dealer_billing",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "default": "Now",
+   "fieldname": "order_date_time",
+   "fieldtype": "Datetime",
+   "in_list_view": 1,
+   "label": "Order Date/ Time",
+   "reqd": 1
+  },
+  {
+   "fieldname": "sales_person",
+   "fieldtype": "Data",
+   "label": "Sales Person"
+  },
+  {
+   "fieldname": "column_break_rzqq",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "dealer",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Dealer",
+   "link_filters": "[[\"Company\",\"custom_active\",\"=\",1]]",
+   "options": "Company",
+   "reqd": 1
+  },
+  {
+   "fieldname": "order_type",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Order Type",
+   "options": "Part Order Type",
+   "reqd": 1
+  },
+  {
+   "default": "Delivery",
+   "fieldname": "delivery_method",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Delivery Method",
+   "options": "Delivery\nCollection",
+   "reqd": 1
+  },
+  {
+   "fieldname": "customer_tab",
+   "fieldtype": "Tab Break",
+   "label": "Customer"
+  },
+  {
+   "depends_on": "eval: doc.order_type != 'Fleet'",
+   "fieldname": "customer",
+   "fieldtype": "Link",
+   "in_standard_filter": 1,
+   "label": "Customer",
+   "options": "Dealer Customer"
+  },
+  {
+   "depends_on": "eval: doc.order_type != 'Fleet'",
+   "fetch_from": "customer.customer_full_name",
+   "fieldname": "full_name",
+   "fieldtype": "Data",
+   "in_standard_filter": 1,
+   "label": "Full Name",
+   "read_only": 1
+  },
+  {
+   "depends_on": "eval: doc.order_type != 'Fleet'",
+   "fetch_from": "customer.phone",
+   "fetch_if_empty": 1,
+   "fieldname": "phone",
+   "fieldtype": "Data",
+   "label": "Phone",
+   "read_only": 1
+  },
+  {
+   "depends_on": "eval: doc.order_type != 'Fleet'",
+   "fetch_from": "customer.mobile",
+   "fetch_if_empty": 1,
+   "fieldname": "mobile",
+   "fieldtype": "Phone",
+   "label": "Mobile",
+   "read_only": 1
+  },
+  {
+   "depends_on": "eval: doc.order_type != 'Fleet'",
+   "fetch_from": "customer.email",
+   "fetch_if_empty": 1,
+   "fieldname": "email",
+   "fieldtype": "Data",
+   "label": "Email",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_kdes",
+   "fieldtype": "Section Break",
+   "label": "Part Basket"
+  },
+  {
+   "fieldname": "table_avsu",
+   "fieldtype": "Table",
+   "options": "Part Order Item"
+  },
+  {
+   "fieldname": "dealer_order_no",
+   "fieldtype": "Data",
+   "label": "Dealer Order No",
+   "reqd": 1
+  },
+  {
+   "fieldname": "summary_tab",
+   "fieldtype": "Tab Break",
+   "label": "Summary"
+  },
+  {
+   "fieldname": "undelivered_parts_section",
+   "fieldtype": "Section Break",
+   "label": "Undelivered Parts"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "table_eaco",
+   "fieldtype": "Table",
+   "options": "Part Order Summary Item",
+   "read_only": 1
+  },
+  {
+   "fieldname": "delivered_parts_section",
+   "fieldtype": "Section Break",
+   "label": "Delivered Parts"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "table_poxl",
+   "fieldtype": "Table",
+   "options": "Part Order Summary Item",
+   "read_only": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "_order_delivered",
+   "fieldtype": "Percent",
+   "in_list_view": 1,
+   "label": "% Order Delivered",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_yrfx",
+   "fieldtype": "Column Break"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "total_parts_ordered",
+   "fieldtype": "Int",
+   "label": "Total Qty Parts Ordered",
+   "read_only": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "total_parts_delivered",
+   "fieldtype": "Int",
+   "label": "Total Qty Parts Delivered",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_durw",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_ktrl",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_hozn",
+   "fieldtype": "Column Break"
+  },
+  {
+   "allow_on_submit": 1,
+   "depends_on": "eval: doc.total_undelivered_parts_qty != 0",
+   "fieldname": "total_undelivered_parts_dealer_billing",
+   "fieldtype": "Currency",
+   "label": "Total Undelivered Parts (Dealer Billing)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_onbm",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_jwxt",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_mage",
+   "fieldtype": "Column Break"
+  },
+  {
+   "allow_on_submit": 1,
+   "depends_on": "eval: doc.total_delivered_parts_qty != 0",
+   "fieldname": "total_delivered_parts_dealer_billing",
+   "fieldtype": "Currency",
+   "label": "Total Delivered Parts (Dealer Billing)",
+   "read_only": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "depends_on": "eval: doc.total_undelivered_parts_qty != 0",
+   "fieldname": "total_undelivered_parts_qty",
+   "fieldtype": "Int",
+   "label": "Total Undelivered Parts (Qty)",
+   "read_only": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "depends_on": "eval: doc.total_delivered_parts_qty != 0",
+   "fieldname": "total_delivered_parts_qty",
+   "fieldtype": "Int",
+   "label": "Total Delivered Parts (Qty)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_hpra",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_sayn",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_fugx",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "total_excl",
+   "fieldtype": "Currency",
+   "label": "Total (Excl)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "vat",
+   "fieldtype": "Currency",
+   "label": "VAT",
+   "read_only": 1
+  },
+  {
+   "fieldname": "total_incl",
+   "fieldtype": "Currency",
+   "label": "Total (Incl)",
+   "read_only": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "depends_on": "eval: doc.order_delivery_time != '00:00:00'",
+   "fieldname": "order_delivery_time",
+   "fieldtype": "Data",
+   "label": "Order Delivery Time (HH:MM:SS)",
+   "read_only": 1
+  },
+  {
+   "depends_on": "eval: doc.order_type == 'Fleet'",
+   "fieldname": "company_reg_no",
+   "fieldtype": "Data",
+   "label": "Company Registration No"
+  },
+  {
+   "depends_on": "eval: doc.order_type == 'Fleet'",
+   "fieldname": "search",
+   "fieldtype": "Button",
+   "label": "Search"
+  },
+  {
+   "fieldname": "fleet_customer",
+   "fieldtype": "Link",
+   "label": "Fleet Customer",
+   "options": "Fleet Customer",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "fleet_customer.customer_full_name",
+   "fieldname": "fleet_customer_name",
+   "fieldtype": "Data",
+   "in_standard_filter": 1,
+   "label": "Fleet Customer Name",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "fleet_customer.email",
+   "fetch_if_empty": 1,
+   "fieldname": "fleet_customer_email",
+   "fieldtype": "Data",
+   "label": "Fleet Customer Email",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "fleet_customer.phone",
+   "fetch_if_empty": 1,
+   "fieldname": "fleet_customer_phone",
+   "fieldtype": "Data",
+   "label": "Fleet Customer Phone",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "fleet_customer.mobile",
+   "fetch_if_empty": 1,
+   "fieldname": "fleet_customer_mobile",
+   "fieldtype": "Phone",
+   "label": "Fleet Customer Mobile",
+   "read_only": 1
+  },
+  {
+   "fieldname": "order_information_section",
+   "fieldtype": "Section Break",
+   "label": "Order Information"
+  },
+  {
+   "fieldname": "overview_section",
+   "fieldtype": "Section Break",
+   "label": "Overview"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Part Order",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "column_break_aaqn",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "customer.address",
+   "fetch_if_empty": 1,
+   "fieldname": "address",
+   "fieldtype": "Small Text",
+   "label": "Address",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "customer.address",
+   "fetch_if_empty": 1,
+   "fieldname": "fleet_customer_address",
+   "fieldtype": "Small Text",
+   "label": "Address",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "fleet_customer.fleet_code",
+   "fetch_if_empty": 1,
+   "fieldname": "fleet_code",
+   "fieldtype": "Data",
+   "label": "Fleet Code",
+   "read_only": 1
+  },
+  {
+   "default": "Today",
+   "fieldname": "delivery_date",
+   "fieldtype": "Date",
+   "label": "Delivery Date",
+   "reqd": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2025-06-26 09:49:08.796290",
+ "modified_by": "Administrator",
+ "module": "Edp Online Vehicles",
+ "name": "Part Order",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}

@@ -1,0 +1,38 @@
+{
+ "cards": [
+  {
+   "card": "Available Dealer Stock"
+  },
+  {
+   "card": "Available HQ Stock"
+  },
+  {
+   "card": "Vehicles Incidents"
+  },
+  {
+   "card": "Maintenance Required"
+  }
+ ],
+ "charts": [
+  {
+   "chart": "Orders per Dealer",
+   "width": "Full"
+  },
+  {
+   "chart": "Wholesale",
+   "width": "Full"
+  }
+ ],
+ "creation": "2025-02-20 14:40:12.580569",
+ "dashboard_name": "Vehicle Overview",
+ "docstatus": 0,
+ "doctype": "Dashboard",
+ "idx": 11,
+ "is_default": 0,
+ "is_standard": 1,
+ "modified": "2025-06-11 13:41:19.586673",
+ "modified_by": "Administrator",
+ "module": "Edp Online Vehicles",
+ "name": "Vehicle Overview",
+ "owner": "Administrator"
+}

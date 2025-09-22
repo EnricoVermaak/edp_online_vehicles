@@ -1,0 +1,105 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "field:description",
+ "creation": "2024-09-19 12:57:33.426906",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "description",
+  "approver",
+  "second_approver",
+  "third_approver",
+  "sub_categories_section",
+  "claim_types",
+  "documents_section",
+  "documents",
+  "status_ageing_section",
+  "status_ageing"
+ ],
+ "fields": [
+  {
+   "fieldname": "description",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Description",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "sub_categories_section",
+   "fieldtype": "Section Break",
+   "label": "Claim Types"
+  },
+  {
+   "fieldname": "claim_types",
+   "fieldtype": "Table",
+   "options": "Dealer Claim Type List"
+  },
+  {
+   "fieldname": "approver",
+   "fieldtype": "Link",
+   "label": "First Approver",
+   "options": "User"
+  },
+  {
+   "fieldname": "second_approver",
+   "fieldtype": "Link",
+   "label": "Second Approver",
+   "options": "User"
+  },
+  {
+   "fieldname": "third_approver",
+   "fieldtype": "Link",
+   "label": "Third Approver",
+   "options": "User"
+  },
+  {
+   "fieldname": "documents_section",
+   "fieldtype": "Section Break",
+   "label": "Documents"
+  },
+  {
+   "fieldname": "documents",
+   "fieldtype": "Table",
+   "options": "DocType Documents"
+  },
+  {
+   "fieldname": "status_ageing_section",
+   "fieldtype": "Section Break",
+   "label": "Status Ageing"
+  },
+  {
+   "fieldname": "status_ageing",
+   "fieldtype": "Table",
+   "options": "Dealer Claims Ageing",
+   "read_only": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2025-04-29 20:30:25.442773",
+ "modified_by": "Administrator",
+ "module": "Edp Online Vehicles",
+ "name": "Dealer Claim Category",
+ "naming_rule": "By fieldname",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}

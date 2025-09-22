@@ -1,0 +1,407 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "format:DB{MM}{YY}-{######}",
+ "creation": "2024-05-26 19:09:18.353955",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "deal_created_on",
+  "column_break_bobz",
+  "dealer",
+  "status",
+  "section_break_eh6v",
+  "sales_person",
+  "sales_person_full_names",
+  "column_break_qivl",
+  "finance_option",
+  "application_type",
+  "vehicles_tab",
+  "stock_vehicles",
+  "section_break_cmus",
+  "column_break_idrq",
+  "column_break_bjcu",
+  "total_suggested_retail_excl",
+  "stock_vehicle_total_vat",
+  "stock_vehicle_total_incl",
+  "trade_in_tab",
+  "trade_in_vehicles",
+  "section_break_mnqf",
+  "column_break_llby",
+  "column_break_addg",
+  "total_trade_in_excl",
+  "total_allowance_on_trade_in_excl",
+  "total_customer_cash_excl",
+  "total_stand_in_price_excl",
+  "total_tradein_price_bank_excl",
+  "total_extras_excl",
+  "total_cash_back_excl",
+  "total_deposit_excl",
+  "sub_total",
+  "total_vat",
+  "total_settlement_excl",
+  "customer_card_tab",
+  "customer",
+  "customer_full_name",
+  "id__number",
+  "contact_number",
+  "email",
+  "column_break_bamr",
+  "address",
+  "citytown",
+  "code",
+  "offer_to_purchase_tab",
+  "section_break_cgof",
+  "table_scfl",
+  "section_break_lfyw",
+  "column_break_cuep",
+  "column_break_nhrb",
+  "sub_total_excl",
+  "vat",
+  "deposit",
+  "total_incl"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_eh6v",
+   "fieldtype": "Section Break",
+   "label": "Deal Information"
+  },
+  {
+   "fieldname": "sales_person",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Sales Person",
+   "options": "User",
+   "reqd": 1
+  },
+  {
+   "fieldname": "finance_option",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Finance Option",
+   "options": "\nCash\nFinance",
+   "reqd": 1
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Status",
+   "options": "Work In Progress\nConclude Deal\nDeliver Vehicle\nCompleted\nCancelled\nLost Sale",
+   "reqd": 1
+  },
+  {
+   "fieldname": "application_type",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Application Type",
+   "options": "\nPrivate\nCompany",
+   "reqd": 1
+  },
+  {
+   "fieldname": "vehicles_tab",
+   "fieldtype": "Tab Break",
+   "label": "Vehicles"
+  },
+  {
+   "fieldname": "stock_vehicles",
+   "fieldtype": "Table",
+   "label": "Stock Vehicles",
+   "options": "Vehicles Deal Builder Vehicle"
+  },
+  {
+   "fieldname": "trade_in_tab",
+   "fieldtype": "Tab Break",
+   "label": "Trade in"
+  },
+  {
+   "fieldname": "trade_in_vehicles",
+   "fieldtype": "Table",
+   "label": "Trade In Vehicles",
+   "options": "Vehicles Deal Builder Tradein"
+  },
+  {
+   "fieldname": "customer_card_tab",
+   "fieldtype": "Tab Break",
+   "label": "Customer Card"
+  },
+  {
+   "fetch_from": "customer.id_no",
+   "fieldname": "id__number",
+   "fieldtype": "Data",
+   "label": "ID  No"
+  },
+  {
+   "fetch_from": "customer.mobile",
+   "fetch_if_empty": 1,
+   "fieldname": "contact_number",
+   "fieldtype": "Phone",
+   "label": "Mobile No",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "customer.city_town",
+   "fieldname": "citytown",
+   "fieldtype": "Data",
+   "label": "City/Town"
+  },
+  {
+   "fetch_from": "customer.code",
+   "fieldname": "code",
+   "fieldtype": "Data",
+   "label": "Code"
+  },
+  {
+   "fetch_from": "customer.email",
+   "fetch_if_empty": 1,
+   "fieldname": "email",
+   "fieldtype": "Data",
+   "label": "Email",
+   "reqd": 1
+  },
+  {
+   "fieldname": "offer_to_purchase_tab",
+   "fieldtype": "Tab Break",
+   "label": "Offer To Purchase"
+  },
+  {
+   "fetch_from": "customer.address",
+   "fieldname": "address",
+   "fieldtype": "Data",
+   "label": "Address"
+  },
+  {
+   "default": "Now",
+   "fieldname": "deal_created_on",
+   "fieldtype": "Datetime",
+   "in_list_view": 1,
+   "label": "Deal Created On",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_bobz",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "sales_person.full_name",
+   "fieldname": "sales_person_full_names",
+   "fieldtype": "Data",
+   "label": "Sales Person Full Names"
+  },
+  {
+   "fieldname": "column_break_qivl",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_cmus",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_idrq",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_bjcu",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "total_suggested_retail_excl",
+   "fieldtype": "Currency",
+   "label": "Total Suggested Retail (Excl)",
+   "precision": "2"
+  },
+  {
+   "fieldname": "section_break_mnqf",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_llby",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_addg",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "total_trade_in_excl",
+   "fieldtype": "Currency",
+   "label": "Total Trade In (Excl)",
+   "precision": "2"
+  },
+  {
+   "fieldname": "total_extras_excl",
+   "fieldtype": "Currency",
+   "label": "Total Settlement (Excl)",
+   "precision": "2"
+  },
+  {
+   "fieldname": "sub_total",
+   "fieldtype": "Currency",
+   "label": "Sub Total",
+   "precision": "2"
+  },
+  {
+   "fieldname": "total_vat",
+   "fieldtype": "Currency",
+   "label": "VAT",
+   "precision": "2"
+  },
+  {
+   "fieldname": "total_settlement_excl",
+   "fieldtype": "Currency",
+   "label": "Total Settlement (Excl)"
+  },
+  {
+   "fieldname": "customer",
+   "fieldtype": "Link",
+   "in_standard_filter": 1,
+   "label": "Customer",
+   "options": "Dealer Customer",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_bamr",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "customer.customer_full_name",
+   "fieldname": "customer_full_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Customer Full Name"
+  },
+  {
+   "fieldname": "section_break_cgof",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "table_scfl",
+   "fieldtype": "Table",
+   "options": "Vehicle Deal Builder OTP Items"
+  },
+  {
+   "fieldname": "section_break_lfyw",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_cuep",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_nhrb",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "sub_total_excl",
+   "fieldtype": "Currency",
+   "label": "Sub Total (Excl)",
+   "precision": "2"
+  },
+  {
+   "fieldname": "vat",
+   "fieldtype": "Currency",
+   "label": "VAT",
+   "precision": "2"
+  },
+  {
+   "fieldname": "total_incl",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Total (Incl)",
+   "precision": "2"
+  },
+  {
+   "fieldname": "dealer",
+   "fieldtype": "Link",
+   "label": "Dealer",
+   "options": "Company",
+   "reqd": 1
+  },
+  {
+   "fieldname": "stock_vehicle_total_vat",
+   "fieldtype": "Currency",
+   "label": "VAT",
+   "precision": "2",
+   "read_only": 1
+  },
+  {
+   "fieldname": "stock_vehicle_total_incl",
+   "fieldtype": "Currency",
+   "label": "Total (Incl)",
+   "precision": "2",
+   "read_only": 1
+  },
+  {
+   "fieldname": "total_deposit_excl",
+   "fieldtype": "Currency",
+   "label": "Total Deposit (Excl)"
+  },
+  {
+   "fieldname": "total_allowance_on_trade_in_excl",
+   "fieldtype": "Currency",
+   "label": "Total Allowance On Trade In (Excl)",
+   "precision": "2"
+  },
+  {
+   "fieldname": "total_customer_cash_excl",
+   "fieldtype": "Currency",
+   "label": "Total Customer Cash (Excl)",
+   "precision": "2"
+  },
+  {
+   "fieldname": "total_stand_in_price_excl",
+   "fieldtype": "Currency",
+   "label": "Total Stand In Price (Excl)",
+   "precision": "2"
+  },
+  {
+   "fieldname": "total_tradein_price_bank_excl",
+   "fieldtype": "Currency",
+   "label": "Total Tradein Price Bank (Excl)",
+   "precision": "2"
+  },
+  {
+   "fieldname": "total_cash_back_excl",
+   "fieldtype": "Currency",
+   "label": "Total Cash Back (Excl)",
+   "precision": "2"
+  },
+  {
+   "fieldname": "deposit",
+   "fieldtype": "Currency",
+   "label": "Deposit",
+   "precision": "2"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2025-05-14 12:39:24.260378",
+ "modified_by": "Administrator",
+ "module": "Edp Online Vehicles",
+ "name": "Vehicles Deal Builder",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}

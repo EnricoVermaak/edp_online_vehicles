@@ -1,0 +1,186 @@
+{
+ "charts": [
+  {
+   "chart_name": "Vehicles Services",
+   "label": "Vehicle Services"
+  }
+ ],
+ "content": "[{\"id\":\"wOBlJiE209\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Service</span>\",\"col\":12}},{\"id\":\"6JRmdWrSgP\",\"type\":\"chart\",\"data\":{\"chart_name\":\"Vehicle Services\",\"col\":12}},{\"id\":\"JXqDXcWO23\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"cR26910rtF\",\"type\":\"card\",\"data\":{\"card_name\":\"Services\",\"col\":4}},{\"id\":\"Hx1nXZOPCe\",\"type\":\"card\",\"data\":{\"card_name\":\"Administration\",\"col\":4}},{\"id\":\"2T4pSI-0B_\",\"type\":\"card\",\"data\":{\"card_name\":\"Reports\",\"col\":4}}]",
+ "creation": "2024-11-27 11:21:47.279910",
+ "custom_blocks": [],
+ "docstatus": 0,
+ "doctype": "Workspace",
+ "for_user": "",
+ "hide_custom": 1,
+ "icon": "getting-started",
+ "idx": 0,
+ "indicator_color": "",
+ "is_hidden": 0,
+ "label": "Service",
+ "links": [
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Administration",
+   "link_count": 1,
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Service Schedule",
+   "link_count": 0,
+   "link_to": "Service Schedules",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Reports",
+   "link_count": 8,
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "Services by Customers",
+   "link_count": 0,
+   "link_to": "Services by Customers Report",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "Service",
+   "link_count": 0,
+   "link_to": "Service",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "Service Per Model",
+   "link_count": 0,
+   "link_to": "Service Per Model",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "Service Per Part",
+   "link_count": 0,
+   "link_to": "Service Per Part",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "Services Per Labour",
+   "link_count": 0,
+   "link_to": "Services Per Labour",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "Load Test",
+   "link_count": 0,
+   "link_to": "Load Test Report",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "Parts Linked to Services",
+   "link_count": 0,
+   "link_to": "Parts Linked to Services Report",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "Labour Linked to Services",
+   "link_count": 0,
+   "link_to": "Labour Linked to Services Report",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Services",
+   "link_count": 3,
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Service Booking",
+   "link_count": 0,
+   "link_to": "Vehicle Service Booking",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Service",
+   "link_count": 0,
+   "link_to": "Vehicles Service",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Breakdown",
+   "link_count": 0,
+   "link_to": "Vehicles Breakdown",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  }
+ ],
+ "modified": "2025-09-11 07:52:46.896030",
+ "modified_by": "Administrator",
+ "module": "Edp Online Vehicles",
+ "name": "Service",
+ "number_cards": [],
+ "owner": "Administrator",
+ "parent_page": "",
+ "public": 1,
+ "quick_lists": [],
+ "roles": [
+  {
+   "role": "System Administrator"
+  }
+ ],
+ "sequence_id": 16.0,
+ "shortcuts": [],
+ "title": "Service"
+}

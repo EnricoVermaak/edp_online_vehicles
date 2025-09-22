@@ -1,0 +1,69 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2024-08-26 11:52:20.604255",
+ "default_view": "List",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_xkf9",
+  "process_description",
+  "process_datetime",
+  "status",
+  "notes"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_xkf9",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "process_description",
+   "fieldtype": "Data",
+   "label": "Process Description"
+  },
+  {
+   "fieldname": "process_datetime",
+   "fieldtype": "Datetime",
+   "label": "Process Date/Time"
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "OK\nFailed"
+  },
+  {
+   "fieldname": "notes",
+   "fieldtype": "Data",
+   "label": "Notes"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2024-08-26 12:13:09.257750",
+ "modified_by": "Administrator",
+ "module": "Edp Online Vehicles",
+ "name": "Process Dashboard",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "search_fields": "process_description",
+ "show_title_field_in_link": 1,
+ "sort_field": "status",
+ "sort_order": "ASC",
+ "states": [],
+ "title_field": "process_description"
+}

@@ -1,0 +1,437 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "field:part_order",
+ "creation": "2025-03-04 16:53:51.395409",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "order_information_section",
+  "order_date_time",
+  "order_type",
+  "delivery_method",
+  "sales_person",
+  "column_break_fzrr",
+  "part_order",
+  "dealer",
+  "dealer_order_no",
+  "part_order_status",
+  "part_basket_section",
+  "table_ugma",
+  "section_break_ywid",
+  "column_break_ehey",
+  "column_break_poer",
+  "total_excl",
+  "vat",
+  "total_incl",
+  "section_break_xwie",
+  "submitted_to_dms",
+  "dms_no",
+  "customer_tab",
+  "customer_information_section",
+  "company_reg_no",
+  "customer",
+  "fleet_customer",
+  "customer_full_name",
+  "email",
+  "column_break_zfsv",
+  "fleet_code",
+  "phone",
+  "mobile",
+  "adress",
+  "summary_tab",
+  "overview_section",
+  "total_qty_parts_ordered",
+  "_order_delivered",
+  "column_break_fzqo",
+  "total_qty_parts_delivered",
+  "order_delivery_time",
+  "undelivered_parts_section",
+  "table_qmpy",
+  "section_break_anxo",
+  "column_break_xpwn",
+  "column_break_dddf",
+  "total_undelivered_parts_qty",
+  "total_undelivered_parts_dealer_billing_excl",
+  "delivered_parts_section",
+  "table_cipd",
+  "section_break_fovy",
+  "column_break_osdk",
+  "column_break_zptk",
+  "total_delivered_parts_qty",
+  "total_delivered_parts_dealer_billing_excl",
+  "section_break_sgsf",
+  "total_picking_time",
+  "column_break_zefm",
+  "total_despatch_time"
+ ],
+ "fields": [
+  {
+   "fieldname": "order_type",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Order Type",
+   "options": "Part Order Type",
+   "read_only": 1
+  },
+  {
+   "fieldname": "delivery_method",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Delivery Method",
+   "options": "Delivery\nCollection",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_fzrr",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "dealer",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Dealer",
+   "options": "Company",
+   "read_only": 1
+  },
+  {
+   "fieldname": "dealer_order_no",
+   "fieldtype": "Data",
+   "in_standard_filter": 1,
+   "label": "Dealer Order No",
+   "read_only": 1
+  },
+  {
+   "fieldname": "sales_person",
+   "fieldtype": "Data",
+   "label": "Sales Person",
+   "read_only": 1
+  },
+  {
+   "fieldname": "order_date_time",
+   "fieldtype": "Datetime",
+   "in_list_view": 1,
+   "label": "Order Date/ Time",
+   "read_only": 1
+  },
+  {
+   "fieldname": "part_order_status",
+   "fieldtype": "Link",
+   "label": "Part Order Status",
+   "options": "Part Order Status"
+  },
+  {
+   "fieldname": "order_information_section",
+   "fieldtype": "Section Break",
+   "label": "Order Information"
+  },
+  {
+   "fieldname": "part_basket_section",
+   "fieldtype": "Section Break",
+   "label": "Part Basket"
+  },
+  {
+   "fieldname": "table_ugma",
+   "fieldtype": "Table",
+   "options": "Part Order Item",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_ywid",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_ehey",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_poer",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "total_excl",
+   "fieldtype": "Currency",
+   "label": "Total (Excl)",
+   "precision": "2",
+   "read_only": 1
+  },
+  {
+   "fieldname": "vat",
+   "fieldtype": "Currency",
+   "label": "VAT",
+   "precision": "2",
+   "read_only": 1
+  },
+  {
+   "fieldname": "total_incl",
+   "fieldtype": "Currency",
+   "label": "Total (Incl)",
+   "precision": "2",
+   "read_only": 1
+  },
+  {
+   "fieldname": "customer_tab",
+   "fieldtype": "Tab Break",
+   "label": "Customer"
+  },
+  {
+   "fieldname": "customer",
+   "fieldtype": "Link",
+   "label": "Customer",
+   "options": "Dealer Customer",
+   "read_only": 1
+  },
+  {
+   "fieldname": "customer_full_name",
+   "fieldtype": "Data",
+   "label": "Full Name",
+   "read_only": 1
+  },
+  {
+   "fieldname": "phone",
+   "fieldtype": "Data",
+   "label": "Phone",
+   "read_only": 1
+  },
+  {
+   "fieldname": "mobile",
+   "fieldtype": "Phone",
+   "label": "Mobile",
+   "read_only": 1
+  },
+  {
+   "fieldname": "email",
+   "fieldtype": "Data",
+   "label": "Email",
+   "read_only": 1
+  },
+  {
+   "fieldname": "customer_information_section",
+   "fieldtype": "Section Break",
+   "label": "Customer Information"
+  },
+  {
+   "fieldname": "summary_tab",
+   "fieldtype": "Tab Break",
+   "label": "Summary"
+  },
+  {
+   "fieldname": "overview_section",
+   "fieldtype": "Section Break",
+   "label": "Overview"
+  },
+  {
+   "fieldname": "total_qty_parts_ordered",
+   "fieldtype": "Int",
+   "label": "Total Qty Parts Ordered",
+   "read_only": 1
+  },
+  {
+   "fieldname": "_order_delivered",
+   "fieldtype": "Percent",
+   "in_list_view": 1,
+   "label": "% Delivered",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_fzqo",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "total_qty_parts_delivered",
+   "fieldtype": "Int",
+   "label": "Total Qty Parts Delivered",
+   "read_only": 1
+  },
+  {
+   "fieldname": "order_delivery_time",
+   "fieldtype": "Data",
+   "label": "Order Delivery Time (HH:MM:SS)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "undelivered_parts_section",
+   "fieldtype": "Section Break",
+   "label": "Undelivered Parts"
+  },
+  {
+   "fieldname": "table_qmpy",
+   "fieldtype": "Table",
+   "options": "Part Order Summary Item"
+  },
+  {
+   "fieldname": "section_break_anxo",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_xpwn",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_dddf",
+   "fieldtype": "Column Break"
+  },
+  {
+   "depends_on": "eval: doc.total_undelivered_parts_qty != 0",
+   "fieldname": "total_undelivered_parts_qty",
+   "fieldtype": "Int",
+   "label": "Total Undelivered Parts (Qty)",
+   "read_only": 1
+  },
+  {
+   "depends_on": "eval: doc.total_undelivered_parts_dealer_billing_excl != 0",
+   "fieldname": "total_undelivered_parts_dealer_billing_excl",
+   "fieldtype": "Currency",
+   "label": "Total Undelivered Parts (Dealer Billing Excl)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "delivered_parts_section",
+   "fieldtype": "Section Break",
+   "label": "Fully Delivered Parts"
+  },
+  {
+   "fieldname": "table_cipd",
+   "fieldtype": "Table",
+   "options": "Part Order Summary Item",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_fovy",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_osdk",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_zptk",
+   "fieldtype": "Column Break"
+  },
+  {
+   "depends_on": "eval: doc.total_delivered_parts_qty != 0",
+   "fieldname": "total_delivered_parts_qty",
+   "fieldtype": "Int",
+   "label": "Total Delivered Parts (Qty)",
+   "read_only": 1
+  },
+  {
+   "depends_on": "eval: doc.total_delivered_parts_qty != 0",
+   "fieldname": "total_delivered_parts_dealer_billing_excl",
+   "fieldtype": "Currency",
+   "label": "Total Delivered Parts (Dealer Billing Excl)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_sgsf",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "total_picking_time",
+   "fieldtype": "Data",
+   "label": "Total Picking Time (HH:MM:SS)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_zefm",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "total_despatch_time",
+   "fieldtype": "Data",
+   "label": "Total Despatch Time (HH:MM:SS)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "part_order",
+   "fieldtype": "Link",
+   "label": "Part Order No",
+   "options": "Part Order",
+   "read_only": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "company_reg_no",
+   "fieldtype": "Data",
+   "label": "Company Registration No",
+   "read_only": 1
+  },
+  {
+   "fieldname": "fleet_customer",
+   "fieldtype": "Link",
+   "label": "Customer",
+   "options": "Fleet Customer",
+   "read_only": 1
+  },
+  {
+   "fieldname": "adress",
+   "fieldtype": "Small Text",
+   "label": "Address",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_zfsv",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "fleet_code",
+   "fieldtype": "Data",
+   "label": "Fleet Code",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_xwie",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "submitted_to_dms",
+   "fieldtype": "Datetime",
+   "label": "Submitted To DMS"
+  },
+  {
+   "fieldname": "dms_no",
+   "fieldtype": "Data",
+   "label": "DMS No"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [
+  {
+   "group": "Picking",
+   "link_doctype": "Part Picking Slip",
+   "link_fieldname": "hq_part_order"
+  },
+  {
+   "group": "Delivery",
+   "link_doctype": "Parts Delivery Note",
+   "link_fieldname": "hq_part_order"
+  }
+ ],
+ "modified": "2025-05-23 08:15:16.466420",
+ "modified_by": "Administrator",
+ "module": "Edp Online Vehicles",
+ "name": "HQ Part Order",
+ "naming_rule": "By fieldname",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}

@@ -1,0 +1,215 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "format:VRFC{YY}{MM}{#######}",
+ "creation": "2025-05-13 12:58:12.528500",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "request_for_credit_details_section",
+  "request_date_time",
+  "reason_for_credit",
+  "column_break_fumh",
+  "dealer",
+  "status",
+  "order_information_section",
+  "order_no",
+  "order_date",
+  "order_placed_by",
+  "column_break_gcpo",
+  "hq_invoice_no",
+  "hq_invoice_date",
+  "hq_invoice_amt",
+  "vehicle_information_section",
+  "vin_serial_no",
+  "model",
+  "model_description",
+  "column_break_sjoa",
+  "category",
+  "range",
+  "summary_section",
+  "summary_of_request_for_credit"
+ ],
+ "fields": [
+  {
+   "default": "Now",
+   "fieldname": "request_date_time",
+   "fieldtype": "Datetime",
+   "in_list_view": 1,
+   "label": "Request Date/ Time",
+   "read_only": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "request_for_credit_details_section",
+   "fieldtype": "Section Break",
+   "label": "Request For Credit Details"
+  },
+  {
+   "fieldname": "column_break_fumh",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "dealer",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Dealer",
+   "options": "Company",
+   "reqd": 1
+  },
+  {
+   "default": "Pending",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Status",
+   "options": "Pending\nApproved\nCompleted\nMore Info Required\nDeclined\nCancelled"
+  },
+  {
+   "fieldname": "order_information_section",
+   "fieldtype": "Section Break",
+   "label": "Order Information"
+  },
+  {
+   "fieldname": "order_no",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Order No",
+   "options": "Head Office Vehicle Orders",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "order_no.name_of_ordering_user",
+   "fieldname": "order_placed_by",
+   "fieldtype": "Data",
+   "label": "Order Placed By",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_gcpo",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "order_no.order_datetime",
+   "fieldname": "order_date",
+   "fieldtype": "Datetime",
+   "label": "Order Date",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "vin_serial_no.ho_invoice_no",
+   "fieldname": "hq_invoice_no",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "HQ Invoice No"
+  },
+  {
+   "fetch_from": "vin_serial_no.ho_invoice_date",
+   "fieldname": "hq_invoice_date",
+   "fieldtype": "Datetime",
+   "label": "HQ Invoice Date"
+  },
+  {
+   "fetch_from": "vin_serial_no.ho_invoice_amt",
+   "fieldname": "hq_invoice_amt",
+   "fieldtype": "Currency",
+   "label": "HQ Invoice Amt"
+  },
+  {
+   "fieldname": "vehicle_information_section",
+   "fieldtype": "Section Break",
+   "label": "Vehicle Information"
+  },
+  {
+   "fetch_from": "order_no.vinserial_no",
+   "fieldname": "vin_serial_no",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "VIN/ Serial No",
+   "options": "Vehicle Stock",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "vin_serial_no.model",
+   "fieldname": "model",
+   "fieldtype": "Link",
+   "label": "Model",
+   "options": "Model Administration",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "vin_serial_no.description",
+   "fieldname": "model_description",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Model Description"
+  },
+  {
+   "fieldname": "column_break_sjoa",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "vin_serial_no.catagory",
+   "fieldname": "category",
+   "fieldtype": "Link",
+   "label": "Category",
+   "options": "Vehicles Category",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "vin_serial_no.range",
+   "fieldname": "range",
+   "fieldtype": "Link",
+   "label": "Range",
+   "options": "Vehicle Range"
+  },
+  {
+   "fieldname": "reason_for_credit",
+   "fieldtype": "Link",
+   "label": "Reason For Credit",
+   "options": "Vehicle Request For Credit Reason",
+   "reqd": 1
+  },
+  {
+   "fieldname": "summary_section",
+   "fieldtype": "Section Break",
+   "label": "Summary"
+  },
+  {
+   "fieldname": "summary_of_request_for_credit",
+   "fieldtype": "Small Text",
+   "label": "Summary of Request For Credit"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2025-05-22 10:43:40.241846",
+ "modified_by": "Administrator",
+ "module": "Edp Online Vehicles",
+ "name": "Vehicle Request For Credit",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}

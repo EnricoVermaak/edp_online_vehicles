@@ -1,0 +1,42 @@
+{
+ "cards": [
+  {
+   "card": "Part Orders"
+  },
+  {
+   "card": "Total Parts Ordered (Today)"
+  },
+  {
+   "card": "Total Parts Delivered (Today)"
+  },
+  {
+   "card": "Average Delivery (%)"
+  }
+ ],
+ "charts": [
+  {
+   "chart": "Part Orders (Dealer Billing)",
+   "width": "Full"
+  },
+  {
+   "chart": "Part Order Status",
+   "width": "Half"
+  },
+  {
+   "chart": "Top 10 Dealer Part Orders",
+   "width": "Full"
+  }
+ ],
+ "creation": "2025-03-04 18:25:23.341253",
+ "dashboard_name": "Parts Overview",
+ "docstatus": 0,
+ "doctype": "Dashboard",
+ "idx": 34,
+ "is_default": 1,
+ "is_standard": 1,
+ "modified": "2025-06-25 11:05:12.426830",
+ "modified_by": "Administrator",
+ "module": "Edp Online Vehicles",
+ "name": "Parts Overview",
+ "owner": "Administrator"
+}

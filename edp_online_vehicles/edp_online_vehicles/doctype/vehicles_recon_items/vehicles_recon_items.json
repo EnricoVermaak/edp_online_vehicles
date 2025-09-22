@@ -1,0 +1,151 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2024-12-04 11:46:49.467072",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "vin_serial_no",
+  "model",
+  "description",
+  "stock_no",
+  "engine_no",
+  "colour",
+  "in_stock",
+  "sold",
+  "column_break_avzt",
+  "invoice_no",
+  "invoice_date",
+  "invoice_amount",
+  "paid",
+  "demo",
+  "retail_date",
+  "section_break_akob",
+  "reason",
+  "comment"
+ ],
+ "fields": [
+  {
+   "fieldname": "vin_serial_no",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "VIN/ Serial No",
+   "options": "Vehicle Stock",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "vin_serial_no.model",
+   "fieldname": "model",
+   "fieldtype": "Data",
+   "label": "Model",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "vin_serial_no.description",
+   "fieldname": "description",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Description",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "vin_serial_no.stock_no",
+   "fieldname": "stock_no",
+   "fieldtype": "Data",
+   "label": "Stock No"
+  },
+  {
+   "fetch_from": "vin_serial_no.engine_no",
+   "fieldname": "engine_no",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Engine No"
+  },
+  {
+   "fetch_from": "vin_serial_no.colour",
+   "fieldname": "colour",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Colour"
+  },
+  {
+   "default": "0",
+   "fieldname": "in_stock",
+   "fieldtype": "Check",
+   "in_list_view": 1,
+   "label": "In Stock"
+  },
+  {
+   "default": "0",
+   "fieldname": "sold",
+   "fieldtype": "Check",
+   "in_list_view": 1,
+   "label": "Sold"
+  },
+  {
+   "fieldname": "column_break_avzt",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "invoice_no",
+   "fieldtype": "Data",
+   "label": "Invoice No"
+  },
+  {
+   "fieldname": "invoice_date",
+   "fieldtype": "Data",
+   "label": "Invoice Date"
+  },
+  {
+   "fieldname": "invoice_amount",
+   "fieldtype": "Currency",
+   "label": "Invoice Amount"
+  },
+  {
+   "default": "0",
+   "fieldname": "paid",
+   "fieldtype": "Check",
+   "label": "Paid"
+  },
+  {
+   "default": "0",
+   "fieldname": "demo",
+   "fieldtype": "Check",
+   "label": "Demo"
+  },
+  {
+   "fieldname": "retail_date",
+   "fieldtype": "Date",
+   "label": "Retail Date"
+  },
+  {
+   "fieldname": "section_break_akob",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "reason",
+   "fieldtype": "Small Text",
+   "label": "Reason",
+   "mandatory_depends_on": "eval: doc.sold == 1;"
+  },
+  {
+   "fieldname": "comment",
+   "fieldtype": "Small Text",
+   "label": "Comment",
+   "mandatory_depends_on": "eval: doc.sold == 1;"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2025-01-15 09:31:48.127075",
+ "modified_by": "Administrator",
+ "module": "Edp Online Vehicles",
+ "name": "Vehicles Recon Items",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

@@ -1,0 +1,56 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2024-06-20 19:42:06.898098",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_syh3",
+  "inv_no",
+  "customer",
+  "inv_qty",
+  "checked_qty"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_syh3",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "inv_no",
+   "fieldtype": "Link",
+   "label": "Inv No",
+   "options": "Sales Invoice"
+  },
+  {
+   "fetch_from": "inv_no.customer",
+   "fieldname": "customer",
+   "fieldtype": "Data",
+   "label": "Customer"
+  },
+  {
+   "fetch_from": "inv_no.total_qty",
+   "fieldname": "inv_qty",
+   "fieldtype": "Int",
+   "label": "Inv Qty"
+  },
+  {
+   "fieldname": "checked_qty",
+   "fieldtype": "Int",
+   "label": "Checked Qty"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2024-07-09 20:04:50.242850",
+ "modified_by": "Administrator",
+ "module": "Edp Online Vehicles",
+ "name": "Security Checklist",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

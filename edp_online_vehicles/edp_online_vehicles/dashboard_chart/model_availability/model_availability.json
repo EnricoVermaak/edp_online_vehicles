@@ -1,0 +1,33 @@
+{
+ "chart_name": "Model Availability",
+ "chart_type": "Report",
+ "creation": "2025-02-20 14:43:49.543164",
+ "docstatus": 0,
+ "doctype": "Dashboard Chart",
+ "dynamic_filters_json": "{}",
+ "filters_json": "{}",
+ "group_by_type": "Count",
+ "idx": 0,
+ "is_public": 1,
+ "is_standard": 1,
+ "modified": "2025-02-20 14:46:27.604730",
+ "modified_by": "Administrator",
+ "module": "Edp Online Vehicles",
+ "name": "Model Availability",
+ "number_of_groups": 0,
+ "owner": "Administrator",
+ "report_name": "Model Availability",
+ "roles": [],
+ "time_interval": "Yearly",
+ "timeseries": 0,
+ "timespan": "Last Year",
+ "type": "Bar",
+ "use_report_chart": 0,
+ "x_field": "model",
+ "y_axis": [
+  {
+   "color": "#29CD42",
+   "y_field": "available_models"
+  }
+ ]
+}

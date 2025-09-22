@@ -1,0 +1,1 @@
+[2025-01-30 12:51:30]: Error writing file for VIN MA1RA4VK2S2015091: (1292, "Incorrect datetime value: '30-01-2025 12:51:30' for column `msademo.edponline.co.za`.`tabVehicle Tracking`.`request_datetime` at row 1")

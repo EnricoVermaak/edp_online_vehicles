@@ -1,0 +1,57 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-04-01 09:23:31.319885",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "customer",
+  "customer_full_name",
+  "email",
+  "phone"
+ ],
+ "fields": [
+  {
+   "fieldname": "customer",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Customer",
+   "options": "Dealer Customer",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "customer.email",
+   "fieldname": "email",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Email"
+  },
+  {
+   "fetch_from": "customer.mobile",
+   "fieldname": "phone",
+   "fieldtype": "Phone",
+   "in_list_view": 1,
+   "label": "Mobile"
+  },
+  {
+   "fetch_from": "customer.customer_full_name",
+   "fieldname": "customer_full_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Customer Full Name"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2025-04-01 09:29:15.868870",
+ "modified_by": "Administrator",
+ "module": "Edp Online Vehicles",
+ "name": "Campaign Customers",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

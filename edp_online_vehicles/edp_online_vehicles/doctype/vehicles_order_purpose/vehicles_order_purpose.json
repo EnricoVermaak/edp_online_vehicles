@@ -1,0 +1,89 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "field:description",
+ "creation": "2024-04-24 14:23:43.831335",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_93fl",
+  "description",
+  "apply_fifo_on_orders",
+  "automatically_allocate_received_shipments",
+  "allocate_from_date",
+  "allocate_to_date",
+  "automatically_set_to_back_order"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_93fl",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Description",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "default": "0",
+   "description": "When selected FIFO ruling will apply to Head Office Orders of this Purpose.",
+   "fieldname": "apply_fifo_on_orders",
+   "fieldtype": "Check",
+   "label": "Automatically Apply FIFO rule on Vehicles Orders"
+  },
+  {
+   "fieldname": "allocate_from_date",
+   "fieldtype": "Int",
+   "label": "Allocate From Date (Day of Month)"
+  },
+  {
+   "fieldname": "allocate_to_date",
+   "fieldtype": "Int",
+   "label": "Allocate To Date (Day of Month)"
+  },
+  {
+   "default": "0",
+   "fieldname": "automatically_allocate_received_shipments",
+   "fieldtype": "Check",
+   "label": " Automatically allocate received shipment vehicles to open back orders"
+  },
+  {
+   "default": "0",
+   "description": "When this checkbox is selected, any order placed with this purpose will automatically be set to Back Order, regardless of stock availability. If unchecked, the system will first check if stock is available and set the order type based on that.",
+   "fieldname": "automatically_set_to_back_order",
+   "fieldtype": "Check",
+   "label": "Automatically set to Back Order"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2025-06-09 14:14:07.116437",
+ "modified_by": "Administrator",
+ "module": "Edp Online Vehicles",
+ "name": "Vehicles Order Purpose",
+ "naming_rule": "By fieldname",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "search_fields": "description",
+ "show_title_field_in_link": 1,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "description"
+}

@@ -1,0 +1,65 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-04-14 12:37:37.680554",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "document_no",
+  "service_type",
+  "odo_readinghours",
+  "status",
+  "service_date"
+ ],
+ "fields": [
+  {
+   "fieldname": "document_no",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Document No",
+   "options": "Vehicles Service",
+   "read_only": 1
+  },
+  {
+   "fieldname": "service_type",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Service Type",
+   "read_only": 1
+  },
+  {
+   "fieldname": "odo_readinghours",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Odo Reading/Hours",
+   "read_only": 1
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Status",
+   "read_only": 1
+  },
+  {
+   "fieldname": "service_date",
+   "fieldtype": "Datetime",
+   "in_list_view": 1,
+   "label": "Service Date",
+   "read_only": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2025-04-14 12:46:43.919039",
+ "modified_by": "Administrator",
+ "module": "Edp Online Vehicles",
+ "name": "Service History",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

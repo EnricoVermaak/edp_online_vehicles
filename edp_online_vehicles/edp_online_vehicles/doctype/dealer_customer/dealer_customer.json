@@ -1,0 +1,316 @@
+{
+ "actions": [],
+ "allow_import": 1,
+ "allow_rename": 1,
+ "autoname": "format:DCUST-{#########}",
+ "creation": "2024-10-09 09:37:26.931527",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "customer_type",
+  "company_name",
+  "customer_name",
+  "customer_surname",
+  "customer_full_name",
+  "id_no",
+  "age",
+  "vat_no",
+  "company_reg_no",
+  "mobile",
+  "email",
+  "phone",
+  "work_phone",
+  "address",
+  "suburb",
+  "city_town",
+  "code",
+  "province_state",
+  "country",
+  "column_break_puju",
+  "check_qvlp",
+  "would_you_like_to_receive_marketing_updates_via_email",
+  "would_you_like_to_receive_marketing_updates_via_post",
+  "did_you_confirm_all_popi_regulations_with_your_customer",
+  "references_section",
+  "from_lead",
+  "from_opportunity",
+  "other_section",
+  "company",
+  "default_price_list",
+  "legal_docs_tab",
+  "driver_license",
+  "id",
+  "passport",
+  "linked_vehicles_tab",
+  "vehicles_linked_to_customer"
+ ],
+ "fields": [
+  {
+   "allow_in_quick_entry": 1,
+   "fieldname": "customer_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Customer Name",
+   "reqd": 1
+  },
+  {
+   "allow_in_quick_entry": 1,
+   "fieldname": "customer_surname",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Customer Surname",
+   "mandatory_depends_on": "eval:(doc.customer_type == \"Individual\" || doc.customer_type == \"Foreigner\");"
+  },
+  {
+   "allow_in_quick_entry": 1,
+   "fieldname": "customer_type",
+   "fieldtype": "Select",
+   "label": "Customer Type",
+   "options": "Individual\nForeigner\nBusiness",
+   "reqd": 1
+  },
+  {
+   "fieldname": "from_lead",
+   "fieldtype": "Link",
+   "label": "From Lead",
+   "options": "Lead"
+  },
+  {
+   "fieldname": "from_opportunity",
+   "fieldtype": "Link",
+   "label": "From Opportunity",
+   "options": "Opportunity"
+  },
+  {
+   "fieldname": "id_no",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "ID No",
+   "mandatory_depends_on": "eval:doc.customer_type == \"Individual\""
+  },
+  {
+   "fieldname": "check_qvlp",
+   "fieldtype": "Select",
+   "label": "Would you like to receive marketing updates via SMS?",
+   "options": "\nYes\nNo",
+   "reqd": 1
+  },
+  {
+   "fieldname": "references_section",
+   "fieldtype": "Section Break",
+   "label": "References"
+  },
+  {
+   "fieldname": "would_you_like_to_receive_marketing_updates_via_email",
+   "fieldtype": "Select",
+   "label": "Would you like to receive marketing updates via Email?",
+   "options": "\nYes\nNo",
+   "reqd": 1
+  },
+  {
+   "fieldname": "would_you_like_to_receive_marketing_updates_via_post",
+   "fieldtype": "Select",
+   "label": "Would you like to receive marketing updates via Post?",
+   "options": "\nYes\nNo",
+   "reqd": 1
+  },
+  {
+   "fieldname": "did_you_confirm_all_popi_regulations_with_your_customer",
+   "fieldtype": "Select",
+   "label": "Did you confirm all POPI regulations with your customer?",
+   "options": "\nYes\nNo",
+   "reqd": 1
+  },
+  {
+   "fieldname": "vat_no",
+   "fieldtype": "Data",
+   "label": "VAT No"
+  },
+  {
+   "fieldname": "company_reg_no",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Company Reg No",
+   "mandatory_depends_on": "eval:doc.customer_type == \"Business\""
+  },
+  {
+   "fieldname": "age",
+   "fieldtype": "Int",
+   "label": "Age",
+   "read_only": 1
+  },
+  {
+   "fieldname": "phone",
+   "fieldtype": "Phone",
+   "label": "Phone",
+   "precision": "0"
+  },
+  {
+   "fieldname": "mobile",
+   "fieldtype": "Phone",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Mobile",
+   "reqd": 1
+  },
+  {
+   "fieldname": "email",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Email",
+   "reqd": 1
+  },
+  {
+   "fieldname": "address",
+   "fieldtype": "Small Text",
+   "label": "Address"
+  },
+  {
+   "fieldname": "city_town",
+   "fieldtype": "Data",
+   "label": "City/ Town"
+  },
+  {
+   "fieldname": "province_state",
+   "fieldtype": "Select",
+   "label": "Province/ State"
+  },
+  {
+   "fieldname": "code",
+   "fieldtype": "Int",
+   "label": "Code"
+  },
+  {
+   "fieldname": "other_section",
+   "fieldtype": "Section Break",
+   "label": "Other"
+  },
+  {
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "label": "Company",
+   "options": "Company",
+   "read_only": 1,
+   "reqd": 1
+  },
+  {
+   "description": "In line with the Protection of Personal Information Act, please ask your customer the following questions.\nIf the customer opts out of marketing, their info will be used solely for service and warranty purposes.",
+   "fieldname": "column_break_puju",
+   "fieldtype": "Column Break",
+   "label": "Protection of Personal Information"
+  },
+  {
+   "fieldname": "legal_docs_tab",
+   "fieldtype": "Tab Break",
+   "label": "Legal Docs"
+  },
+  {
+   "fieldname": "driver_license",
+   "fieldtype": "Attach",
+   "label": "Driver License"
+  },
+  {
+   "fieldname": "id",
+   "fieldtype": "Attach",
+   "label": "ID"
+  },
+  {
+   "fieldname": "passport",
+   "fieldtype": "Attach",
+   "label": "Passport"
+  },
+  {
+   "fieldname": "linked_vehicles_tab",
+   "fieldtype": "Tab Break",
+   "label": "Linked Vehicles"
+  },
+  {
+   "fieldname": "vehicles_linked_to_customer",
+   "fieldtype": "Table",
+   "label": "Vehicles Linked to Customer",
+   "options": "Linked Vehicles"
+  },
+  {
+   "fieldname": "customer_full_name",
+   "fieldtype": "Data",
+   "label": "Customer Full Name",
+   "read_only": 1
+  },
+  {
+   "allow_in_quick_entry": 1,
+   "depends_on": "eval: doc.customer_type == 'Business'",
+   "fieldname": "company_name",
+   "fieldtype": "Data",
+   "label": "Company Name",
+   "mandatory_depends_on": "eval:doc.customer_type == \"Business\""
+  },
+  {
+   "fieldname": "suburb",
+   "fieldtype": "Data",
+   "label": "Suburb"
+  },
+  {
+   "fieldname": "work_phone",
+   "fieldtype": "Float",
+   "label": "Work Phone",
+   "precision": "0"
+  },
+  {
+   "fieldname": "country",
+   "fieldtype": "Link",
+   "label": "Country",
+   "options": "Country"
+  },
+  {
+   "fieldname": "default_price_list",
+   "fieldtype": "Link",
+   "label": "Default Price List",
+   "options": "Price List"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [
+  {
+   "link_doctype": "Vehicle Stock",
+   "link_fieldname": "customer"
+  },
+  {
+   "link_doctype": "Vehicles Service",
+   "link_fieldname": "customer"
+  },
+  {
+   "link_doctype": "Vehicles Warranty Claims",
+   "link_fieldname": "customer"
+  }
+ ],
+ "modified": "2025-07-03 10:51:44.775772",
+ "modified_by": "Administrator",
+ "module": "Edp Online Vehicles",
+ "name": "Dealer Customer",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "search_fields": "customer_name,customer_surname,id_no,mobile",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}

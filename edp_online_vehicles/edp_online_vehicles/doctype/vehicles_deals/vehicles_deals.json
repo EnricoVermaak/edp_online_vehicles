@@ -1,0 +1,552 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2024-05-06 10:51:17.260937",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_vgbt",
+  "site",
+  "invoice_no",
+  "ref_no",
+  "status",
+  "user",
+  "dealer",
+  "category",
+  "lead_from",
+  "purchaser",
+  "purchaser_address",
+  "deliver_on_behalf_of",
+  "delivery_address",
+  "contact_no",
+  "new_used",
+  "mmcode",
+  "make",
+  "model",
+  "chassis_no",
+  "engine_no",
+  "registration_no",
+  "mileage",
+  "colour",
+  "column_break_kqn0",
+  "price",
+  "price_comment",
+  "warranty_amt",
+  "warranty_comment",
+  "registration_fee",
+  "registration_fee_comment",
+  "service_fee",
+  "service_fee_comment",
+  "extras_1_amt",
+  "extras_1_description",
+  "extras_2_amt",
+  "extras_2_description",
+  "extras_3_amt",
+  "extras_3_description",
+  "extras_4_amt",
+  "extras_4_description",
+  "extras_5_amt",
+  "extras_5_description",
+  "extras_6_amt",
+  "extras_6_description",
+  "extras_7_amt",
+  "extras_7_description",
+  "total_excl",
+  "vat",
+  "deposit",
+  "deposit_description",
+  "total_incl",
+  "terms",
+  "section_break_hoyp",
+  "invoice_date",
+  "date_paid",
+  "deal_period",
+  "admin_bank",
+  "auction_house",
+  "seller",
+  "client",
+  "rate",
+  "request_by_date",
+  "debtor_account",
+  "gl_account",
+  "account_description",
+  "show_on_stats",
+  "column_break_pcdr",
+  "amt_from_bank",
+  "dic_amt",
+  "admin_registration_fee",
+  "admin_service_fee",
+  "deductions_amt",
+  "deductions_description",
+  "warranty_admin_amt",
+  "warranty_admin_description",
+  "vaps_amt",
+  "vaps_description",
+  "column_break_giro",
+  "accounting_tab",
+  "linked_deal",
+  "pastel_export",
+  "tax_type",
+  "ledger_account",
+  "submitted_on",
+  "last_comments",
+  "test"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_vgbt",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "site",
+   "fieldtype": "Data",
+   "label": "Site"
+  },
+  {
+   "fieldname": "invoice_no",
+   "fieldtype": "Data",
+   "label": "Invoice No"
+  },
+  {
+   "fieldname": "ref_no",
+   "fieldtype": "Data",
+   "label": "Ref No"
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Data",
+   "label": "Status"
+  },
+  {
+   "fieldname": "user",
+   "fieldtype": "Data",
+   "label": "User"
+  },
+  {
+   "fieldname": "dealer",
+   "fieldtype": "Data",
+   "label": "Dealer"
+  },
+  {
+   "fieldname": "category",
+   "fieldtype": "Data",
+   "label": "Category"
+  },
+  {
+   "fieldname": "lead_from",
+   "fieldtype": "Data",
+   "label": "Lead From"
+  },
+  {
+   "fieldname": "purchaser",
+   "fieldtype": "Data",
+   "label": "Purchaser"
+  },
+  {
+   "fieldname": "purchaser_address",
+   "fieldtype": "Small Text",
+   "label": "Purchaser Address"
+  },
+  {
+   "fieldname": "deliver_on_behalf_of",
+   "fieldtype": "Data",
+   "label": "Deliver on Behalf of"
+  },
+  {
+   "fieldname": "delivery_address",
+   "fieldtype": "Small Text",
+   "label": "Delivery Address"
+  },
+  {
+   "fieldname": "contact_no",
+   "fieldtype": "Data",
+   "label": "Contact No"
+  },
+  {
+   "fieldname": "new_used",
+   "fieldtype": "Data",
+   "label": "New/ Used"
+  },
+  {
+   "fieldname": "mmcode",
+   "fieldtype": "Data",
+   "label": "M&M Code"
+  },
+  {
+   "fieldname": "make",
+   "fieldtype": "Data",
+   "label": "Make"
+  },
+  {
+   "fieldname": "model",
+   "fieldtype": "Data",
+   "label": "Model"
+  },
+  {
+   "fieldname": "chassis_no",
+   "fieldtype": "Data",
+   "label": "Chassis No"
+  },
+  {
+   "fieldname": "engine_no",
+   "fieldtype": "Data",
+   "label": "Engine No"
+  },
+  {
+   "fieldname": "registration_no",
+   "fieldtype": "Data",
+   "label": "Registration No"
+  },
+  {
+   "fieldname": "mileage",
+   "fieldtype": "Data",
+   "label": "Mileage"
+  },
+  {
+   "fieldname": "colour",
+   "fieldtype": "Data",
+   "label": "Colour"
+  },
+  {
+   "fieldname": "column_break_kqn0",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "price",
+   "fieldtype": "Currency",
+   "label": "Price"
+  },
+  {
+   "fieldname": "price_comment",
+   "fieldtype": "Data",
+   "label": "Price Comment"
+  },
+  {
+   "fieldname": "warranty_amt",
+   "fieldtype": "Currency",
+   "label": "Warranty"
+  },
+  {
+   "fieldname": "warranty_comment",
+   "fieldtype": "Data",
+   "label": "Warranty Comment"
+  },
+  {
+   "fieldname": "registration_fee",
+   "fieldtype": "Currency",
+   "label": "Registration Fee"
+  },
+  {
+   "fieldname": "registration_fee_comment",
+   "fieldtype": "Small Text",
+   "label": "Registration Fee Comment"
+  },
+  {
+   "fieldname": "service_fee",
+   "fieldtype": "Currency",
+   "label": "Service Fee"
+  },
+  {
+   "fieldname": "service_fee_comment",
+   "fieldtype": "Data",
+   "label": "Service Fee Comment"
+  },
+  {
+   "fieldname": "extras_1_amt",
+   "fieldtype": "Currency",
+   "label": "Other Extras"
+  },
+  {
+   "fieldname": "extras_1_description",
+   "fieldtype": "Data",
+   "label": "Other Extras Description"
+  },
+  {
+   "fieldname": "extras_2_amt",
+   "fieldtype": "Currency",
+   "label": "Extras 2"
+  },
+  {
+   "fieldname": "extras_2_description",
+   "fieldtype": "Data",
+   "label": "Extras 2 Description"
+  },
+  {
+   "fieldname": "extras_3_amt",
+   "fieldtype": "Currency",
+   "label": "Extras 3"
+  },
+  {
+   "fieldname": "extras_3_description",
+   "fieldtype": "Data",
+   "label": "Extras 3 Description"
+  },
+  {
+   "fieldname": "extras_4_amt",
+   "fieldtype": "Currency",
+   "label": "Extras 4"
+  },
+  {
+   "fieldname": "extras_4_description",
+   "fieldtype": "Data",
+   "label": "Extras 4 Description"
+  },
+  {
+   "fieldname": "extras_5_amt",
+   "fieldtype": "Currency",
+   "label": "Extras 5"
+  },
+  {
+   "fieldname": "extras_5_description",
+   "fieldtype": "Data",
+   "label": "Extras 5 Description"
+  },
+  {
+   "fieldname": "extras_6_amt",
+   "fieldtype": "Currency",
+   "label": "Extras 6"
+  },
+  {
+   "fieldname": "extras_6_description",
+   "fieldtype": "Data",
+   "label": "Extras 6 Description"
+  },
+  {
+   "fieldname": "extras_7_amt",
+   "fieldtype": "Currency",
+   "label": "Extras 7"
+  },
+  {
+   "fieldname": "extras_7_description",
+   "fieldtype": "Data",
+   "label": "Extras 7 Description"
+  },
+  {
+   "fieldname": "total_excl",
+   "fieldtype": "Currency",
+   "label": "Total (Excl)"
+  },
+  {
+   "fieldname": "vat",
+   "fieldtype": "Currency",
+   "label": "VAT"
+  },
+  {
+   "fieldname": "deposit",
+   "fieldtype": "Currency",
+   "label": "Deposit"
+  },
+  {
+   "fieldname": "deposit_description",
+   "fieldtype": "Data",
+   "label": "Deposit Description"
+  },
+  {
+   "fieldname": "total_incl",
+   "fieldtype": "Currency",
+   "label": "Total (Incl)"
+  },
+  {
+   "fieldname": "terms",
+   "fieldtype": "Data",
+   "label": "Terms"
+  },
+  {
+   "fieldname": "section_break_hoyp",
+   "fieldtype": "Tab Break",
+   "label": "Admin"
+  },
+  {
+   "fieldname": "invoice_date",
+   "fieldtype": "Date",
+   "label": "Invoice Date"
+  },
+  {
+   "fieldname": "date_paid",
+   "fieldtype": "Date",
+   "label": "Date Paid"
+  },
+  {
+   "fieldname": "deal_period",
+   "fieldtype": "Data",
+   "label": "Deal Period"
+  },
+  {
+   "fieldname": "admin_bank",
+   "fieldtype": "Data",
+   "label": "Bank"
+  },
+  {
+   "fieldname": "auction_house",
+   "fieldtype": "Data",
+   "label": "Auction House"
+  },
+  {
+   "fieldname": "seller",
+   "fieldtype": "Data",
+   "label": "Seller"
+  },
+  {
+   "fieldname": "client",
+   "fieldtype": "Data",
+   "label": "Client"
+  },
+  {
+   "fieldname": "rate",
+   "fieldtype": "Data",
+   "label": "Rate"
+  },
+  {
+   "fieldname": "request_by_date",
+   "fieldtype": "Date",
+   "label": "Request by Date"
+  },
+  {
+   "fieldname": "debtor_account",
+   "fieldtype": "Data",
+   "label": "Debtor Account"
+  },
+  {
+   "fieldname": "gl_account",
+   "fieldtype": "Data",
+   "label": "GL Account Number"
+  },
+  {
+   "fieldname": "account_description",
+   "fieldtype": "Data",
+   "label": "Account Description"
+  },
+  {
+   "default": "0",
+   "fieldname": "show_on_stats",
+   "fieldtype": "Check",
+   "label": "Show on Stats"
+  },
+  {
+   "fieldname": "column_break_pcdr",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "amt_from_bank",
+   "fieldtype": "Data",
+   "label": "Amount from Bank"
+  },
+  {
+   "fieldname": "dic_amt",
+   "fieldtype": "Data",
+   "label": "DIC"
+  },
+  {
+   "fieldname": "admin_registration_fee",
+   "fieldtype": "Data",
+   "label": "Registration Fee"
+  },
+  {
+   "fieldname": "admin_service_fee",
+   "fieldtype": "Data",
+   "label": "Service Fee"
+  },
+  {
+   "fieldname": "deductions_amt",
+   "fieldtype": "Data",
+   "label": "Deductions"
+  },
+  {
+   "fieldname": "deductions_description",
+   "fieldtype": "Data",
+   "label": "Deductions Description"
+  },
+  {
+   "fieldname": "warranty_admin_amt",
+   "fieldtype": "Data",
+   "label": "Warranty"
+  },
+  {
+   "fieldname": "warranty_admin_description",
+   "fieldtype": "Data",
+   "label": "Warranty Description"
+  },
+  {
+   "fieldname": "vaps_amt",
+   "fieldtype": "Data",
+   "label": "VAPS"
+  },
+  {
+   "fieldname": "vaps_description",
+   "fieldtype": "Data",
+   "label": "VAPS Description"
+  },
+  {
+   "fieldname": "column_break_giro",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "accounting_tab",
+   "fieldtype": "Tab Break",
+   "label": "Accounting"
+  },
+  {
+   "fieldname": "linked_deal",
+   "fieldtype": "Data",
+   "label": "Linked Deal"
+  },
+  {
+   "fieldname": "pastel_export",
+   "fieldtype": "Datetime",
+   "label": "Pastel Export"
+  },
+  {
+   "fieldname": "tax_type",
+   "fieldtype": "Data",
+   "label": "Tax Type"
+  },
+  {
+   "fieldname": "ledger_account",
+   "fieldtype": "Data",
+   "label": "Ledger Account"
+  },
+  {
+   "fieldname": "submitted_on",
+   "fieldtype": "Data",
+   "label": "Submitted On"
+  },
+  {
+   "fieldname": "last_comments",
+   "fieldtype": "Small Text",
+   "label": "Last Comments"
+  },
+  {
+   "fieldname": "test",
+   "fieldtype": "Data",
+   "label": "Test"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2024-07-03 17:10:00.681538",
+ "modified_by": "Administrator",
+ "module": "Edp Online Vehicles",
+ "name": "Vehicles Deals",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "quick_entry": 1,
+ "search_fields": " invoice_no",
+ "show_title_field_in_link": 1,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "invoice_no"
+}

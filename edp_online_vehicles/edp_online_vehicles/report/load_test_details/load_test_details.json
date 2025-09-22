@@ -1,0 +1,27 @@
+{
+ "add_total_row": 0,
+ "columns": [],
+ "creation": "2024-03-14 10:19:33.218883",
+ "disabled": 0,
+ "docstatus": 0,
+ "doctype": "Report",
+ "filters": [],
+ "idx": 34,
+ "is_standard": "Yes",
+ "json": "{\"filters\":[],\"fields\":[[\"name\",\"Vehicles Load Test\"],[\"docstatus\",\"Vehicles Load Test\"],[\"vin_serial_no\",\"Vehicles Load Test\"],[\"model\",\"Vehicles Load Test\"],[\"status\",\"Vehicles Load Test\"],[\"tested_on\",\"Vehicles Load Test\"],[\"tested_by\",\"Vehicles Load Test\"],[\"next_load_test\",\"Vehicles Load Test\"],[\"next_inspection_date\",\"Vehicles Load Test\"],[\"able_to_lift_swl_safely\",\"Vehicles Load Test\"],[\"_assign\",\"Vehicles Load Test\"],[\"lights\",\"Vehicles Load Test\"],[\"_liked_by\",\"Vehicles Load Test\"],[\"load_back_rest\",\"Vehicles Load Test\"],[\"load_chart\",\"Vehicles Load Test\"],[\"load_test_at\",\"Vehicles Load Test\"],[\"lock_pins\",\"Vehicles Load Test\"],[\"mast__and_extension_mast_condition\",\"Vehicles Load Test\"],[\"mast_model_mm\",\"Vehicles Load Test\"],[\"mast_mounting\",\"Vehicles Load Test\"],[\"carriage_condition\",\"Vehicles Load Test\"],[\"brand\",\"Vehicles Load Test\"],[\"bonnet_secure\",\"Vehicles Load Test\"],[\"battery_secure_and_terminals_in_good_condition\",\"Vehicles Load Test\"],[\"axle_mounting\",\"Vehicles Load Test\"],[\"attachment_mountings\",\"Vehicles Load Test\"],[\"chassis_condition\",\"Vehicles Load Test\"],[\"chain_tension_setting\",\"Vehicles Load Test\"],[\"chain_sheaves\",\"Vehicles Load Test\"],[\"chain_link_plate\",\"Vehicles Load Test\"],[\"chain_anchors\",\"Vehicles Load Test\"],[\"model_description\",\"Vehicles Load Test\"],[\"model_year\",\"Vehicles Load Test\"],[\"reverse_alarm\",\"Vehicles Load Test\"],[\"relief_valve_function\",\"Vehicles Load Test\"],[\"rated_capacity_kg\",\"Vehicles Load Test\"],[\"power_system\",\"Vehicles Load Test\"],[\"radiator_fan_shroud\",\"Vehicles Load Test\"],[\"overhead_guard_secure\",\"Vehicles Load Test\"],[\"counterweight_securing_bolt\",\"Vehicles Load Test\"],[\"owner\",\"Vehicles Load Test\"],[\"creation\",\"Vehicles Load Test\"],[\"foot_brakepedal_rubbers\",\"Vehicles Load Test\"],[\"engine_leaks\",\"Vehicles Load Test\"],[\"emergency_stopdeadman_switchpedal\",\"Vehicles Load Test\"],[\"drive_axle_mounting\",\"Vehicles Load Test\"],[\"data_plateattachment_data_plate\",\"Vehicles Load Test\"],[\"standard_capacity\",\"Vehicles Load Test\"],[\"seat_condition\",\"Vehicles Load Test\"]],\"order_by\":\"`tabVehicles Load Test`.`modified` desc\",\"page_length\":20,\"column_widths\":{\"name\":120,\"vin_serial_no\":120,\"model\":120,\"status\":120,\"tested_on\":120,\"tested_by\":120,\"next_load_test\":120,\"next_inspection_date\":120,\"able_to_lift_swl_safely\":120,\"_assign\":120,\"lights\":120,\"_liked_by\":120,\"load_back_rest\":120,\"load_chart\":120,\"load_test_at\":120,\"lock_pins\":120,\"mast__and_extension_mast_condition\":120,\"mast_model_mm\":120,\"mast_mounting\":120,\"carriage_condition\":120,\"brand\":120,\"bonnet_secure\":120,\"battery_secure_and_terminals_in_good_condition\":120,\"axle_mounting\":120,\"attachment_mountings\":120,\"chassis_condition\":120,\"chain_tension_setting\":120,\"chain_sheaves\":120,\"chain_link_plate\":120,\"chain_anchors\":120,\"model_description\":120,\"model_year\":120,\"reverse_alarm\":120,\"relief_valve_function\":120,\"rated_capacity_kg\":120,\"power_system\":120,\"radiator_fan_shroud\":120,\"overhead_guard_secure\":120,\"counterweight_securing_bolt\":120,\"owner\":120,\"creation\":120,\"foot_brakepedal_rubbers\":120,\"engine_leaks\":120,\"emergency_stopdeadman_switchpedal\":120,\"drive_axle_mounting\":120,\"data_plateattachment_data_plate\":120,\"standard_capacity\":120,\"seat_condition\":120},\"group_by\":null}",
+ "letterhead": null,
+ "modified": "2024-07-03 18:11:04.837576",
+ "modified_by": "Administrator",
+ "module": "Edp Online Vehicles",
+ "name": "Load Test Details",
+ "owner": "Administrator",
+ "prepared_report": 0,
+ "ref_doctype": "Vehicles Load Test",
+ "report_name": "Load Test Details",
+ "report_type": "Report Builder",
+ "roles": [
+  {
+   "role": "System Manager"
+  }
+ ]
+}

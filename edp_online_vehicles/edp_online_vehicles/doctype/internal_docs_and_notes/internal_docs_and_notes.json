@@ -1,0 +1,91 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2024-10-23 10:30:04.722150",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "links_section",
+  "company",
+  "services",
+  "request_for_service",
+  "warranty",
+  "load_test",
+  "notes_section",
+  "notes"
+ ],
+ "fields": [
+  {
+   "fieldname": "notes_section",
+   "fieldtype": "Section Break",
+   "label": "Notes"
+  },
+  {
+   "fieldname": "notes",
+   "fieldtype": "Text"
+  },
+  {
+   "fieldname": "links_section",
+   "fieldtype": "Section Break",
+   "label": "Links"
+  },
+  {
+   "fieldname": "services",
+   "fieldtype": "Link",
+   "label": "Services",
+   "options": "Vehicles Service",
+   "read_only": 1
+  },
+  {
+   "fieldname": "request_for_service",
+   "fieldtype": "Link",
+   "label": "Request for Service",
+   "options": "Request for Service",
+   "read_only": 1
+  },
+  {
+   "fieldname": "warranty",
+   "fieldtype": "Link",
+   "label": "Warranty",
+   "options": "Vehicles Warranty Claims",
+   "read_only": 1
+  },
+  {
+   "fieldname": "load_test",
+   "fieldtype": "Link",
+   "label": "Load Test",
+   "options": "Vehicles Load Test",
+   "read_only": 1
+  },
+  {
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "label": "Company",
+   "options": "Company"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2024-10-28 14:00:11.780242",
+ "modified_by": "Administrator",
+ "module": "Edp Online Vehicles",
+ "name": "Internal Docs and Notes",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

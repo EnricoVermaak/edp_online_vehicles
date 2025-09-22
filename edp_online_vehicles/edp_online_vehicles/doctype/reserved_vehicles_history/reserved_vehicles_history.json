@@ -1,0 +1,197 @@
+{
+ "actions": [],
+ "allow_import": 1,
+ "autoname": "autoincrement",
+ "creation": "2025-07-03 09:23:35.154556",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "vin_serial_no",
+  "model",
+  "column_break_qnjp",
+  "dealer",
+  "vehicle_unreserved",
+  "section_break_ejwt",
+  "reserve_reason",
+  "period_section",
+  "reserve_from_date",
+  "column_break_nbbs",
+  "reserve_to_date",
+  "total_days",
+  "customer_card_tab",
+  "customer",
+  "customer_full_name",
+  "column_break_swir",
+  "phone",
+  "email",
+  "address",
+  "section_break_wjyv",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "vin_serial_no",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "VIN/ Serial No",
+   "options": "Vehicle Stock",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "fetch_from": "vin_serial_no.model",
+   "fieldname": "model",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Model",
+   "options": "Model Administration",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_qnjp",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "dealer",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Dealer",
+   "options": "Company",
+   "reqd": 1
+  },
+  {
+   "fieldname": "section_break_ejwt",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "reserve_reason",
+   "fieldtype": "Small Text",
+   "in_list_view": 1,
+   "label": "Reserve Reason",
+   "reqd": 1
+  },
+  {
+   "fieldname": "period_section",
+   "fieldtype": "Section Break",
+   "label": "Period"
+  },
+  {
+   "default": "Today",
+   "fieldname": "reserve_from_date",
+   "fieldtype": "Datetime",
+   "label": "Reserve From Date",
+   "read_only": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_nbbs",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "reserve_to_date",
+   "fieldtype": "Datetime",
+   "label": "Reserve To Date"
+  },
+  {
+   "depends_on": "eval: doc.total_days != 0 && doc.reserve_to_date && doc.reserve_to_date != frappe.datetime.nowdate()\r\n",
+   "fieldname": "total_days",
+   "fieldtype": "Int",
+   "label": "Total Days",
+   "read_only": 1
+  },
+  {
+   "fieldname": "customer_card_tab",
+   "fieldtype": "Tab Break",
+   "label": "Customer Card"
+  },
+  {
+   "allow_in_quick_entry": 1,
+   "fieldname": "customer",
+   "fieldtype": "Link",
+   "label": "Customer",
+   "options": "Dealer Customer"
+  },
+  {
+   "fetch_from": "customer.customer_name",
+   "fieldname": "customer_full_name",
+   "fieldtype": "Data",
+   "label": "Customer Full Name",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_swir",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "customer.phone",
+   "fetch_if_empty": 1,
+   "fieldname": "phone",
+   "fieldtype": "Data",
+   "label": "Phone"
+  },
+  {
+   "fetch_from": "customer.email",
+   "fetch_if_empty": 1,
+   "fieldname": "email",
+   "fieldtype": "Data",
+   "label": "Email"
+  },
+  {
+   "fetch_from": "customer.address",
+   "fetch_if_empty": 1,
+   "fieldname": "address",
+   "fieldtype": "Small Text",
+   "label": "Address"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Reserved Vehicles",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "vehicle_unreserved",
+   "fieldtype": "Datetime",
+   "label": "Vehicle Unreserved",
+   "reqd": 1
+  },
+  {
+   "fieldname": "section_break_wjyv",
+   "fieldtype": "Section Break"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2025-07-03 09:24:51.895064",
+ "modified_by": "Administrator",
+ "module": "Edp Online Vehicles",
+ "name": "Reserved Vehicles History",
+ "naming_rule": "Autoincrement",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}

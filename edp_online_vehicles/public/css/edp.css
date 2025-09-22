@@ -1,0 +1,132 @@
+.form-tabs-list {
+    position: sticky;
+    background-color: var(--card-bg);
+    z-index: 5;
+    padding-left: var(--padding-xs);
+    transition: top 0.5s;
+    border-bottom: 1px solid var(--border-color);
+    border-radius: var(--border-radius-md) var(--border-radius-md) 0 0;
+}
+
+* {
+    scrollbar-width: thin;
+    scrollbar-color: var(--scrollbar-thumb-color) var(--scrollbar-track-color);
+}
+
+*, ::before, ::after {
+    box-sizing: border-box;
+}
+
+.form-tabs-list .form-tabs {
+    flex-wrap: nowrap;
+    align-items: center;
+    overflow: overlay;
+}
+
+.nav {
+    display: flex;
+    flex-wrap: wrap;
+    padding-left: 0px;
+    margin-bottom: 0px;
+    list-style: none;
+}
+
+ol, ul, dl {
+    margin-top: 0px;
+    margin-bottom: 1rem;
+}
+
+.form-tabs {
+    overflow: auto; /* Ensures the element is scrollable */
+    scrollbar-width: none; /* For Firefox */
+}
+
+.form-tabs::-webkit-scrollbar {
+    display: none; /* For Chrome, Safari, and Edge */
+}
+
+.form-tabs-list .form-tabs .nav-item {
+    font-size: var(--text-base);
+    font-weight: var(--weight-regular);
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+}
+
+.form-tabs-list .form-tabs .nav-item .nav-link.active {
+    font-weight: 600;
+    color: var(--text-color);
+    border-bottom: 1px solid var(--primary);
+}
+
+.form-tabs-list .form-tabs .nav-item .nav-link {
+    color: var(--text-muted);
+    padding: 10px 0px;
+    margin: 0 var(--margin-md);
+}
+
+.nav-link {
+    display: block;
+    padding: 0.5rem 1rem;
+}
+
+.web-form-footer button,
+.web-form-footer .center-area
+ {
+    display: none !important;
+}
+
+.web-form-footer .submit-btn {
+    display: block !important;
+}
+
+[data-doctype="Web Form"] .page-content-wrapper .container .page_content {
+    max-width: 100%;
+}
+
+[data-doctype="Web Form"] .page-content-wrapper .container .page_content .web-form-header .web-form-head {
+    padding: 0;
+    border-bottom: none;
+}
+
+[data-doctype="Web Form"] .page-content-wrapper .container .page_content .web-form {
+    padding: 1.25rem 1rem 1.25rem;
+}
+
+.web-form-title {
+    display: none;
+}
+
+[data-doctype="Web Form"] .page-content-wrapper .container .page_content .web-form-header{
+    padding: 0;
+}
+
+.main-column {
+    margin-top: -25px;
+}
+
+.web-form-container {
+    position: relative;
+}
+
+.web-form-container .edit-button {
+    position: absolute;
+    top: 16px;
+    right: 0
+}
+.web-form-container .submit-btn {
+    position: absolute;
+    top: 16px;
+    right: 0
+}
+
+.web-form-introduction {
+    display: none;
+}
+
+/* .app-logo {
+    display: block !important;
+    width: 500px !important;
+    height: auto !important;
+    max-height: none !important;
+    margin: 0 auto !important;
+} */

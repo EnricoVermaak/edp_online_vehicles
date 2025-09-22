@@ -1,0 +1,18 @@
+/* ../../../../../tmp/tmp-2955617-PQcvLU21wCxT/edp_online/edp_online/public/scss/edp_online.bundle.css */
+.red-dot {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    background: red;
+    border-radius: 50%;
+    margin-right: 5px;
+  }
+  [data-page-route="List/Head Office Equipment Orders/List"] .list-subject,
+  [data-page-route="List/Equipment Dealer to Dealer Order/List"] .list-subject {
+    max-width: 25px;
+  }
+  [data-page-route="List/Head Office Equipment Orders/List"] .list-subject span:not(.select-like),
+  [data-page-route="List/Equipment Dealer to Dealer Order/List"] .list-subject span:not(.select-like) {
+    display: none;
+  }
+  /*# sourceMappingURL=edp_online.bundle.6ASJR5K7.css.map */

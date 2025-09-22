@@ -1,0 +1,165 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "format:ESR-{MM}{YY}-{######}",
+ "creation": "2024-09-12 09:22:37.947370",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "vin_serial_no",
+  "model",
+  "model_description",
+  "colour",
+  "column_break_lsie",
+  "dealer",
+  "customer",
+  "customer_name",
+  "customer_email",
+  "customer_phone",
+  "column_break_airu",
+  "date_time_of_theft",
+  "status",
+  "recovery_supporting_document",
+  "section_break_ihdh",
+  "customer_statement",
+  "investigation",
+  "recovery_details"
+ ],
+ "fields": [
+  {
+   "allow_in_quick_entry": 1,
+   "fieldname": "vin_serial_no",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "VIN/ Serial No",
+   "options": "Vehicle Stock",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "vin_serial_no.model",
+   "fieldname": "model",
+   "fieldtype": "Link",
+   "label": "Model",
+   "options": "Model Administration"
+  },
+  {
+   "fetch_from": "model.model_description",
+   "fieldname": "model_description",
+   "fieldtype": "Data",
+   "label": "Model Description"
+  },
+  {
+   "fetch_from": "vin_serial_no.colour",
+   "fieldname": "colour",
+   "fieldtype": "Data",
+   "label": "Colour"
+  },
+  {
+   "fieldname": "column_break_lsie",
+   "fieldtype": "Column Break"
+  },
+  {
+   "allow_in_quick_entry": 1,
+   "fetch_from": "vin_serial_no.customer",
+   "fetch_if_empty": 1,
+   "fieldname": "customer",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Customer",
+   "options": "Dealer Customer"
+  },
+  {
+   "fetch_from": "customer.customer_name",
+   "fieldname": "customer_name",
+   "fieldtype": "Data",
+   "label": "Customer Name"
+  },
+  {
+   "fetch_from": "customer.email",
+   "fieldname": "customer_email",
+   "fieldtype": "Data",
+   "label": "Customer Email"
+  },
+  {
+   "fetch_from": "customer.mobile",
+   "fieldname": "customer_phone",
+   "fieldtype": "Data",
+   "label": "Customer Phone"
+  },
+  {
+   "fieldname": "column_break_airu",
+   "fieldtype": "Column Break"
+  },
+  {
+   "allow_in_quick_entry": 1,
+   "fieldname": "date_time_of_theft",
+   "fieldtype": "Datetime",
+   "label": "Date/ Time of Theft",
+   "reqd": 1
+  },
+  {
+   "default": "Pending",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "Pending\nUnder Review\nPending Information\nReported\nInvestigation in Progress\nRecovered (Returned to Customer)\nRecovered (Written Off)\nRecovered (Sold to Insurer)"
+  },
+  {
+   "fieldname": "recovery_supporting_document",
+   "fieldtype": "Attach",
+   "label": "Recovery Supporting Document"
+  },
+  {
+   "fieldname": "section_break_ihdh",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "customer_statement",
+   "fieldtype": "Text Editor",
+   "label": "Customer Statement"
+  },
+  {
+   "fieldname": "investigation",
+   "fieldtype": "Text Editor",
+   "label": "Investigation"
+  },
+  {
+   "fieldname": "recovery_details",
+   "fieldtype": "Text Editor",
+   "label": "Recovery Details"
+  },
+  {
+   "fieldname": "dealer",
+   "fieldtype": "Link",
+   "label": "Dealer",
+   "options": "Company",
+   "reqd": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2025-01-29 16:34:26.179215",
+ "modified_by": "Administrator",
+ "module": "Edp Online Vehicles",
+ "name": "Stolen Vehicles Register",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}

@@ -1,0 +1,107 @@
+[
+ {
+  "docstatus": 0,
+  "doctype": "Website Sidebar",
+  "modified": "2024-10-01 14:19:10.106506",
+  "name": "EDP Sidebar",
+  "sidebar_items": [
+   {
+    "group": null,
+    "parent": "EDP Sidebar",
+    "parentfield": "sidebar_items",
+    "parenttype": "Website Sidebar",
+    "route": "/project",
+    "title": "Projects"
+   },
+   {
+    "group": null,
+    "parent": "EDP Sidebar",
+    "parentfield": "sidebar_items",
+    "parenttype": "Website Sidebar",
+    "route": "/rfq",
+    "title": "Request for Quotations"
+   },
+   {
+    "group": null,
+    "parent": "EDP Sidebar",
+    "parentfield": "sidebar_items",
+    "parenttype": "Website Sidebar",
+    "route": "/supplier-quotations",
+    "title": "Supplier Quotation"
+   },
+   {
+    "group": null,
+    "parent": "EDP Sidebar",
+    "parentfield": "sidebar_items",
+    "parenttype": "Website Sidebar",
+    "route": "/quotations",
+    "title": "Quotations"
+   },
+   {
+    "group": null,
+    "parent": "EDP Sidebar",
+    "parentfield": "sidebar_items",
+    "parenttype": "Website Sidebar",
+    "route": "/orders",
+    "title": "Orders"
+   },
+   {
+    "group": null,
+    "parent": "EDP Sidebar",
+    "parentfield": "sidebar_items",
+    "parenttype": "Website Sidebar",
+    "route": "/invoices",
+    "title": "Invoices"
+   },
+   {
+    "group": null,
+    "parent": "EDP Sidebar",
+    "parentfield": "sidebar_items",
+    "parenttype": "Website Sidebar",
+    "route": "/issues",
+    "title": "Issues"
+   },
+   {
+    "group": null,
+    "parent": "EDP Sidebar",
+    "parentfield": "sidebar_items",
+    "parenttype": "Website Sidebar",
+    "route": "/newsletters",
+    "title": "Newsletter"
+   },
+   {
+    "group": null,
+    "parent": "EDP Sidebar",
+    "parentfield": "sidebar_items",
+    "parenttype": "Website Sidebar",
+    "route": "/services",
+    "title": "Vehicles Services"
+   },
+   {
+    "group": null,
+    "parent": "EDP Sidebar",
+    "parentfield": "sidebar_items",
+    "parenttype": "Website Sidebar",
+    "route": "/vehicles",
+    "title": "Vehicle Stock"
+   },
+   {
+    "group": null,
+    "parent": "EDP Sidebar",
+    "parentfield": "sidebar_items",
+    "parenttype": "Website Sidebar",
+    "route": "/rfs",
+    "title": "Request For Services"
+   },
+   {
+    "group": null,
+    "parent": "EDP Sidebar",
+    "parentfield": "sidebar_items",
+    "parenttype": "Website Sidebar",
+    "route": "/vehicles-warranty-claim",
+    "title": "Vehicles Warranty Claim"
+   }
+  ],
+  "title": "EDP Sidebar"
+ }
+]

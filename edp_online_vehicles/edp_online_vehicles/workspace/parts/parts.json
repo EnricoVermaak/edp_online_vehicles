@@ -1,0 +1,447 @@
+{
+ "charts": [
+  {
+   "chart_name": "Part Orders (Dealer Billing)",
+   "label": "Part Orders (Dealer Billing)"
+  }
+ ],
+ "content": "[{\"id\":\"C4qQJ44QQC\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Parts</span>\",\"col\":12}},{\"id\":\"MjWNcwKZCo\",\"type\":\"chart\",\"data\":{\"chart_name\":\"Part Orders (Dealer Billing)\",\"col\":12}},{\"id\":\"ppdbKzRLaB\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"-V3l2iKCOp\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Order Parts\",\"col\":3}},{\"id\":\"1IGPdxYElf\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Parts Overview Dashboard\",\"col\":3}},{\"id\":\"_OnI4qA_TM\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"ku2-7SG-zE\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Pending HQ Orders\",\"col\":3}},{\"id\":\"Xc7H9GPkB3\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Credit Limit Exceeded Orders\",\"col\":3}},{\"id\":\"nrqK76eM5N\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"mCEYtj8C9E\",\"type\":\"card\",\"data\":{\"card_name\":\"Part Order\",\"col\":4}},{\"id\":\"JbrYm3tFOK\",\"type\":\"card\",\"data\":{\"card_name\":\"Picking & Delivery\",\"col\":4}},{\"id\":\"bp6rjs2at9\",\"type\":\"card\",\"data\":{\"card_name\":\"Reports\",\"col\":4}},{\"id\":\"PnG5iBXy6w\",\"type\":\"card\",\"data\":{\"card_name\":\"Tools\",\"col\":4}}]",
+ "creation": "2025-06-24 15:23:52.600877",
+ "custom_blocks": [],
+ "docstatus": 0,
+ "doctype": "Workspace",
+ "for_user": "",
+ "hide_custom": 1,
+ "icon": "quantity-1",
+ "idx": 0,
+ "indicator_color": "green",
+ "is_hidden": 0,
+ "label": "Parts",
+ "links": [
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Order History",
+   "link_count": 0,
+   "link_to": "Part Order",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "HQ Part Orders",
+   "link_count": 0,
+   "link_to": "HQ Part Order",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "D2D Part Orders",
+   "link_count": 0,
+   "link_to": "D2D Part Order",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Request For Credit",
+   "link_count": 0,
+   "link_to": "Part Request For Credit",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Recon/ Cycle Count",
+   "link_count": 0,
+   "link_to": "Stock Reconciliation",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Quality Inspection",
+   "link_count": 0,
+   "link_to": "Quality Inspection",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Quality Feedback",
+   "link_count": 0,
+   "link_to": "Quality Feedback",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Stock Ledger",
+   "link_count": 0,
+   "link_to": "Stock Ledger",
+   "link_type": "Report",
+   "onboard": 0,
+   "report_ref_doctype": "Stock Ledger Entry",
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Part Stock Summary",
+   "link_count": 0,
+   "link_to": "stock-balance",
+   "link_type": "Page",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Part Orders",
+   "link_count": 0,
+   "link_to": "Part Order",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Undelivered Parts",
+   "link_count": 0,
+   "link_to": "Undelivered Parts",
+   "link_type": "Report",
+   "onboard": 0,
+   "report_ref_doctype": "HQ Part Order",
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Part Order Supply Rate",
+   "link_count": 0,
+   "link_to": "Part Order Supply Rate",
+   "link_type": "Report",
+   "onboard": 0,
+   "report_ref_doctype": "HQ Part Order",
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Stock Ageing",
+   "link_count": 0,
+   "link_to": "Stock Ageing",
+   "link_type": "Report",
+   "onboard": 0,
+   "report_ref_doctype": "Item",
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Part Orders",
+   "link_count": 0,
+   "link_to": "Parts Orders",
+   "link_type": "Report",
+   "onboard": 0,
+   "report_ref_doctype": "Part Order",
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Part Orders Per Dealer",
+   "link_count": 0,
+   "link_to": "Parts Orders per Dealer",
+   "link_type": "Report",
+   "onboard": 0,
+   "report_ref_doctype": "Part Order",
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Delivery Note",
+   "link_count": 0,
+   "link_to": "Parts Delivery Note",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Picking Slip",
+   "link_count": 0,
+   "link_to": "Parts Picking",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Receipt",
+   "link_count": 0,
+   "link_to": "Part Receipt",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Dispatch",
+   "link_count": 0,
+   "link_to": "Part Dispatch",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Part Order",
+   "link_count": 4,
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Order History",
+   "link_count": 0,
+   "link_to": "Part Order",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "HQ Part Orders",
+   "link_count": 0,
+   "link_to": "HQ Part Order",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "D2D Part Orders",
+   "link_count": 0,
+   "link_to": "D2D Part Order",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Request For Credit",
+   "link_count": 0,
+   "link_to": "Part Request For Credit",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Picking & Delivery",
+   "link_count": 4,
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Delivery Note",
+   "link_count": 0,
+   "link_to": "Parts Delivery Note",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Picking Slip",
+   "link_count": 0,
+   "link_to": "Parts Picking",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Receipt",
+   "link_count": 0,
+   "link_to": "Part Receipt",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Dispatch",
+   "link_count": 0,
+   "link_to": "Part Dispatch",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Tools",
+   "link_count": 3,
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Recon/ Cycle Count",
+   "link_count": 0,
+   "link_to": "Stock Reconciliation",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Quality Inspection",
+   "link_count": 0,
+   "link_to": "Quality Inspection",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Quality Feedback",
+   "link_count": 0,
+   "link_to": "Quality Feedback",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Reports",
+   "link_count": 3,
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Stock Ledger",
+   "link_count": 0,
+   "link_to": "Stock Ledger",
+   "link_type": "Report",
+   "onboard": 0,
+   "report_ref_doctype": "Stock Ledger Entry",
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Part Stock Summary",
+   "link_count": 0,
+   "link_to": "stock-balance",
+   "link_type": "Page",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Stock Ageing",
+   "link_count": 0,
+   "link_to": "Stock Ageing",
+   "link_type": "Report",
+   "onboard": 0,
+   "report_ref_doctype": "Item",
+   "type": "Link"
+  }
+ ],
+ "modified": "2025-09-11 07:52:52.626509",
+ "modified_by": "Administrator",
+ "module": "Edp Online Vehicles",
+ "name": "Parts",
+ "number_cards": [],
+ "owner": "Administrator",
+ "parent_page": "",
+ "public": 1,
+ "quick_lists": [],
+ "roles": [
+  {
+   "role": "System Manager"
+  },
+  {
+   "role": "Vehicles Administrator"
+  }
+ ],
+ "sequence_id": 38.0,
+ "shortcuts": [
+  {
+   "color": "Orange",
+   "doc_view": "List",
+   "label": "Pending HQ Orders",
+   "link_to": "HQ Part Order",
+   "stats_filter": "[[\"HQ Part Order\",\"part_order_status\",\"=\",\"Pending\",false]]",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Order Parts",
+   "link_to": "part-order-1",
+   "type": "Page"
+  },
+  {
+   "color": "Red",
+   "doc_view": "List",
+   "label": "Credit Limit Exceeded Orders",
+   "link_to": "HQ Part Order",
+   "stats_filter": "[[\"HQ Part Order\",\"part_order_status\",\"=\",\"Credit Limit Exceeded\",false]]",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Parts Overview Dashboard",
+   "link_to": "Parts Overview",
+   "type": "Dashboard"
+  }
+ ],
+ "title": "Parts"
+}

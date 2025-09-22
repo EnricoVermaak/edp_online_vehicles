@@ -1,0 +1,232 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-03-04 15:07:18.007691",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "part_information_section",
+  "part_no",
+  "status",
+  "column_break_pchw",
+  "description",
+  "eta",
+  "stock_information_section",
+  "qty",
+  "qty_delivered",
+  "column_break_mggh",
+  "soh",
+  "open_orders",
+  "pricing_information_section",
+  "dealer_billing_excl",
+  "disc_amount",
+  "air_freight_cost_excl",
+  "column_break_btxc",
+  "dealer_billing_incl",
+  "section_break_cngv",
+  "total_excl",
+  "column_break_lhnt",
+  "total_incl",
+  "image_section",
+  "image",
+  "item_image",
+  "section_break_zpyv",
+  "order_from",
+  "column_break_chha",
+  "dealer"
+ ],
+ "fields": [
+  {
+   "columns": 1,
+   "fieldname": "part_no",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Part No",
+   "options": "Item",
+   "read_only": 1,
+   "reqd": 1
+  },
+  {
+   "columns": 2,
+   "fetch_from": "part_no.item_name",
+   "fieldname": "description",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Description",
+   "read_only": 1
+  },
+  {
+   "fieldname": "qty_delivered",
+   "fieldtype": "Int",
+   "label": "Qty Delivered",
+   "read_only": 1
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "\nCancel\nApprove\nDeclined"
+  },
+  {
+   "fieldname": "part_information_section",
+   "fieldtype": "Section Break",
+   "label": "Part Information"
+  },
+  {
+   "fieldname": "column_break_pchw",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "eta",
+   "fieldtype": "Date",
+   "label": "ETA"
+  },
+  {
+   "fieldname": "stock_information_section",
+   "fieldtype": "Section Break",
+   "label": "Stock Information"
+  },
+  {
+   "fieldname": "column_break_mggh",
+   "fieldtype": "Column Break"
+  },
+  {
+   "columns": 1,
+   "fieldname": "soh",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "SOH",
+   "non_negative": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "open_orders",
+   "fieldtype": "Int",
+   "label": "Open Orders",
+   "non_negative": 1
+  },
+  {
+   "fieldname": "pricing_information_section",
+   "fieldtype": "Section Break",
+   "label": "Pricing Information"
+  },
+  {
+   "columns": 1,
+   "fieldname": "dealer_billing_excl",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Dealer Billing (Excl)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_btxc",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "dealer_billing_incl",
+   "fieldtype": "Currency",
+   "label": "Dealer Billing (Incl)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_cngv",
+   "fieldtype": "Section Break"
+  },
+  {
+   "columns": 1,
+   "fieldname": "total_excl",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Total (Excl)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_lhnt",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "total_incl",
+   "fieldtype": "Currency",
+   "label": "Total (Incl)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "image_section",
+   "fieldtype": "Section Break",
+   "label": "Image"
+  },
+  {
+   "fieldname": "image",
+   "fieldtype": "Attach Image",
+   "label": "Image",
+   "read_only": 1
+  },
+  {
+   "fieldname": "item_image",
+   "fieldtype": "Image",
+   "label": "Item Image",
+   "options": "image"
+  },
+  {
+   "fieldname": "section_break_zpyv",
+   "fieldtype": "Section Break"
+  },
+  {
+   "columns": 1,
+   "fieldname": "order_from",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Order From",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_chha",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "dealer",
+   "fieldtype": "Data",
+   "label": "Dealer",
+   "read_only": 1
+  },
+  {
+   "columns": 1,
+   "fieldname": "qty",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Qty",
+   "non_negative": 1,
+   "read_only": 1,
+   "reqd": 1
+  },
+  {
+   "columns": 1,
+   "fieldname": "air_freight_cost_excl",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Airfreight Cost (Excl)",
+   "read_only": 1
+  },
+  {
+   "columns": 1,
+   "fieldname": "disc_amount",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Disc Amount (Excl)",
+   "read_only": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2025-03-11 08:48:05.268244",
+ "modified_by": "Administrator",
+ "module": "Edp Online Vehicles",
+ "name": "D2D Part Order Items",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

@@ -1,0 +1,194 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-04-02 12:28:58.211123",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_mqdn",
+  "supplier",
+  "shipment_file_no",
+  "vessel_name",
+  "exchange_rate",
+  "column_break_drlu",
+  "factory_order_date",
+  "production_date",
+  "shipment_date",
+  "eta_harbour",
+  "eta_warehouse",
+  "column_break_peyo",
+  "dealer",
+  "target_warehouse",
+  "status",
+  "hide_on_stock_availability",
+  "shipment_items_tab",
+  "part_shipment_items",
+  "section_break_youb",
+  "column_break_ygug",
+  "column_break_sitj",
+  "column_break_xggp",
+  "total_excl",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_mqdn",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Part Shipment",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "supplier",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Supplier",
+   "options": "Supplier",
+   "reqd": 1
+  },
+  {
+   "fieldname": "shipment_file_no",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Shipment File No",
+   "reqd": 1
+  },
+  {
+   "fieldname": "vessel_name",
+   "fieldtype": "Data",
+   "label": "Vessel Name"
+  },
+  {
+   "fieldname": "exchange_rate",
+   "fieldtype": "Currency",
+   "label": "Exchange Rate"
+  },
+  {
+   "fieldname": "column_break_drlu",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "factory_order_date",
+   "fieldtype": "Date",
+   "label": "Factory Order Date"
+  },
+  {
+   "fieldname": "production_date",
+   "fieldtype": "Date",
+   "label": "Production Date"
+  },
+  {
+   "fieldname": "shipment_date",
+   "fieldtype": "Date",
+   "label": "Shipment Date"
+  },
+  {
+   "fieldname": "eta_harbour",
+   "fieldtype": "Date",
+   "label": "ETA Harbour"
+  },
+  {
+   "fieldname": "eta_warehouse",
+   "fieldtype": "Date",
+   "label": "ETA Warehouse"
+  },
+  {
+   "fieldname": "column_break_peyo",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "dealer",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Dealer",
+   "options": "Company",
+   "reqd": 1
+  },
+  {
+   "fieldname": "target_warehouse",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Target Warehouse",
+   "options": "Warehouse",
+   "reqd": 1
+  },
+  {
+   "default": "In Progress",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "In Progress\nPartially Received\nCompleted"
+  },
+  {
+   "default": "0",
+   "fieldname": "hide_on_stock_availability",
+   "fieldtype": "Check",
+   "label": "Hide on Stock Availability"
+  },
+  {
+   "fieldname": "shipment_items_tab",
+   "fieldtype": "Tab Break",
+   "label": "Shipment Items"
+  },
+  {
+   "fieldname": "section_break_youb",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_ygug",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_sitj",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_xggp",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "total_excl",
+   "fieldtype": "Currency",
+   "label": "Total (Excl)",
+   "precision": "2"
+  },
+  {
+   "fieldname": "part_shipment_items",
+   "fieldtype": "Table",
+   "options": "Part Shipment Items"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2025-04-02 13:10:08.727356",
+ "modified_by": "Administrator",
+ "module": "Edp Online Vehicles",
+ "name": "Part Shipment",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

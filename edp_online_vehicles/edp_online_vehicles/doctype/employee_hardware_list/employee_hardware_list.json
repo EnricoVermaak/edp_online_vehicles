@@ -1,0 +1,42 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2024-10-06 10:51:55.709436",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "hardware",
+  "request_qty"
+ ],
+ "fields": [
+  {
+   "fieldname": "hardware",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Hardware",
+   "options": "Employee Hardware",
+   "reqd": 1
+  },
+  {
+   "default": "1",
+   "fieldname": "request_qty",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Request Qty",
+   "reqd": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2024-10-06 10:53:06.728990",
+ "modified_by": "Administrator",
+ "module": "Edp Online Vehicles",
+ "name": "Employee Hardware List",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

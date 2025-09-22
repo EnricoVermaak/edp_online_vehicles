@@ -1,0 +1,245 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "format:EDTDO-{MM}{YY}-{#########}",
+ "creation": "2024-10-09 15:29:18.503880",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "order_no",
+  "order_placed_by",
+  "name_of_ordering_user",
+  "order_placed_to",
+  "dealer_order_no",
+  "column_break_dwaq",
+  "status",
+  "order_date_time",
+  "requested_delivery_date",
+  "vehicles_basket_section",
+  "model",
+  "description",
+  "model_year",
+  "colour",
+  "purpose",
+  "column_break_axts",
+  "vin_serial_no",
+  "model_delivered",
+  "modelyear_delivered",
+  "colour_delivered",
+  "price_excl",
+  "section_break_dcsm",
+  "reason",
+  "section_break_zafw",
+  "column_break_zqbo",
+  "row_id",
+  "column_break_akoo",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "order_placed_by",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Order Placed By",
+   "read_only": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "order_placed_to",
+   "fieldtype": "Link",
+   "label": "Order Placed To",
+   "options": "Company",
+   "read_only": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "dealer_order_no",
+   "fieldtype": "Data",
+   "label": "Dealer Order No",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_dwaq",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "order_date_time",
+   "fieldtype": "Datetime",
+   "in_list_view": 1,
+   "label": "Order Date/ Time",
+   "read_only": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "requested_delivery_date",
+   "fieldtype": "Date",
+   "label": "Requested Delivery Date"
+  },
+  {
+   "fieldname": "section_break_zafw",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_zqbo",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_akoo",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Vehicles Dealer to Dealer Order",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "vin_serial_no",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Vin/Serial No",
+   "mandatory_depends_on": "eval: doc.order_status == 'Approved'",
+   "options": "Vehicle Stock"
+  },
+  {
+   "fieldname": "model",
+   "fieldtype": "Data",
+   "label": "Model",
+   "read_only": 1
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Description",
+   "read_only": 1
+  },
+  {
+   "fieldname": "model_year",
+   "fieldtype": "Data",
+   "label": "Model Year",
+   "read_only": 1
+  },
+  {
+   "fieldname": "colour",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Colour",
+   "read_only": 1
+  },
+  {
+   "fieldname": "purpose",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Purpose",
+   "read_only": 1
+  },
+  {
+   "fieldname": "price_excl",
+   "fieldtype": "Data",
+   "label": "Price (Excl)"
+  },
+  {
+   "fieldname": "column_break_axts",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "order_no",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Order No",
+   "options": "Vehicle Order",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "vin_serial_no.model",
+   "fieldname": "model_delivered",
+   "fieldtype": "Data",
+   "label": "Model"
+  },
+  {
+   "fetch_from": "vin_serial_no.model_year",
+   "fieldname": "modelyear_delivered",
+   "fieldtype": "Data",
+   "label": "Model Year"
+  },
+  {
+   "fetch_from": "vin_serial_no.colour",
+   "fieldname": "colour_delivered",
+   "fieldtype": "Data",
+   "label": "Colour"
+  },
+  {
+   "fieldname": "section_break_dcsm",
+   "fieldtype": "Section Break"
+  },
+  {
+   "depends_on": "eval: in_list(['Declined', 'Cancelled'], doc.order_status);",
+   "fieldname": "reason",
+   "fieldtype": "Text",
+   "label": "Reason",
+   "mandatory_depends_on": "eval: in_list(['Declined', 'Cancelled'], doc.order_status);"
+  },
+  {
+   "fieldname": "row_id",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "Row ID"
+  },
+  {
+   "fieldname": "name_of_ordering_user",
+   "fieldtype": "Data",
+   "label": "Name of Ordering User",
+   "read_only": 1,
+   "reqd": 1
+  },
+  {
+   "default": "Pending",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Status",
+   "options": "Pending\nApproved\nDelivered\nDeclined\nCancelled",
+   "reqd": 1
+  },
+  {
+   "fieldname": "vehicles_basket_section",
+   "fieldtype": "Section Break",
+   "label": "Vehicles Basket"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2025-01-22 12:42:11.500271",
+ "modified_by": "Administrator",
+ "module": "Edp Online Vehicles",
+ "name": "Vehicles Dealer to Dealer Order",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}

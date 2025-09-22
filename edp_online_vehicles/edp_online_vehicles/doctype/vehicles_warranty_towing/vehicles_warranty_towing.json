@@ -1,0 +1,182 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2024-06-07 15:01:55.459411",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_twbf",
+  "vin_serial_no",
+  "reg_no",
+  "make",
+  "model",
+  "case_no",
+  "case_type",
+  "diagnosis",
+  "created_on",
+  "status",
+  "location_addr1",
+  "location_addr2",
+  "location_suburb",
+  "location_town",
+  "location_province",
+  "location_country",
+  "location_coordinates",
+  "destination_addr1",
+  "destination_addr2",
+  "destination_suburb",
+  "destination_town",
+  "destination_province",
+  "destination_country",
+  "destination_coordinates"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_twbf",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "vin_serial_no",
+   "fieldtype": "Data",
+   "label": "VIN/Serial No"
+  },
+  {
+   "fieldname": "reg_no",
+   "fieldtype": "Data",
+   "label": "Reg No"
+  },
+  {
+   "fieldname": "make",
+   "fieldtype": "Link",
+   "label": "Make",
+   "options": "Vehicles MMCodes"
+  },
+  {
+   "fetch_from": "make.model",
+   "fieldname": "model",
+   "fieldtype": "Link",
+   "label": "Model",
+   "options": "Vehicles MMCodes"
+  },
+  {
+   "fieldname": "case_no",
+   "fieldtype": "Data",
+   "label": "Case No"
+  },
+  {
+   "fieldname": "case_type",
+   "fieldtype": "Select",
+   "label": "Case Type",
+   "options": "Standard Breakdown\nCommercial Breakdown\nInsurable Risk"
+  },
+  {
+   "fieldname": "diagnosis",
+   "fieldtype": "Data",
+   "label": "Diagnosis"
+  },
+  {
+   "fieldname": "created_on",
+   "fieldtype": "Data",
+   "label": "Created On"
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Data",
+   "label": "Status"
+  },
+  {
+   "fieldname": "location_addr1",
+   "fieldtype": "Data",
+   "label": "Location Addr1"
+  },
+  {
+   "fieldname": "location_addr2",
+   "fieldtype": "Data",
+   "label": "Location Addr2"
+  },
+  {
+   "fieldname": "location_suburb",
+   "fieldtype": "Data",
+   "label": "Location Suburb"
+  },
+  {
+   "fieldname": "location_town",
+   "fieldtype": "Data",
+   "label": "Location Town"
+  },
+  {
+   "fieldname": "location_province",
+   "fieldtype": "Data",
+   "label": "Location Province"
+  },
+  {
+   "fieldname": "location_country",
+   "fieldtype": "Data",
+   "label": "Location Country"
+  },
+  {
+   "fieldname": "location_coordinates",
+   "fieldtype": "Data",
+   "label": "Location Coordinates"
+  },
+  {
+   "fieldname": "destination_addr1",
+   "fieldtype": "Data",
+   "label": "Destination Addr1"
+  },
+  {
+   "fieldname": "destination_addr2",
+   "fieldtype": "Data",
+   "label": "Destination Addr2"
+  },
+  {
+   "fieldname": "destination_suburb",
+   "fieldtype": "Data",
+   "label": "Destination Suburb"
+  },
+  {
+   "fieldname": "destination_town",
+   "fieldtype": "Data",
+   "label": "Destination Town"
+  },
+  {
+   "fieldname": "destination_province",
+   "fieldtype": "Data",
+   "label": "Destination Province"
+  },
+  {
+   "fieldname": "destination_country",
+   "fieldtype": "Data",
+   "label": "Destination Country"
+  },
+  {
+   "fieldname": "destination_coordinates",
+   "fieldtype": "Data",
+   "label": "Destination Coordinates"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2024-07-03 17:12:51.857743",
+ "modified_by": "Administrator",
+ "module": "Edp Online Vehicles",
+ "name": "Vehicles Warranty Towing",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

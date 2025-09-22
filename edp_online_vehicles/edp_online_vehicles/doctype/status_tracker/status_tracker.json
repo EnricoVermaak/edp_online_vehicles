@@ -1,0 +1,79 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "format:ST-{DDMMYY}-{####}",
+ "creation": "2025-05-05 10:29:30.366307",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "document_details_section",
+  "status_doctype",
+  "column_break_xuuq",
+  "document",
+  "status_table_section",
+  "status_tracking_table"
+ ],
+ "fields": [
+  {
+   "fieldname": "document_details_section",
+   "fieldtype": "Section Break",
+   "label": "Document Details"
+  },
+  {
+   "fieldname": "status_doctype",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "DocType",
+   "options": "DocType",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_xuuq",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "document",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Document",
+   "read_only": 1
+  },
+  {
+   "fieldname": "status_table_section",
+   "fieldtype": "Section Break",
+   "label": "Status Table"
+  },
+  {
+   "fieldname": "status_tracking_table",
+   "fieldtype": "Table",
+   "label": "Status Tracking Table",
+   "options": "Status Tracker Table",
+   "read_only": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2025-05-05 11:49:38.894138",
+ "modified_by": "Administrator",
+ "module": "Edp Online Vehicles",
+ "name": "Status Tracker",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

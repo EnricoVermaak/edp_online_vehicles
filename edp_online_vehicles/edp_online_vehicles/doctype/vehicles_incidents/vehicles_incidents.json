@@ -1,0 +1,362 @@
+{
+ "actions": [],
+ "autoname": "format:E-INC-{#####}",
+ "creation": "2024-03-14 08:43:14.242875",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_zelq",
+  "vin_serial_no",
+  "odo_reading_hours",
+  "brand",
+  "model_code",
+  "model_description",
+  "model_year",
+  "column_break_8qzg",
+  "dealer",
+  "customer",
+  "driver_full_names",
+  "driver_contact_no",
+  "insurance_company",
+  "policy_no",
+  "column_break_lyfl",
+  "incident_date_time",
+  "location",
+  "status",
+  "case_no",
+  "internal_investigator",
+  "incident_type",
+  "incident_details_section",
+  "incident_description",
+  "witness_information",
+  "damage_assesment",
+  "injuries",
+  "parts_tab",
+  "parts",
+  "section_break_pdto",
+  "column_break_utbq",
+  "column_break_qshd",
+  "parts_total",
+  "police_involvement_tab",
+  "police_report_no",
+  "column_break_8wyv",
+  "responding_officer",
+  "investigating_officer",
+  "confirmation_tab",
+  "driver",
+  "driver_signature",
+  "section_break_feir",
+  "internal_investigator_full_names",
+  "internal_investigator_signature",
+  "column_break_waqu",
+  "management_user",
+  "management_full_names",
+  "managament_signature"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_zelq",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "vin_serial_no",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "VIN/ Serial No",
+   "options": "Vehicle Stock",
+   "reqd": 1,
+   "search_index": 1
+  },
+  {
+   "fetch_from": "vin_serial_no.brand",
+   "fieldname": "brand",
+   "fieldtype": "Data",
+   "label": "Brand"
+  },
+  {
+   "fetch_from": "vin_serial_no.model",
+   "fieldname": "model_code",
+   "fieldtype": "Data",
+   "label": "Model Code"
+  },
+  {
+   "fetch_from": "vin_serial_no.description",
+   "fieldname": "model_description",
+   "fieldtype": "Data",
+   "label": "Model Description"
+  },
+  {
+   "fetch_from": "vin_serial_no.model_year",
+   "fieldname": "model_year",
+   "fieldtype": "Data",
+   "label": "Model Year"
+  },
+  {
+   "fieldname": "column_break_8qzg",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "driver_full_names",
+   "fieldtype": "Data",
+   "label": "Driver Full Names"
+  },
+  {
+   "fieldname": "driver_contact_no",
+   "fieldtype": "Data",
+   "label": "Driver Contact No"
+  },
+  {
+   "fieldname": "insurance_company",
+   "fieldtype": "Data",
+   "label": "Insurance Company"
+  },
+  {
+   "fieldname": "policy_no",
+   "fieldtype": "Data",
+   "label": "Policy No"
+  },
+  {
+   "fieldname": "column_break_lyfl",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "incident_date_time",
+   "fieldtype": "Datetime",
+   "label": "Incident Date/Time"
+  },
+  {
+   "fieldname": "location",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Location",
+   "reqd": 1
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "Open\nPending Investigation\nInvestigation Completed\nClosed"
+  },
+  {
+   "fieldname": "case_no",
+   "fieldtype": "Data",
+   "label": "Case No"
+  },
+  {
+   "fieldname": "internal_investigator",
+   "fieldtype": "Link",
+   "label": "Internal Investigator",
+   "options": "User"
+  },
+  {
+   "fieldname": "incident_type",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Incident Type",
+   "options": "Vehicles Incident Type",
+   "reqd": 1
+  },
+  {
+   "fieldname": "incident_details_section",
+   "fieldtype": "Section Break",
+   "label": "Incident Details"
+  },
+  {
+   "fieldname": "incident_description",
+   "fieldtype": "Text Editor",
+   "label": "Incident Description"
+  },
+  {
+   "fieldname": "witness_information",
+   "fieldtype": "Text Editor",
+   "label": "Witness Information"
+  },
+  {
+   "fieldname": "damage_assesment",
+   "fieldtype": "Text Editor",
+   "label": "Damage Assesment"
+  },
+  {
+   "fieldname": "injuries",
+   "fieldtype": "Text Editor",
+   "label": "Injuries"
+  },
+  {
+   "fieldname": "parts_tab",
+   "fieldtype": "Tab Break",
+   "label": "Parts"
+  },
+  {
+   "fieldname": "police_involvement_tab",
+   "fieldtype": "Tab Break",
+   "label": "Police Involvement"
+  },
+  {
+   "fieldname": "police_report_no",
+   "fieldtype": "Data",
+   "label": "Police Report No"
+  },
+  {
+   "fieldname": "column_break_8wyv",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "responding_officer",
+   "fieldtype": "Data",
+   "label": "Responding Officer"
+  },
+  {
+   "fieldname": "investigating_officer",
+   "fieldtype": "Data",
+   "label": "Investigating Officer"
+  },
+  {
+   "fieldname": "confirmation_tab",
+   "fieldtype": "Tab Break",
+   "label": "Confirmation"
+  },
+  {
+   "fieldname": "driver_signature",
+   "fieldtype": "Signature",
+   "label": "Driver Signature"
+  },
+  {
+   "fieldname": "driver",
+   "fieldtype": "Data",
+   "label": "Driver"
+  },
+  {
+   "fieldname": "internal_investigator_signature",
+   "fieldtype": "Signature",
+   "label": "Internal Investigator Signature"
+  },
+  {
+   "fetch_from": "internal_investigator.full_name",
+   "fieldname": "internal_investigator_full_names",
+   "fieldtype": "Data",
+   "label": "Internal Investigator Full Names"
+  },
+  {
+   "fieldname": "managament_signature",
+   "fieldtype": "Signature",
+   "label": "Managament Signature"
+  },
+  {
+   "fieldname": "management_user",
+   "fieldtype": "Link",
+   "label": "Management User",
+   "options": "User"
+  },
+  {
+   "fetch_from": "management_user.full_name",
+   "fieldname": "management_full_names",
+   "fieldtype": "Data",
+   "label": "Management Full Names"
+  },
+  {
+   "fieldname": "odo_reading_hours",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Odo Reading/ Hours",
+   "reqd": 1
+  },
+  {
+   "fieldname": "customer",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Customer",
+   "options": "Customer",
+   "reqd": 1
+  },
+  {
+   "fieldname": "dealer",
+   "fieldtype": "Link",
+   "label": "Dealer",
+   "options": "Company",
+   "reqd": 1
+  },
+  {
+   "fieldname": "section_break_feir",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_waqu",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "parts",
+   "fieldtype": "Table",
+   "label": "Parts",
+   "options": "Service Parts Items"
+  },
+  {
+   "fieldname": "section_break_pdto",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_utbq",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_qshd",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "parts_total",
+   "fieldtype": "Currency",
+   "label": "Parts Total",
+   "precision": "2"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [
+  {
+   "group": "Service",
+   "link_doctype": "Vehicles Service",
+   "link_fieldname": "vehicles_incidents"
+  },
+  {
+   "group": "Warranty",
+   "link_doctype": "Vehicles Warranty Claims",
+   "link_fieldname": "vehicles_incidents"
+  }
+ ],
+ "modified": "2025-04-15 15:36:17.349240",
+ "modified_by": "Administrator",
+ "module": "Edp Online Vehicles",
+ "name": "Vehicles Incidents",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Vehicles Administrator",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "show_title_field_in_link": 1,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "vin_serial_no",
+ "track_changes": 1
+}

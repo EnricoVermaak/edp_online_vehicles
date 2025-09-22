@@ -1,0 +1,48 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2024-10-14 15:35:19.792558",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "select",
+  "vehicles_basket"
+ ],
+ "fields": [
+  {
+   "fieldname": "select",
+   "fieldtype": "Select",
+   "label": "Select"
+  },
+  {
+   "fieldname": "vehicles_basket",
+   "fieldtype": "Table",
+   "label": "Vehicles Basket",
+   "options": "Vehicles Order Item"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2024-10-17 11:59:53.369223",
+ "modified_by": "Administrator",
+ "module": "Edp Online Vehicles",
+ "name": "Domonstration",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

@@ -1,0 +1,321 @@
+{
+ "actions": [],
+ "allow_import": 1,
+ "allow_rename": 1,
+ "autoname": "field:tag_no",
+ "creation": "2024-08-28 17:14:04.280350",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "tag_no",
+  "column_break_mtpy",
+  "status",
+  "section_break_ng6a",
+  "vin_serial_no",
+  "model",
+  "column_break_xszk",
+  "brand",
+  "model_year",
+  "section_break_gvaf",
+  "specifications",
+  "instructions",
+  "contract_tab",
+  "contract_details_section",
+  "contract_no",
+  "contract_status",
+  "column_break_yunx",
+  "contract_start_date",
+  "contract_end_date",
+  "section_break_bpri",
+  "contract_agreement",
+  "signed_by",
+  "signed_on",
+  "service_tab",
+  "service_period_years",
+  "service_km_hours_limit",
+  "column_break_6kva",
+  "service_start_date",
+  "service_end_date",
+  "last_load_test_date",
+  "next_load_test_date",
+  "warranty_tab",
+  "warranty_period_years",
+  "warranty_km_hours_limit",
+  "column_break_gpui",
+  "warranty_start_date",
+  "warranty_end_date",
+  "linked_items_tab",
+  "linked_items"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_ng6a",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "vin_serial_no",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "VIN/ Serial No",
+   "mandatory_depends_on": "eval: doc.tag_no",
+   "options": "Vehicle Stock"
+  },
+  {
+   "fetch_from": "vin_serial_no.model",
+   "fieldname": "model",
+   "fieldtype": "Link",
+   "label": "Model",
+   "options": "Model Administration",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_xszk",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "model.brand",
+   "fieldname": "brand",
+   "fieldtype": "Data",
+   "label": "Brand",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "vin_serial_no.model_year",
+   "fieldname": "model_year",
+   "fieldtype": "Data",
+   "label": "Model Year",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_gvaf",
+   "fieldtype": "Section Break",
+   "label": "Specifications"
+  },
+  {
+   "fieldname": "specifications",
+   "fieldtype": "Table",
+   "options": "Vehicles Model Specifications",
+   "read_only": 1
+  },
+  {
+   "fieldname": "instructions",
+   "fieldtype": "Long Text",
+   "label": "Instructions"
+  },
+  {
+   "fieldname": "contract_tab",
+   "fieldtype": "Tab Break",
+   "label": "Contract"
+  },
+  {
+   "fieldname": "contract_agreement",
+   "fieldtype": "Text Editor",
+   "label": "Contract Agreement",
+   "read_only": 1
+  },
+  {
+   "fieldname": "signed_by",
+   "fieldtype": "Data",
+   "label": "Signed By",
+   "read_only": 1
+  },
+  {
+   "fieldname": "signed_on",
+   "fieldtype": "Date",
+   "label": "Signed On",
+   "read_only": 1
+  },
+  {
+   "fieldname": "service_tab",
+   "fieldtype": "Tab Break",
+   "label": "Service"
+  },
+  {
+   "fetch_from": "vin_serial_no.service_period_years",
+   "fieldname": "service_period_years",
+   "fieldtype": "Int",
+   "label": "Service Period (Years)"
+  },
+  {
+   "fetch_from": "vin_serial_no.service_km_hours_limit",
+   "fieldname": "service_km_hours_limit",
+   "fieldtype": "Int",
+   "label": "Service KM/ Hours Limit"
+  },
+  {
+   "fieldname": "warranty_tab",
+   "fieldtype": "Tab Break",
+   "label": "Warranty"
+  },
+  {
+   "fetch_from": "vin_serial_no.service_start_date",
+   "fieldname": "service_start_date",
+   "fieldtype": "Date",
+   "label": "Service Start Date"
+  },
+  {
+   "fetch_from": "vin_serial_no.service_end_date",
+   "fieldname": "service_end_date",
+   "fieldtype": "Date",
+   "label": "Service End Date"
+  },
+  {
+   "fieldname": "column_break_6kva",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "vin_serial_no.warranty_period_years",
+   "fieldname": "warranty_period_years",
+   "fieldtype": "Int",
+   "label": "Warranty Period(Years)"
+  },
+  {
+   "fetch_from": "vin_serial_no.warranty_km_hours_limit",
+   "fieldname": "warranty_km_hours_limit",
+   "fieldtype": "Int",
+   "label": "Warranty KM/ Hours Limit"
+  },
+  {
+   "fieldname": "column_break_gpui",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "vin_serial_no.warranty_start_date",
+   "fieldname": "warranty_start_date",
+   "fieldtype": "Date",
+   "label": "Warranty Start Date"
+  },
+  {
+   "fetch_from": "vin_serial_no.warranty_end_date",
+   "fieldname": "warranty_end_date",
+   "fieldtype": "Date",
+   "label": "Warranty End Date"
+  },
+  {
+   "fetch_from": "vin_serial_no.last_load_test_date",
+   "fieldname": "last_load_test_date",
+   "fieldtype": "Date",
+   "label": "Last Load Test Date"
+  },
+  {
+   "fetch_from": "vin_serial_no.next_load_test_date",
+   "fieldname": "next_load_test_date",
+   "fieldtype": "Date",
+   "label": "Next Load Test Date"
+  },
+  {
+   "fieldname": "contract_no",
+   "fieldtype": "Data",
+   "label": "Contract No",
+   "read_only": 1
+  },
+  {
+   "fieldname": "contract_status",
+   "fieldtype": "Data",
+   "label": "Contract Status",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_yunx",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "contract_start_date",
+   "fieldtype": "Date",
+   "label": "Contract Start Date",
+   "read_only": 1
+  },
+  {
+   "fieldname": "contract_end_date",
+   "fieldtype": "Date",
+   "label": "Contract End Date",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_bpri",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "contract_details_section",
+   "fieldtype": "Section Break",
+   "label": "Contract Details"
+  },
+  {
+   "fieldname": "tag_no",
+   "fieldtype": "Data",
+   "label": "Tag No",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "column_break_mtpy",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "Unlinked",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "Unlinked\nLinked",
+   "read_only": 1
+  },
+  {
+   "fieldname": "linked_items_tab",
+   "fieldtype": "Tab Break",
+   "label": "Linked Items"
+  },
+  {
+   "fieldname": "linked_items",
+   "fieldtype": "Table",
+   "label": "Linked Items",
+   "options": "Vehicles Card Linked Items"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [
+  {
+   "group": "Service",
+   "link_doctype": "Request for Service",
+   "link_fieldname": "vin_serial_no"
+  },
+  {
+   "group": "Service",
+   "link_doctype": "Vehicles Service",
+   "link_fieldname": "vinserial_no"
+  },
+  {
+   "group": "Incidents",
+   "link_doctype": "Vehicles Incidents",
+   "link_fieldname": "vin_serial_no"
+  },
+  {
+   "group": "Incidents",
+   "link_doctype": "Vehicles Breakdown",
+   "link_fieldname": "vehicles_card"
+  }
+ ],
+ "modified": "2025-01-03 14:42:45.052689",
+ "modified_by": "Administrator",
+ "module": "Edp Online Vehicles",
+ "name": "Vehicles Card",
+ "naming_rule": "By fieldname",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}

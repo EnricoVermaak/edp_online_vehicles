@@ -1,0 +1,77 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2024-05-08 09:52:54.792928",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_q6ez",
+  "part",
+  "description",
+  "qty",
+  "price",
+  "total_excl",
+  "soh"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_q6ez",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "part",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Part No",
+   "options": "Item",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "part.item_name",
+   "fieldname": "description",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Description",
+   "read_only": 1
+  },
+  {
+   "fieldname": "price",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Price Per Part (Excl)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "soh",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "SOH",
+   "read_only": 1
+  },
+  {
+   "fieldname": "qty",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Qty"
+  },
+  {
+   "fieldname": "total_excl",
+   "fieldtype": "Currency",
+   "label": "Total (Excl)",
+   "read_only": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2025-03-13 10:25:20.334768",
+ "modified_by": "Administrator",
+ "module": "Edp Online Vehicles",
+ "name": "Catalogue part list",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

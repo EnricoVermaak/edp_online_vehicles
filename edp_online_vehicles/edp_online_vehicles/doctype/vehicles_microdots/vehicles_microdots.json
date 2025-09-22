@@ -1,0 +1,105 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "field:microdot",
+ "creation": "2024-09-12 13:54:18.698574",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_2dna",
+  "dealer",
+  "microdot",
+  "status",
+  "date_received",
+  "date_applied",
+  "vin_serial_no",
+  "is_updated"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_2dna",
+   "fieldtype": "Section Break"
+  },
+  {
+   "allow_in_quick_entry": 1,
+   "fieldname": "microdot",
+   "fieldtype": "Data",
+   "label": "Microdot",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "default": "Received",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "Received\nUsed",
+   "read_only": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "date_received",
+   "fieldtype": "Date",
+   "label": "Date Received",
+   "read_only": 1
+  },
+  {
+   "fieldname": "date_applied",
+   "fieldtype": "Datetime",
+   "label": "Date Applied",
+   "read_only": 1
+  },
+  {
+   "fieldname": "vin_serial_no",
+   "fieldtype": "Link",
+   "label": "Vin/ Serial No",
+   "options": "Vehicle Stock"
+  },
+  {
+   "allow_in_quick_entry": 1,
+   "fieldname": "dealer",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Dealer",
+   "options": "Company",
+   "reqd": 1
+  },
+  {
+   "default": "1",
+   "fieldname": "is_updated",
+   "fieldtype": "Check",
+   "hidden": 1,
+   "in_preview": 1,
+   "label": "Update"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2025-01-27 08:38:02.105454",
+ "modified_by": "Administrator",
+ "module": "Edp Online Vehicles",
+ "name": "Vehicles Microdots",
+ "naming_rule": "By fieldname",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "quick_entry": 1,
+ "show_title_field_in_link": 1,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "microdot",
+ "track_changes": 1
+}

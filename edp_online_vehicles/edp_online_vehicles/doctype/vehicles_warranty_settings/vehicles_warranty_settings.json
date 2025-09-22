@@ -1,0 +1,54 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2024-09-26 12:13:25.307138",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "general_settings_section",
+  "allow_user_to_create_material_request_from_vehicles_service",
+  "allow_user_to_create_sales_order_from_vehicles_service"
+ ],
+ "fields": [
+  {
+   "fieldname": "general_settings_section",
+   "fieldtype": "Section Break",
+   "label": "General Settings"
+  },
+  {
+   "default": "0",
+   "fieldname": "allow_user_to_create_material_request_from_vehicles_service",
+   "fieldtype": "Check",
+   "label": "Allow user to create Material Request from Vehicles Service"
+  },
+  {
+   "default": "0",
+   "fieldname": "allow_user_to_create_sales_order_from_vehicles_service",
+   "fieldtype": "Check",
+   "label": "Allow user to create Sales Order from Vehicles Service"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "issingle": 1,
+ "links": [],
+ "modified": "2024-09-26 12:15:07.473914",
+ "modified_by": "Administrator",
+ "module": "Edp Online Vehicles",
+ "name": "Vehicles Warranty Settings",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

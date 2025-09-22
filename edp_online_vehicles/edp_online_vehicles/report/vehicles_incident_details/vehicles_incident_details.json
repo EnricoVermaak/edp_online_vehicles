@@ -1,0 +1,27 @@
+{
+ "add_total_row": 0,
+ "columns": [],
+ "creation": "2024-03-14 10:24:48.522344",
+ "disabled": 0,
+ "docstatus": 0,
+ "doctype": "Report",
+ "filters": [],
+ "idx": 32,
+ "is_standard": "Yes",
+ "json": "{\"filters\":[],\"fields\":[[\"name\",\"Vehicles Incidents\"],[\"docstatus\",\"Vehicles Incidents\"],[\"vin_serial_no\",\"Vehicles Incidents\"],[\"status\",\"Vehicles Incidents\"],[\"internal_investigator\",\"Vehicles Incidents\"],[\"incident_type\",\"Vehicles Incidents\"],[\"_assign\",\"Vehicles Incidents\"],[\"brand\",\"Vehicles Incidents\"],[\"case_no\",\"Vehicles Incidents\"],[\"owner\",\"Vehicles Incidents\"],[\"_liked_by\",\"Vehicles Incidents\"],[\"modified\",\"Vehicles Incidents\"],[\"modified_by\",\"Vehicles Incidents\"],[\"investigating_officer\",\"Vehicles Incidents\"],[\"damage_assesment\",\"Vehicles Incidents\"],[\"creation\",\"Vehicles Incidents\"],[\"incident_description\",\"Vehicles Incidents\"],[\"incident_date_time\",\"Vehicles Incidents\"],[\"driver_signature\",\"Vehicles Incidents\"],[\"driver_full_names\",\"Vehicles Incidents\"],[\"driver_contact_no\",\"Vehicles Incidents\"],[\"driver\",\"Vehicles Incidents\"],[\"insurance_company\",\"Vehicles Incidents\"],[\"injuries\",\"Vehicles Incidents\"],[\"idx\",\"Vehicles Incidents\"],[\"internal_investigator_full_names\",\"Vehicles Incidents\"],[\"internal_investigator_signature\",\"Vehicles Incidents\"],[\"witness_information\",\"Vehicles Incidents\"],[\"_user_tags\",\"Vehicles Incidents\"],[\"location\",\"Vehicles Incidents\"],[\"managament_signature\",\"Vehicles Incidents\"],[\"management_full_names\",\"Vehicles Incidents\"],[\"management_user\",\"Vehicles Incidents\"],[\"model_code\",\"Vehicles Incidents\"],[\"model_description\",\"Vehicles Incidents\"],[\"model_year\",\"Vehicles Incidents\"],[\"police_report_no\",\"Vehicles Incidents\"],[\"policy_no\",\"Vehicles Incidents\"],[\"responding_officer\",\"Vehicles Incidents\"]],\"order_by\":\"`tabVehicles Incidents`.`modified` desc\",\"page_length\":20,\"column_widths\":{\"name\":120,\"vin_serial_no\":120,\"status\":120,\"internal_investigator\":120,\"incident_type\":120,\"_assign\":120,\"brand\":120,\"case_no\":120,\"owner\":120,\"_liked_by\":120,\"modified\":120,\"modified_by\":120,\"investigating_officer\":120,\"damage_assesment\":120,\"creation\":120,\"incident_description\":120,\"incident_date_time\":120,\"driver_signature\":120,\"driver_full_names\":120,\"driver_contact_no\":120,\"driver\":120,\"insurance_company\":120,\"injuries\":120,\"idx\":120,\"internal_investigator_full_names\":120,\"internal_investigator_signature\":120,\"witness_information\":120,\"_user_tags\":120,\"location\":120,\"managament_signature\":120,\"management_full_names\":120,\"management_user\":120,\"model_code\":120,\"model_description\":120,\"model_year\":120,\"police_report_no\":120,\"policy_no\":120,\"responding_officer\":120},\"group_by\":null}",
+ "letterhead": null,
+ "modified": "2024-07-03 18:10:44.200064",
+ "modified_by": "Administrator",
+ "module": "Edp Online Vehicles",
+ "name": "Vehicles Incident Details",
+ "owner": "Administrator",
+ "prepared_report": 0,
+ "ref_doctype": "Vehicles Incidents",
+ "report_name": "Vehicles Incident Details",
+ "report_type": "Report Builder",
+ "roles": [
+  {
+   "role": "System Manager"
+  }
+ ]
+}

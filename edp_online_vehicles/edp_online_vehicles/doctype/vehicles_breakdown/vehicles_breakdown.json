@@ -1,0 +1,375 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "format:EBR{MM}{YY}-{###########}",
+ "creation": "2024-10-02 08:01:06.898897",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "breakdown_date_time",
+  "territory",
+  "column_break_fywe",
+  "status",
+  "company",
+  "fault_category",
+  "vehicles_information_section",
+  "vin_serial_no",
+  "model",
+  "engine_no",
+  "column_break_qfau",
+  "odo_reading",
+  "registration_no",
+  "colour",
+  "section_break_qimh",
+  "breakdown_reason",
+  "reason_for_repair",
+  "breakdown_location_section",
+  "latitude",
+  "column_break_qaww",
+  "longitude",
+  "section_break_djmv",
+  "geolocation_bpdq",
+  "references_section",
+  "vehicles_card",
+  "issue",
+  "customer_tab",
+  "customer_name",
+  "warranty_tab",
+  "warranty_period_years",
+  "warranty_km_hours_limit",
+  "column_break_nfeo",
+  "warranty_start_date",
+  "warranty_end_date",
+  "service_tab",
+  "service_interval",
+  "service_period_limit_months",
+  "service_km_hours_limit",
+  "last_service_hours",
+  "last_service_date",
+  "next_service_due_date",
+  "column_break_wzeg",
+  "service_start_date",
+  "service_end_date",
+  "image",
+  "contract_tab",
+  "contract_name",
+  "contract_type",
+  "start_date",
+  "end_date"
+ ],
+ "fields": [
+  {
+   "default": "Now",
+   "fieldname": "breakdown_date_time",
+   "fieldtype": "Datetime",
+   "in_list_view": 1,
+   "label": "Breakdown Date/ Time",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_fywe",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Link",
+   "in_standard_filter": 1,
+   "label": "Status",
+   "options": "Breakdown Status"
+  },
+  {
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "label": "Dealer",
+   "options": "Company"
+  },
+  {
+   "fieldname": "vin_serial_no",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "VIN/ Serial No",
+   "options": "Vehicle Stock",
+   "reqd": 1,
+   "search_index": 1
+  },
+  {
+   "fetch_from": "vin_serial_no.engine_no",
+   "fieldname": "engine_no",
+   "fieldtype": "Data",
+   "label": "Engine No"
+  },
+  {
+   "fetch_from": "vin_serial_no.colour",
+   "fieldname": "colour",
+   "fieldtype": "Data",
+   "label": "Colour"
+  },
+  {
+   "fieldname": "column_break_qfau",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "odo_reading",
+   "fieldtype": "Float",
+   "label": "Odo Reading",
+   "reqd": 1
+  },
+  {
+   "fieldname": "section_break_qimh",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "breakdown_reason",
+   "fieldtype": "Small Text",
+   "label": "Breakdown Reason"
+  },
+  {
+   "fieldname": "reason_for_repair",
+   "fieldtype": "Small Text",
+   "label": "Reason for Repair"
+  },
+  {
+   "fetch_from": "vin_serial_no.model",
+   "fieldname": "model",
+   "fieldtype": "Link",
+   "label": "Model",
+   "options": "Model Administration"
+  },
+  {
+   "fieldname": "customer_tab",
+   "fieldtype": "Tab Break",
+   "label": "Customer"
+  },
+  {
+   "fieldname": "customer_name",
+   "fieldtype": "Link",
+   "in_standard_filter": 1,
+   "label": "Customer Name",
+   "options": "Customer"
+  },
+  {
+   "fieldname": "territory",
+   "fieldtype": "Link",
+   "label": "Territory",
+   "options": "Territory"
+  },
+  {
+   "fieldname": "breakdown_location_section",
+   "fieldtype": "Section Break",
+   "label": "Breakdown Location"
+  },
+  {
+   "fieldname": "latitude",
+   "fieldtype": "Float",
+   "label": "Latitude"
+  },
+  {
+   "fieldname": "column_break_qaww",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "longitude",
+   "fieldtype": "Float",
+   "label": "Longitude"
+  },
+  {
+   "fieldname": "section_break_djmv",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "geolocation_bpdq",
+   "fieldtype": "Geolocation"
+  },
+  {
+   "fieldname": "registration_no",
+   "fieldtype": "Data",
+   "label": "Registration No"
+  },
+  {
+   "fieldname": "references_section",
+   "fieldtype": "Section Break",
+   "label": "References"
+  },
+  {
+   "fieldname": "vehicles_information_section",
+   "fieldtype": "Section Break",
+   "label": "Vehicles Information"
+  },
+  {
+   "fieldname": "vehicles_card",
+   "fieldtype": "Link",
+   "hidden": 1,
+   "label": "Vehicles Card",
+   "options": "Vehicles Card",
+   "print_hide": 1,
+   "report_hide": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "issue",
+   "fieldtype": "Link",
+   "hidden": 1,
+   "label": "Issue",
+   "options": "Issue",
+   "print_hide": 1,
+   "report_hide": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "warranty_tab",
+   "fieldtype": "Tab Break",
+   "label": "Warranty"
+  },
+  {
+   "fieldname": "service_tab",
+   "fieldtype": "Tab Break",
+   "label": "Service"
+  },
+  {
+   "fieldname": "contract_tab",
+   "fieldtype": "Tab Break",
+   "label": "Contract"
+  },
+  {
+   "fieldname": "warranty_period_years",
+   "fieldtype": "Int",
+   "label": "Warranty Period (Years)"
+  },
+  {
+   "fieldname": "warranty_km_hours_limit",
+   "fieldtype": "Int",
+   "label": "Warranty KM/ Hours Limit"
+  },
+  {
+   "fieldname": "column_break_nfeo",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "warranty_start_date",
+   "fieldtype": "Date",
+   "label": "Warranty Start Date"
+  },
+  {
+   "fieldname": "warranty_end_date",
+   "fieldtype": "Date",
+   "label": "Warranty End Date"
+  },
+  {
+   "fieldname": "service_interval",
+   "fieldtype": "Int",
+   "label": "Service Interval"
+  },
+  {
+   "fieldname": "service_period_limit_months",
+   "fieldtype": "Int",
+   "label": "Service Period Limit (Months)"
+  },
+  {
+   "fieldname": "service_km_hours_limit",
+   "fieldtype": "Int",
+   "label": "Service KM/ Hours Limit"
+  },
+  {
+   "fieldname": "last_service_hours",
+   "fieldtype": "Float",
+   "label": "Last Service Hours"
+  },
+  {
+   "fieldname": "last_service_date",
+   "fieldtype": "Date",
+   "label": "Last Service Date"
+  },
+  {
+   "fieldname": "next_service_due_date",
+   "fieldtype": "Date",
+   "label": "Next Service Due Date"
+  },
+  {
+   "fieldname": "column_break_wzeg",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "service_start_date",
+   "fieldtype": "Date",
+   "label": "Service Start Date"
+  },
+  {
+   "fieldname": "service_end_date",
+   "fieldtype": "Date",
+   "label": "Service End Date"
+  },
+  {
+   "fieldname": "image",
+   "fieldtype": "Attach Image",
+   "label": "Image"
+  },
+  {
+   "fieldname": "contract_name",
+   "fieldtype": "Data",
+   "label": "Contract Name"
+  },
+  {
+   "fieldname": "contract_type",
+   "fieldtype": "Select",
+   "label": "Contract Type"
+  },
+  {
+   "fieldname": "start_date",
+   "fieldtype": "Date",
+   "label": "Start Date"
+  },
+  {
+   "fieldname": "end_date",
+   "fieldtype": "Date",
+   "label": "End Date"
+  },
+  {
+   "fieldname": "fault_category",
+   "fieldtype": "Link",
+   "label": "Fault Category",
+   "options": "Breakdown Fault Category"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [
+  {
+   "group": "Service",
+   "link_doctype": "Request for Service",
+   "link_fieldname": "vehicles_breakdown"
+  },
+  {
+   "group": "Service",
+   "link_doctype": "Vehicles Service",
+   "link_fieldname": "breakdown_link"
+  },
+  {
+   "group": "Warranty",
+   "link_doctype": "Vehicles Warranty Claims",
+   "link_fieldname": "vehicles_breakdown"
+  }
+ ],
+ "modified": "2025-05-06 14:50:31.450012",
+ "modified_by": "Administrator",
+ "module": "Edp Online Vehicles",
+ "name": "Vehicles Breakdown",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

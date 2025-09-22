@@ -1,0 +1,177 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2024-06-07 11:42:26.230608",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_kw7x",
+  "id",
+  "month",
+  "source",
+  "priority",
+  "priority_status",
+  "rework_status",
+  "rework_date",
+  "rework_comment",
+  "customer_status",
+  "product_range",
+  "stock_no",
+  "column_break_0wdf",
+  "vin_no",
+  "model_description",
+  "comments",
+  "location",
+  "compound",
+  "compound_note",
+  "compound_receive_date",
+  "batch_van",
+  "material",
+  "overage_days"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_kw7x",
+   "fieldtype": "Section Break",
+   "label": "Vehicle Rework/Refurbish"
+  },
+  {
+   "fieldname": "id",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "ID"
+  },
+  {
+   "fieldname": "month",
+   "fieldtype": "Data",
+   "label": "Rework Month"
+  },
+  {
+   "bold": 1,
+   "fieldname": "source",
+   "fieldtype": "Data",
+   "label": "Source"
+  },
+  {
+   "fieldname": "priority",
+   "fieldtype": "Data",
+   "label": "Priority"
+  },
+  {
+   "fieldname": "priority_status",
+   "fieldtype": "Data",
+   "label": "Priority Status"
+  },
+  {
+   "fieldname": "rework_status",
+   "fieldtype": "Data",
+   "label": "Rework Status"
+  },
+  {
+   "fieldname": "rework_date",
+   "fieldtype": "Data",
+   "label": "Rework Date"
+  },
+  {
+   "fieldname": "rework_comment",
+   "fieldtype": "Data",
+   "label": "Rework Comment"
+  },
+  {
+   "fieldname": "customer_status",
+   "fieldtype": "Data",
+   "label": "Customer Status"
+  },
+  {
+   "fieldname": "product_range",
+   "fieldtype": "Data",
+   "label": "Product Range"
+  },
+  {
+   "fieldname": "stock_no",
+   "fieldtype": "Data",
+   "label": "Stock No"
+  },
+  {
+   "fieldname": "column_break_0wdf",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "vin_no",
+   "fieldtype": "Data",
+   "label": "Vin No"
+  },
+  {
+   "fieldname": "model_description",
+   "fieldtype": "Data",
+   "label": "Model Description"
+  },
+  {
+   "fieldname": "comments",
+   "fieldtype": "Data",
+   "label": "Comments"
+  },
+  {
+   "fieldname": "location",
+   "fieldtype": "Data",
+   "label": "Location"
+  },
+  {
+   "fieldname": "compound",
+   "fieldtype": "Data",
+   "label": "Compound"
+  },
+  {
+   "fieldname": "compound_note",
+   "fieldtype": "Data",
+   "label": "Compound Note"
+  },
+  {
+   "fieldname": "compound_receive_date",
+   "fieldtype": "Data",
+   "label": "Compound Receive Date"
+  },
+  {
+   "fieldname": "batch_van",
+   "fieldtype": "Data",
+   "label": "Batch Van"
+  },
+  {
+   "fieldname": "material",
+   "fieldtype": "Data",
+   "label": "Material"
+  },
+  {
+   "fieldname": "overage_days",
+   "fieldtype": "Data",
+   "label": "Overage Days"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2024-07-03 17:08:02.135020",
+ "modified_by": "Administrator",
+ "module": "Edp Online Vehicles",
+ "name": "Vehicles Vehicle Rework",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "search_fields": "month",
+ "show_title_field_in_link": 1,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "month"
+}

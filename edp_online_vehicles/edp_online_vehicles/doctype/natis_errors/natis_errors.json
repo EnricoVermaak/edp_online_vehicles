@@ -1,0 +1,169 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2024-05-06 10:48:03.141375",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_jctm",
+  "dealer",
+  "vin_no",
+  "stock_no",
+  "client_no",
+  "customer_name",
+  "customer_surname",
+  "client_id_type",
+  "client_id_number",
+  "column_break_fxwb",
+  "error_code",
+  "error_field",
+  "error_description",
+  "email_sent_on",
+  "post_type",
+  "post_date_time",
+  "section_break_cobv",
+  "sale_reference"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_jctm",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "vin_no",
+   "fieldtype": "Link",
+   "label": "Vin No",
+   "options": "Vehicle Stock",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "vin_no.stock_no",
+   "fieldname": "stock_no",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Stock No",
+   "read_only": 1
+  },
+  {
+   "fieldname": "client_id_type",
+   "fieldtype": "Data",
+   "label": "Customer ID Type",
+   "read_only": 1
+  },
+  {
+   "fieldname": "client_id_number",
+   "fieldtype": "Data",
+   "label": "Customer ID Number",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_fxwb",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "error_code",
+   "fieldtype": "Data",
+   "label": "Error Code",
+   "read_only": 1
+  },
+  {
+   "fieldname": "error_field",
+   "fieldtype": "Data",
+   "label": "Error Field",
+   "read_only": 1
+  },
+  {
+   "fieldname": "error_description",
+   "fieldtype": "Data",
+   "label": "Error Description",
+   "read_only": 1
+  },
+  {
+   "fieldname": "email_sent_on",
+   "fieldtype": "Data",
+   "label": "Email Sent On",
+   "read_only": 1
+  },
+  {
+   "fieldname": "post_type",
+   "fieldtype": "Data",
+   "label": "Post Type",
+   "read_only": 1
+  },
+  {
+   "fieldname": "post_date_time",
+   "fieldtype": "Datetime",
+   "label": "Post Date Time",
+   "read_only": 1
+  },
+  {
+   "fieldname": "dealer",
+   "fieldtype": "Link",
+   "label": "Dealer",
+   "options": "Company",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "vin_no.customer",
+   "fieldname": "client_no",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Customer No",
+   "options": "Dealer Customer",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "vin_no.customer_full_name",
+   "fieldname": "customer_name",
+   "fieldtype": "Data",
+   "label": "Customer Name",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "vin_no.customer_full_name",
+   "fieldname": "customer_surname",
+   "fieldtype": "Data",
+   "label": "Customer Surname",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_cobv",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "sale_reference",
+   "fieldtype": "Link",
+   "label": "Sale Reference",
+   "options": "Vehicle Retail",
+   "read_only": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2025-06-11 11:59:58.712688",
+ "modified_by": "Administrator",
+ "module": "Edp Online Vehicles",
+ "name": "Natis Errors",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "search_fields": "vin_no",
+ "show_title_field_in_link": 1,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "vin_no",
+ "track_changes": 1
+}

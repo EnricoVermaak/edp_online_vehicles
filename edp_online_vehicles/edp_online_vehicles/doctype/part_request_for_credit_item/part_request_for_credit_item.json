@@ -1,0 +1,137 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-02-26 15:53:42.881494",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "part_ordered",
+  "part_ordered_description",
+  "column_break_cigy",
+  "part_received",
+  "part_received_description",
+  "section_break_npaf",
+  "return_qty",
+  "approved_qty",
+  "order_no",
+  "invoice_no",
+  "invoice_date",
+  "reason",
+  "status"
+ ],
+ "fields": [
+  {
+   "columns": 2,
+   "fieldname": "part_ordered",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Part Ordered",
+   "link_filters": "[[\"Item\",\"item_group\",\"=\",\"Parts\"]]",
+   "options": "Item",
+   "reqd": 1
+  },
+  {
+   "columns": 2,
+   "fieldname": "part_received",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Part Received",
+   "link_filters": "[[\"Item\",\"item_group\",\"=\",\"Parts\"]]",
+   "options": "Item",
+   "reqd": 1
+  },
+  {
+   "columns": 1,
+   "default": "1",
+   "fieldname": "return_qty",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Return Qty",
+   "non_negative": 1,
+   "reqd": 1
+  },
+  {
+   "columns": 2,
+   "fieldname": "invoice_no",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Invoice No",
+   "reqd": 1
+  },
+  {
+   "columns": 1,
+   "fieldname": "invoice_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Invoice Date",
+   "reqd": 1
+  },
+  {
+   "columns": 2,
+   "fieldname": "reason",
+   "fieldtype": "Small Text",
+   "in_list_view": 1,
+   "label": "Reason",
+   "reqd": 1
+  },
+  {
+   "columns": 1,
+   "default": "Pending",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Status",
+   "options": "Pending\nApproved\nDeclined\nCancelled",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "part_ordered.item_name",
+   "fieldname": "part_ordered_description",
+   "fieldtype": "Data",
+   "label": "Part Ordered Description",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_cigy",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "part_received.item_name",
+   "fieldname": "part_received_description",
+   "fieldtype": "Data",
+   "label": "Part Received Description",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_npaf",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "order_no",
+   "fieldtype": "Link",
+   "label": "Order No",
+   "options": "Part Order"
+  },
+  {
+   "columns": 1,
+   "fieldname": "approved_qty",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Approved Qty",
+   "non_negative": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2025-03-14 08:30:58.236946",
+ "modified_by": "Administrator",
+ "module": "Edp Online Vehicles",
+ "name": "Part Request For Credit Item",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

@@ -1,0 +1,631 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "format:WC-{YY}{MM}-{#####}",
+ "creation": "2024-03-14 01:54:39.763880",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_6gue",
+  "vin_serial_no",
+  "model",
+  "model_description",
+  "column_break_pqz0",
+  "oem_approval_no",
+  "ho_approval_no",
+  "dealer_jobcard_no",
+  "submitted_to_dms",
+  "column_break_hsbt",
+  "dealer",
+  "date_of_failure",
+  "odo_reading",
+  "status",
+  "vehicle_information_section",
+  "engine_no",
+  "brand",
+  "license_no",
+  "license_expiry_date",
+  "vehicle_registration_number",
+  "column_break_cncj",
+  "colour",
+  "model_year",
+  "bought_from_dealer",
+  "more_info_section",
+  "summary",
+  "column_break_nj0t",
+  "return_reason",
+  "references_section",
+  "vehicles_breakdown",
+  "vehicles_incidents",
+  "customer_tab",
+  "customer",
+  "customer_name",
+  "column_break_2xx0",
+  "phone",
+  "email",
+  "adress",
+  "warranty_plan_tab",
+  "warranty_start_date",
+  "warranty_end_date",
+  "warranty_period_years",
+  "column_break_dmel",
+  "extended_warranty_start_date",
+  "extended_warranty_end_date",
+  "extended_warranty_period",
+  "fault_cause_remedy_tab",
+  "fault",
+  "cause",
+  "remedy",
+  "parts_tab",
+  "part_schedule_date",
+  "part_items",
+  "section_break_yezc",
+  "column_break_fiij",
+  "column_break_pfgu",
+  "total_excl",
+  "labour_tab",
+  "labour_items",
+  "extras_tab",
+  "extra_items",
+  "section_break_ixhf",
+  "column_break_ljup",
+  "column_break_yhba",
+  "extra_cost_total_excl",
+  "history_tab",
+  "service_history",
+  "warranty_history",
+  "breakdown_history",
+  "incident_history",
+  "documents_and_images_tab",
+  "odo_meter",
+  "sticker",
+  "faulty_parts_image",
+  "column_break_xldu",
+  "head_office_invoice",
+  "technician_invoice",
+  "approval_letter",
+  "tab_break_wcj7",
+  "reported_by",
+  "technician",
+  "technician_signature",
+  "technician_full_names",
+  "approved_by",
+  "authorised_by_signature",
+  "authorised_by_full_names",
+  "attached_document_tab",
+  "attached_documents"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_6gue",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "vin_serial_no",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "VIN/ Serial No",
+   "options": "Vehicle Stock",
+   "reqd": 1,
+   "search_index": 1
+  },
+  {
+   "fetch_from": "vin_serial_no.model",
+   "fieldname": "model",
+   "fieldtype": "Data",
+   "label": "Model",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "vin_serial_no.description",
+   "fieldname": "model_description",
+   "fieldtype": "Data",
+   "label": "Model Description",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "vin_serial_no.brand",
+   "fieldname": "brand",
+   "fieldtype": "Data",
+   "label": "Brand",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "vin_serial_no.engine_no",
+   "fieldname": "engine_no",
+   "fieldtype": "Data",
+   "label": "Engine No",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "vin_serial_no.model_year",
+   "fieldname": "model_year",
+   "fieldtype": "Data",
+   "label": "Model Year",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_pqz0",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "vin_serial_no.warranty_period_years",
+   "fieldname": "warranty_period_years",
+   "fieldtype": "Int",
+   "label": "Warranty Period (Years)",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "vin_serial_no.warranty_start_date",
+   "fieldname": "warranty_start_date",
+   "fieldtype": "Date",
+   "label": "Warranty Start Date",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "vin_serial_no.warranty_end_date",
+   "fieldname": "warranty_end_date",
+   "fieldtype": "Date",
+   "label": "Warranty End Date",
+   "read_only": 1
+  },
+  {
+   "fieldname": "oem_approval_no",
+   "fieldtype": "Data",
+   "label": "OEM Approval No"
+  },
+  {
+   "fieldname": "ho_approval_no",
+   "fieldtype": "Data",
+   "label": "HO Approval No"
+  },
+  {
+   "fieldname": "dealer_jobcard_no",
+   "fieldtype": "Data",
+   "label": "Dealer Jobcard No"
+  },
+  {
+   "fieldname": "column_break_hsbt",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "date_of_failure",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Date of Failure",
+   "reqd": 1
+  },
+  {
+   "fieldname": "odo_reading",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Odo Reading",
+   "reqd": 1
+  },
+  {
+   "fieldname": "reported_by",
+   "fieldtype": "Link",
+   "label": "Reported By",
+   "options": "User"
+  },
+  {
+   "fieldname": "technician",
+   "fieldtype": "Link",
+   "label": "Technician",
+   "options": "User",
+   "reqd": 1
+  },
+  {
+   "fieldname": "approved_by",
+   "fieldtype": "Link",
+   "label": "Authorised By",
+   "options": "User"
+  },
+  {
+   "default": "Pending",
+   "fieldname": "status",
+   "fieldtype": "Link",
+   "label": "Status",
+   "options": "Warranty Status",
+   "reqd": 1
+  },
+  {
+   "fieldname": "more_info_section",
+   "fieldtype": "Section Break",
+   "label": "More Info"
+  },
+  {
+   "fieldname": "summary",
+   "fieldtype": "Small Text",
+   "label": "Summary"
+  },
+  {
+   "fieldname": "column_break_nj0t",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "return_reason",
+   "fieldtype": "Small Text",
+   "label": "Return Reason"
+  },
+  {
+   "fieldname": "customer_tab",
+   "fieldtype": "Tab Break",
+   "label": "Customer"
+  },
+  {
+   "fetch_from": "vin_serial_no.customer",
+   "fetch_if_empty": 1,
+   "fieldname": "customer",
+   "fieldtype": "Link",
+   "label": "Customer",
+   "options": "Dealer Customer",
+   "reqd": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "fault_cause_remedy_tab",
+   "fieldtype": "Tab Break",
+   "label": "Fault/ Cause/ Remedy"
+  },
+  {
+   "fieldname": "fault",
+   "fieldtype": "Small Text",
+   "in_list_view": 1,
+   "label": "Fault"
+  },
+  {
+   "fieldname": "cause",
+   "fieldtype": "Small Text",
+   "label": "Cause"
+  },
+  {
+   "fieldname": "remedy",
+   "fieldtype": "Small Text",
+   "label": "Remedy"
+  },
+  {
+   "fieldname": "parts_tab",
+   "fieldtype": "Tab Break",
+   "label": "Parts"
+  },
+  {
+   "fieldname": "part_items",
+   "fieldtype": "Table",
+   "label": "Part Items",
+   "options": "Warranty Part Item"
+  },
+  {
+   "fieldname": "labour_tab",
+   "fieldtype": "Tab Break",
+   "label": "Labour"
+  },
+  {
+   "fieldname": "labour_items",
+   "fieldtype": "Table",
+   "label": "Labour Items",
+   "options": "Warranty Labour Item"
+  },
+  {
+   "fieldname": "extras_tab",
+   "fieldtype": "Tab Break",
+   "label": "Extras"
+  },
+  {
+   "fieldname": "extra_items",
+   "fieldtype": "Table",
+   "label": "Extra Items",
+   "options": "Extra Items"
+  },
+  {
+   "fieldname": "documents_and_images_tab",
+   "fieldtype": "Tab Break",
+   "label": "Documents and Images"
+  },
+  {
+   "fieldname": "odo_meter",
+   "fieldtype": "Attach Image",
+   "label": "Odo Meter"
+  },
+  {
+   "fieldname": "sticker",
+   "fieldtype": "Attach Image",
+   "label": "Sticker"
+  },
+  {
+   "fieldname": "faulty_parts_image",
+   "fieldtype": "Attach Image",
+   "label": "Faulty Parts Image"
+  },
+  {
+   "fieldname": "column_break_xldu",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "head_office_invoice",
+   "fieldtype": "Attach",
+   "label": "Head Office Invoice"
+  },
+  {
+   "fieldname": "technician_invoice",
+   "fieldtype": "Attach",
+   "label": "Technician Invoice"
+  },
+  {
+   "fieldname": "approval_letter",
+   "fieldtype": "Attach",
+   "label": "Approval Letter"
+  },
+  {
+   "fieldname": "tab_break_wcj7",
+   "fieldtype": "Tab Break",
+   "label": "Confirmation"
+  },
+  {
+   "fieldname": "technician_signature",
+   "fieldtype": "Signature",
+   "label": "Technician Signature"
+  },
+  {
+   "fetch_from": "technician.full_name",
+   "fieldname": "technician_full_names",
+   "fieldtype": "Data",
+   "label": "Technician Full Names"
+  },
+  {
+   "fieldname": "authorised_by_signature",
+   "fieldtype": "Signature",
+   "label": "Authorised By Signature"
+  },
+  {
+   "fetch_from": "approved_by.full_name",
+   "fieldname": "authorised_by_full_names",
+   "fieldtype": "Data",
+   "label": "Authorised By Full Names"
+  },
+  {
+   "fetch_from": "customer.customer_full_name",
+   "fieldname": "customer_name",
+   "fieldtype": "Data",
+   "label": "Customer Name",
+   "read_only": 1
+  },
+  {
+   "fieldname": "warranty_plan_tab",
+   "fieldtype": "Tab Break",
+   "label": "Warranty Plan"
+  },
+  {
+   "fieldname": "column_break_dmel",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "extended_warranty_start_date",
+   "fieldtype": "Date",
+   "label": "Extended Warranty Start Date",
+   "read_only": 1
+  },
+  {
+   "fieldname": "extended_warranty_end_date",
+   "fieldtype": "Date",
+   "label": "Extended Warranty End Date",
+   "read_only": 1
+  },
+  {
+   "fieldname": "extended_warranty_period",
+   "fieldtype": "Int",
+   "label": "Extended Warranty Period (Years)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_2xx0",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "customer.phone",
+   "fieldname": "phone",
+   "fieldtype": "Float",
+   "label": "Phone"
+  },
+  {
+   "fetch_from": "customer.email",
+   "fieldname": "email",
+   "fieldtype": "Data",
+   "label": "Email"
+  },
+  {
+   "fetch_from": "customer.address",
+   "fieldname": "adress",
+   "fieldtype": "Small Text",
+   "label": "Adress"
+  },
+  {
+   "fieldname": "extra_cost_total_excl",
+   "fieldtype": "Currency",
+   "label": "Extra Cost Total (Excl)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_ixhf",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_ljup",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_yhba",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "part_schedule_date",
+   "fieldtype": "Date",
+   "label": "Scheduled Delivery Date for Parts"
+  },
+  {
+   "fieldname": "attached_documents",
+   "fieldtype": "Table",
+   "label": "Attached Documents",
+   "options": "Attached Documents"
+  },
+  {
+   "fieldname": "attached_document_tab",
+   "fieldtype": "Tab Break",
+   "hidden": 1,
+   "label": "Attached Documents"
+  },
+  {
+   "fieldname": "dealer",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Dealer",
+   "options": "Company",
+   "reqd": 1
+  },
+  {
+   "fieldname": "references_section",
+   "fieldtype": "Section Break",
+   "label": "References"
+  },
+  {
+   "fieldname": "vehicles_breakdown",
+   "fieldtype": "Link",
+   "hidden": 1,
+   "label": "Vehicles Breakdown",
+   "options": "Vehicles Breakdown",
+   "search_index": 1
+  },
+  {
+   "fieldname": "section_break_yezc",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_fiij",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_pfgu",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "total_excl",
+   "fieldtype": "Currency",
+   "label": "Total (Excl)"
+  },
+  {
+   "fieldname": "vehicle_information_section",
+   "fieldtype": "Section Break",
+   "label": "Vehicle Information"
+  },
+  {
+   "fieldname": "license_no",
+   "fieldtype": "Data",
+   "label": "License No"
+  },
+  {
+   "fieldname": "license_expiry_date",
+   "fieldtype": "Date",
+   "label": "License Expiry Date"
+  },
+  {
+   "fieldname": "vehicle_registration_number",
+   "fieldtype": "Data",
+   "label": "Vehicle Registration Number"
+  },
+  {
+   "fieldname": "column_break_cncj",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "colour",
+   "fieldtype": "Data",
+   "label": "Colour"
+  },
+  {
+   "fieldname": "bought_from_dealer",
+   "fieldtype": "Data",
+   "label": "Bought From Dealer"
+  },
+  {
+   "fieldname": "history_tab",
+   "fieldtype": "Tab Break",
+   "label": "History"
+  },
+  {
+   "fieldname": "service_history",
+   "fieldtype": "Table",
+   "label": "Service History",
+   "options": "Service History"
+  },
+  {
+   "fieldname": "warranty_history",
+   "fieldtype": "Table",
+   "label": "Warranty History",
+   "options": "Warranty History"
+  },
+  {
+   "fieldname": "breakdown_history",
+   "fieldtype": "Table",
+   "label": "Breakdown History",
+   "options": "Breakdown History"
+  },
+  {
+   "fieldname": "incident_history",
+   "fieldtype": "Table",
+   "label": "Incident History",
+   "options": "Incident History"
+  },
+  {
+   "fieldname": "vehicles_incidents",
+   "fieldtype": "Link",
+   "label": "Vehicles Incidents",
+   "options": "Vehicles Incidents",
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "submitted_to_dms",
+   "fieldtype": "Datetime",
+   "label": "Submitted To DMS"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [
+  {
+   "link_doctype": "Material Request",
+   "link_fieldname": "custom_linked_warranty_id"
+  },
+  {
+   "link_doctype": "Internal Docs and Notes",
+   "link_fieldname": "warranty"
+  }
+ ],
+ "modified": "2025-05-23 11:30:22.444696",
+ "modified_by": "Administrator",
+ "module": "Edp Online Vehicles",
+ "name": "Vehicles Warranty Claims",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "show_title_field_in_link": 1,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "vin_serial_no",
+ "track_changes": 1
+}

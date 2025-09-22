@@ -1,0 +1,213 @@
+[
+ {
+  "custom_menu": [
+   {
+    "enabled": 1,
+    "parent": "Portal Settings",
+    "parentfield": "custom_menu",
+    "parenttype": "Portal Settings",
+    "reference_doctype": "Vehicles Service",
+    "role": "Customer",
+    "route": "services",
+    "target": null,
+    "title": "Vehicles Services"
+   },
+   {
+    "enabled": 1,
+    "parent": "Portal Settings",
+    "parentfield": "custom_menu",
+    "parenttype": "Portal Settings",
+    "reference_doctype": "Vehicle Stock",
+    "role": "Customer",
+    "route": "Vehicles",
+    "target": null,
+    "title": "Vehicle Stock"
+   },
+   {
+    "enabled": 1,
+    "parent": "Portal Settings",
+    "parentfield": "custom_menu",
+    "parenttype": "Portal Settings",
+    "reference_doctype": "Request for Service",
+    "role": "Customer",
+    "route": "rfs",
+    "target": null,
+    "title": "Request For Services"
+   },
+   {
+    "enabled": 1,
+    "parent": "Portal Settings",
+    "parentfield": "custom_menu",
+    "parenttype": "Portal Settings",
+    "reference_doctype": "Vehicles Warranty Claims",
+    "role": "Customer",
+    "route": "vehicles-warranty-claim",
+    "target": null,
+    "title": "Vehicles Warranty Claim"
+   }
+  ],
+  "default_portal_home": "",
+  "default_role": "Customer",
+  "docstatus": 0,
+  "doctype": "Portal Settings",
+  "hide_standard_menu": 0,
+  "menu": [
+   {
+    "enabled": 1,
+    "parent": "Portal Settings",
+    "parentfield": "menu",
+    "parenttype": "Portal Settings",
+    "reference_doctype": "Project",
+    "role": "Customer",
+    "route": "/project",
+    "target": null,
+    "title": "Projects"
+   },
+   {
+    "enabled": 1,
+    "parent": "Portal Settings",
+    "parentfield": "menu",
+    "parenttype": "Portal Settings",
+    "reference_doctype": "Request for Quotation",
+    "role": "Supplier",
+    "route": "/rfq",
+    "target": null,
+    "title": "Request for Quotations"
+   },
+   {
+    "enabled": 1,
+    "parent": "Portal Settings",
+    "parentfield": "menu",
+    "parenttype": "Portal Settings",
+    "reference_doctype": "Supplier Quotation",
+    "role": "Supplier",
+    "route": "/supplier-quotations",
+    "target": null,
+    "title": "Supplier Quotation"
+   },
+   {
+    "enabled": 0,
+    "parent": "Portal Settings",
+    "parentfield": "menu",
+    "parenttype": "Portal Settings",
+    "reference_doctype": "Purchase Order",
+    "role": "Supplier",
+    "route": "/purchase-orders",
+    "target": null,
+    "title": "Purchase Orders"
+   },
+   {
+    "enabled": 0,
+    "parent": "Portal Settings",
+    "parentfield": "menu",
+    "parenttype": "Portal Settings",
+    "reference_doctype": "Purchase Invoice",
+    "role": "Supplier",
+    "route": "/purchase-invoices",
+    "target": null,
+    "title": "Purchase Invoices"
+   },
+   {
+    "enabled": 1,
+    "parent": "Portal Settings",
+    "parentfield": "menu",
+    "parenttype": "Portal Settings",
+    "reference_doctype": "Quotation",
+    "role": "Customer",
+    "route": "/quotations",
+    "target": null,
+    "title": "Quotations"
+   },
+   {
+    "enabled": 1,
+    "parent": "Portal Settings",
+    "parentfield": "menu",
+    "parenttype": "Portal Settings",
+    "reference_doctype": "Sales Order",
+    "role": "Customer",
+    "route": "/orders",
+    "target": null,
+    "title": "Orders"
+   },
+   {
+    "enabled": 1,
+    "parent": "Portal Settings",
+    "parentfield": "menu",
+    "parenttype": "Portal Settings",
+    "reference_doctype": "Sales Invoice",
+    "role": "Customer",
+    "route": "/invoices",
+    "target": null,
+    "title": "Invoices"
+   },
+   {
+    "enabled": 0,
+    "parent": "Portal Settings",
+    "parentfield": "menu",
+    "parenttype": "Portal Settings",
+    "reference_doctype": "Delivery Note",
+    "role": "Customer",
+    "route": "/shipments",
+    "target": null,
+    "title": "Shipments"
+   },
+   {
+    "enabled": 1,
+    "parent": "Portal Settings",
+    "parentfield": "menu",
+    "parenttype": "Portal Settings",
+    "reference_doctype": "Issue",
+    "role": "Customer",
+    "route": "/issues",
+    "target": null,
+    "title": "Issues"
+   },
+   {
+    "enabled": 0,
+    "parent": "Portal Settings",
+    "parentfield": "menu",
+    "parenttype": "Portal Settings",
+    "reference_doctype": "Address",
+    "role": null,
+    "route": "/addresses",
+    "target": null,
+    "title": "Addresses"
+   },
+   {
+    "enabled": 0,
+    "parent": "Portal Settings",
+    "parentfield": "menu",
+    "parenttype": "Portal Settings",
+    "reference_doctype": "Timesheet",
+    "role": "Customer",
+    "route": "/timesheets",
+    "target": null,
+    "title": "Timesheets"
+   },
+   {
+    "enabled": 1,
+    "parent": "Portal Settings",
+    "parentfield": "menu",
+    "parenttype": "Portal Settings",
+    "reference_doctype": "Newsletter",
+    "role": null,
+    "route": "/newsletters",
+    "target": null,
+    "title": "Newsletter"
+   },
+   {
+    "enabled": 0,
+    "parent": "Portal Settings",
+    "parentfield": "menu",
+    "parenttype": "Portal Settings",
+    "reference_doctype": "Material Request",
+    "role": "Customer",
+    "route": "/material-requests",
+    "target": null,
+    "title": "Material Request"
+   }
+  ],
+  "modified": "2024-10-01 13:40:06.421354",
+  "name": "Portal Settings"
+ }
+]

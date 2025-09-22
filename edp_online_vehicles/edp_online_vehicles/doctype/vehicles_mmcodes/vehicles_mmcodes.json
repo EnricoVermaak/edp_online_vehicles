@@ -1,0 +1,308 @@
+{
+ "actions": [],
+ "allow_import": 1,
+ "allow_rename": 1,
+ "creation": "2024-06-06 15:02:24.397171",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_yq0v",
+  "mm_code",
+  "vehicle_type",
+  "make",
+  "model",
+  "variant",
+  "reg_year",
+  "publication_section",
+  "master_model",
+  "make_code",
+  "model_code",
+  "variant_code",
+  "axle_configuration",
+  "body_type",
+  "no_of_doors",
+  "drive",
+  "seats",
+  "vehicles_use",
+  "wheelbase",
+  "manual_auto",
+  "no_gears",
+  "cooling",
+  "cubic_capacity",
+  "cyl_configuration",
+  "engine_cycle",
+  "fuel_tank_size",
+  "fuel_type",
+  "kilowatts",
+  "no_cylinders",
+  "turbo_or_super_charged",
+  "gcm",
+  "gvm",
+  "tare",
+  "origin",
+  "front_no_tyres",
+  "front_tyre_size",
+  "rear_no_tyres",
+  "rear_tyre_size",
+  "intro_date",
+  "disc_date",
+  "co2",
+  "length",
+  "height",
+  "width",
+  "new_list_price"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_yq0v",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "mm_code",
+   "fieldtype": "Data",
+   "label": "MM Code"
+  },
+  {
+   "fieldname": "vehicle_type",
+   "fieldtype": "Data",
+   "label": "Vehicles Type"
+  },
+  {
+   "fieldname": "make",
+   "fieldtype": "Data",
+   "label": "Make"
+  },
+  {
+   "fieldname": "model",
+   "fieldtype": "Data",
+   "label": "Model"
+  },
+  {
+   "fieldname": "variant",
+   "fieldtype": "Data",
+   "label": "Variant"
+  },
+  {
+   "fieldname": "reg_year",
+   "fieldtype": "Data",
+   "label": "Reg Year"
+  },
+  {
+   "fieldname": "publication_section",
+   "fieldtype": "Data",
+   "label": "Publication Section"
+  },
+  {
+   "fieldname": "master_model",
+   "fieldtype": "Data",
+   "label": "Master Model"
+  },
+  {
+   "fieldname": "make_code",
+   "fieldtype": "Data",
+   "label": "Make Code"
+  },
+  {
+   "fieldname": "model_code",
+   "fieldtype": "Data",
+   "label": "Model Code"
+  },
+  {
+   "fieldname": "variant_code",
+   "fieldtype": "Data",
+   "label": "Variant Code"
+  },
+  {
+   "fieldname": "axle_configuration",
+   "fieldtype": "Data",
+   "label": "Axle Configuration"
+  },
+  {
+   "fieldname": "body_type",
+   "fieldtype": "Data",
+   "label": "Body Type"
+  },
+  {
+   "fieldname": "no_of_doors",
+   "fieldtype": "Data",
+   "label": "No Of Doors"
+  },
+  {
+   "fieldname": "drive",
+   "fieldtype": "Data",
+   "label": "Drive"
+  },
+  {
+   "fieldname": "seats",
+   "fieldtype": "Data",
+   "label": "Seats"
+  },
+  {
+   "fieldname": "vehicles_use",
+   "fieldtype": "Data",
+   "label": "Vehicles Use"
+  },
+  {
+   "fieldname": "wheelbase",
+   "fieldtype": "Data",
+   "label": "Wheelbase"
+  },
+  {
+   "fieldname": "manual_auto",
+   "fieldtype": "Data",
+   "label": "Manual Auto"
+  },
+  {
+   "fieldname": "no_gears",
+   "fieldtype": "Data",
+   "label": "No Gears"
+  },
+  {
+   "fieldname": "cooling",
+   "fieldtype": "Data",
+   "label": "Cooling"
+  },
+  {
+   "fieldname": "cubic_capacity",
+   "fieldtype": "Data",
+   "label": "Cubic Capacity"
+  },
+  {
+   "fieldname": "cyl_configuration",
+   "fieldtype": "Data",
+   "label": "Cyl Configuration"
+  },
+  {
+   "fieldname": "engine_cycle",
+   "fieldtype": "Data",
+   "label": "Engine Cycle"
+  },
+  {
+   "fieldname": "fuel_tank_size",
+   "fieldtype": "Data",
+   "label": "Fuel Tank Size"
+  },
+  {
+   "fieldname": "fuel_type",
+   "fieldtype": "Data",
+   "label": "Fuel Type"
+  },
+  {
+   "fieldname": "kilowatts",
+   "fieldtype": "Data",
+   "label": "Kilowatts"
+  },
+  {
+   "fieldname": "no_cylinders",
+   "fieldtype": "Data",
+   "label": "No Cylinders"
+  },
+  {
+   "fieldname": "turbo_or_super_charged",
+   "fieldtype": "Data",
+   "label": "Turbo or Super Charged"
+  },
+  {
+   "fieldname": "gcm",
+   "fieldtype": "Data",
+   "label": "GCM"
+  },
+  {
+   "fieldname": "gvm",
+   "fieldtype": "Data",
+   "label": "GVM"
+  },
+  {
+   "fieldname": "tare",
+   "fieldtype": "Data",
+   "label": "Tare"
+  },
+  {
+   "fieldname": "origin",
+   "fieldtype": "Data",
+   "label": "Origin"
+  },
+  {
+   "fieldname": "front_no_tyres",
+   "fieldtype": "Data",
+   "label": "Front No Tyres"
+  },
+  {
+   "fieldname": "front_tyre_size",
+   "fieldtype": "Data",
+   "label": "Front Tyre Size"
+  },
+  {
+   "fieldname": "rear_no_tyres",
+   "fieldtype": "Data",
+   "label": "Rear No Tyres"
+  },
+  {
+   "fieldname": "rear_tyre_size",
+   "fieldtype": "Data",
+   "label": "Rear Tyre Size"
+  },
+  {
+   "fieldname": "intro_date",
+   "fieldtype": "Data",
+   "label": "Intro Date"
+  },
+  {
+   "fieldname": "disc_date",
+   "fieldtype": "Data",
+   "label": "Disc Date"
+  },
+  {
+   "fieldname": "co2",
+   "fieldtype": "Data",
+   "label": "CO2"
+  },
+  {
+   "fieldname": "length",
+   "fieldtype": "Data",
+   "label": "Length"
+  },
+  {
+   "fieldname": "height",
+   "fieldtype": "Data",
+   "label": "Height"
+  },
+  {
+   "fieldname": "width",
+   "fieldtype": "Data",
+   "label": "Width"
+  },
+  {
+   "fieldname": "new_list_price",
+   "fieldtype": "Data",
+   "label": "New List Price"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2024-07-03 17:09:44.610483",
+ "modified_by": "Administrator",
+ "module": "Edp Online Vehicles",
+ "name": "Vehicles MMCodes",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "search_fields": "make",
+ "show_title_field_in_link": 1,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "make"
+}

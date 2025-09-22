@@ -1,0 +1,99 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2024-03-18 10:50:32.622094",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_vysh",
+  "customer",
+  "account",
+  "delivery_note",
+  "column_break_ewdq",
+  "rfc_status",
+  "approval_status",
+  "parts_ordered_section",
+  "items",
+  "reason"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_vysh",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "customer",
+   "fieldtype": "Link",
+   "label": "Customer",
+   "options": "Company"
+  },
+  {
+   "fetch_from": "customer.default_inventory_account",
+   "fieldname": "account",
+   "fieldtype": "Data",
+   "label": "Account"
+  },
+  {
+   "fieldname": "delivery_note",
+   "fieldtype": "Link",
+   "label": "Delivery Note",
+   "options": "Delivery Note"
+  },
+  {
+   "fieldname": "column_break_ewdq",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "rfc_status",
+   "fieldtype": "Select",
+   "label": "RFC Status",
+   "options": "Pending\nCompleted"
+  },
+  {
+   "fieldname": "approval_status",
+   "fieldtype": "Select",
+   "label": "Approval Status",
+   "options": "\nApproved\nDeclined\nMore Information Required"
+  },
+  {
+   "fieldname": "parts_ordered_section",
+   "fieldtype": "Section Break",
+   "label": "Parts Ordered"
+  },
+  {
+   "fieldname": "items",
+   "fieldtype": "Table",
+   "label": "Items",
+   "options": "RFC Items"
+  },
+  {
+   "fieldname": "reason",
+   "fieldtype": "Text Editor",
+   "label": "Reason"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2024-07-03 16:54:50.185471",
+ "modified_by": "Administrator",
+ "module": "Edp Online Vehicles",
+ "name": "Request For Credit RFC",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

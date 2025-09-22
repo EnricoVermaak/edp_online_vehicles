@@ -1,0 +1,63 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2024-07-05 05:38:30.226608",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "item",
+  "description",
+  "duration_hours",
+  "rate_hour",
+  "total_excl"
+ ],
+ "fields": [
+  {
+   "fetch_from": "labour_code.item_name",
+   "fieldname": "description",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Description"
+  },
+  {
+   "fetch_from": "labour_code.standard_rate",
+   "fieldname": "rate_hour",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Rate/ Hour"
+  },
+  {
+   "fieldname": "total_excl",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Total (Excl)"
+  },
+  {
+   "fieldname": "item",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Labour Code",
+   "options": "Item"
+  },
+  {
+   "default": "1",
+   "fieldname": "duration_hours",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Duration (Hours)"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2024-07-07 17:29:15.266448",
+ "modified_by": "Administrator",
+ "module": "Edp Online Vehicles",
+ "name": "Service Schedules Labour Items",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

@@ -1,0 +1,21 @@
+@import "./part-order";
+
+.red-dot {
+	display: inline-block;
+	width: 10px;
+	height: 10px;
+	background: red;
+	border-radius: 50%;
+	margin-right: 5px;
+}
+
+// [data-page-route="List/Head Office Vehicle Orders/List"],
+[data-page-route="List/Vehicles Dealer to Dealer Order/List"] {
+	.list-subject {
+		max-width: 25px;
+
+		span:not(.select-like) {
+			display: none;
+		}
+	}
+}

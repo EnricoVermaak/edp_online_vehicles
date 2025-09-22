@@ -1,0 +1,140 @@
+{
+ "actions": [],
+ "allow_import": 1,
+ "allow_rename": 1,
+ "autoname": "field:tag_no",
+ "creation": "2024-09-26 15:14:20.664527",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "tag_information_section",
+  "tag_no",
+  "column_break_kogc",
+  "status",
+  "item_information_section",
+  "item_column",
+  "item",
+  "brand",
+  "column_break_jthr",
+  "vin_serial_no",
+  "model",
+  "section_break_khkk",
+  "description",
+  "item_specifications_section",
+  "table_inpt"
+ ],
+ "fields": [
+  {
+   "fieldname": "tag_information_section",
+   "fieldtype": "Section Break",
+   "label": "Tag Information"
+  },
+  {
+   "fieldname": "tag_no",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Tag No",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "item_information_section",
+   "fieldtype": "Section Break",
+   "label": "Item Information"
+  },
+  {
+   "fieldname": "item",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Item",
+   "mandatory_depends_on": "eval: doc.tag_no",
+   "options": "Item"
+  },
+  {
+   "fetch_from": "item.description",
+   "fieldname": "description",
+   "fieldtype": "Text Editor",
+   "label": "Item Description"
+  },
+  {
+   "fetch_from": "item.brand",
+   "fieldname": "brand",
+   "fieldtype": "Data",
+   "label": "Brand"
+  },
+  {
+   "fieldname": "item_specifications_section",
+   "fieldtype": "Section Break",
+   "label": "Item Specifications"
+  },
+  {
+   "fieldname": "table_inpt",
+   "fieldtype": "Table",
+   "options": "Item Specifications"
+  },
+  {
+   "fieldname": "column_break_jthr",
+   "fieldtype": "Column Break",
+   "label": "Vehicles"
+  },
+  {
+   "fieldname": "section_break_khkk",
+   "fieldtype": "Section Break"
+  },
+  {
+   "default": "Unlinked",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "Unlinked\nLinked",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_kogc",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "vin_serial_no",
+   "fieldtype": "Link",
+   "label": "VIN/ Serial No",
+   "options": "Vehicle Stock"
+  },
+  {
+   "fieldname": "item_column",
+   "fieldtype": "Column Break",
+   "label": "Item"
+  },
+  {
+   "fetch_from": "vin_serial_no.model",
+   "fieldname": "model",
+   "fieldtype": "Data",
+   "label": "Model"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2025-01-03 14:42:35.528317",
+ "modified_by": "Administrator",
+ "module": "Edp Online Vehicles",
+ "name": "Item Card",
+ "naming_rule": "By fieldname",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}

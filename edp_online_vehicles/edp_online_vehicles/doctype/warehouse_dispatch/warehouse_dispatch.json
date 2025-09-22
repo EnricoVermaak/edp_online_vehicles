@@ -1,0 +1,278 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "DTCCL-.########",
+ "creation": "2024-06-14 20:17:40.500956",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_b8q3",
+  "trip_sheet_tab",
+  "status",
+  "column_break_iqgc",
+  "scheduled_delivery_date",
+  "delivered_on",
+  "section_break_dqui",
+  "delivered_by",
+  "column_break_pp4j",
+  "reg_no",
+  "section_break_2kvl",
+  "scan_barcode",
+  "dispatch_list",
+  "delivery_driver_tab",
+  "customer",
+  "column_break_5dtw",
+  "delivery_status",
+  "section_break_vcu5",
+  "customer_delivery_scan_barcode",
+  "customer_delivery_list",
+  "section_break_xkjw",
+  "outstanding_boxes",
+  "column_break_il1o",
+  "total_boxes",
+  "customer_confirmation_section",
+  "customer_confirmation_received_by",
+  "customer_confirmation_signature",
+  "confirmation_tab",
+  "driver_confirmation_section",
+  "driver",
+  "driver_signed_date",
+  "driver_signature",
+  "return_confirmation_section",
+  "received_by",
+  "received_by_signed_date",
+  "received_by_signature",
+  "supervisor_confirmation_section",
+  "supervisor",
+  "supervisor_signed_date",
+  "supervisor_signature"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_b8q3",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "trip_sheet_tab",
+   "fieldtype": "Tab Break",
+   "label": "Trip Sheet"
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "Draft\nSecurity Checked\nOut for Delivery\nDelivered"
+  },
+  {
+   "fieldname": "column_break_iqgc",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "scheduled_delivery_date",
+   "fieldtype": "Date",
+   "label": "Scheduled Delivery Date"
+  },
+  {
+   "fieldname": "delivered_on",
+   "fieldtype": "Datetime",
+   "label": "Delivery Trip Completed On"
+  },
+  {
+   "fieldname": "section_break_dqui",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "delivered_by",
+   "fieldtype": "Link",
+   "label": "Delivered By",
+   "options": "User"
+  },
+  {
+   "fieldname": "column_break_pp4j",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "reg_no",
+   "fieldtype": "Link",
+   "label": "Delivery Vehicles",
+   "options": "Vehicle Stock"
+  },
+  {
+   "fieldname": "section_break_2kvl",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "scan_barcode",
+   "fieldtype": "Data",
+   "label": "Scan Barcode"
+  },
+  {
+   "fieldname": "dispatch_list",
+   "fieldtype": "Table",
+   "label": "Dispatch List",
+   "options": "Warehouse Dispatch List"
+  },
+  {
+   "fieldname": "delivery_driver_tab",
+   "fieldtype": "Tab Break",
+   "label": "Delivery"
+  },
+  {
+   "fieldname": "customer",
+   "fieldtype": "Link",
+   "label": "Customer",
+   "options": "Customer"
+  },
+  {
+   "fieldname": "column_break_5dtw",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "delivery_status",
+   "fieldtype": "Select",
+   "label": "Customer Delivery Status",
+   "options": "In Progress\nCompleted"
+  },
+  {
+   "fieldname": "section_break_vcu5",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "customer_delivery_scan_barcode",
+   "fieldtype": "Data",
+   "label": "Scan Barcode"
+  },
+  {
+   "fieldname": "customer_delivery_list",
+   "fieldtype": "Table",
+   "label": "Customer Delivery List",
+   "options": "Customer Delivery List"
+  },
+  {
+   "fieldname": "section_break_xkjw",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "outstanding_boxes",
+   "fieldtype": "Int",
+   "label": "Outstanding Boxes"
+  },
+  {
+   "fieldname": "column_break_il1o",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "total_boxes",
+   "fieldtype": "Int",
+   "label": "Total Boxes"
+  },
+  {
+   "fieldname": "customer_confirmation_section",
+   "fieldtype": "Section Break",
+   "label": "Customer Confirmation"
+  },
+  {
+   "fieldname": "customer_confirmation_received_by",
+   "fieldtype": "Data",
+   "label": "Received By"
+  },
+  {
+   "fieldname": "customer_confirmation_signature",
+   "fieldtype": "Signature",
+   "label": "Received By Signature"
+  },
+  {
+   "fieldname": "confirmation_tab",
+   "fieldtype": "Tab Break",
+   "label": "Confirmation"
+  },
+  {
+   "fieldname": "driver_confirmation_section",
+   "fieldtype": "Section Break",
+   "label": "Driver Confirmation"
+  },
+  {
+   "fieldname": "driver",
+   "fieldtype": "Link",
+   "label": "Driver",
+   "options": "User"
+  },
+  {
+   "fieldname": "driver_signed_date",
+   "fieldtype": "Date",
+   "label": "Driver Signed Date"
+  },
+  {
+   "fieldname": "driver_signature",
+   "fieldtype": "Signature",
+   "label": "Driver Signature"
+  },
+  {
+   "fieldname": "return_confirmation_section",
+   "fieldtype": "Section Break",
+   "label": "Return Confirmation"
+  },
+  {
+   "fieldname": "received_by",
+   "fieldtype": "Link",
+   "label": "Received By",
+   "options": "User"
+  },
+  {
+   "fieldname": "received_by_signed_date",
+   "fieldtype": "Date",
+   "label": "Received By Signed Date"
+  },
+  {
+   "fieldname": "received_by_signature",
+   "fieldtype": "Signature",
+   "label": "Received By Signature"
+  },
+  {
+   "fieldname": "supervisor_confirmation_section",
+   "fieldtype": "Section Break",
+   "label": "Supervisor Confirmation"
+  },
+  {
+   "fieldname": "supervisor",
+   "fieldtype": "Link",
+   "label": "Supervisor",
+   "options": "User"
+  },
+  {
+   "fieldname": "supervisor_signed_date",
+   "fieldtype": "Date",
+   "label": "Supervisor Signed Date"
+  },
+  {
+   "fieldname": "supervisor_signature",
+   "fieldtype": "Signature",
+   "label": "Supervisor Signature"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2024-07-09 20:04:01.006449",
+ "modified_by": "Administrator",
+ "module": "Edp Online Vehicles",
+ "name": "Warehouse Dispatch",
+ "naming_rule": "Expression (old style)",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

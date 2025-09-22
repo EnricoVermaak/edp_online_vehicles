@@ -1,0 +1,372 @@
+{
+ "actions": [],
+ "allow_import": 1,
+ "allow_rename": 1,
+ "autoname": "format:DC-{MM}{YY}-{#######}",
+ "creation": "2024-09-19 12:54:42.533446",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "claim_details_section",
+  "dealer_ref_no",
+  "claim_datetime",
+  "column_break_fxdr",
+  "claim_status",
+  "claim_amt",
+  "claim_age",
+  "column_break_fkvk",
+  "dealer",
+  "final_status_date",
+  "fleet_section",
+  "company_registration_no",
+  "search",
+  "fleet_customer",
+  "fleet_customer_name",
+  "fleet_customer_email",
+  "column_break_ulnx",
+  "fleet_customer_phone",
+  "fleet_customer_mobile",
+  "fleet_customer_address",
+  "part_percentage_discount",
+  "vehicle_percentage_discount",
+  "section_break_fbqi",
+  "po_number",
+  "invoice_number",
+  "claim_type_section",
+  "claim_category",
+  "column_break_qvrd",
+  "claim_description",
+  "column_break_fzmo",
+  "claim_type_code",
+  "section_break_vgjk",
+  "documents",
+  "section_break_xjss",
+  "claim_reason",
+  "status_ageing_section",
+  "status_ageing",
+  "documents_tab",
+  "invoice_document",
+  "tab_break_y1mo",
+  "table_exgk",
+  "section_break_mmsl",
+  "column_break_ebvc",
+  "column_break_fxof",
+  "total_vehicles",
+  "parts_tab",
+  "claim_parts",
+  "section_break_mxfs",
+  "column_break_zhxq",
+  "column_break_xcej",
+  "parts_total_excl"
+ ],
+ "fields": [
+  {
+   "fieldname": "claim_category",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Claim Category",
+   "options": "Dealer Claim Category",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_fxdr",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "dealer",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Dealer",
+   "options": "Company",
+   "reqd": 1
+  },
+  {
+   "default": "Now",
+   "fieldname": "claim_datetime",
+   "fieldtype": "Datetime",
+   "in_list_view": 1,
+   "label": "Claim Date/Time",
+   "read_only": 1,
+   "reqd": 1
+  },
+  {
+   "depends_on": "eval: doc.claim_category",
+   "fieldname": "claim_description",
+   "fieldtype": "Select",
+   "label": "Claim Type Description",
+   "reqd": 1
+  },
+  {
+   "fieldname": "claim_amt",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Claim Amt",
+   "reqd": 1
+  },
+  {
+   "default": "Pending",
+   "fieldname": "claim_status",
+   "fieldtype": "Select",
+   "label": "Claim Status",
+   "options": "Pending\nClaim Submitted\nSubmitted for HOD Approval\nClaim Updated\nApproved for Remittance\nClaim Declined\nClaim Pending Info\nCancelled\nRemittance"
+  },
+  {
+   "fieldname": "claim_age",
+   "fieldtype": "Int",
+   "label": "Claim Age",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_fkvk",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "claim_details_section",
+   "fieldtype": "Section Break",
+   "label": "Claim Details"
+  },
+  {
+   "fieldname": "tab_break_y1mo",
+   "fieldtype": "Tab Break",
+   "label": "Vehicles"
+  },
+  {
+   "fieldname": "claim_type_code",
+   "fieldtype": "Data",
+   "label": "Claim Type Code",
+   "read_only": 1
+  },
+  {
+   "fieldname": "table_exgk",
+   "fieldtype": "Table",
+   "options": "Vehicles Item"
+  },
+  {
+   "fieldname": "section_break_xjss",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "claim_reason",
+   "fieldtype": "Small Text",
+   "label": "Claim Reason"
+  },
+  {
+   "fieldname": "total_vehicles",
+   "fieldtype": "Int",
+   "label": "Total Vehicles"
+  },
+  {
+   "fieldname": "claim_type_section",
+   "fieldtype": "Section Break",
+   "label": "Claim Type"
+  },
+  {
+   "fieldname": "column_break_qvrd",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_fzmo",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "final_status_date",
+   "fieldtype": "Datetime",
+   "hidden": 1,
+   "label": "Final Status Date"
+  },
+  {
+   "fieldname": "dealer_ref_no",
+   "fieldtype": "Data",
+   "label": "Dealer Ref No",
+   "reqd": 1
+  },
+  {
+   "fieldname": "fleet_section",
+   "fieldtype": "Section Break",
+   "label": "Fleet"
+  },
+  {
+   "fieldname": "fleet_customer",
+   "fieldtype": "Link",
+   "label": "Fleet Customer",
+   "options": "Fleet Customer",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_ulnx",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_mmsl",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_ebvc",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_fxof",
+   "fieldtype": "Column Break"
+  },
+  {
+   "depends_on": "eval: doc.claim_category",
+   "fieldname": "section_break_vgjk",
+   "fieldtype": "Section Break"
+  },
+  {
+   "depends_on": "eval: doc.claim_category",
+   "fieldname": "documents",
+   "fieldtype": "Table",
+   "label": "Documents",
+   "options": "DocType Documents"
+  },
+  {
+   "fieldname": "parts_tab",
+   "fieldtype": "Tab Break",
+   "label": "Parts"
+  },
+  {
+   "fieldname": "claim_parts",
+   "fieldtype": "Table",
+   "label": "Claim Parts",
+   "options": "Service Parts Items"
+  },
+  {
+   "fieldname": "section_break_mxfs",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_zhxq",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_xcej",
+   "fieldtype": "Column Break"
+  },
+  {
+   "depends_on": "eval: doc.table_exgk",
+   "fieldname": "parts_total_excl",
+   "fieldtype": "Currency",
+   "label": "Parts Total (Excl)"
+  },
+  {
+   "fieldname": "company_registration_no",
+   "fieldtype": "Data",
+   "label": "Company Registration No"
+  },
+  {
+   "fieldname": "search",
+   "fieldtype": "Button",
+   "label": "Search"
+  },
+  {
+   "fieldname": "fleet_customer_name",
+   "fieldtype": "Data",
+   "label": "Fleet Customer Name",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "fleet_customer.email",
+   "fieldname": "fleet_customer_email",
+   "fieldtype": "Data",
+   "label": "Fleet Customer Email",
+   "read_only": 1
+  },
+  {
+   "depends_on": "eval: doc.fleet_code",
+   "fetch_from": "fleet_customer.phone",
+   "fieldname": "fleet_customer_phone",
+   "fieldtype": "Float",
+   "label": "Fleet Customer Phone",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "fleet_customer.mobile",
+   "fieldname": "fleet_customer_mobile",
+   "fieldtype": "Phone",
+   "label": "Fleet Customer Mobile",
+   "read_only": 1
+  },
+  {
+   "fieldname": "fleet_customer_address",
+   "fieldtype": "Small Text",
+   "label": "Fleet Customer Address",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "fleet_customer.parts_discount",
+   "fieldname": "part_percentage_discount",
+   "fieldtype": "Percent",
+   "label": "Part Discount (%)",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "fleet_customer.vehicle_discount",
+   "fieldname": "vehicle_percentage_discount",
+   "fieldtype": "Percent",
+   "label": "Vehicle Discount (%)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "status_ageing_section",
+   "fieldtype": "Section Break",
+   "label": "Status Ageing"
+  },
+  {
+   "fieldname": "status_ageing",
+   "fieldtype": "Table",
+   "options": "Dealer Claims Ageing",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_fbqi",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "po_number",
+   "fieldtype": "Data",
+   "label": "PO Number"
+  },
+  {
+   "fieldname": "invoice_number",
+   "fieldtype": "Data",
+   "label": "Invoice Number"
+  },
+  {
+   "fieldname": "documents_tab",
+   "fieldtype": "Tab Break",
+   "label": "Documents"
+  },
+  {
+   "fieldname": "invoice_document",
+   "fieldtype": "Attach",
+   "label": "Invoice Document"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2025-05-20 16:04:38.905678",
+ "modified_by": "Administrator",
+ "module": "Edp Online Vehicles",
+ "name": "Dealer Claims",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}

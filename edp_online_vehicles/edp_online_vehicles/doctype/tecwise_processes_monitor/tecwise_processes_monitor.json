@@ -1,0 +1,64 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2024-08-26 11:35:06.622342",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_od0i",
+  "process_description",
+  "dtprocess",
+  "status",
+  "notes"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_od0i",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "process_description",
+   "fieldtype": "Data",
+   "label": "Process Description"
+  },
+  {
+   "fieldname": "dtprocess",
+   "fieldtype": "Datetime",
+   "label": "DTProcess"
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Data",
+   "label": "Status"
+  },
+  {
+   "fieldname": "notes",
+   "fieldtype": "Data",
+   "label": "Notes"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2024-08-26 11:36:00.601906",
+ "modified_by": "Administrator",
+ "module": "Edp Online Vehicles",
+ "name": "Tecwise Processes Monitor",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

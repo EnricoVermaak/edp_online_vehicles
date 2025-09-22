@@ -1,0 +1,39 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-07-03 10:48:00.896898",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "region",
+  "region_code"
+ ],
+ "fields": [
+  {
+   "fieldname": "region",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Region",
+   "reqd": 1
+  },
+  {
+   "fieldname": "region_code",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Region Code",
+   "reqd": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2025-07-03 10:49:12.942847",
+ "modified_by": "Administrator",
+ "module": "Edp Online Vehicles",
+ "name": "Regions Table",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

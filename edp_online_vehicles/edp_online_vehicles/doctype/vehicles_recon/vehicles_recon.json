@@ -1,0 +1,110 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2024-12-04 11:35:34.851263",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "submitted_by",
+  "submitted_on",
+  "amended_from",
+  "column_break_dnei",
+  "company",
+  "status",
+  "test_section",
+  "test_field",
+  "equipment_tab",
+  "stock"
+ ],
+ "fields": [
+  {
+   "fieldname": "submitted_by",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Submitted By",
+   "options": "User"
+  },
+  {
+   "default": "now",
+   "fieldname": "submitted_on",
+   "fieldtype": "Datetime",
+   "in_list_view": 1,
+   "label": "Submitted On"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Vehicles Recon",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "column_break_dnei",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "Pending",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Status",
+   "options": "Pending\nCompleted"
+  },
+  {
+   "fieldname": "equipment_tab",
+   "fieldtype": "Tab Break",
+   "label": "Equipment"
+  },
+  {
+   "fieldname": "stock",
+   "fieldtype": "Table",
+   "options": "Vehicles Recon Items"
+  },
+  {
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Dealer",
+   "options": "Company"
+  },
+  {
+   "fieldname": "test_section",
+   "fieldtype": "Section Break",
+   "label": "Test"
+  },
+  {
+   "fieldname": "test_field",
+   "fieldtype": "Data",
+   "label": "test_field"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2025-02-26 11:51:55.425158",
+ "modified_by": "Administrator",
+ "module": "Edp Online Vehicles",
+ "name": "Vehicles Recon",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}

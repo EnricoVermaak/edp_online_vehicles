@@ -1,0 +1,73 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2024-06-07 14:34:13.372788",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_4emo",
+  "year",
+  "month",
+  "usd",
+  "eur",
+  "gbp"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_4emo",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "year",
+   "fieldtype": "Data",
+   "label": "Year"
+  },
+  {
+   "fieldname": "month",
+   "fieldtype": "Data",
+   "label": "Month"
+  },
+  {
+   "fieldname": "usd",
+   "fieldtype": "Data",
+   "label": "USD"
+  },
+  {
+   "fieldname": "eur",
+   "fieldtype": "Data",
+   "label": "EUR"
+  },
+  {
+   "fieldname": "gbp",
+   "fieldtype": "Data",
+   "label": "GBP"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2024-07-03 17:13:28.150837",
+ "modified_by": "Administrator",
+ "module": "Edp Online Vehicles",
+ "name": "Vehicles Warranty Rates",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "search_fields": "year",
+ "show_title_field_in_link": 1,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "year"
+}

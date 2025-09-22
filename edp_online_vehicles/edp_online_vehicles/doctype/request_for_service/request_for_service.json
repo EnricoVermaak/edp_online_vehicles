@@ -1,0 +1,653 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "format:RFS-{YY}{MM}-{#####}",
+ "creation": "2024-05-14 18:56:01.482107",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "vehicles_information_section",
+  "vin_serial_no",
+  "model_no",
+  "mhe_fleet_no",
+  "request_for_service_date",
+  "odo_reading",
+  "incident_no",
+  "column_break_w0yg",
+  "dealer",
+  "customer",
+  "customer_name",
+  "current_location",
+  "price_list",
+  "job_card_no",
+  "rfs_status",
+  "service_request_information",
+  "service_date",
+  "technician",
+  "technician_full_name",
+  "column_break_z3uj",
+  "centre",
+  "total_vat_excl",
+  "section_break_xfjx",
+  "service_reason",
+  "section_break_6zwk",
+  "pdi_inspection",
+  "vehicles_rental_return",
+  "vehicles_card",
+  "vehicles_breakdown",
+  "requested_parts_tab",
+  "parts",
+  "part_schedule_date",
+  "show_price_for_request_for_service",
+  "section_break_bbmt",
+  "column_break_mzeo",
+  "column_break_uzfr",
+  "parts_total_excl",
+  "requested_labour_tab",
+  "labour",
+  "section_break_xbsk",
+  "column_break_hspn",
+  "column_break_inwk",
+  "labours_total_excl",
+  "extra_costs_tab",
+  "extras",
+  "section_break_hlts",
+  "column_break_ttrh",
+  "column_break_spoz",
+  "extra_cost_total_excl",
+  "fc_confirmation_tab",
+  "quote_information_section",
+  "quote_date",
+  "quote_no",
+  "column_break_lmrg",
+  "quotation_document",
+  "quote_approval_section",
+  "quote_preapproval_date",
+  "quote_preapproval_user",
+  "quote_preapproval_signature",
+  "column_break_km23",
+  "fianl_approval_signature_date",
+  "final_approval_user",
+  "final_approval_signature",
+  "client_order_section",
+  "sr_date",
+  "client_order_no",
+  "po_julian_month",
+  "column_break_yyal",
+  "purchase_order_document",
+  "approval_document",
+  "invoice_approval_section",
+  "invoice_date",
+  "invoice_no",
+  "column_break_c5gc",
+  "invoice_document",
+  "section_break_ylld",
+  "invoice_approval_no",
+  "invoice_approval_date",
+  "invoice_approval_user",
+  "invoice_approval_signature",
+  "amended_from",
+  "attached_documents_tab",
+  "attached_documents"
+ ],
+ "fields": [
+  {
+   "fieldname": "service_request_information",
+   "fieldtype": "Section Break",
+   "label": "Service Request Information"
+  },
+  {
+   "fieldname": "job_card_no",
+   "fieldtype": "Data",
+   "in_standard_filter": 1,
+   "label": "Job Card No"
+  },
+  {
+   "fieldname": "service_date",
+   "fieldtype": "Date",
+   "label": "Service Date"
+  },
+  {
+   "fieldname": "technician",
+   "fieldtype": "Link",
+   "in_standard_filter": 1,
+   "label": "Technician",
+   "options": "User",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_z3uj",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "centre",
+   "fieldtype": "Select",
+   "label": "Centre",
+   "mandatory_depends_on": "eval:doc.customer == \"63100654\"",
+   "options": "\nERTC\nDry Goods\nCold Store\nFreshmark"
+  },
+  {
+   "fieldname": "total_vat_excl",
+   "fieldtype": "Currency",
+   "label": "Total (VAT Excl)"
+  },
+  {
+   "fieldname": "vin_serial_no",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "VIN/ Serial No",
+   "options": "Vehicle Stock",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "vin_serial_no.model",
+   "fieldname": "model_no",
+   "fieldtype": "Data",
+   "label": "Model No",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_w0yg",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "vin_serial_no.fleet_no",
+   "fetch_if_empty": 1,
+   "fieldname": "mhe_fleet_no",
+   "fieldtype": "Data",
+   "label": "MHE Fleet No"
+  },
+  {
+   "fieldname": "requested_parts_tab",
+   "fieldtype": "Tab Break",
+   "label": "Requested Parts"
+  },
+  {
+   "fieldname": "parts",
+   "fieldtype": "Table",
+   "label": "Parts",
+   "options": "RFS Parts"
+  },
+  {
+   "fieldname": "requested_labour_tab",
+   "fieldtype": "Tab Break",
+   "label": "Requested Labour"
+  },
+  {
+   "fieldname": "labour",
+   "fieldtype": "Table",
+   "label": "Labour",
+   "options": "RFS Labour"
+  },
+  {
+   "fieldname": "extra_costs_tab",
+   "fieldtype": "Tab Break",
+   "label": "Extra Costs"
+  },
+  {
+   "fieldname": "extras",
+   "fieldtype": "Table",
+   "label": "Extra's",
+   "options": "Extra Items"
+  },
+  {
+   "fieldname": "fc_confirmation_tab",
+   "fieldtype": "Tab Break",
+   "label": "Documents & Approval"
+  },
+  {
+   "fieldname": "quote_information_section",
+   "fieldtype": "Section Break",
+   "label": "Quote Information"
+  },
+  {
+   "fieldname": "quote_date",
+   "fieldtype": "Date",
+   "label": "Quote Date",
+   "mandatory_depends_on": "eval:doc.rfs_status == \"Awaiting Quote Approval\""
+  },
+  {
+   "fieldname": "quote_no",
+   "fieldtype": "Data",
+   "label": "Quote No",
+   "mandatory_depends_on": "eval:doc.rfs_status == \"Awaiting Quote Approval\""
+  },
+  {
+   "fieldname": "column_break_lmrg",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "quotation_document",
+   "fieldtype": "Attach",
+   "label": "Quotation Document",
+   "mandatory_depends_on": "eval:doc.rfs_status == \"Awaiting Quote Approval\""
+  },
+  {
+   "fieldname": "quote_approval_section",
+   "fieldtype": "Section Break",
+   "label": "Quote Approval"
+  },
+  {
+   "fieldname": "quote_preapproval_date",
+   "fieldtype": "Date",
+   "label": "Quote Pre- Approval Date",
+   "mandatory_depends_on": "eval:(doc.rfs_status == \"Quote Approved\" && !in_list([\"63100654\", \"63101610\"], doc.customer))",
+   "permlevel": 1
+  },
+  {
+   "fieldname": "quote_preapproval_user",
+   "fieldtype": "Link",
+   "label": "Quote Pre- Approval User",
+   "mandatory_depends_on": "eval:(doc.rfs_status == \"Quote Approved\" && !in_list([\"63100654\", \"63101610\"], doc.customer))",
+   "options": "User",
+   "permlevel": 1
+  },
+  {
+   "fieldname": "quote_preapproval_signature",
+   "fieldtype": "Signature",
+   "label": "Quote Pre- Approval Signature",
+   "mandatory_depends_on": "eval:(doc.rfs_status == \"Quote Approved\" && !in_list([\"63100654\", \"63101610\"], doc.customer))",
+   "permlevel": 1
+  },
+  {
+   "fieldname": "column_break_km23",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "fianl_approval_signature_date",
+   "fieldtype": "Date",
+   "label": "Quote Final Approval Signature Date",
+   "mandatory_depends_on": "eval:(doc.rfs_status == \"Quote Approved\" && !in_list([\"63100654\", \"63101610\"], doc.customer))",
+   "permlevel": 1
+  },
+  {
+   "fieldname": "final_approval_user",
+   "fieldtype": "Link",
+   "label": "Quote Final Approval User",
+   "mandatory_depends_on": "eval:(doc.rfs_status == \"Quote Approved\" && !in_list([\"63100654\", \"63101610\"], doc.customer))",
+   "options": "User",
+   "permlevel": 1
+  },
+  {
+   "fieldname": "final_approval_signature",
+   "fieldtype": "Signature",
+   "label": "Quote Final Approval Signature",
+   "mandatory_depends_on": "eval:(doc.rfs_status == \"Quote Approved\" && !in_list([\"63100654\", \"63101610\"], doc.customer))",
+   "permlevel": 1
+  },
+  {
+   "fieldname": "client_order_section",
+   "fieldtype": "Section Break",
+   "label": "Client Order Information"
+  },
+  {
+   "fieldname": "sr_date",
+   "fieldtype": "Date",
+   "label": "Order Date"
+  },
+  {
+   "fieldname": "client_order_no",
+   "fieldtype": "Data",
+   "label": "Client Order No"
+  },
+  {
+   "fieldname": "po_julian_month",
+   "fieldtype": "Data",
+   "label": "PO Julian Month"
+  },
+  {
+   "fieldname": "column_break_yyal",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "purchase_order_document",
+   "fieldtype": "Attach",
+   "label": "Purchase Order Document"
+  },
+  {
+   "fieldname": "approval_document",
+   "fieldtype": "Attach",
+   "label": "Approval Document"
+  },
+  {
+   "fieldname": "invoice_approval_section",
+   "fieldtype": "Section Break",
+   "label": "Invoice Information"
+  },
+  {
+   "fieldname": "invoice_date",
+   "fieldtype": "Date",
+   "label": "Invoice Date",
+   "mandatory_depends_on": "eval:doc.rfs_status == \"Invoiced\""
+  },
+  {
+   "fieldname": "invoice_no",
+   "fieldtype": "Data",
+   "label": "Invoice No",
+   "mandatory_depends_on": "eval:doc.rfs_status == \"Invoiced\""
+  },
+  {
+   "fieldname": "column_break_c5gc",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "invoice_document",
+   "fieldtype": "Attach",
+   "label": "Invoice Document",
+   "mandatory_depends_on": "eval:doc.rfs_status == \"Invoiced\""
+  },
+  {
+   "fieldname": "section_break_ylld",
+   "fieldtype": "Section Break",
+   "label": "Invoice Approval"
+  },
+  {
+   "fieldname": "invoice_approval_date",
+   "fieldtype": "Date",
+   "label": "Invoice Approval Date",
+   "mandatory_depends_on": "eval:(doc.rfs_status == \"Quote Approved\" && !in_list([\"63100654\", \"63101610\"], doc.customer))",
+   "permlevel": 1
+  },
+  {
+   "fieldname": "invoice_approval_user",
+   "fieldtype": "Link",
+   "label": "Invoice Approval User",
+   "mandatory_depends_on": "eval:(doc.rfs_status == \"Invoice Approved\" && !in_list([\"63100654\", \"63101610\"], doc.customer))",
+   "options": "User",
+   "permlevel": 1
+  },
+  {
+   "fieldname": "invoice_approval_signature",
+   "fieldtype": "Signature",
+   "label": "Invoice Approval Signature",
+   "mandatory_depends_on": "eval:(doc.rfs_status == \"Invoice Approved\" && !in_list([\"63100654\", \"63101610\"], doc.customer))",
+   "permlevel": 1
+  },
+  {
+   "fetch_from": "vin_serial_no.customer",
+   "fetch_if_empty": 1,
+   "fieldname": "customer",
+   "fieldtype": "Link",
+   "in_standard_filter": 1,
+   "label": "Customer",
+   "options": "Customer",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "customer.default_price_list",
+   "fieldname": "price_list",
+   "fieldtype": "Link",
+   "label": "Price List",
+   "options": "Price List"
+  },
+  {
+   "fieldname": "section_break_bbmt",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_mzeo",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_uzfr",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "parts_total_excl",
+   "fieldtype": "Currency",
+   "label": "Parts Total (Excl)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_xbsk",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_hspn",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_inwk",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "labours_total_excl",
+   "fieldtype": "Currency",
+   "label": "Labours Total (Excl)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_hlts",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_ttrh",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_spoz",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "extra_cost_total_excl",
+   "fieldtype": "Currency",
+   "label": "Extra Cost Total (Excl)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Request for Service",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "default": "Today",
+   "fieldname": "request_for_service_date",
+   "fieldtype": "Date",
+   "label": "Request for Service Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "odo_reading",
+   "fieldtype": "Int",
+   "label": "Odo Reading",
+   "reqd": 1
+  },
+  {
+   "fieldname": "rfs_status",
+   "fieldtype": "Link",
+   "in_standard_filter": 1,
+   "label": "RFS Status",
+   "options": "RFS Status",
+   "permlevel": 1,
+   "reqd": 1
+  },
+  {
+   "fetch_from": "vin_serial_no.current_location",
+   "fetch_if_empty": 1,
+   "fieldname": "current_location",
+   "fieldtype": "Data",
+   "label": "Current Location",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "customer.customer_name",
+   "fieldname": "customer_name",
+   "fieldtype": "Data",
+   "label": "Customer Name",
+   "read_only": 1
+  },
+  {
+   "fieldname": "invoice_approval_no",
+   "fieldtype": "Data",
+   "label": "Invoice Approval No",
+   "permlevel": 1
+  },
+  {
+   "fieldname": "section_break_xfjx",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "service_reason",
+   "fieldtype": "Small Text",
+   "label": "Service Reason"
+  },
+  {
+   "fieldname": "incident_no",
+   "fieldtype": "Link",
+   "label": "Incident No",
+   "options": "Vehicles Incidents"
+  },
+  {
+   "fieldname": "section_break_6zwk",
+   "fieldtype": "Section Break",
+   "hidden": 1,
+   "label": "References"
+  },
+  {
+   "fieldname": "pdi_inspection",
+   "fieldtype": "Link",
+   "label": "PDI Inspection",
+   "options": "Vehicles PDI Inspection",
+   "search_index": 1
+  },
+  {
+   "fieldname": "dealer",
+   "fieldtype": "Link",
+   "label": "Dealer",
+   "options": "Company",
+   "reqd": 1
+  },
+  {
+   "fieldname": "part_schedule_date",
+   "fieldtype": "Date",
+   "label": "Scheduled Delivery Date for Parts"
+  },
+  {
+   "fetch_from": "technician.full_name",
+   "fieldname": "technician_full_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Technician Full Name"
+  },
+  {
+   "default": "0",
+   "fetch_from": "customer.custom_show_price_for_request_for_service",
+   "fetch_if_empty": 1,
+   "fieldname": "show_price_for_request_for_service",
+   "fieldtype": "Check",
+   "hidden": 1,
+   "label": "Show price for Request for service"
+  },
+  {
+   "fieldname": "attached_documents",
+   "fieldtype": "Table",
+   "label": "Attached Documents",
+   "options": "Attached Documents"
+  },
+  {
+   "fieldname": "attached_documents_tab",
+   "fieldtype": "Tab Break",
+   "hidden": 1,
+   "label": "Attached Documents"
+  },
+  {
+   "fieldname": "vehicles_information_section",
+   "fieldtype": "Section Break",
+   "label": "General Information"
+  },
+  {
+   "fieldname": "vehicles_rental_return",
+   "fieldtype": "Link",
+   "label": "Vehicles Rental Return",
+   "options": "Vehicles Rental Return",
+   "search_index": 1
+  },
+  {
+   "fieldname": "vehicles_card",
+   "fieldtype": "Link",
+   "label": "Vehicles Card",
+   "options": "Vehicles Card"
+  },
+  {
+   "fieldname": "vehicles_breakdown",
+   "fieldtype": "Link",
+   "hidden": 1,
+   "label": "Vehicles Breakdown",
+   "options": "Vehicles Breakdown",
+   "search_index": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "is_calendar_and_gantt": 1,
+ "is_submittable": 1,
+ "links": [
+  {
+   "link_doctype": "Sales Order",
+   "link_fieldname": "custom_linked_rfs_id"
+  },
+  {
+   "link_doctype": "Material Request",
+   "link_fieldname": "custom_linked_rfs_id"
+  },
+  {
+   "link_doctype": "Internal Docs and Notes",
+   "link_fieldname": "request_for_service"
+  }
+ ],
+ "modified": "2025-02-04 08:26:55.872125",
+ "modified_by": "Administrator",
+ "module": "Edp Online Vehicles",
+ "name": "Request for Service",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Aftersales Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Customer",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}

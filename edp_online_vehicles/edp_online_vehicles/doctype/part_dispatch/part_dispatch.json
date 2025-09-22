@@ -1,0 +1,164 @@
+{
+ "actions": [],
+ "creation": "2025-04-08 16:49:14.330803",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "dispatch_part_tab",
+  "section_break_kobu",
+  "ordered_part_details_column",
+  "bin_location",
+  "part_no",
+  "description",
+  "qty_ordered",
+  "dispatched_part_details_column",
+  "scanned_bin_location",
+  "scanned_part_no",
+  "qty_dispatched",
+  "part_dispatched",
+  "scan",
+  "section_break_aquo",
+  "amended_from",
+  "last_part_idx",
+  "parts_dispatched_tab",
+  "parts_dispatched",
+  "parts_ordered_tab",
+  "parts_ordered"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_kobu",
+   "fieldtype": "Section Break",
+   "label": "Details"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Part Dispatch",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "dispatch_part_tab",
+   "fieldtype": "Tab Break",
+   "label": "Dispatch Part"
+  },
+  {
+   "fieldname": "ordered_part_details_column",
+   "fieldtype": "Column Break",
+   "label": "Ordered Part Details"
+  },
+  {
+   "fieldname": "bin_location",
+   "fieldtype": "Data",
+   "label": "Bin Location"
+  },
+  {
+   "fieldname": "part_no",
+   "fieldtype": "Data",
+   "label": "Part No"
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Data",
+   "label": "Description"
+  },
+  {
+   "fieldname": "qty_ordered",
+   "fieldtype": "Int",
+   "label": "Qty Ordered"
+  },
+  {
+   "fieldname": "dispatched_part_details_column",
+   "fieldtype": "Column Break",
+   "label": "Dispatched Part Details"
+  },
+  {
+   "fieldname": "scanned_bin_location",
+   "fieldtype": "Data",
+   "label": "Bin Location"
+  },
+  {
+   "fieldname": "scanned_part_no",
+   "fieldtype": "Data",
+   "label": "Part no"
+  },
+  {
+   "fieldname": "qty_dispatched",
+   "fieldtype": "Int",
+   "label": "Qty Dispatched"
+  },
+  {
+   "fieldname": "part_dispatched",
+   "fieldtype": "Button",
+   "label": "Part Dispatched"
+  },
+  {
+   "fieldname": "scan",
+   "fieldtype": "Button",
+   "label": "Access Camera"
+  },
+  {
+   "fieldname": "section_break_aquo",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "parts_dispatched_tab",
+   "fieldtype": "Tab Break",
+   "label": "Parts Dispatched"
+  },
+  {
+   "fieldname": "parts_dispatched",
+   "fieldtype": "Table",
+   "label": "Parts Dispatched",
+   "options": "Parts Picking Table",
+   "read_only": 1
+  },
+  {
+   "fieldname": "parts_ordered_tab",
+   "fieldtype": "Tab Break",
+   "label": "Parts Ordered"
+  },
+  {
+   "fieldname": "parts_ordered",
+   "fieldtype": "Table",
+   "label": "Parts Ordered",
+   "options": "Parts Picking Table",
+   "read_only": 1
+  },
+  {
+   "fieldname": "last_part_idx",
+   "fieldtype": "Int",
+   "label": "Last Part Idx"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2025-04-08 16:59:31.621160",
+ "modified_by": "Administrator",
+ "module": "Edp Online Vehicles",
+ "name": "Part Dispatch",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

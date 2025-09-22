@@ -1,0 +1,1 @@
+<SupplierInterface>TAC|MAHINDRASA|2025-01-21T13:44:14000B|STATUSCHANGE|R - Vehicle Received in Depot||MA1RA2VK2S2049559|2T0000B</SupplierInterface>

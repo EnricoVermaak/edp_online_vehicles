@@ -1,0 +1,180 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-04-10 15:50:00.434927",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "booking_information_section",
+  "requested_booking_date_time",
+  "column_break_amoi",
+  "dealer",
+  "status",
+  "section_break_afxl",
+  "vehicle_column",
+  "vin_serial_no",
+  "model",
+  "engine_no",
+  "service_type",
+  "odo_reading_hours",
+  "customer_column",
+  "customer",
+  "customer_full_name",
+  "mobile",
+  "email",
+  "section_break_lsyk",
+  "service_notes"
+ ],
+ "fields": [
+  {
+   "fieldname": "booking_information_section",
+   "fieldtype": "Section Break",
+   "label": "Booking Information"
+  },
+  {
+   "fieldname": "requested_booking_date_time",
+   "fieldtype": "Datetime",
+   "in_list_view": 1,
+   "label": "Requested Booking Date/ Time",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_amoi",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "dealer",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Dealer",
+   "options": "Company",
+   "reqd": 1
+  },
+  {
+   "default": "Pending",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Status",
+   "options": "Pending\nArrived\nCancelled",
+   "reqd": 1
+  },
+  {
+   "fieldname": "section_break_afxl",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "vehicle_column",
+   "fieldtype": "Column Break",
+   "label": "Vehicle"
+  },
+  {
+   "fetch_from": "vin_serial_no.model",
+   "fieldname": "model",
+   "fieldtype": "Link",
+   "label": "Model",
+   "options": "Model Administration",
+   "read_only": 1
+  },
+  {
+   "fieldname": "customer_column",
+   "fieldtype": "Column Break",
+   "label": "Customer"
+  },
+  {
+   "fetch_from": "vin_serial_no.engine_no",
+   "fieldname": "engine_no",
+   "fieldtype": "Data",
+   "label": "Engine No",
+   "read_only": 1
+  },
+  {
+   "fieldname": "odo_reading_hours",
+   "fieldtype": "Int",
+   "label": "Odo Reading/ Hours"
+  },
+  {
+   "fieldname": "customer",
+   "fieldtype": "Link",
+   "label": "Customer",
+   "options": "Dealer Customer"
+  },
+  {
+   "fetch_from": "customer.customer_full_name",
+   "fieldname": "customer_full_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Customer Full Name"
+  },
+  {
+   "fetch_from": "customer.mobile",
+   "fetch_if_empty": 1,
+   "fieldname": "mobile",
+   "fieldtype": "Phone",
+   "label": "Mobile"
+  },
+  {
+   "fetch_from": "customer.email",
+   "fetch_if_empty": 1,
+   "fieldname": "email",
+   "fieldtype": "Data",
+   "label": "Email"
+  },
+  {
+   "fieldname": "service_type",
+   "fieldtype": "Link",
+   "label": "Service Type",
+   "options": "Service Schedules"
+  },
+  {
+   "fieldname": "vin_serial_no",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "VIN/Serial No",
+   "options": "Vehicle Stock",
+   "reqd": 1
+  },
+  {
+   "fieldname": "section_break_lsyk",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "service_notes",
+   "fieldtype": "Text Editor",
+   "label": "Service Notes"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [
+  {
+   "link_doctype": "Vehicles Service",
+   "link_fieldname": "service_booking"
+  }
+ ],
+ "modified": "2025-05-08 10:27:19.040613",
+ "modified_by": "Administrator",
+ "module": "Edp Online Vehicles",
+ "name": "Vehicle Service Booking",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

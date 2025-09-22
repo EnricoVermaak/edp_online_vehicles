@@ -1,0 +1,266 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "format:ERR-{MM}{YY}-{#######}",
+ "creation": "2024-08-23 09:07:33.486121",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_nb77",
+  "return_date",
+  "type",
+  "return_reason",
+  "column_break_qe3k",
+  "status",
+  "billing_stopped",
+  "billing_cancellation_document",
+  "accounting_updated",
+  "section_break_ochh",
+  "vin_serial_no",
+  "model",
+  "description",
+  "column_break_lsdu",
+  "dealer",
+  "customer",
+  "customer_name",
+  "customer_phone",
+  "customer_email",
+  "transport_section",
+  "transport_booked_by",
+  "transport_booking_date",
+  "column_break_rg3n",
+  "transport_company",
+  "warehouse_section",
+  "received_by",
+  "date_received",
+  "column_break_npxs",
+  "technician",
+  "repairs_eta",
+  "inspection_tab",
+  "inspection_template",
+  "inspection"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_nb77",
+   "fieldtype": "Section Break"
+  },
+  {
+   "default": "Today",
+   "fieldname": "return_date",
+   "fieldtype": "Date",
+   "label": "Return Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_qe3k",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "Pending\nCompleted"
+  },
+  {
+   "fieldname": "section_break_ochh",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "vin_serial_no",
+   "fieldtype": "Link",
+   "label": "VIN/ Serial No",
+   "options": "Vehicle Stock",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "vin_serial_no.model",
+   "fieldname": "model",
+   "fieldtype": "Data",
+   "label": "Model"
+  },
+  {
+   "fetch_from": "vin_serial_no.description",
+   "fieldname": "description",
+   "fieldtype": "Data",
+   "label": "Description"
+  },
+  {
+   "fieldname": "column_break_lsdu",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "vin_serial_no.customer",
+   "fieldname": "customer",
+   "fieldtype": "Link",
+   "label": "Customer",
+   "options": "Customer"
+  },
+  {
+   "fetch_from": "customer.customer_name",
+   "fieldname": "customer_name",
+   "fieldtype": "Data",
+   "label": "Customer Name"
+  },
+  {
+   "fetch_from": "customer.mobile_no",
+   "fieldname": "customer_phone",
+   "fieldtype": "Data",
+   "label": "Customer Phone"
+  },
+  {
+   "fetch_from": "customer.email_id",
+   "fieldname": "customer_email",
+   "fieldtype": "Data",
+   "label": "Customer Email"
+  },
+  {
+   "fieldname": "type",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Type",
+   "options": "\nCustomer Return\nContract Lapse\nAftersales Repair",
+   "reqd": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "billing_stopped",
+   "fieldtype": "Check",
+   "label": "Billing Stopped"
+  },
+  {
+   "fieldname": "warehouse_section",
+   "fieldtype": "Section Break",
+   "label": "Warehouse"
+  },
+  {
+   "fieldname": "received_by",
+   "fieldtype": "Link",
+   "label": "Received By",
+   "options": "User"
+  },
+  {
+   "fieldname": "column_break_npxs",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "date_received",
+   "fieldtype": "Datetime",
+   "label": "Date Received"
+  },
+  {
+   "fieldname": "inspection_tab",
+   "fieldtype": "Tab Break",
+   "label": "Return Inspection"
+  },
+  {
+   "fieldname": "inspection_template",
+   "fieldtype": "Link",
+   "label": "Inspection Template",
+   "options": "Vehicles Inspection Template"
+  },
+  {
+   "fieldname": "inspection",
+   "fieldtype": "Table",
+   "options": "Vehicles PDI Inspection List"
+  },
+  {
+   "default": "0",
+   "fieldname": "accounting_updated",
+   "fieldtype": "Check",
+   "label": "Accounting Updated"
+  },
+  {
+   "fieldname": "return_reason",
+   "fieldtype": "Select",
+   "label": "Return Reason",
+   "options": "Short Term Rental Return\nLong Term Rental Return\nAftersales\nEarly Termination Long Term Rental\nRFM\nLoan\nDemo",
+   "reqd": 1
+  },
+  {
+   "depends_on": "eval:doc.billing_stopped == \"1\"",
+   "fieldname": "billing_cancellation_document",
+   "fieldtype": "Attach",
+   "label": "Billing Cancellation Document",
+   "mandatory_depends_on": "eval:doc.billing_stopped == \"1\""
+  },
+  {
+   "fieldname": "transport_section",
+   "fieldtype": "Section Break",
+   "label": "Transport"
+  },
+  {
+   "fieldname": "transport_booked_by",
+   "fieldtype": "Link",
+   "label": "Transport Booked By",
+   "options": "User"
+  },
+  {
+   "fieldname": "transport_booking_date",
+   "fieldtype": "Datetime",
+   "label": "Transport Booking Date"
+  },
+  {
+   "fieldname": "column_break_rg3n",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "transport_company",
+   "fieldtype": "Data",
+   "label": "Transport Company"
+  },
+  {
+   "fieldname": "technician",
+   "fieldtype": "Link",
+   "label": "Technician",
+   "options": "User"
+  },
+  {
+   "fieldname": "repairs_eta",
+   "fieldtype": "Datetime",
+   "label": "Repairs ETA"
+  },
+  {
+   "fieldname": "dealer",
+   "fieldtype": "Link",
+   "label": "Dealer",
+   "options": "Company",
+   "reqd": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [
+  {
+   "link_doctype": "Request for Service",
+   "link_fieldname": "vehicles_rental_return"
+  },
+  {
+   "link_doctype": "Vehicles PDI Inspection",
+   "link_fieldname": "vehicles_rental_return"
+  }
+ ],
+ "modified": "2025-01-03 14:42:36.887637",
+ "modified_by": "Administrator",
+ "module": "Edp Online Vehicles",
+ "name": "Vehicles Rental Return",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}
