@@ -1,0 +1,256 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "format:{MM}{YY}-{dealer}-{###}",
+ "creation": "2025-09-25 08:24:33.665796",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "dealer",
+  "column_break_txxf",
+  "visited_on",
+  "status",
+  "section_break_xils",
+  "contact_person",
+  "column_break_tyxy",
+  "contact_person_email",
+  "contact_person_phone",
+  "compliance_tab",
+  "table_lcsk",
+  "compliance_comments",
+  "vehicles_tab",
+  "table_gzpt",
+  "vehicles_comment",
+  "performance_tab",
+  "vehicles_section",
+  "sales_performance_note",
+  "vehicle_stock_note",
+  "service_section",
+  "service_note",
+  "warranty_section",
+  "warranty_claims_note",
+  "parts_section",
+  "parts_stock_note",
+  "parts_orders_note",
+  "confirmation_tab",
+  "visited_by",
+  "full_name",
+  "visited_by_signature",
+  "column_break_qlni",
+  "hosted_by_full_name",
+  "hosted_by_email",
+  "hosted_by_signature"
+ ],
+ "fields": [
+  {
+   "fieldname": "dealer",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Dealer",
+   "options": "Company",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_txxf",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "visited_on",
+   "fieldtype": "Datetime",
+   "in_list_view": 1,
+   "label": "Visited On"
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Status",
+   "options": "Pending\nCompleted\nAttention Required\nCancelled",
+   "reqd": 1
+  },
+  {
+   "fieldname": "section_break_xils",
+   "fieldtype": "Section Break",
+   "label": "Contact Person (Dealership)"
+  },
+  {
+   "fieldname": "contact_person",
+   "fieldtype": "Data",
+   "label": "Contact Person"
+  },
+  {
+   "fieldname": "contact_person_email",
+   "fieldtype": "Data",
+   "label": "Contact Person Email"
+  },
+  {
+   "fieldname": "contact_person_phone",
+   "fieldtype": "Phone",
+   "label": "Contact Person Phone"
+  },
+  {
+   "fieldname": "compliance_tab",
+   "fieldtype": "Tab Break",
+   "label": "Compliance"
+  },
+  {
+   "fieldname": "vehicles_tab",
+   "fieldtype": "Tab Break",
+   "label": "Vehicles"
+  },
+  {
+   "fieldname": "table_gzpt",
+   "fieldtype": "Table",
+   "label": "Vehicle Stock",
+   "options": "Vehicles Recon Items"
+  },
+  {
+   "fieldname": "vehicles_comment",
+   "fieldtype": "Long Text",
+   "label": "Vehicle(s) Comment"
+  },
+  {
+   "fieldname": "table_lcsk",
+   "fieldtype": "Table",
+   "options": "Dealer Visit Compliance Items"
+  },
+  {
+   "fieldname": "compliance_comments",
+   "fieldtype": "Long Text",
+   "label": "Compliance Comments"
+  },
+  {
+   "fieldname": "confirmation_tab",
+   "fieldtype": "Tab Break",
+   "label": "Confirmation"
+  },
+  {
+   "fieldname": "visited_by",
+   "fieldtype": "Link",
+   "in_standard_filter": 1,
+   "label": "Visited By",
+   "options": "User"
+  },
+  {
+   "fetch_from": "visited_by.full_name",
+   "fieldname": "full_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Full Name",
+   "read_only": 1
+  },
+  {
+   "fieldname": "visited_by_signature",
+   "fieldtype": "Signature",
+   "label": "Visited By Signature"
+  },
+  {
+   "fieldname": "column_break_qlni",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "hosted_by_full_name",
+   "fieldtype": "Data",
+   "label": "Hosted By Full Name"
+  },
+  {
+   "fieldname": "hosted_by_email",
+   "fieldtype": "Data",
+   "label": "Hosted By Email"
+  },
+  {
+   "fieldname": "hosted_by_signature",
+   "fieldtype": "Signature",
+   "label": "Hosted By Signature"
+  },
+  {
+   "fieldname": "column_break_tyxy",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "performance_tab",
+   "fieldtype": "Tab Break",
+   "label": "Performance"
+  },
+  {
+   "fieldname": "vehicles_section",
+   "fieldtype": "Section Break",
+   "label": "Vehicles"
+  },
+  {
+   "fieldname": "sales_performance_note",
+   "fieldtype": "Small Text",
+   "label": "Sales Performance Note"
+  },
+  {
+   "fieldname": "vehicle_stock_note",
+   "fieldtype": "Small Text",
+   "label": "Vehicle Stock Note"
+  },
+  {
+   "fieldname": "service_section",
+   "fieldtype": "Section Break",
+   "label": "Service"
+  },
+  {
+   "fieldname": "service_note",
+   "fieldtype": "Small Text",
+   "label": "Service Note"
+  },
+  {
+   "fieldname": "warranty_section",
+   "fieldtype": "Section Break",
+   "label": "Warranty"
+  },
+  {
+   "fieldname": "warranty_claims_note",
+   "fieldtype": "Small Text",
+   "label": "Warranty Claims Note"
+  },
+  {
+   "fieldname": "parts_section",
+   "fieldtype": "Section Break",
+   "label": "Parts"
+  },
+  {
+   "fieldname": "parts_stock_note",
+   "fieldtype": "Small Text",
+   "label": "Parts Stock Note"
+  },
+  {
+   "fieldname": "parts_orders_note",
+   "fieldtype": "Small Text",
+   "label": "Parts Orders Note"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2025-09-25 08:50:58.589588",
+ "modified_by": "Administrator",
+ "module": "Edp Online Vehicles",
+ "name": "Dealer Visit",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}
