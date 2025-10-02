@@ -144,19 +144,19 @@ class HeadOfficeVehicleOrders(Document):
 							user_company = frappe.defaults.get_user_default("Company")
 							head_office = frappe.get_value("Company", {"custom_head_office": 1}, "name")
 
-							if user_company == head_office:
-								create_integration_doc = frappe.db.get_value(
-									"Vehicles Order Status", {"name": self.status}, "create_integration_file"
-								)
-								if create_integration_doc:
-									if self.vinserial_no:
-										tac_delivery_outgoing(
-											self.vinserial_no,
-											self.model_delivered,
-											self.model_description,
-											self.colour_delivered,
-											self.order_placed_by,
-										)
+							# if user_company == head_office:
+							# 	create_integration_doc = frappe.db.get_value(
+							# 		"Vehicles Order Status", {"name": self.status}, "create_integration_file"
+							# 	)
+							# 	if create_integration_doc:
+							# 		if self.vinserial_no:
+							# 			tac_delivery_outgoing(
+							# 				self.vinserial_no,
+							# 				self.model_delivered,
+							# 				self.model_description,
+							# 				self.colour_delivered,
+							# 				self.order_placed_by,
+							# 			)
 
 							order_doc = frappe.get_doc("Vehicle Order", self.order_no)
 
@@ -271,21 +271,21 @@ class HeadOfficeVehicleOrders(Document):
 										"Company", {"custom_head_office": 1}, "name"
 									)
 
-									if user_company == head_office:
-										create_integration_doc = frappe.db.get_value(
-											"Vehicles Order Status",
-											{"name": self.status},
-											"create_integration_file",
-										)
-										if create_integration_doc:
-											if self.vinserial_no:
-												tac_delivery_outgoing(
-													self.vinserial_no,
-													self.model_delivered,
-													self.model_description,
-													self.colour_delivered,
-													self.order_placed_by,
-												)
+									# if user_company == head_office:
+									# 	create_integration_doc = frappe.db.get_value(
+									# 		"Vehicles Order Status",
+									# 		{"name": self.status},
+									# 		"create_integration_file",
+									# 	)
+									# 	if create_integration_doc:
+									# 		if self.vinserial_no:
+									# 			tac_delivery_outgoing(
+									# 				self.vinserial_no,
+									# 				self.model_delivered,
+									# 				self.model_description,
+									# 				self.colour_delivered,
+									# 				self.order_placed_by,
+									# 			)
 
 									order_doc = frappe.get_doc("Vehicle Order", self.order_no)
 

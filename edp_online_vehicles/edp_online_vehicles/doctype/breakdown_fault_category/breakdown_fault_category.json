@@ -12,13 +12,15 @@
   {
    "fieldname": "description",
    "fieldtype": "Data",
+   "in_list_view": 1,
    "label": "Description",
+   "reqd": 1,
    "unique": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-05-06 14:49:37.288430",
+ "modified": "2025-09-30 12:33:57.350468",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Breakdown Fault Category",
@@ -38,6 +40,7 @@
    "write": 1
   }
  ],
+ "row_format": "Dynamic",
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": []

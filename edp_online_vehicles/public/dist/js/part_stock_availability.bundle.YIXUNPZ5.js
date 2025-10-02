@@ -1,7 +1,7 @@
 (() => {
   // ../edp_online_vehicles/edp_online_vehicles/edp_online_vehicles/page/part_stock_availabil/part_stock_availability_control.js
-  frappe.provide("edp_online_vehicles.edp_online_vehicles_mahindrasa");
-  edp_online_vehicles.edp_online_vehicles_mahindrasa.PartStockAvailability = class PartStockAvailability {
+  frappe.provide("edp_online_vehicles.edp_online_vehicles");
+  edp_online_vehicles.edp_online_vehicles.PartStockAvailability = class PartStockAvailability {
     constructor(opts) {
       $.extend(this, opts);
       this.make();
@@ -56,7 +56,7 @@
         true
       );
       frappe.call({
-        method: "edp_online_vehicles.edp_online_vehicles_mahindrasa.page.part_stock_availabil.get_headers.get_context",
+        method: "edp_online_vehicles.edp_online_vehicles.page.part_stock_availabil.get_headers.get_context",
         args: { context },
         callback: function(r) {
           if (r.message) {
@@ -637,4 +637,4 @@
 </div>
 `;
 })();
-//# sourceMappingURL=part_stock_availability.bundle.3EZJ3RUN.js.map
+//# sourceMappingURL=part_stock_availability.bundle.YIXUNPZ5.js.map

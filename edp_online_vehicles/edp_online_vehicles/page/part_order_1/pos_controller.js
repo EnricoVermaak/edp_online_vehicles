@@ -10,7 +10,7 @@ edp_online_vehicles.PartOrder.Controller = class {
 
 	fetch_opening_entry() {
 		return frappe.call(
-			"edp_online_vehicles.edp_online_vehicles_mahindrasa.page.part_order_1.point_of_sale.check_opening_entry",
+			"edp_online_vehicles.edp_online_vehicles.page.part_order_1.point_of_sale.check_opening_entry",
 			{
 				user: frappe.session.user,
 			},

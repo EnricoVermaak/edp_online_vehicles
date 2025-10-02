@@ -10,7 +10,8 @@
   "status_selected_datetime",
   "column_break_ygvx",
   "status",
-  "status_changed_datetime"
+  "status_changed_datetime",
+  "time_elapsed_hoursminutes"
  ],
  "fields": [
   {
@@ -47,11 +48,16 @@
    "fieldname": "tracking_doc_doctype",
    "fieldtype": "Data",
    "label": "DocType"
+  },
+  {
+   "fieldname": "time_elapsed_hoursminutes",
+   "fieldtype": "Data",
+   "label": "Time Elapsed Hours/Minutes"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-02-07 10:36:33.950204",
+ "modified": "2025-09-30 14:23:31.307573",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicle Status Tracking",
@@ -70,6 +76,7 @@
    "write": 1
   }
  ],
+ "row_format": "Dynamic",
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": [],

@@ -22,9 +22,9 @@ frappe.pages["part-stock-availabil"].on_page_load = function (wrapper) {
 
 	frappe.require("part_stock_availability.bundle.js", function () {
 		page.part_stock_availability =
-			new edp_online_vehicles.edp_online_vehicles_mahindrasa.PartStockAvailability({
+			new edp_online_vehicles.edp_online_vehicles.PartStockAvailability({
 				parent: page.main,
-				method: "edp_online_vehicles.edp_online_vehicles_mahindrasa.page.part_stock_availabil.part_stock_availability.get_data",
+				method: "edp_online_vehicles.edp_online_vehicles.page.part_stock_availabil.part_stock_availability.get_data",
 				template: "part_stock_availability_list",
 			});
 

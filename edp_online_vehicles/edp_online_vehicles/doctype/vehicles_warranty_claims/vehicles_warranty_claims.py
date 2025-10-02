@@ -59,7 +59,7 @@ class VehiclesWarrantyClaims(Document):
 	def before_insert(self):
 		service_docs = frappe.get_all(
 			"Vehicles Service",
-			filters={"model": self.model, "vinserial_no": self.vin_serial_no},
+			filters={"model": self.model, "vin_serial_no": self.vin_serial_no},
 			fields=["name", "service_type", "odo_reading_hours", "service_status", "service_date"],
 			order_by="creation desc",
 		)

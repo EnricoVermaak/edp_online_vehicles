@@ -149,7 +149,8 @@
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "Colour",
-   "options": "Model Colour"
+   "options": "Model Colour",
+   "reqd": 1
   },
   {
    "fieldname": "column_break_uikn",
@@ -162,6 +163,7 @@
    "in_standard_filter": 1,
    "label": "Model",
    "options": "Model Administration",
+   "reqd": 1,
    "search_index": 1
   },
   {
@@ -515,7 +517,8 @@
    "in_standard_filter": 1,
    "label": "Category",
    "options": "Vehicles Category",
-   "read_only": 1
+   "read_only": 1,
+   "reqd": 1
   },
   {
    "fieldname": "section_break_ssxz",
@@ -665,6 +668,7 @@
    "show_dashboard": 1
   },
   {
+   "collapsible": 1,
    "fieldname": "order_details_section",
    "fieldtype": "Section Break",
    "label": "Order Details"
@@ -739,7 +743,7 @@
    "link_fieldname": "vin_serial_no"
   }
  ],
- "modified": "2025-07-09 09:00:31.236865",
+ "modified": "2025-10-02 08:11:20.357669",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicle Stock",
@@ -771,6 +775,7 @@
   }
  ],
  "quick_entry": 1,
+ "row_format": "Dynamic",
  "search_fields": "customer, model, colour, stock_no, alternative_stock_no",
  "show_title_field_in_link": 1,
  "sort_field": "modified",

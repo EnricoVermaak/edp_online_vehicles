@@ -8,7 +8,7 @@ frappe.ui.form.on("Inspection FSP", {
 		if (template) {
 			frappe
 				.call({
-					method: "edp_online_vehicles.edp_online_vehicles_mahindrasa.doctype.inspection_fsp.inspection_fsp.inspection_template",
+					method: "edp_online_vehicles.edp_online_vehicles.doctype.inspection_fsp.inspection_fsp.inspection_template",
 					args: { template: template },
 				})
 				.done((r) => {

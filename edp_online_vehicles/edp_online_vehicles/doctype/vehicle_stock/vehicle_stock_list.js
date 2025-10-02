@@ -209,7 +209,7 @@ frappe.listview_settings["Vehicle Stock"] = {
 			});
 		});
 
-		listview.page.add_actions_menu_item(__("Sell"), function () {
+		listview.page.add_actions_menu_item(__("Retail"), function () {
 			const selected_docs = listview.get_checked_items();
 			let vin = selected_docs.map((doc) => doc.name);
 			let checks = [];

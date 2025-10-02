@@ -147,10 +147,15 @@ class PartOrder(Document):
 			newdoc = frappe.new_doc("Sales Order")
 			newdoc.customer = self.dealer
 			newdoc.order_type = "Sales"
+			newdoc.custom_sales_category = "Parts"
 
-			hq_company = frappe.get_all("Company", filters={"custom_head_office": 1}, pluck="name", limit=1)
+			hq_company = frappe.db.get_value("Company", {"custom_head_office": 1}, "name")
+
+			if not hq_company:
+				frappe.throw("No Head Office company (custom_head_office=1) found.")
 
 			newdoc.company = hq_company
+
 			newdoc.transaction_date = today()
 			newdoc.delivery_date = self.delivery_date
 
@@ -213,11 +218,12 @@ class PartOrder(Document):
 				newdoc = frappe.new_doc("Sales Order")
 				newdoc.customer = self.dealer
 				newdoc.order_type = "Sales"
+				newdoc.custom_sales_category = "Parts"
 				newdoc.company = dealer
 				newdoc.transaction_date = today()
 				newdoc.delivery_date = self.delivery_date
 
-				for part in warehouse_items:
+				for part in items:
 					newdoc.append(
 						"items",
 						{

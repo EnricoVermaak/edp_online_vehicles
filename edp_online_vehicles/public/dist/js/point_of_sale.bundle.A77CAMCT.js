@@ -436,7 +436,7 @@
       console.log(this);
       console.log(price_list);
       return frappe.call({
-        method: "edp_online_vehicles.edp_online_vehicles_mahindrasa.page.part_order_1.point_of_sale.get_items",
+        method: "edp_online_vehicles.edp_online_vehicles.page.part_order_1.point_of_sale.get_items",
         freeze: true,
         args: { start, page_length, price_list, item_group, search_term }
       });
@@ -3543,7 +3543,7 @@ Return`,
     }
     fetch_opening_entry() {
       return frappe.call(
-        "edp_online_vehicles.edp_online_vehicles_mahindrasa.page.part_order_1.point_of_sale.check_opening_entry",
+        "edp_online_vehicles.edp_online_vehicles.page.part_order_1.point_of_sale.check_opening_entry",
         {
           user: frappe.session.user
         }
@@ -4418,4 +4418,4 @@ Return`,
     }
   };
 })();
-//# sourceMappingURL=point_of_sale.bundle.TKR7C2EN.js.map
+//# sourceMappingURL=point_of_sale.bundle.A77CAMCT.js.map

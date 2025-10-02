@@ -160,7 +160,7 @@ frappe.ui.form.on("Request for Service", {
 					console.log(frm);
 
 					frappe.model.open_mapped_doc({
-						method: "edp_online_vehicles.edp_online_vehicles_mahindrasa.doctype.request_for_service.request_for_service.create_internal_docs_notes",
+						method: "edp_online_vehicles.edp_online_vehicles.doctype.request_for_service.request_for_service.create_internal_docs_notes",
 						frm: frm,
 					});
 				},

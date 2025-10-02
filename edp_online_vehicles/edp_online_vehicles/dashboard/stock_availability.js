@@ -1,8 +1,21 @@
-frappe.provide("edp_online_vehicles.edp_online_vehicles_mahindrasa");
+frappe.provide("edp_online_vehicles.edp_online_vehicles");
 
 /* global edp_online_vehicles */
 
-edp_online_vehicles.edp_online_vehicles_mahindrasa.StockAvailability = class StockAvailability {
+function ensureStyleTag(id, css) {
+  if (document.getElementById(id)) return;
+  const el = document.createElement('style');
+  el.id = id;
+  el.appendChild(document.createTextNode(css));
+  document.head.appendChild(el);
+}
+
+function getPageBody() {
+  // current visible page body in Frappe Desk
+  return $('.page-body:visible').last();
+}
+
+edp_online_vehicles.edp_online_vehicles.StockAvailability = class StockAvailability {
 	constructor(opts) {
 		$.extend(this, opts);
 		this.make();
@@ -115,7 +128,7 @@ edp_online_vehicles.edp_online_vehicles_mahindrasa.StockAvailability = class Sto
 
 			if (action === "HQ") {
 				frappe.call({
-					method: "edp_online_vehicles.edp_online_vehicles_mahindrasa.dashboard.get_popup_data.get_hq_data",
+					method: "edp_online_vehicles.edp_online_vehicles.dashboard.get_popup_data.get_hq_data",
 					args: {
 						model: model_code,
 					},
@@ -129,7 +142,7 @@ edp_online_vehicles.edp_online_vehicles_mahindrasa.StockAvailability = class Sto
 
 			if (action === "Dealer") {
 				frappe.call({
-					method: "edp_online_vehicles.edp_online_vehicles_mahindrasa.dashboard.get_popup_data.get_dealer_data",
+					method: "edp_online_vehicles.edp_online_vehicles.dashboard.get_popup_data.get_dealer_data",
 					args: {
 						model: model_code,
 					},
@@ -143,7 +156,7 @@ edp_online_vehicles.edp_online_vehicles_mahindrasa.StockAvailability = class Sto
 
 			if (action === "Pipeline") {
 				frappe.call({
-					method: "edp_online_vehicles.edp_online_vehicles_mahindrasa.dashboard.get_popup_data.get_pipline_data",
+					method: "edp_online_vehicles.edp_online_vehicles.dashboard.get_popup_data.get_pipline_data",
 					args: {
 						model: model_code,
 					},
@@ -157,7 +170,7 @@ edp_online_vehicles.edp_online_vehicles_mahindrasa.StockAvailability = class Sto
 
 			if (action === "Date 1") {
 				frappe.call({
-					method: "edp_online_vehicles.edp_online_vehicles_mahindrasa.dashboard.get_popup_data.get_pipline_data",
+					method: "edp_online_vehicles.edp_online_vehicles.dashboard.get_popup_data.get_pipline_data",
 					args: {
 						model: model_code,
 						date: action,
@@ -172,7 +185,7 @@ edp_online_vehicles.edp_online_vehicles_mahindrasa.StockAvailability = class Sto
 
 			if (action === "Date 2") {
 				frappe.call({
-					method: "edp_online_vehicles.edp_online_vehicles_mahindrasa.dashboard.get_popup_data.get_pipline_data",
+					method: "edp_online_vehicles.edp_online_vehicles.dashboard.get_popup_data.get_pipline_data",
 					args: {
 						model: model_code,
 						date: action,
@@ -187,7 +200,7 @@ edp_online_vehicles.edp_online_vehicles_mahindrasa.StockAvailability = class Sto
 
 			if (action === "Date 3") {
 				frappe.call({
-					method: "edp_online_vehicles.edp_online_vehicles_mahindrasa.dashboard.get_popup_data.get_pipline_data",
+					method: "edp_online_vehicles.edp_online_vehicles.dashboard.get_popup_data.get_pipline_data",
 					args: {
 						model: model_code,
 						date: action,
@@ -202,7 +215,7 @@ edp_online_vehicles.edp_online_vehicles_mahindrasa.StockAvailability = class Sto
 
 			if (action === "Date 4") {
 				frappe.call({
-					method: "edp_online_vehicles.edp_online_vehicles_mahindrasa.dashboard.get_popup_data.get_pipline_data",
+					method: "edp_online_vehicles.edp_online_vehicles.dashboard.get_popup_data.get_pipline_data",
 					args: {
 						model: model_code,
 						date: action,
@@ -217,7 +230,7 @@ edp_online_vehicles.edp_online_vehicles_mahindrasa.StockAvailability = class Sto
 
 			if (action === "Date 5") {
 				frappe.call({
-					method: "edp_online_vehicles.edp_online_vehicles_mahindrasa.dashboard.get_popup_data.get_pipline_data",
+					method: "edp_online_vehicles.edp_online_vehicles.dashboard.get_popup_data.get_pipline_data",
 					args: {
 						model: model_code,
 						date: action,
@@ -232,7 +245,7 @@ edp_online_vehicles.edp_online_vehicles_mahindrasa.StockAvailability = class Sto
 
 			if (action === "Date 6") {
 				frappe.call({
-					method: "edp_online_vehicles.edp_online_vehicles_mahindrasa.dashboard.get_popup_data.get_pipline_data",
+					method: "edp_online_vehicles.edp_online_vehicles.dashboard.get_popup_data.get_pipline_data",
 					args: {
 						model: model_code,
 						date: action,
@@ -247,7 +260,7 @@ edp_online_vehicles.edp_online_vehicles_mahindrasa.StockAvailability = class Sto
 
 			if (action === "Date 7") {
 				frappe.call({
-					method: "edp_online_vehicles.edp_online_vehicles_mahindrasa.dashboard.get_popup_data.get_pipline_data",
+					method: "edp_online_vehicles.edp_online_vehicles.dashboard.get_popup_data.get_pipline_data",
 					args: {
 						model: model_code,
 						date: action,
@@ -262,7 +275,7 @@ edp_online_vehicles.edp_online_vehicles_mahindrasa.StockAvailability = class Sto
 
 			if (action === "Date 8") {
 				frappe.call({
-					method: "edp_online_vehicles.edp_online_vehicles_mahindrasa.dashboard.get_popup_data.get_pipline_data",
+					method: "edp_online_vehicles.edp_online_vehicles.dashboard.get_popup_data.get_pipline_data",
 					args: {
 						model: model_code,
 						date: action,
@@ -277,7 +290,7 @@ edp_online_vehicles.edp_online_vehicles_mahindrasa.StockAvailability = class Sto
 
 			if (action === "Date 9") {
 				frappe.call({
-					method: "edp_online_vehicles.edp_online_vehicles_mahindrasa.dashboard.get_popup_data.get_pipline_data",
+					method: "edp_online_vehicles.edp_online_vehicles.dashboard.get_popup_data.get_pipline_data",
 					args: {
 						model: model_code,
 						date: action,
@@ -292,7 +305,7 @@ edp_online_vehicles.edp_online_vehicles_mahindrasa.StockAvailability = class Sto
 
 			if (action === "Date 10") {
 				frappe.call({
-					method: "edp_online_vehicles.edp_online_vehicles_mahindrasa.dashboard.get_popup_data.get_pipline_data",
+					method: "edp_online_vehicles.edp_online_vehicles.dashboard.get_popup_data.get_pipline_data",
 					args: {
 						model: model_code,
 						date: action,
@@ -307,7 +320,7 @@ edp_online_vehicles.edp_online_vehicles_mahindrasa.StockAvailability = class Sto
 
 			if (action === "Date 11") {
 				frappe.call({
-					method: "edp_online_vehicles.edp_online_vehicles_mahindrasa.dashboard.get_popup_data.get_pipline_data",
+					method: "edp_online_vehicles.edp_online_vehicles.dashboard.get_popup_data.get_pipline_data",
 					args: {
 						model: model_code,
 						date: action,
@@ -322,7 +335,7 @@ edp_online_vehicles.edp_online_vehicles_mahindrasa.StockAvailability = class Sto
 
 			if (action === "Date 12") {
 				frappe.call({
-					method: "edp_online_vehicles.edp_online_vehicles_mahindrasa.dashboard.get_popup_data.get_pipline_data",
+					method: "edp_online_vehicles.edp_online_vehicles.dashboard.get_popup_data.get_pipline_data",
 					args: {
 						model: model_code,
 						date: action,
@@ -337,7 +350,7 @@ edp_online_vehicles.edp_online_vehicles_mahindrasa.StockAvailability = class Sto
 
 			if (action === "Total") {
 				frappe.call({
-					method: "edp_online_vehicles.edp_online_vehicles_mahindrasa.dashboard.get_popup_data.get_total_data",
+					method: "edp_online_vehicles.edp_online_vehicles.dashboard.get_popup_data.get_total_data",
 					args: {
 						model: model_code,
 					},
@@ -351,7 +364,7 @@ edp_online_vehicles.edp_online_vehicles_mahindrasa.StockAvailability = class Sto
 
 			if (action === "Unconfirmed") {
 				frappe.call({
-					method: "edp_online_vehicles.edp_online_vehicles_mahindrasa.dashboard.get_popup_data.get_unconfirmed_data",
+					method: "edp_online_vehicles.edp_online_vehicles.dashboard.get_popup_data.get_unconfirmed_data",
 					args: {
 						model: model_code,
 					},
@@ -366,134 +379,73 @@ edp_online_vehicles.edp_online_vehicles_mahindrasa.StockAvailability = class Sto
 
 		function open_vehicle_popup(vehicle_data) {
 			let count = vehicle_data.length;
-			let $popup = $("#vehicle-popup");
+			ensureStyleTag('vehicle-popup-css', `
+				#vehicle-popup {
+				position: fixed;
+				bottom: 0; left: 0; right: 0;
+				background: #fff;
+				border-top: 1px solid #ccc;
+				box-shadow: 0 -2px 5px rgba(0,0,0,0.2);
+				z-index: 9999;
+				padding-bottom: 10px; padding-left: 10px; padding-right: 10px;
+				max-height: 35vh; overflow-y: auto; resize: vertical;
+				}
+				#vehicle-popup .popup-header {
+				display: flex; justify-content: space-between; align-items: center;
+				border-bottom: 1px solid #ccc; padding-bottom: 5px; margin-bottom: 10px;
+				position: sticky; top: 0; background: #fff; z-index: 10;
+				}
+				#vehicle-popup .popup-title { font-size: 16px; font-weight: bold; }
+				#vehicle-popup .popup-count { margin-right: auto; padding-left: 10px; font-size: 14px; color: #555; }
+				#vehicle-popup .popup-close { background: transparent; border: none; font-size: 18px; cursor: pointer; }
+				#vehicle-popup .action-container { display: flex; align-items: center; margin-bottom: 10px; }
+				#vehicle-popup .vin-search { padding: 5px; border: 1px solid #ccc; border-radius: 5px; }
+				#vehicle-popup .action-group { margin-left: auto; position: relative; }
+				#vehicle-popup .action-btn, #vehicle-popup .view-model-btn { cursor: pointer; margin-left: 5px; }
+				#vehicle-popup .dropdown-menu {
+				display: none; position: absolute; top: 100%; left: 0; background-color: #fff; min-width: 150px;
+				box-shadow: 0 8px 16px rgba(0,0,0,0.2); z-index: 10;
+				}
+				#vehicle-popup .dropdown-menu a { display: block; padding: 8px 12px; text-decoration: none; color: #000; cursor: pointer; }
+				#vehicle-popup .dropdown-menu a.disabled { color: #999; pointer-events: none; }
+				#vehicle-popup .dropdown-menu a:hover { background-color: #f1f1f1; }
+				#vehicle-popup table { width: 100%; }
+				#vehicle-popup th, #vehicle-popup td { padding: 5px; text-align: left; }
+			`);
 
+			const $page = getPageBody();
+
+			// nuke any stale instance that may live in a hidden page
+			$page.find('#vehicle-popup').remove();
+
+			let $popup = $page.find('#vehicle-popup');
 			if (!$popup.length) {
-				$popup = $(`
-					<style>
-						#vehicle-popup {
-							position: fixed;
-							bottom: 0;
-							left: 0;
-							right: 0;
-							background: #fff;
-							border-top: 1px solid #ccc;
-							box-shadow: 0 -2px 5px rgba(0,0,0,0.2);
-							z-index: 9999;
-							padding-bottom: 10px;
-							padding-left: 10px;
-							padding-right: 10px;
-							max-height: 35vh;
-							overflow-y: auto;
-							resize: vertical;
-						}
-						#vehicle-popup .popup-header {
-							display: flex;
-							justify-content: space-between;
-							align-items: center;
-							border-bottom: 1px solid #ccc;
-							padding-bottom: 5px;
-							margin-bottom: 10px;
-							position: sticky;
-							top: 0;
-							background: #fff;
-							z-index: 10;
-						}
-						#vehicle-popup .popup-title {
-							font-size: 16px;
-							font-weight: bold;
-						}
-						#vehicle-popup .popup-count {
-							margin-right: auto;
-							padding-left: 10px;
-							font-size: 14px;
-							color: #555;
-						}
-						#vehicle-popup .popup-close {
-							background: transparent;
-							border: none;
-							font-size: 18px;
-							cursor: pointer;
-						}
-						/* Action Dropdown and search container */
-						#vehicle-popup .action-container {
-							display: flex;
-							align-items: center;
-							margin-bottom: 10px;
-						}
-						/* VIN search input styling */
-						#vehicle-popup .vin-search {
-							padding: 5px;
-							border: 1px solid #ccc;
-							border-radius: 5px;
-						}
-						/* Grouping the action button and dropdown on the right */
-						#vehicle-popup .action-group {
-							margin-left: auto;
-							position: relative;
-						}
-						#vehicle-popup .action-btn,
-						#vehicle-popup .view-model-btn {
-							cursor: pointer;
-							margin-left: 5px;
-						}
-						/* Dropdown menu styles */
-						#vehicle-popup .dropdown-menu {
-							display: none;
-							position: absolute;
-							top: 100%;
-							left: 0;
-							background-color: #fff;
-							min-width: 150px;
-							box-shadow: 0 8px 16px rgba(0,0,0,0.2);
-							z-index: 10;
-						}
-						#vehicle-popup .dropdown-menu a {
-							display: block;
-							padding: 8px 12px;
-							text-decoration: none;
-							color: #000;
-							cursor: pointer;
-						}
-						#vehicle-popup .dropdown-menu a.disabled {
-							color: #999;
-							pointer-events: none;
-						}
-						#vehicle-popup .dropdown-menu a:hover {
-							background-color: #f1f1f1;
-						}
-						#vehicle-popup table {
-							width: 100%;
-						}
-						#vehicle-popup th, #vehicle-popup td {
-							padding: 5px;
-							text-align: left;
-						}
-					</style>
-					<div id="vehicle-popup">
-						<div class="popup-header">
-							<span class="popup-title">${__("Vehicle Details")}</span>
-							<span class="popup-count"></span>
-							<button class="popup-close">X</button>
-						</div>
-						<div class="action-container">
-							<input type="text" class="vin-search" placeholder="${__("Search VIN/Serial No")}" />
-							<div class="action-group">
-								<button class="view-model-btn btn btn-primary">${__("View Model")}</button>
-								<button class="action-btn btn btn-primary">${__("Action")}</button>
-								<div class="dropdown-menu">
-									<a class="dropdown-item allocate-order" href="#">${__("Allocate to Order")}</a>
-									<a class="dropdown-item reserve" href="#">${__("Reserve")}</a>
-								</div>
-							</div>
-						</div>
-						<div class="popup-content"></div>
+			$popup = $(`
+				<div id="vehicle-popup">
+				<div class="popup-header">
+					<span class="popup-title">${__("Vehicle Details")}</span>
+					<span class="popup-count"></span>
+					<button class="popup-close">X</button>
+				</div>
+				<div class="action-container">
+					<input type="text" class="vin-search" placeholder="${__("Search VIN/Serial No")}" />
+					<div class="action-group">
+					<button class="view-model-btn btn btn-primary">${__("View Model")}</button>
+					<button class="action-btn btn btn-primary">${__("Action")}</button>
+					<div class="dropdown-menu">
+						<a class="dropdown-item allocate-order" href="#">${__("Allocate to Order")}</a>
+						<a class="dropdown-item reserve" href="#">${__("Reserve")}</a>
 					</div>
-				`);
-				$(".page-body").append($popup);
+					</div>
+				</div>
+				<div class="popup-content"></div>
+				</div>
+			`);
+			$page.append($popup);
 
-				$popup.find(".popup-close").on("click", function () {
-					$popup.remove();
+				$(document).off('click.vehiclePopup', '#vehicle-popup .popup-close');
+				$(document).on('click.vehiclePopup', '#vehicle-popup .popup-close', function () {
+					$('#vehicle-popup').remove();
 				});
 
 				$popup.find(".allocate-order").on("click", function () {
@@ -670,109 +622,49 @@ edp_online_vehicles.edp_online_vehicles_mahindrasa.StockAvailability = class Sto
 
 		function open_vehicle_shipment_popup(vehicle_data) {
 			let count = vehicle_data.length;
-			let $popup = $("#vehicle-popup");
+			ensureStyleTag('vehicle-popup-css', `
+				#vehicle-popup {
+				position: fixed;
+				bottom: 0; left: 0; right: 0;
+				background: #fff;
+				border-top: 1px solid #ccc;
+				box-shadow: 0 -2px 5px rgba(0,0,0,0.2);
+				z-index: 9999;
+				padding-bottom: 10px; padding-left: 10px; padding-right: 10px;
+				max-height: 35vh; overflow-y: auto; resize: vertical;
+				}
+				#vehicle-popup .popup-header {
+				display: flex; justify-content: space-between; align-items: center;
+				border-bottom: 1px solid #ccc; padding-bottom: 5px; margin-bottom: 10px;
+				position: sticky; top: 0; background: #fff; z-index: 10;
+				}
+				#vehicle-popup .popup-title { font-size: 16px; font-weight: bold; }
+				#vehicle-popup .popup-count { margin-right: auto; padding-left: 10px; font-size: 14px; color: #555; }
+				#vehicle-popup .popup-close { background: transparent; border: none; font-size: 18px; cursor: pointer; }
+				#vehicle-popup .action-container { display: flex; align-items: center; margin-bottom: 10px; }
+				#vehicle-popup .vin-search { padding: 5px; border: 1px solid #ccc; border-radius: 5px; }
+				#vehicle-popup .action-group { margin-left: auto; position: relative; }
+				#vehicle-popup .action-btn, #vehicle-popup .view-model-btn { cursor: pointer; margin-left: 5px; }
+				#vehicle-popup .dropdown-menu {
+				display: none; position: absolute; top: 100%; left: 0; background-color: #fff; min-width: 150px;
+				box-shadow: 0 8px 16px rgba(0,0,0,0.2); z-index: 10;
+				}
+				#vehicle-popup .dropdown-menu a { display: block; padding: 8px 12px; text-decoration: none; color: #000; cursor: pointer; }
+				#vehicle-popup .dropdown-menu a.disabled { color: #999; pointer-events: none; }
+				#vehicle-popup .dropdown-menu a:hover { background-color: #f1f1f1; }
+				#vehicle-popup table { width: 100%; }
+				#vehicle-popup th, #vehicle-popup td { padding: 5px; text-align: left; }
+			`);
+
+			const $page = getPageBody();
+
+			// nuke any stale instance that may live in a hidden page
+			$page.find('#vehicle-popup').remove();
+
+			let $popup = $page.find('#vehicle-popup');
 
 			if (!$popup.length) {
 				$popup = $(`
-					<style>
-						#vehicle-popup {
-							position: fixed;
-							bottom: 0;
-							left: 0;
-							right: 0;
-							background: #fff;
-							border-top: 1px solid #ccc;
-							box-shadow: 0 -2px 5px rgba(0,0,0,0.2);
-							z-index: 9999;
-							padding-bottom: 10px;
-							padding-left: 10px;
-							padding-right: 10px;
-							max-height: 35vh;
-							overflow-y: auto;
-						}
-						#vehicle-popup .popup-header {
-							display: flex;
-							justify-content: space-between;
-							align-items: center;
-							border-bottom: 1px solid #ccc;
-							padding-bottom: 5px;
-							margin-bottom: 10px;
-							position: sticky;
-							top: 0;
-							background: #fff;
-							z-index: 10;
-						}
-						#vehicle-popup .popup-title {
-							font-size: 16px;
-							font-weight: bold;
-						}
-						#vehicle-popup .popup-count {
-							margin-right: auto;
-							padding-left: 10px;
-							font-size: 14px;
-							color: #555;
-						}
-						#vehicle-popup .popup-close {
-							background: transparent;
-							border: none;
-							font-size: 18px;
-							cursor: pointer;
-						}
-						/* Action Dropdown and search container */
-						#vehicle-popup .action-container {
-							display: flex;
-							align-items: center;
-							margin-bottom: 10px;
-						}
-						/* VIN search input styling */
-						#vehicle-popup .vin-search {
-							padding: 5px;
-							border: 1px solid #ccc;
-							border-radius: 5px;
-						}
-						/* Grouping the action button and dropdown on the right */
-						#vehicle-popup .action-group {
-							margin-left: auto;
-							position: relative;
-						}
-						#vehicle-popup .view-model-btn,
-						#vehicle-popup .action-btn {
-							cursor: pointer;
-							margin-left: 5px;
-						}
-						/* Dropdown menu styles */
-						#vehicle-popup .dropdown-menu {
-							display: none;
-							position: absolute;
-							top: 100%;
-							left: 0;
-							background-color: #fff;
-							min-width: 150px;
-							box-shadow: 0 8px 16px rgba(0,0,0,0.2);
-							z-index: 10;
-						}
-						#vehicle-popup .dropdown-menu a {
-							display: block;
-							padding: 8px 12px;
-							text-decoration: none;
-							color: #000;
-							cursor: pointer;
-						}
-						#vehicle-popup .dropdown-menu a.disabled {
-							color: #999;
-							pointer-events: none;
-						}
-						#vehicle-popup .dropdown-menu a:hover {
-							background-color: #f1f1f1;
-						}
-						#vehicle-popup table {
-							width: 100%;
-						}
-						#vehicle-popup th, #vehicle-popup td {
-							padding: 5px;
-							text-align: left;
-						}
-					</style>
 					<div id="vehicle-popup">
 						<div class="popup-header">
 							<span class="popup-title">${__("Vehicle Details")}</span>
@@ -793,10 +685,11 @@ edp_online_vehicles.edp_online_vehicles_mahindrasa.StockAvailability = class Sto
 						<div class="popup-content"></div>
 					</div>
 				`);
-				$(".page-body").append($popup);
+				$page.append($popup);
 
-				$popup.find(".popup-close").on("click", function () {
-					$popup.remove();
+				$(document).off('click.vehiclePopup', '#vehicle-popup .popup-close');
+				$(document).on('click.vehiclePopup', '#vehicle-popup .popup-close', function () {
+					$('#vehicle-popup').remove();
 				});
 
 				$popup.find(".allocate-order").on("click", function () {
@@ -851,8 +744,9 @@ edp_online_vehicles.edp_online_vehicles_mahindrasa.StockAvailability = class Sto
 					}
 				});
 
-				$(document).on("click", function () {
-					$popup.find(".dropdown-menu").hide();
+				$(document).off('click.vehiclePopupGlobal');
+				$(document).on('click.vehiclePopupGlobal', function () {
+					$('#vehicle-popup .dropdown-menu').hide();
 				});
 
 				// Hide the action button if the user's default company is not the Head Office company
@@ -996,108 +890,27 @@ edp_online_vehicles.edp_online_vehicles_mahindrasa.StockAvailability = class Sto
 								url: modelData.right_image,
 							});
 
+						ensureStyleTag('model-popup-css', `
+							#model-popup-overlay { position: fixed; top:0; left:0; width:100vw; height:100vh; background: rgba(0,0,0,0.5); z-index:10000; }
+							#model-popup { position: fixed; top:50%; left:50%; transform: translate(-50%,-50%); background:#fff; padding:20px; box-shadow:0 4px 10px rgba(0,0,0,0.3); max-height:90vh; overflow-y:auto; }
+							#model-popup .model-close { position:absolute; top:10px; right:10px; background:transparent; border:none; font-size:18px; cursor:pointer; }
+							.model-gallery { position:relative; text-align:center; }
+							.model-gallery img { object-fit:contain; }
+							.model-gallery .gallery-label { position:absolute; top:10px; left:10px; background:rgba(0,0,0,0.6); color:#fff; padding:5px 10px; font-size:14px; }
+							.model-gallery .gallery-arrow { position:absolute; top:50%; transform:translateY(-50%); font-size:24px; color:rgba(0,0,0,0.5); cursor:pointer; display:none; }
+							.model-gallery .left-arrow { left:10px; }
+							.model-gallery .right-arrow { right:10px; }
+							.model-gallery:hover .gallery-arrow { display:block; }
+							.gallery-dots { text-align:center; margin-top:10px; }
+							.gallery-dots .dot { display:inline-block; width:10px; height:10px; border-radius:50%; background:#ccc; margin:0 5px; cursor:pointer; }
+							.gallery-dots .dot.active { background:#333; }
+							.model-details table { width:100%; border-collapse:collapse; margin-top:20px; }
+							.model-details th, .model-details td { padding:5px; border:1px solid #ccc; text-align:left; }
+							.no-image-message { padding:20px; font-size:16px; color:#555; }
+						`);
+
 						// Create the modal HTML with an image gallery and model details table
 						let modalHtml = $(`
-							<style>
-								#model-popup-overlay {
-									position: fixed;
-									top: 0;
-									left: 0;
-									width: 100vw;
-									height: 100vh;
-									background: rgba(0,0,0,0.5);
-									z-index: 10000;
-								}
-								#model-popup {
-									position: fixed;
-									top: 50%;
-									left: 50%;
-									transform: translate(-50%, -50%);
-									background: #fff;
-									padding: 20px;
-									box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-									max-height: 90vh;
-									overflow-y: auto;
-								}
-								#model-popup .model-close {
-									position: absolute;
-									top: 10px;
-									right: 10px;
-									background: transparent;
-									border: none;
-									font-size: 18px;
-									cursor: pointer;
-								}
-								/* Gallery styles */
-								.model-gallery {
-									position: relative;
-									text-align: center;
-								}
-								.model-gallery img {
-									object-fit: contain;
-								}
-								.model-gallery .gallery-label {
-									position: absolute;
-									top: 10px;
-									left: 10px;
-									background: rgba(0,0,0,0.6);
-									color: #fff;
-									padding: 5px 10px;
-									font-size: 14px;
-								}
-								.model-gallery .gallery-arrow {
-									position: absolute;
-									top: 50%;
-									transform: translateY(-50%);
-									font-size: 24px;
-									color: rgba(0,0,0,0.5);
-									cursor: pointer;
-									display: none;
-								}
-								.model-gallery .left-arrow {
-									left: 10px;
-								}
-								.model-gallery .right-arrow {
-									right: 10px;
-								}
-								.model-gallery:hover .gallery-arrow {
-									display: block;
-								}
-								/* Dots */
-								.gallery-dots {
-									text-align: center;
-									margin-top: 10px;
-								}
-								.gallery-dots .dot {
-									display: inline-block;
-									width: 10px;
-									height: 10px;
-									border-radius: 50%;
-									background: #ccc;
-									margin: 0 5px;
-									cursor: pointer;
-								}
-								.gallery-dots .dot.active {
-									background: #333;
-								}
-								/* Model details table styling: same as popup table */
-								.model-details table {
-									width: 100%;
-									border-collapse: collapse;
-									margin-top: 20px;
-								}
-								.model-details th, .model-details td {
-									padding: 5px;
-									border: 1px solid #ccc;
-									text-align: left;
-								}
-								/* Message style for missing image */
-								.no-image-message {
-									padding: 20px;
-									font-size: 16px;
-									color: #555;
-								}
-							</style>
 							<div id="model-popup-overlay">
 								<div id="model-popup">
 									<button class="model-close">X</button>
@@ -1484,7 +1297,7 @@ edp_online_vehicles.edp_online_vehicles_mahindrasa.StockAvailability = class Sto
 
 	// 	// Fetch headers from the backend using frappe.call
 	// 	frappe.call({
-	// 		method: "edp_online_vehicles.edp_online_vehicles_mahindrasa.dashboard.get_headers.get_context",
+	// 		method: "edp_online_vehicles.edp_online_vehicles.dashboard.get_headers.get_context",
 	// 		args: { context: context },
 	// 		callback: function (r) {
 	// 			if (r.message) {
@@ -1535,8 +1348,10 @@ edp_online_vehicles.edp_online_vehicles_mahindrasa.StockAvailability = class Sto
 			true,
 		);
 
+		console.log(context);
+
 		frappe.call({
-			method: "edp_online_vehicles.edp_online_vehicles_mahindrasa.dashboard.get_headers.get_context",
+			method: "edp_online_vehicles.edp_online_vehicles.dashboard.get_headers.get_context",
 			args: { context },
 			callback: function (r) {
 				if (!r.message) return;

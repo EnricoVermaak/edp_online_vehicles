@@ -81,7 +81,7 @@ frappe.ui.form.on("Vehicles Warranty Claims", {
 				console.log(frm);
 
 				frappe.model.open_mapped_doc({
-					method: "edp_online_vehicles.edp_online_vehicles_mahindrasa.doctype.vehicles_warranty_claims.vehicles_warranty_claims.create_internal_docs_notes",
+					method: "edp_online_vehicles.edp_online_vehicles.doctype.vehicles_warranty_claims.vehicles_warranty_claims.create_internal_docs_notes",
 					frm: frm,
 				});
 			},

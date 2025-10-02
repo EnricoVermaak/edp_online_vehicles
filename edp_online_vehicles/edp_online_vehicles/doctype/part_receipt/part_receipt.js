@@ -33,7 +33,7 @@ frappe.ui.form.on("Part Receipt", {
 				console.log("Item added to table.");
 
 				frappe.call({
-					method: "edp_online_vehicles.edp_online_vehicles_mahindrasa.doctype.part_receipt.part_receipt.check_item",
+					method: "edp_online_vehicles.edp_online_vehicles.doctype.part_receipt.part_receipt.check_item",
 					args: {
 						part_no: frm.doc.scan_barcode,
 					},

@@ -60,7 +60,7 @@ frappe.ui.form.on("Vehicles Load Test", {
 					console.log(frm);
 
 					frappe.model.open_mapped_doc({
-						method: "edp_online_vehicles.edp_online_vehicles_mahindrasa.doctype.vehicles_load_test.vehicles_load_test.create_internal_docs_notes",
+						method: "edp_online_vehicles.edp_online_vehicles.doctype.vehicles_load_test.vehicles_load_test.create_internal_docs_notes",
 						frm: frm,
 					});
 				},

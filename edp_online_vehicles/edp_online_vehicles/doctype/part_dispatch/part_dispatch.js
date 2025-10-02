@@ -145,7 +145,7 @@ frappe.ui.form.on("Part Dispatch", {
 	scanned_part_no: function (frm) {
 		if (frm.doc.scanned_part_no) {
 			frappe.call({
-				method: "edp_online_vehicles.edp_online_vehicles_mahindrasa.doctype.part_dispatch.part_dispatch.check_item",
+				method: "edp_online_vehicles.edp_online_vehicles.doctype.part_dispatch.part_dispatch.check_item",
 				args: {
 					part_no: frm.doc.scanned_part_no,
 				},
@@ -187,7 +187,7 @@ function open_scan_dialog(frm) {
 			let scannedText = result.getText();
 			if (scannedText) {
 				frappe.call({
-					method: "edp_online_vehicles.edp_online_vehicles_mahindrasa.doctype.part_dispatch.part_dispatch.check_item",
+					method: "edp_online_vehicles.edp_online_vehicles.doctype.part_dispatch.part_dispatch.check_item",
 					args: { part_no: scannedText },
 					callback: function (r) {
 						if (r.message) {

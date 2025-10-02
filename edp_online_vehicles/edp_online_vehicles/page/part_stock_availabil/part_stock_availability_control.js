@@ -1,8 +1,8 @@
-frappe.provide("edp_online_vehicles.edp_online_vehicles_mahindrasa");
+frappe.provide("edp_online_vehicles.edp_online_vehicles");
 
 /* global edp_online_vehicles */
 
-edp_online_vehicles.edp_online_vehicles_mahindrasa.PartStockAvailability = class PartStockAvailability {
+edp_online_vehicles.edp_online_vehicles.PartStockAvailability = class PartStockAvailability {
 	constructor(opts) {
 		$.extend(this, opts);
 		this.make();
@@ -72,7 +72,7 @@ edp_online_vehicles.edp_online_vehicles_mahindrasa.PartStockAvailability = class
 
 		// Fetch headers from the backend using frappe.call
 		frappe.call({
-			method: "edp_online_vehicles.edp_online_vehicles_mahindrasa.page.part_stock_availabil.get_headers.get_context",
+			method: "edp_online_vehicles.edp_online_vehicles.page.part_stock_availabil.get_headers.get_context",
 			args: { context: context },
 			callback: function (r) {
 				if (r.message) {

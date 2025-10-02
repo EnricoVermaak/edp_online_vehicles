@@ -141,7 +141,7 @@ frappe.ui.form.on("Parts Picking", {
 	scanned_part_no: function (frm) {
 		if (frm.doc.scanned_part_no) {
 			frappe.call({
-				method: "edp_online_vehicles.edp_online_vehicles_mahindrasa.doctype.parts_picking.parts_picking.check_item",
+				method: "edp_online_vehicles.edp_online_vehicles.doctype.parts_picking.parts_picking.check_item",
 				args: {
 					part_no: frm.doc.scanned_part_no,
 				},
@@ -205,7 +205,7 @@ function open_scan_dialog(frm) {
 			let scannedText = result.getText();
 			if (scannedText) {
 				frappe.call({
-					method: "edp_online_vehicles.edp_online_vehicles_mahindrasa.doctype.parts_picking.parts_picking.check_item",
+					method: "edp_online_vehicles.edp_online_vehicles.doctype.parts_picking.parts_picking.check_item",
 					args: { part_no: scannedText },
 					callback: function (r) {
 						if (r.message) {

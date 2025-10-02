@@ -78,13 +78,14 @@
   {
    "fieldname": "test_field",
    "fieldtype": "Data",
+   "hidden": 1,
    "label": "test_field"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-02-26 11:51:55.425158",
+ "modified": "2025-09-30 13:06:40.444260",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicles Recon",
@@ -103,6 +104,7 @@
    "write": 1
   }
  ],
+ "row_format": "Dynamic",
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": [],

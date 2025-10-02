@@ -410,7 +410,7 @@ frappe.ui.form.on("Vehicles Service", {
 				"Internal Docs and Notes",
 				() => {
 					frappe.model.open_mapped_doc({
-						method: "edp_online_vehicles.edp_online_vehicles_mahindrasa.doctype.vehicles_service.vehicles_service.create_internal_docs_notes",
+						method: "edp_online_vehicles.edp_online_vehicles.doctype.vehicles_service.vehicles_service.create_internal_docs_notes",
 						frm: frm,
 					});
 				},

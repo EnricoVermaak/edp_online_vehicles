@@ -72,7 +72,7 @@ edp_online_vehicles.PartOrder.ItemSelector = class {
 		// !item_group && (item_group = this.parent_item_group);
 
 		return frappe.call({
-			method: "edp_online_vehicles.edp_online_vehicles_mahindrasa.page.part_order_1.point_of_sale.get_items",
+			method: "edp_online_vehicles.edp_online_vehicles.page.part_order_1.point_of_sale.get_items",
 			freeze: true,
 			args: { start, page_length, price_list, item_group, search_term },
 		});
