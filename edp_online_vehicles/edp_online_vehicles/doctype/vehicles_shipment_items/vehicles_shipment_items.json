@@ -12,6 +12,7 @@
   "vin_serial_no",
   "container_no",
   "jet_no",
+  "interior_colour",
   "column_break_mtwq",
   "stock_no",
   "engine_no",
@@ -208,17 +209,24 @@
    "fieldtype": "Datetime",
    "label": "Submitted To DMS",
    "read_only": 1
+  },
+  {
+   "fieldname": "interior_colour",
+   "fieldtype": "Link",
+   "label": "Interior Colour",
+   "options": "Interior Model Colour"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-05-22 17:05:34.309852",
+ "modified": "2025-10-13 14:18:23.419471",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicles Shipment Items",
  "owner": "Administrator",
  "permissions": [],
+ "row_format": "Dynamic",
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": []

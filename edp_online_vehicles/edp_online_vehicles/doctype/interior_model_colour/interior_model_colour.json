@@ -1,0 +1,49 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-10-13 14:13:50.563081",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "colour",
+  "factory_colour_code",
+  "discontinued"
+ ],
+ "fields": [
+  {
+   "fieldname": "colour",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Colour",
+   "reqd": 1
+  },
+  {
+   "fieldname": "factory_colour_code",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Factory Colour Code"
+  },
+  {
+   "default": "0",
+   "fieldname": "discontinued",
+   "fieldtype": "Check",
+   "in_list_view": 1,
+   "label": "Discontinued"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2025-10-13 14:15:33.109475",
+ "modified_by": "Administrator",
+ "module": "Edp Online Vehicles",
+ "name": "Interior Model Colour",
+ "owner": "Administrator",
+ "permissions": [],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

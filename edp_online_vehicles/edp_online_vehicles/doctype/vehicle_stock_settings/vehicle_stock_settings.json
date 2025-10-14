@@ -58,7 +58,13 @@
   "used_vehicles_section",
   "automatically_create_stock_no_for_used_vehicles",
   "used_vehicles_stock_no_prefix",
-  "used_vehicles_last_stock_no"
+  "used_vehicles_last_stock_no",
+  "integrations_tab",
+  "bank_integration_section",
+  "max_retries",
+  "php_timeout",
+  "servers_section",
+  "integration_servers"
  ],
  "fields": [
   {
@@ -389,12 +395,42 @@
    "fieldname": "allow_microdot_allocation_on_retail",
    "fieldtype": "Check",
    "label": "Allow Microdot Allocation on Vehicle Retail"
+  },
+  {
+   "fieldname": "integrations_tab",
+   "fieldtype": "Tab Break",
+   "label": "Integrations"
+  },
+  {
+   "fieldname": "servers_section",
+   "fieldtype": "Section Break",
+   "label": "Servers"
+  },
+  {
+   "fieldname": "bank_integration_section",
+   "fieldtype": "Section Break",
+   "label": "Bank Integration"
+  },
+  {
+   "fieldname": "max_retries",
+   "fieldtype": "Int",
+   "label": "Max Retries"
+  },
+  {
+   "fieldname": "php_timeout",
+   "fieldtype": "Int",
+   "label": "PHP Timeout (Seconds)"
+  },
+  {
+   "fieldname": "integration_servers",
+   "fieldtype": "Table",
+   "options": "Integration Servers"
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2025-09-30 12:48:23.271301",
+ "modified": "2025-10-13 10:27:44.347704",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicle Stock Settings",

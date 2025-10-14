@@ -424,7 +424,7 @@
    "allow_in_quick_entry": 1,
    "fieldname": "target_warehouse",
    "fieldtype": "Link",
-   "label": "Target Warehouse",
+   "label": "Current Warehouse",
    "options": "Warehouse"
   },
   {
@@ -743,7 +743,7 @@
    "link_fieldname": "vin_serial_no"
   }
  ],
- "modified": "2025-10-02 08:11:20.357669",
+ "modified": "2025-10-09 08:52:47.763856",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicle Stock",

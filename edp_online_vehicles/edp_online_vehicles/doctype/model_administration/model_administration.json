@@ -12,8 +12,6 @@
   "model_year",
   "proper_name",
   "nsc_no",
-  "naamsa_code",
-  "naamsa_colour_code",
   "column_break_pvcv",
   "model_description",
   "series_code",
@@ -23,7 +21,6 @@
   "brand",
   "series_description",
   "mm_code",
-  "co2_emission",
   "category",
   "range",
   "class_",
@@ -38,13 +35,23 @@
   "section_break_jrap",
   "territory_export_prices",
   "colours_tab",
+  "exterior_section",
   "model_colours",
+  "interior_section",
+  "interior_colours",
   "model_pictures_tab",
+  "exterior_images_section",
   "front_image",
   "left_image",
   "column_break_ezbe",
   "rear_image",
   "right_image",
+  "interior_images_section",
+  "interior_image1",
+  "interior_image3",
+  "column_break_mwtg",
+  "interior_image2",
+  "interior_image4",
   "tab_break_jpsx",
   "tyre_specifications_section",
   "tyre_size_front",
@@ -65,6 +72,8 @@
   "fuel_type",
   "total_no_of_axles",
   "driving_axles",
+  "naamsa_code",
+  "naamsa_colour_code",
   "column_break_vwau",
   "engine_displacement",
   "engine_capacity",
@@ -75,6 +84,7 @@
   "tare",
   "mast_reach_mm",
   "column_break_grty",
+  "co2_emission",
   "sitting_capacity",
   "standing_capacity",
   "overall_length",
@@ -98,8 +108,7 @@
   "service_terms_and_conditions",
   "service_warranty_tab",
   "service_info_section",
-  "service_inspection_interval_km_hours",
-  "service_inspection_interval_months",
+  "default_service_plan",
   "column_break_rxij",
   "service_interval_months",
   "service_period",
@@ -107,14 +116,10 @@
   "service_type_max_allowance",
   "service_type_minimum_allowance",
   "warranty_info_section",
-  "warranty_period",
+  "default_warranty_plan",
   "column_break_q3q1",
+  "warranty_period",
   "warranty_limit_km_hours",
-  "load_test_section",
-  "pass_requirement",
-  "column_break_h40v",
-  "load_test_interval",
-  "load_test_interval_months",
   "conversion_options_tab",
   "convert_to_models_options_section",
   "table_fqry"
@@ -374,7 +379,7 @@
   {
    "fieldname": "model_colours",
    "fieldtype": "Table",
-   "label": "Model Colours",
+   "label": "Exterior Colours",
    "options": "Model Colours"
   },
   {
@@ -527,6 +532,7 @@
    "label": "Service & Warranty"
   },
   {
+   "fetch_from": "default_service_plan.service_period_months",
    "fieldname": "service_period",
    "fieldtype": "Int",
    "label": "Service Period Limit (Months)"
@@ -541,6 +547,7 @@
    "fieldtype": "Column Break"
   },
   {
+   "fetch_from": "default_service_plan.service_odo_limit",
    "fieldname": "service_limit_km_hours",
    "fieldtype": "Int",
    "label": "Service Odo Limit (KM/ Hours)"
@@ -551,64 +558,36 @@
    "label": "Warranty Info"
   },
   {
+   "fetch_from": "default_warranty_plan.warranty_period_months",
+   "fetch_if_empty": 1,
    "fieldname": "warranty_period",
    "fieldtype": "Int",
-   "label": "Warranty Period"
+   "label": "Warranty Period (Months)"
   },
   {
    "fieldname": "column_break_q3q1",
    "fieldtype": "Column Break"
   },
   {
+   "fetch_from": "default_warranty_plan.warranty_odo_limit",
    "fieldname": "warranty_limit_km_hours",
    "fieldtype": "Int",
    "label": "Warranty Limit (KM/ Hours)"
   },
   {
-   "fieldname": "load_test_section",
-   "fieldtype": "Section Break",
-   "label": "Load Test"
-  },
-  {
-   "fieldname": "pass_requirement",
-   "fieldtype": "Percent",
-   "label": "Pass (%) Requirement"
-  },
-  {
-   "fieldname": "column_break_h40v",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "load_test_interval",
-   "fieldtype": "Data",
-   "label": "Load Test Interval (KM/ Hours)"
-  },
-  {
-   "fieldname": "load_test_interval_months",
-   "fieldtype": "Int",
-   "label": "Load Test Interval (Months)"
-  },
-  {
-   "fieldname": "service_inspection_interval_km_hours",
-   "fieldtype": "Int",
-   "label": "Service Inspection Interval (KM/ Hours)"
-  },
-  {
-   "fieldname": "service_inspection_interval_months",
-   "fieldtype": "Int",
-   "label": "Service Inspection Interval (Months)"
-  },
-  {
+   "fetch_from": "default_service_plan.service_interval_months",
    "fieldname": "service_interval_months",
    "fieldtype": "Int",
    "label": "Service Interval (Months)"
   },
   {
+   "collapsible": 1,
    "fieldname": "tyre_specifications_section",
    "fieldtype": "Section Break",
    "label": "Tyre Specifications"
   },
   {
+   "collapsible": 1,
    "fieldname": "general_specifications_section",
    "fieldtype": "Section Break",
    "label": "General Specifications"
@@ -708,6 +687,70 @@
    "fieldname": "automatically_reserve_model",
    "fieldtype": "Check",
    "label": "Automatically Reserve Model"
+  },
+  {
+   "fieldname": "interior_colours",
+   "fieldtype": "Table",
+   "label": "Interior Colours",
+   "options": "Interior Model Colour"
+  },
+  {
+   "fieldname": "exterior_section",
+   "fieldtype": "Section Break",
+   "label": "Exterior"
+  },
+  {
+   "fieldname": "interior_section",
+   "fieldtype": "Section Break",
+   "label": "Interior"
+  },
+  {
+   "fieldname": "exterior_images_section",
+   "fieldtype": "Section Break",
+   "label": "Exterior Images"
+  },
+  {
+   "fieldname": "interior_images_section",
+   "fieldtype": "Section Break",
+   "label": "Interior Images"
+  },
+  {
+   "fieldname": "interior_image1",
+   "fieldtype": "Attach Image",
+   "label": "Interior Image"
+  },
+  {
+   "fieldname": "interior_image3",
+   "fieldtype": "Attach Image",
+   "label": "Interior Image"
+  },
+  {
+   "fieldname": "column_break_mwtg",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "interior_image2",
+   "fieldtype": "Attach Image",
+   "label": "Interior Image"
+  },
+  {
+   "fieldname": "interior_image4",
+   "fieldtype": "Attach Image",
+   "label": "Interior Image"
+  },
+  {
+   "fieldname": "default_warranty_plan",
+   "fieldtype": "Link",
+   "label": "Default Warranty Plan",
+   "link_filters": "[[\"Vehicles Warranty Plan Administration\",\"status\",\"=\",\"Active\"]]",
+   "options": "Vehicles Warranty Plan Administration"
+  },
+  {
+   "fieldname": "default_service_plan",
+   "fieldtype": "Link",
+   "label": "Default Service Plan",
+   "link_filters": "[[\"Vehicles Service Plan Administration\",\"status\",\"=\",\"Active\"]]",
+   "options": "Vehicles Service Plan Administration"
   }
  ],
  "image_field": "model_default_image",
@@ -734,7 +777,7 @@
    "link_fieldname": "model"
   }
  ],
- "modified": "2025-10-02 12:23:02.143371",
+ "modified": "2025-10-13 14:57:06.631557",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Model Administration",

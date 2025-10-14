@@ -1,24 +1,25 @@
 {
  "actions": [],
  "allow_rename": 1,
+ "autoname": "field:description",
  "creation": "2024-04-25 10:08:08.611972",
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
   "section_break_iic3",
   "description",
-  "vehicles_model",
   "warranty_type",
   "status",
   "column_break_evqm",
-  "warranty_period_years",
   "warranty_period_months",
   "warranty_odo_limit",
   "warranty_company_section",
   "warranty_plan_administrator",
   "column_break_fvmm",
   "warranty_dealer_billing_excl",
-  "retail_price_excl"
+  "retail_price_excl",
+  "parts_covered_tab",
+  "items"
  ],
  "fields": [
   {
@@ -28,44 +29,45 @@
   {
    "fieldname": "description",
    "fieldtype": "Data",
-   "label": "Plan Description"
-  },
-  {
-   "fieldname": "vehicles_model",
-   "fieldtype": "Link",
-   "label": "Vehicle Model",
-   "options": "Model Administration"
+   "in_list_view": 1,
+   "label": "Plan Description",
+   "reqd": 1,
+   "unique": 1
   },
   {
    "fieldname": "warranty_type",
    "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "Warranty Type",
    "options": "Vehicles Warranty Plan Type"
   },
   {
    "fieldname": "status",
    "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "Status",
-   "options": "Active\nInactive"
+   "options": "Active\nInactive",
+   "reqd": 1
   },
   {
    "fieldname": "column_break_evqm",
    "fieldtype": "Column Break"
   },
   {
-   "fieldname": "warranty_period_years",
-   "fieldtype": "Data",
-   "label": "Warranty Period (Years)"
-  },
-  {
    "fieldname": "warranty_period_months",
-   "fieldtype": "Data",
-   "label": "Warranty Period (Months)"
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Warranty Period (Months)",
+   "reqd": 1
   },
   {
    "fieldname": "warranty_odo_limit",
    "fieldtype": "Float",
-   "label": "Warranty Odo Limit"
+   "in_list_view": 1,
+   "label": "Warranty Odo Limit",
+   "reqd": 1
   },
   {
    "fieldname": "warranty_company_section",
@@ -91,14 +93,26 @@
    "fieldname": "retail_price_excl",
    "fieldtype": "Currency",
    "label": "Retail Price (Excl)"
+  },
+  {
+   "fieldname": "parts_covered_tab",
+   "fieldtype": "Tab Break",
+   "label": "Items Covered"
+  },
+  {
+   "fieldname": "items",
+   "fieldtype": "Table",
+   "label": "Items",
+   "options": "Warranty Plan Part Item"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-04-15 16:47:56.030923",
+ "modified": "2025-10-13 15:07:08.471659",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicles Warranty Plan Administration",
+ "naming_rule": "By fieldname",
  "owner": "Administrator",
  "permissions": [
   {
@@ -114,6 +128,7 @@
    "write": 1
   }
  ],
+ "row_format": "Dynamic",
  "search_fields": "description",
  "show_title_field_in_link": 1,
  "sort_field": "modified",

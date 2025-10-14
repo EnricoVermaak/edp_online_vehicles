@@ -9,14 +9,43 @@
   "status",
   "description",
   "colour",
+  "active",
+  "default",
   "auto_move_stock",
   "automatically_submit_document",
-  "in_transit_warehouse",
-  "default",
-  "active",
   "automatically_apply_fifo_rule_on_vehicles_orders",
-  "create_integration_file",
-  "vin_serial_no_mandatory"
+  "vin_serial_no_mandatory",
+  "visible_to_dealer",
+  "transport_section",
+  "require_transport_company",
+  "in_transit_warehouse",
+  "change_vehicle_status_to_available",
+  "cancel_order_section",
+  "cancel_order_after_hours",
+  "remove_vin_from_order",
+  "section_break_cssb",
+  "status_visble_to_head_office",
+  "status_visble_to_dealers",
+  "integration_tab",
+  "bank_section",
+  "credit_check",
+  "credit_approval",
+  "cancel_approval",
+  "sap_section",
+  "vehicle_so_creation",
+  "vehicle_so_bank_approval",
+  "vehicle_so_cancellation",
+  "vehicle_so_credit_note",
+  "evolve_section",
+  "create_evolve_order",
+  "generate_evolve_invoice",
+  "email_tab",
+  "email_template",
+  "send_email_to_users",
+  "send_mail_to_regional_manager",
+  "send_mail_to_sales_coordinator",
+  "send_mail_to_transport_company",
+  "send_mail_to_floorplan"
  ],
  "fields": [
   {
@@ -64,7 +93,7 @@
   {
    "default": "0",
    "depends_on": "eval: doc.active == 1 && !doc.name.startsWith('new-vehicles-order-status')\r\n",
-   "description": "If this option is selected, the system will automatically set this status as the default when processing a sale.",
+   "description": "If this option is selected, the system will automatically set this status as the default when processing an order.",
    "fieldname": "default",
    "fieldtype": "Check",
    "label": "Default",
@@ -78,13 +107,6 @@
    "label": "Automatically Apply FIFO rule on Vehicles Orders"
   },
   {
-   "default": "0",
-   "description": "Creates integration file for order when status is reached.",
-   "fieldname": "create_integration_file",
-   "fieldtype": "Check",
-   "label": "Create Integration File"
-  },
-  {
    "fieldname": "colour",
    "fieldtype": "Select",
    "label": "Colour",
@@ -95,11 +117,193 @@
    "fieldname": "vin_serial_no_mandatory",
    "fieldtype": "Check",
    "label": "VIN/Serial No Mandatory"
+  },
+  {
+   "depends_on": "eval: doc.email_template",
+   "fieldname": "send_email_to_users",
+   "fieldtype": "Table",
+   "label": "Send Email to Users",
+   "options": "Email Users"
+  },
+  {
+   "default": "0",
+   "depends_on": "eval: doc.email_template",
+   "fieldname": "send_mail_to_regional_manager",
+   "fieldtype": "Check",
+   "label": "Send Mail To Regional Manager "
+  },
+  {
+   "default": "0",
+   "depends_on": "eval: doc.email_template",
+   "fieldname": "send_mail_to_sales_coordinator",
+   "fieldtype": "Check",
+   "label": "Send Mail To Sales Co-ordinator"
+  },
+  {
+   "fieldname": "email_tab",
+   "fieldtype": "Tab Break",
+   "label": "Email"
+  },
+  {
+   "fieldname": "email_template",
+   "fieldtype": "Link",
+   "label": "Email Template",
+   "options": "Email Template"
+  },
+  {
+   "fieldname": "cancel_order_after_hours",
+   "fieldtype": "Int",
+   "label": "Cancel Order After (Hours)"
+  },
+  {
+   "default": "0",
+   "fieldname": "visible_to_dealer",
+   "fieldtype": "Check",
+   "label": "Visible to Dealer"
+  },
+  {
+   "fieldname": "cancel_order_section",
+   "fieldtype": "Section Break",
+   "label": "Cancel Order"
+  },
+  {
+   "fieldname": "integration_tab",
+   "fieldtype": "Tab Break",
+   "label": "Integration"
+  },
+  {
+   "default": "0",
+   "description": "If checked, EDP will try to fetch the invoice from Evolve.",
+   "fieldname": "generate_evolve_invoice",
+   "fieldtype": "Check",
+   "label": "Generate Evolve Invoice"
+  },
+  {
+   "default": "0",
+   "fieldname": "send_mail_to_transport_company",
+   "fieldtype": "Check",
+   "label": "Send Mail To Transport Company"
+  },
+  {
+   "default": "0",
+   "description": "Once this Document Status is reached for a Head Office Order the Transport Company will be mandatory.",
+   "fieldname": "require_transport_company",
+   "fieldtype": "Check",
+   "label": "Require Transport Company"
+  },
+  {
+   "fieldname": "transport_section",
+   "fieldtype": "Section Break",
+   "label": "Transport"
+  },
+  {
+   "default": "0",
+   "description": "If this is checked, the vehicle will be removed from the order when this status is selected.",
+   "fieldname": "remove_vin_from_order",
+   "fieldtype": "Check",
+   "label": "Remove VIN from order."
+  },
+  {
+   "default": "0",
+   "fieldname": "send_mail_to_floorplan",
+   "fieldtype": "Check",
+   "label": "Send Mail To Floorplan"
+  },
+  {
+   "default": "0",
+   "fieldname": "change_vehicle_status_to_available",
+   "fieldtype": "Check",
+   "label": "Change Vehicle Status to available"
+  },
+  {
+   "default": "0",
+   "description": "If checked, a credit check will be performed once the order is updated to this status.",
+   "fieldname": "credit_check",
+   "fieldtype": "Check",
+   "label": "Perform Credit Check"
+  },
+  {
+   "default": "0",
+   "description": "If checked, a credit approval will be performed once the order is updated to this status. If this is successfull, a new agreement will automaticly be done.",
+   "fieldname": "credit_approval",
+   "fieldtype": "Check",
+   "label": "Perform Credit Approval"
+  },
+  {
+   "default": "0",
+   "fieldname": "cancel_approval",
+   "fieldtype": "Check",
+   "label": "Cancel Approval"
+  },
+  {
+   "fieldname": "section_break_cssb",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "status_visble_to_head_office",
+   "fieldtype": "Table",
+   "label": "Status Visble To Head Office",
+   "options": "Vehicle Order Status Items"
+  },
+  {
+   "fieldname": "status_visble_to_dealers",
+   "fieldtype": "Table",
+   "label": "Status Visble To Dealers",
+   "options": "Vehicle Order Status Items"
+  },
+  {
+   "fieldname": "bank_section",
+   "fieldtype": "Section Break",
+   "label": "Bank"
+  },
+  {
+   "fieldname": "evolve_section",
+   "fieldtype": "Section Break",
+   "label": "Evolve"
+  },
+  {
+   "default": "0",
+   "description": "If checked, an order will be created on Evolve.",
+   "fieldname": "create_evolve_order",
+   "fieldtype": "Check",
+   "label": "Create Evolve Order"
+  },
+  {
+   "fieldname": "sap_section",
+   "fieldtype": "Section Break",
+   "label": "SAP"
+  },
+  {
+   "default": "0",
+   "description": "If checked, a new order will be created on SAP. This order have a \"Delivery Block\".",
+   "fieldname": "vehicle_so_creation",
+   "fieldtype": "Check",
+   "label": "Vehicle SO Creation"
+  },
+  {
+   "default": "0",
+   "description": "If checked, the order will be cancelled on SAP.",
+   "fieldname": "vehicle_so_cancellation",
+   "fieldtype": "Check",
+   "label": "Vehicle SO Cancellation"
+  },
+  {
+   "default": "0",
+   "description": "If checked, a request will be sent to remove the \"Delivery Block\" on created order.",
+   "fieldname": "vehicle_so_bank_approval",
+   "fieldtype": "Check",
+   "label": "Vehicle SO Bank Approval"
+  },
+  {
+   "default": "0",
+   "fieldname": "vehicle_so_credit_note",
+   "fieldtype": "Check",
+   "label": "Vehicle Credit Note"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-05-13 12:44:53.465045",
+ "modified": "2025-10-13 15:41:35.299118",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicles Order Status",
@@ -119,6 +323,7 @@
    "write": 1
   }
  ],
+ "row_format": "Dynamic",
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": [],

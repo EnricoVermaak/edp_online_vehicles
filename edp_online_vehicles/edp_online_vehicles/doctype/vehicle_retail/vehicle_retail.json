@@ -15,12 +15,17 @@
   "image",
   "vehicles_section",
   "vehicles_sale_items",
+  "section_break_numj",
+  "column_break_vdsb",
+  "column_break_kgtd",
+  "total_retail_excl",
   "sale_information_section",
   "sale_type",
   "finance_method",
   "financed_by",
   "sales_person",
   "sales_person_full_names",
+  "customer_invoice_document",
   "column_break_bttl",
   "sales_card_capture_date",
   "retail_date",
@@ -83,7 +88,8 @@
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "Sales Person",
-   "options": "User",
+   "link_filters": "[[\"Sales Person\",\"enabled\",\"=\",1]]",
+   "options": "Sales Person",
    "reqd": 1
   },
   {
@@ -173,7 +179,7 @@
    "label": "Customer Address"
   },
   {
-   "fetch_from": "sales_person.full_name",
+   "fetch_from": "sales_person.sales_person_name",
    "fieldname": "sales_person_full_names",
    "fieldtype": "Data",
    "label": "Sales Person Full Names",
@@ -305,12 +311,34 @@
    "fieldtype": "Datetime",
    "label": "Natis Release Date",
    "read_only": 1
+  },
+  {
+   "fieldname": "section_break_numj",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_vdsb",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_kgtd",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "total_retail_excl",
+   "fieldtype": "Currency",
+   "label": "Total Retail (Excl)"
+  },
+  {
+   "fieldname": "customer_invoice_document",
+   "fieldtype": "Attach",
+   "label": "Customer Invoice Document"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-07-09 09:32:27.333398",
+ "modified": "2025-10-13 15:24:39.838708",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicle Retail",

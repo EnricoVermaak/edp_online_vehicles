@@ -57,7 +57,7 @@
   {
    "fieldname": "convert_to_description",
    "fieldtype": "Data",
-   "label": "Convert From Series Description",
+   "label": "Convert To Series Description",
    "read_only": 1
   },
   {
@@ -126,7 +126,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-12-11 10:59:21.001663",
+ "modified": "2025-10-13 14:34:03.032174",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Model Conversion",
@@ -146,6 +146,7 @@
    "write": 1
   }
  ],
+ "row_format": "Dynamic",
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": [],

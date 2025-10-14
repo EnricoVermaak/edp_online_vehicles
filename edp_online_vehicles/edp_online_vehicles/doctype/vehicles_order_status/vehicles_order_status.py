@@ -7,3 +7,8 @@ from frappe.model.document import Document
 
 class VehiclesOrderStatus(Document):
 	pass
+	# def on_update(self):
+	# 	frappe.msgprint('on_update')
+
+	# def after_insert(self):
+	# 	frappe.msgprint('after_insert')

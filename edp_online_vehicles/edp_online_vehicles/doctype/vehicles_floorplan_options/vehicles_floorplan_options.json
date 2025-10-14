@@ -7,7 +7,9 @@
  "engine": "InnoDB",
  "field_order": [
   "bank",
-  "description"
+  "description",
+  "plan",
+  "errors"
  ],
  "fields": [
   {
@@ -22,13 +24,25 @@
    "fieldname": "description",
    "fieldtype": "Small Text",
    "label": "Description"
+  },
+  {
+   "fieldname": "plan",
+   "fieldtype": "Table",
+   "label": "Plan",
+   "options": "Plan Codes"
+  },
+  {
+   "fieldname": "errors",
+   "fieldtype": "Table",
+   "label": "Errors",
+   "options": "Integration Status"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-10-02 11:00:00.247030",
+ "modified": "2025-08-21 14:26:15.686015",
  "modified_by": "Administrator",
- "module": "Edp Online Vehicles",
+ "module": "EDP Online Vehicles",
  "name": "Vehicles Floorplan Options",
  "naming_rule": "By fieldname",
  "owner": "Administrator",

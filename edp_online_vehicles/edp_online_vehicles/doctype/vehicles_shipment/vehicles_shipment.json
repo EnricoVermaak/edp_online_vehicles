@@ -8,10 +8,11 @@
  "field_order": [
   "section_break_6u7m",
   "supplier",
+  "shipment_method",
   "shipment_file_no",
   "batch_no",
   "vessel_name",
-  "exchange_rate",
+  "contract_no",
   "column_break_ifk7",
   "factory_order_date",
   "production_date",
@@ -23,19 +24,24 @@
   "target_warehouse",
   "status",
   "hide_on_stock_availability",
+  "section_break_hgyx",
+  "purchasing_currency",
+  "column_break_iqzy",
+  "exchange_rate",
   "shipment_items_tab",
   "vehicles_shipment_items",
   "section_break_vsgr",
   "column_break_rhrs",
+  "total_vehicles",
   "column_break_dvnm",
-  "column_break_swtx",
   "total_excl",
   "amended_from"
  ],
  "fields": [
   {
    "fieldname": "section_break_6u7m",
-   "fieldtype": "Section Break"
+   "fieldtype": "Section Break",
+   "label": "Shipment Details"
   },
   {
    "fieldname": "supplier",
@@ -128,6 +134,7 @@
    "fieldname": "vehicles_shipment_items",
    "fieldtype": "Table",
    "in_standard_filter": 1,
+   "label": "Vehicles",
    "options": "Vehicles Shipment Items",
    "reqd": 1
   },
@@ -159,10 +166,6 @@
    "read_only": 1
   },
   {
-   "fieldname": "column_break_swtx",
-   "fieldtype": "Column Break"
-  },
-  {
    "fieldname": "amended_from",
    "fieldtype": "Link",
    "label": "Amended From",
@@ -176,12 +179,45 @@
    "fieldname": "batch_no",
    "fieldtype": "Data",
    "label": "Batch No"
+  },
+  {
+   "fieldname": "contract_no",
+   "fieldtype": "Data",
+   "label": "Contract No"
+  },
+  {
+   "fieldname": "section_break_hgyx",
+   "fieldtype": "Section Break",
+   "label": "Exchange Details"
+  },
+  {
+   "fetch_from": "supplier.default_currency",
+   "fieldname": "purchasing_currency",
+   "fieldtype": "Link",
+   "label": "Purchasing Currency",
+   "options": "Currency"
+  },
+  {
+   "fieldname": "column_break_iqzy",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "total_vehicles",
+   "fieldtype": "Int",
+   "label": "Total Vehicles",
+   "read_only": 1
+  },
+  {
+   "fieldname": "shipment_method",
+   "fieldtype": "Select",
+   "label": "Shipment Method",
+   "options": "Container\nRoRo\nFlat Rack\nLoLo\nAir Freight"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-05-22 17:08:45.002839",
+ "modified": "2025-10-13 14:08:13.087186",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicles Shipment",
@@ -201,6 +237,7 @@
    "write": 1
   }
  ],
+ "row_format": "Dynamic",
  "search_fields": "shipment_file_no",
  "show_title_field_in_link": 1,
  "sort_field": "modified",

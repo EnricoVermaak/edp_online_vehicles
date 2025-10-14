@@ -1,0 +1,61 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-08-21 14:23:06.165449",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "response_from_bank",
+  "response_status",
+  "integration_status",
+  "error_type",
+  "response_code"
+ ],
+ "fields": [
+  {
+   "fieldname": "response_from_bank",
+   "fieldtype": "Small Text",
+   "in_list_view": 1,
+   "label": "Response from Bank"
+  },
+  {
+   "fieldname": "response_status",
+   "fieldtype": "Small Text",
+   "in_list_view": 1,
+   "label": "Response Status"
+  },
+  {
+   "fieldname": "integration_status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Integration Status",
+   "options": "\nPending\nProcessed\nSuccessful\nFailed"
+  },
+  {
+   "fieldname": "error_type",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Error Type",
+   "options": "\nData Error\nConnection Error"
+  },
+  {
+   "fieldname": "response_code",
+   "fieldtype": "Data",
+   "label": "Response Code"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2025-10-13 16:43:02.839205",
+ "modified_by": "Administrator",
+ "module": "Edp Online Vehicles",
+ "name": "Integration Status",
+ "owner": "Administrator",
+ "permissions": [],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

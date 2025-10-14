@@ -1,9 +1,9 @@
-# Copyright (c) 2025, NexTash and Contributors
+# Copyright (c) 2025, Tecwise and Contributors
 # See license.txt
 
 # import frappe
 from frappe.tests.utils import FrappeTestCase
 
 
-class TestServicePlan(FrappeTestCase):
+class TestEmailUsers(FrappeTestCase):
 	pass
