@@ -18,3 +18,4 @@ frappe.ui.form.on("Vehicle Service Booking", {
         }
     },
 });
+

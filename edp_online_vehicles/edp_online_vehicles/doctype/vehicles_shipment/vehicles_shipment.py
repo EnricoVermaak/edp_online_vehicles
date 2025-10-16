@@ -8,6 +8,8 @@ from frappe import _
 from frappe.model.document import Document
 from frappe.utils import add_days, nowdate
 from frappe.utils.data import get_link_to_form
+from frappe.utils import nowdate
+from frappe.utils import today
 
 
 class VehiclesShipment(Document):
@@ -112,7 +114,7 @@ class VehiclesShipment(Document):
 						"catagory": model_doc.category,
 						"shipment_file_no": self.shipment_file_no,
 						"availability_status": "Reserved",
-                        "ho_date_received":self.shipment_date
+                        "ho_date_received":today()
       
 					}
 				)
@@ -147,7 +149,9 @@ class VehiclesShipment(Document):
 						"catagory": model_doc.category,
 						"shipment_file_no": self.shipment_file_no,
 						"availability_status": "Available",
-                        "ho_date_received":self.shipment_date
+                        # "ho_date_received":self.shipment_date,
+                        "ho_date_received":today()
+
 					}
 				)
 

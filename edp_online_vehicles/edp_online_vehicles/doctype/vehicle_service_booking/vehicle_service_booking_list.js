@@ -1,5 +1,5 @@
-frappe.listview_settings['Vehicles Service'] = {
-     onload(listview) {
+frappe.listview_settings['Vehicle Service Booking'] = {
+    onload(listview) {
         setTimeout(() => {
             const vinHeader = $('span[data-sort-by="vin_serial_no"]');
             if (vinHeader.length) {
