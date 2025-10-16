@@ -112,6 +112,8 @@ class VehiclesShipment(Document):
 						"catagory": model_doc.category,
 						"shipment_file_no": self.shipment_file_no,
 						"availability_status": "Reserved",
+                        "ho_date_received":self.shipment_date
+      
 					}
 				)
 
@@ -145,6 +147,7 @@ class VehiclesShipment(Document):
 						"catagory": model_doc.category,
 						"shipment_file_no": self.shipment_file_no,
 						"availability_status": "Available",
+                        "ho_date_received":self.shipment_date
 					}
 				)
 

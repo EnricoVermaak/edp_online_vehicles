@@ -572,26 +572,6 @@ frappe.ui.form.on("Vehicles Shipment Items", {
 		calculate_sub_total(frm, "total_excl", "vehicles_shipment_items");
 	},
 
-	// reserve_to_order(frm, cdt, cdn) {
-	// 	let row = locals[cdt][cdn];
-
-	// 	if (row.reserve_to_order) {
-	// 		if (row.vin_serial_no) {
-	// 			frappe.call({
-	// 				method: "edp_online_vehicles.events.create_reserve_doc.update_order_details",
-	// 				args: {
-	// 					vinno: row.vin_serial_no,
-	// 					dealer: values.dealer,
-	// 					customer: values.customer,
-	// 					reserve_reason: values.reserve_reason,
-	// 					reserve_from_date: values.reserve_from_date,
-	// 					reserve_to_date: values.reserve_to_date,
-	// 					head_office_vehicle_order: order,
-	// 				},
-	// 			});
-	// 		}
-	// 	}
-	// },
 });
 
 const calculate_sub_total = (frm, field_name, table_name) => {
@@ -609,7 +589,6 @@ const calculate_sub_total = (frm, field_name, table_name) => {
 };
 
 function handle_custom_buttons(frm) {
-	// Remove existing buttons if present
 	const grid_wrapper =
 		frm.fields_dict["vehicles_shipment_items"]?.grid?.wrapper?.get(0);
 	const existing_buttons = grid_wrapper?.querySelector(
