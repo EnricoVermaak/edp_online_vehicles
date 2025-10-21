@@ -247,7 +247,7 @@ frappe.ui.form.on("Vehicle Order", {
 																							r
 																								.message
 																								.length >
-																								0
+																							0
 																						) {
 																							let warehouse_names =
 																								r.message.map(
@@ -1002,94 +1002,6 @@ frappe.ui.form.on("Vehicle Order", {
 				});
 		});
 
-		// Promise.all(calls).then(() => {
-		//     const summaryRows = Object.values(groups).map(g => `
-		//         <tr>
-		//             <td>${g.model}</td>
-		//             <td>${g.description}</td>
-		//             <td>${g.colour}</td>
-		//             <td>${g.rows.length}</td>
-		//         </tr>
-		//     `).join('');
-
-		//     // Inject .text-danger on any row that flipped Warehouse→Back Order
-		//     const vehicleRows = frm.doc.vehicles_basket.map(row => {
-		//         const prev    = frm._prev_order_from[row.idx];
-		//         const curr    = row.order_from;
-		//         const danger  = (prev === 'Warehouse' && curr === 'Back Order')
-		//                       ? 'text-danger'
-		//                       : '';
-		//         return `
-		//         <tr class="${danger}">
-		//             <td>${row.model}</td>
-		//             <td>${row.description}</td>
-		//             <td>${row.colour}</td>
-		//             <td>${row.purpose}</td>
-		//             <td>${row.order_from}</td>
-		//         </tr>`;
-		//     }).join('');
-
-		//     const html = `
-		//         <ul class="nav nav-tabs" role="tablist">
-		//             <li class="nav-item">
-		//                 <a class="nav-link active" id="tab-summary" href="#">Summary</a>
-		//             </li>
-		//             <li class="nav-item">
-		//                 <a class="nav-link" id="tab-vehicles" href="#">Vehicles</a>
-		//             </li>
-		//         </ul>
-		//         <div class="tab-content mt-3">
-		//             <div id="content-summary" class="tab-pane fade show active">
-		//                 <table class="table table-bordered">
-		//                     <thead>
-		//                         <tr><th>Model</th><th>Description</th><th>Colour</th><th>Qty</th></tr>
-		//                     </thead>
-		//                     <tbody>${summaryRows}</tbody>
-		//                 </table>
-		//             </div>
-		//             <div id="content-vehicles" class="tab-pane fade">
-		//                 <table class="table table-bordered">
-		//                     <thead>
-		//                         <tr><th>Model</th><th>Description</th>
-		//                             <th>Colour</th><th>Purpose</th><th>Order From</th>
-		//                         </tr>
-		//                     </thead>
-		//                     <tbody>${vehicleRows}</tbody>
-		//                 </table>
-		//             </div>
-		//         </div>`;
-
-		//     let dlg = new frappe.ui.Dialog({
-		//         size: 'extra-large',
-		//         title: __('Confirm Vehicle Order'),
-		//         fields: [{ fieldtype: 'HTML', fieldname: 'tab_html' }],
-		//         primary_action_label: __('Confirm'),
-		//         primary_action() {
-		//             frappe.validated = true;
-		//             dlg.hide();
-		//             frm._skip_stock_dialog = true;
-		//             frm.save();
-		//             if (frm.doc.finance_option && frm.doc.dealer_order_no) {
-		//                 frappe.dom.freeze();
-		//             }
-		//         },
-		//         secondary_action_label: __('Cancel'),
-		//         secondary_action() { dlg.hide(); }
-		//     });
-
-		//     dlg.fields_dict.tab_html.$wrapper.html(html);
-		//     let $w = dlg.fields_dict.tab_html.$wrapper;
-		//     $w.find('.nav-link').on('click', function(e) {
-		//         e.preventDefault();
-		//         $w.find('.nav-link').removeClass('active');
-		//         $w.find('.tab-pane').removeClass('show active');
-		//         $(this).addClass('active');
-		//         let pane = this.id.replace('tab-', '#content-');
-		//         $w.find(pane).addClass('show active');
-		//     });
-
-		//     dlg.show();
-		// });
 	},
 
 	after_save: function (frm) {
@@ -1240,9 +1152,9 @@ frappe.ui.form.on("Vehicles Order Item", {
 												.filter(
 													(item) =>
 														item.model ===
-															row.model &&
+														row.model &&
 														item.colour ===
-															row.colour,
+														row.colour,
 												)
 												.filter(
 													(item) =>
@@ -1316,7 +1228,7 @@ frappe.ui.form.on("Vehicles Order Item", {
 											) {
 												if (
 													frm.fields_dict[
-														"mandatory_documents"
+													"mandatory_documents"
 													] &&
 													frm.fields_dict[
 														"mandatory_documents"
@@ -1358,7 +1270,7 @@ frappe.ui.form.on("Vehicles Order Item", {
 																	r.message &&
 																	r.message
 																		.length >
-																		0
+																	0
 																) {
 																	let warehouse_names =
 																		r.message.map(
@@ -1542,9 +1454,9 @@ frappe.ui.form.on("Vehicles Order Item", {
 												.filter(
 													(item) =>
 														item.model ===
-															row.model &&
+														row.model &&
 														item.colour ===
-															row.colour,
+														row.colour,
 												)
 												.filter(
 													(item) =>
@@ -1618,7 +1530,7 @@ frappe.ui.form.on("Vehicles Order Item", {
 											) {
 												if (
 													frm.fields_dict[
-														"mandatory_documents"
+													"mandatory_documents"
 													] &&
 													frm.fields_dict[
 														"mandatory_documents"
@@ -1660,7 +1572,7 @@ frappe.ui.form.on("Vehicles Order Item", {
 																	r.message &&
 																	r.message
 																		.length >
-																		0
+																	0
 																) {
 																	let warehouse_names =
 																		r.message.map(
@@ -1970,7 +1882,7 @@ frappe.ui.form.on("Vehicles Order Item", {
 									if (row.order_from === "Warehouse") {
 										if (
 											frm.fields_dict[
-												"mandatory_documents"
+											"mandatory_documents"
 											] &&
 											frm.fields_dict[
 												"mandatory_documents"
@@ -2305,7 +2217,7 @@ frappe.ui.form.on("Vehicles Order Item", {
 																						r
 																							.message
 																							.length >
-																							0
+																						0
 																					) {
 																						let warehouse_names =
 																							r.message.map(
@@ -2505,9 +2417,9 @@ frappe.ui.form.on("Vehicles Order Item", {
 														.filter(
 															(item) =>
 																item.model ===
-																	row.model &&
+																row.model &&
 																item.colour ===
-																	row.colour,
+																row.colour,
 														)
 														.filter(
 															(item) =>
@@ -2587,7 +2499,7 @@ frappe.ui.form.on("Vehicles Order Item", {
 													) {
 														if (
 															frm.fields_dict[
-																"mandatory_documents"
+															"mandatory_documents"
 															] &&
 															frm.fields_dict[
 																"mandatory_documents"
@@ -2638,7 +2550,7 @@ frappe.ui.form.on("Vehicles Order Item", {
 																						r
 																							.message
 																							.length >
-																							0
+																						0
 																					) {
 																						let warehouse_names =
 																							r.message.map(
@@ -2702,14 +2614,14 @@ frappe.ui.form.on("Vehicles Order Item", {
 
 																											if (
 																												row.order_from ===
-																													"Dealer" ||
+																												"Dealer" ||
 																												row.order_from ===
-																													"Action Required"
+																												"Action Required"
 																											) {
 																												if (
 																													frm
 																														.fields_dict[
-																														"mandatory_documents"
+																													"mandatory_documents"
 																													] &&
 																													frm
 																														.fields_dict[
@@ -2782,7 +2694,7 @@ frappe.ui.form.on("Vehicles Order Item", {
 																												if (
 																													frm
 																														.fields_dict[
-																														"mandatory_documents"
+																													"mandatory_documents"
 																													] &&
 																													frm
 																														.fields_dict[
