@@ -2991,6 +2991,7 @@ frappe.ui.form.on("Vehicles Order Item", {
 								dealers: [hq_company],
 								warehouse_names: warehouse_names,
 								model: row.model,
+								// colour: "White",
 								colour: row.colour,
 							},
 							callback: function (r) {
@@ -3325,44 +3326,45 @@ frappe.ui.form.on("Vehicles Order Item", {
 									}
 								},
 							});
-						} else {
-							frappe.call({
-								method: "edp_online_vehicles.events.check_orders.check_if_stock_available",
-								args: {
-									model: row.model,
-									colour: row.colour,
-								},
-								callback: function (r) {
-									if (r.message) {
-										frappe.model.set_value(
-											cdt,
-											cdn,
-											"place_back_order",
-											0,
-										);
-										frappe.model.set_value(
-											cdt,
-											cdn,
-											"order_from",
-											"Warehouse",
-										);
-									} else {
-										frappe.model.set_value(
-											cdt,
-											cdn,
-											"place_back_order",
-											1,
-										);
-										frappe.model.set_value(
-											cdt,
-											cdn,
-											"order_from",
-											"Back Order",
-										);
-									}
-								},
-							});
-						}
+						} 
+						// else {
+						// 	frappe.call({
+						// 		method: "edp_online_vehicles.events.check_orders.check_if_stock_available",
+						// 		args: {
+						// 			model: row.model,
+						// 			colour: row.colour,
+						// 		},
+						// 		callback: function (r) {
+						// 			if (r.message) {
+						// 				frappe.model.set_value(
+						// 					cdt,
+						// 					cdn,
+						// 					"place_back_order",
+						// 					0,
+						// 				);
+						// 				frappe.model.set_value(
+						// 					cdt,
+						// 					cdn,
+						// 					"order_from",
+						// 					"Warehouse",
+						// 				);
+						// 			} else {
+						// 				frappe.model.set_value(
+						// 					cdt,
+						// 					cdn,
+						// 					"place_back_order",
+						// 					1,
+						// 				);
+						// 				frappe.model.set_value(
+						// 					cdt,
+						// 					cdn,
+						// 					"order_from",
+						// 					"Back Order",
+						// 				);
+						// 			}
+						// 		},
+						// 	});
+						// }
 					});
 			} else {
 				frappe.model.set_value(cdt, cdn, "purpose", null);

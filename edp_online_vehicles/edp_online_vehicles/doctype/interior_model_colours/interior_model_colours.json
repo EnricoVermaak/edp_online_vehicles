@@ -1,12 +1,11 @@
 {
  "actions": [],
  "allow_rename": 1,
- "creation": "2025-10-13 14:13:50.563081",
+ "creation": "2025-10-20 19:11:07.947671",
  "doctype": "DocType",
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "model",
   "colour",
   "factory_colour_code",
   "discontinued"
@@ -16,9 +15,7 @@
    "fieldname": "colour",
    "fieldtype": "Data",
    "in_list_view": 1,
-   "label": "Colour",
-   "reqd": 1,
-   "unique": 1
+   "label": "Colour"
   },
   {
    "fieldname": "factory_colour_code",
@@ -32,43 +29,21 @@
    "fieldtype": "Check",
    "in_list_view": 1,
    "label": "Discontinued"
-  },
-  {
-   "fieldname": "model",
-   "fieldtype": "Link",
-   "label": "Model",
-   "options": "Model Administration",
-   "reqd": 1
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
+ "istable": 1,
  "links": [],
- "modified": "2025-10-20 17:41:25.898662",
+ "modified": "2025-10-20 19:28:28.891853",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
- "name": "Interior Model Colour",
+ "name": "Interior Model Colours",
  "owner": "Administrator",
- "permissions": [
-  {
-   "create": 1,
-   "delete": 1,
-   "email": 1,
-   "export": 1,
-   "print": 1,
-   "read": 1,
-   "report": 1,
-   "role": "System Manager",
-   "share": 1,
-   "write": 1
-  }
- ],
+ "permissions": [],
  "row_format": "Dynamic",
- "search_fields": "colour,model",
- "show_title_field_in_link": 1,
+ "rows_threshold_for_grid_search": 20,
  "sort_field": "modified",
  "sort_order": "DESC",
- "states": [],
- "title_field": "colour",
- "track_changes": 1
+ "states": []
 }

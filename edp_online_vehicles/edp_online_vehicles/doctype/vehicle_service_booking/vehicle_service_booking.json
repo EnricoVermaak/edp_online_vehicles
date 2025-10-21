@@ -14,16 +14,32 @@
   "vehicle_column",
   "vin_serial_no",
   "model",
-  "engine_no",
-  "service_type",
+  "model_description",
   "odo_reading_hours",
+  "service_type",
   "customer_column",
   "customer",
   "customer_full_name",
   "mobile",
   "email",
+  "service_and_warranty_information_section",
+  "service_column",
+  "service_start_date",
+  "service_end_date",
+  "service_interval",
+  "service_period_months",
+  "service_km_hours_limit",
+  "warranty_column",
+  "warranty_start_date",
+  "warranty_end_date",
+  "warranty_period_months",
+  "warranty_km_hours_limit",
   "section_break_lsyk",
-  "service_notes"
+  "service_notes",
+  "parts_tab",
+  "table_jwkk",
+  "labour_tab",
+  "table_ottr"
  ],
  "fields": [
   {
@@ -58,12 +74,13 @@
    "in_list_view": 1,
    "in_standard_filter": 1,
    "label": "Status",
-   "options": "Pending\nArrived\nCancelled",
+   "options": "Pending\nConditionally Approved\nConditionally Declined\nArrived\nCancelled",
    "reqd": 1
   },
   {
    "fieldname": "section_break_afxl",
-   "fieldtype": "Section Break"
+   "fieldtype": "Section Break",
+   "label": "Vehicle and Customer Information"
   },
   {
    "fieldname": "vehicle_column",
@@ -84,16 +101,10 @@
    "label": "Customer"
   },
   {
-   "fetch_from": "vin_serial_no.engine_no",
-   "fieldname": "engine_no",
-   "fieldtype": "Data",
-   "label": "Engine No",
-   "read_only": 1
-  },
-  {
    "fieldname": "odo_reading_hours",
    "fieldtype": "Int",
-   "label": "Odo Reading/ Hours"
+   "label": "Odo Reading/ Hours",
+   "reqd": 1
   },
   {
    "fieldname": "customer",
@@ -146,11 +157,118 @@
    "fieldname": "service_notes",
    "fieldtype": "Text Editor",
    "label": "Service Notes"
+  },
+  {
+   "fetch_from": "vin_serial_no.description",
+   "fieldname": "model_description",
+   "fieldtype": "Data",
+   "label": "Model Description",
+   "read_only": 1
+  },
+  {
+   "fieldname": "parts_tab",
+   "fieldtype": "Tab Break",
+   "label": "Parts"
+  },
+  {
+   "fieldname": "table_jwkk",
+   "fieldtype": "Table",
+   "options": "Service Parts Items"
+  },
+  {
+   "fieldname": "labour_tab",
+   "fieldtype": "Tab Break",
+   "label": "Labour"
+  },
+  {
+   "fieldname": "table_ottr",
+   "fieldtype": "Table",
+   "options": "Service Labour Items"
+  },
+  {
+   "collapsible": 1,
+   "fieldname": "service_and_warranty_information_section",
+   "fieldtype": "Section Break",
+   "label": "Service and Warranty Information"
+  },
+  {
+   "fieldname": "service_column",
+   "fieldtype": "Column Break",
+   "label": "Service"
+  },
+  {
+   "fetch_from": "vin_serial_no.service_start_date",
+   "fieldname": "service_start_date",
+   "fieldtype": "Date",
+   "label": "Service Start Date",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "vin_serial_no.service_end_date",
+   "fieldname": "service_end_date",
+   "fieldtype": "Date",
+   "label": "Service End Date",
+   "read_only": 1
+  },
+  {
+   "fieldname": "warranty_column",
+   "fieldtype": "Column Break",
+   "label": "Warranty"
+  },
+  {
+   "fetch_from": "vin_serial_no.service_interval",
+   "fieldname": "service_interval",
+   "fieldtype": "Int",
+   "label": "Service Interval",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "vin_serial_no.service_period_years",
+   "fieldname": "service_period_months",
+   "fieldtype": "Int",
+   "label": "Service Period (Months)",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "vin_serial_no.service_km_hours_limit",
+   "fieldname": "service_km_hours_limit",
+   "fieldtype": "Int",
+   "label": "Service KM/ Hours Limit",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "vin_serial_no.warranty_start_date",
+   "fieldname": "warranty_start_date",
+   "fieldtype": "Date",
+   "label": "Warranty Start Date",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "vin_serial_no.warranty_end_date",
+   "fieldname": "warranty_end_date",
+   "fieldtype": "Date",
+   "label": "Warranty End Date",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "vin_serial_no.warranty_period_years",
+   "fieldname": "warranty_period_months",
+   "fieldtype": "Int",
+   "label": "Warranty Period (Months)",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "vin_serial_no.warranty_km_hours_limit",
+   "fieldname": "warranty_km_hours_limit",
+   "fieldtype": "Int",
+   "label": "Warranty KM/ Hours Limit",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
+ "is_calendar_and_gantt": 1,
  "links": [],
- "modified": "2025-10-09 08:43:12.505564",
+ "modified": "2025-10-16 13:51:34.172307",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicle Service Booking",
@@ -172,5 +290,6 @@
  "row_format": "Dynamic",
  "sort_field": "modified",
  "sort_order": "DESC",
- "states": []
+ "states": [],
+ "track_changes": 1
 }

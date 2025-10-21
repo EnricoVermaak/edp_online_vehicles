@@ -7,6 +7,9 @@ frappe.listview_settings["Head Office Vehicle Orders"] = {
 	// Remove before_render since it might run too late
 	// Instead, load data in onload and then refresh
 	onload: function (listview) {
+		// Hide the default "New" button
+		$('[data-label="Add Head Office Vehicle Orders"]').hide();
+
 		frappe.db
 			.get_single_value("Vehicle Stock Settings", "status_filter_list")
 			.then((status_string) => {

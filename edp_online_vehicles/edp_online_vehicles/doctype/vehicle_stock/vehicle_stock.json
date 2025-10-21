@@ -24,6 +24,7 @@
   "microdot",
   "microdot_fitted_by",
   "colour",
+  "interior_colour",
   "model_year",
   "register_no",
   "natis_release_date",
@@ -84,22 +85,30 @@
   "import_customer_surname",
   "import_customer_email_address",
   "warranty_tab",
+  "warranty_summary_section",
   "warranty_period_years",
   "warranty_km_hours_limit",
   "column_break_sg8w",
   "warranty_start_date",
   "warranty_end_date",
+  "warranty_plans_section",
+  "table_pcgj",
   "service_tab",
+  "service_plan_summary_section",
   "service_interval",
   "service_period_years",
   "service_km_hours_limit",
-  "last_service_hours",
-  "last_service_date",
-  "next_service_due_date",
   "column_break_7e9z",
   "service_start_date",
   "service_end_date",
   "image",
+  "section_break_llyx",
+  "last_service_hours",
+  "column_break_wjfr",
+  "last_service_date",
+  "next_service_due_date",
+  "service_plans_section",
+  "table_gtny",
   "attached_documents_tab",
   "attached_documents",
   "connections_tab"
@@ -304,13 +313,12 @@
    "label": "Warranty"
   },
   {
-   "fetch_from": "model.warranty_period",
+   "fetch_if_empty": 1,
    "fieldname": "warranty_period_years",
    "fieldtype": "Int",
-   "label": "Warranty Period (Years)"
+   "label": "Warranty Period (Months)"
   },
   {
-   "fetch_from": "model.warranty_limit_km_hours",
    "fieldname": "warranty_km_hours_limit",
    "fieldtype": "Int",
    "label": "Warranty KM/ Hours Limit"
@@ -349,7 +357,7 @@
   {
    "fieldname": "last_service_hours",
    "fieldtype": "Float",
-   "label": "Last Service Hours",
+   "label": "Last Service KM/ Hours",
    "read_only": 1
   },
   {
@@ -692,6 +700,51 @@
    "fieldtype": "Date",
    "label": "Retail Date",
    "read_only": 1
+  },
+  {
+   "fieldname": "warranty_summary_section",
+   "fieldtype": "Section Break",
+   "label": "Warranty Summary"
+  },
+  {
+   "fieldname": "warranty_plans_section",
+   "fieldtype": "Section Break",
+   "label": "Warranty Plans"
+  },
+  {
+   "fieldname": "table_pcgj",
+   "fieldtype": "Table",
+   "options": "Warranty Plan View"
+  },
+  {
+   "fieldname": "service_plan_summary_section",
+   "fieldtype": "Section Break",
+   "label": "Service Plan Summary"
+  },
+  {
+   "fieldname": "service_plans_section",
+   "fieldtype": "Section Break",
+   "label": "Service Plans"
+  },
+  {
+   "fieldname": "table_gtny",
+   "fieldtype": "Table",
+   "options": "Service Plan View"
+  },
+  {
+   "fieldname": "section_break_llyx",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_wjfr",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "interior_colour",
+   "fieldtype": "Link",
+   "label": "Interior Colour",
+   "options": "Interior Model Colour",
+   "reqd": 1
   }
  ],
  "image_field": "image",
@@ -705,11 +758,6 @@
   {
    "group": "Warranty and Service",
    "link_doctype": "Vehicles Warranty Claims",
-   "link_fieldname": "vin_serial_no"
-  },
-  {
-   "group": "Warranty and Service",
-   "link_doctype": "Vehicles Warranty Plan",
    "link_fieldname": "vin_serial_no"
   },
   {
@@ -743,7 +791,7 @@
    "link_fieldname": "vin_serial_no"
   }
  ],
- "modified": "2025-10-09 08:52:47.763856",
+ "modified": "2025-10-20 16:21:12.512771",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicle Stock",

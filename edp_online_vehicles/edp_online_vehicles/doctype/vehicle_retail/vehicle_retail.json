@@ -26,6 +26,7 @@
   "sales_person",
   "sales_person_full_names",
   "customer_invoice_document",
+  "registration_year",
   "column_break_bttl",
   "sales_card_capture_date",
   "retail_date",
@@ -333,12 +334,17 @@
    "fieldname": "customer_invoice_document",
    "fieldtype": "Attach",
    "label": "Customer Invoice Document"
+  },
+  {
+   "fieldname": "registration_year",
+   "fieldtype": "Int",
+   "label": "Registration Year"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-10-13 15:24:39.838708",
+ "modified": "2025-10-21 11:32:26.348544",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicle Retail",

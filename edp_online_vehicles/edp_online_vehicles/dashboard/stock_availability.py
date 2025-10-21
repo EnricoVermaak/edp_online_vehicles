@@ -53,10 +53,8 @@ def get_data(model_range=None, model=None):
 		for w in frappe.get_all("Warehouse", fields=["name", "custom_show_on_vehicles_availability"])
 	}
 
-	# Fetch available vehicles
+	# Fetch all available vehicles (do not filter by range yet)
 	vehicle_filters = {"availability_status": "Available"}
-	if model_range:
-		vehicle_filters["catagory"] = model_range
 	if model:
 		vehicle_filters["model"] = model
 
@@ -220,6 +218,10 @@ def get_data(model_range=None, model=None):
 			# if that range now has nothing, drop the range
 			if not grouped_data[rng]:
 				del grouped_data[rng]
+
+	# Filter grouped data by range after grouping
+	if model_range:
+		grouped_data = {rng: md for rng, md in grouped_data.items() if rng == model_range}
 
 	# Return as list
 	return [{"model_range": rng, "models": list(md.values())} for rng, md in grouped_data.items()]

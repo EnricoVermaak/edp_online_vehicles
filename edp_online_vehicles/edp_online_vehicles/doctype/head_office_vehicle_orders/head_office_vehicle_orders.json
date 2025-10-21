@@ -25,10 +25,26 @@
   "section_break_qfuu",
   "performa_invoice_no",
   "bank_integration_response",
+  "sap_integration_response",
   "column_break_yfez",
   "sap_sales_order_no",
+  "sales_order_type",
   "sap_invoice_no",
+  "invoice_amount",
+  "invoice_date",
   "sap_invoice",
+  "check_invoice",
+  "column_break_nzxi",
+  "credit_note_no",
+  "credit_note_type",
+  "credit_note_date",
+  "credit_note_comment",
+  "total_excl_vat",
+  "credit_note",
+  "sap_integration_section",
+  "integration_retry_count",
+  "failed_integration",
+  "transaction_id",
   "epuipment_basket_section",
   "ordered_column",
   "model",
@@ -432,12 +448,97 @@
    "fieldtype": "Attach",
    "label": "SAP Invoice",
    "read_only": 1
+  },
+  {
+   "fieldname": "sap_integration_response",
+   "fieldtype": "Small Text",
+   "label": "SAP Integration Response"
+  },
+  {
+   "fieldname": "sales_order_type",
+   "fieldtype": "Select",
+   "hidden": 1,
+   "label": "Type",
+   "options": "Invoice\nCredit\nReinvoice\nUsed"
+  },
+  {
+   "fieldname": "invoice_amount",
+   "fieldtype": "Currency",
+   "label": "Invoice Amount"
+  },
+  {
+   "fieldname": "invoice_date",
+   "fieldtype": "Date",
+   "label": "Invoice date"
+  },
+  {
+   "fieldname": "check_invoice",
+   "fieldtype": "Button",
+   "label": "Check Invoice"
+  },
+  {
+   "fieldname": "column_break_nzxi",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "credit_note_no",
+   "fieldtype": "Data",
+   "label": "Credit Note No"
+  },
+  {
+   "fieldname": "credit_note_type",
+   "fieldtype": "Select",
+   "label": "Type",
+   "options": "Invoice\nCredit\nReinvoice\nUsed"
+  },
+  {
+   "fieldname": "credit_note_date",
+   "fieldtype": "Date",
+   "label": "Credit Note Date"
+  },
+  {
+   "fieldname": "credit_note_comment",
+   "fieldtype": "Data",
+   "label": "Credit Note Comment"
+  },
+  {
+   "fieldname": "total_excl_vat",
+   "fieldtype": "Currency",
+   "label": "Total (Excl. VAT)"
+  },
+  {
+   "fieldname": "credit_note",
+   "fieldtype": "Attach",
+   "label": "Credit Note"
+  },
+  {
+   "fieldname": "sap_integration_section",
+   "fieldtype": "Section Break",
+   "label": "SAP Integration"
+  },
+  {
+   "fieldname": "integration_retry_count",
+   "fieldtype": "Int",
+   "label": "Integration Retry Count",
+   "read_only": 1
+  },
+  {
+   "fieldname": "failed_integration",
+   "fieldtype": "Data",
+   "label": "Failed Integration",
+   "read_only": 1
+  },
+  {
+   "fieldname": "transaction_id",
+   "fieldtype": "Data",
+   "label": "Transaction ID",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-09-23 18:20:55.728280",
+ "modified": "2025-10-15 06:41:23.160750",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Head Office Vehicle Orders",

@@ -9,10 +9,9 @@
   "section_break_pxlo",
   "item",
   "description",
-  "price_excl",
   "qty",
-  "total_excl",
-  "uom"
+  "price_excl",
+  "total_excl"
  ],
  "fields": [
   {
@@ -24,14 +23,16 @@
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "Item",
-   "options": "Item"
+   "options": "Item",
+   "reqd": 1
   },
   {
    "fetch_from": "item.item_name",
    "fieldname": "description",
    "fieldtype": "Data",
    "in_list_view": 1,
-   "label": "Description"
+   "label": "Description",
+   "read_only": 1
   },
   {
    "default": "1",
@@ -45,30 +46,27 @@
    "fieldname": "price_excl",
    "fieldtype": "Currency",
    "in_list_view": 1,
-   "label": "Price (Excl)"
+   "label": "Price (Excl)",
+   "read_only": 1
   },
   {
    "fieldname": "total_excl",
    "fieldtype": "Currency",
    "in_list_view": 1,
-   "label": "Total (Excl)"
-  },
-  {
-   "fetch_from": "item.stock_uom",
-   "fieldname": "uom",
-   "fieldtype": "Data",
-   "label": "UOM"
+   "label": "Total (Excl)",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-09-02 11:16:16.368949",
+ "modified": "2025-10-16 13:30:06.728638",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Service Parts Items",
  "owner": "Administrator",
  "permissions": [],
+ "row_format": "Dynamic",
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": []

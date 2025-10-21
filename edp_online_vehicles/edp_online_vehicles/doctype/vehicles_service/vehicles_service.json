@@ -7,18 +7,17 @@
  "field_order": [
   "vehicles_tab",
   "section_break_mdlp",
-  "requested_booking_date_time",
-  "service_date",
-  "service_completed",
-  "column_break_mvt2",
-  "dealer",
-  "billing_category",
-  "service_type",
-  "service_status",
-  "vor",
-  "eta_date",
-  "vehicles_information_section",
   "vin_serial_no",
+  "model_description",
+  "odo_reading_hours",
+  "service_type",
+  "column_break_mvt2",
+  "service_status",
+  "system_status",
+  "service_date",
+  "dealer",
+  "dms_approval_no",
+  "vehicles_information_section",
   "engine_no",
   "model",
   "brand",
@@ -26,14 +25,19 @@
   "licence_expiry_date",
   "vehicle_registration_number",
   "column_break_jy4l",
-  "odo_reading_hours",
   "colour",
   "model_year",
   "bought_from_dealer",
   "column_break_izfh",
   "warranty_start_date",
   "warranty_end_date",
-  "warranty_period_years",
+  "warranty_period_months",
+  "additional_service_information_section",
+  "requested_booking_date_time",
+  "submitted_to_dms",
+  "column_break_lunc",
+  "eta_date",
+  "service_completed",
   "section_break_gdbj",
   "service_reason",
   "breakdown_link",
@@ -49,9 +53,7 @@
   "customer_address",
   "job_card_information_section",
   "job_card_no",
-  "dms_approval_no",
   "technician",
-  "submitted_to_dms",
   "column_break_7fue",
   "service_start_date",
   "service_end_date",
@@ -102,7 +104,6 @@
   "technician_and_customer_section",
   "tecnician_signature",
   "technician_full_names",
-  "additional_repairs_required",
   "column_break_ddxj",
   "customer_signature",
   "customer_full_names",
@@ -130,10 +131,11 @@
    "label": "Service Information"
   },
   {
+   "default": "Today",
    "fieldname": "service_date",
    "fieldtype": "Date",
    "label": "Service Date",
-   "mandatory_depends_on": "eval:doc.status == \"Accepted\""
+   "read_only": 1
   },
   {
    "fieldname": "service_completed",
@@ -178,9 +180,10 @@
    "reqd": 1
   },
   {
+   "collapsible": 1,
    "fieldname": "vehicles_information_section",
    "fieldtype": "Section Break",
-   "label": "Vehicle Information"
+   "label": "Additional Vehicle Information"
   },
   {
    "fetch_from": "vin_serial_no.model",
@@ -245,12 +248,6 @@
    "fieldname": "warranty_start_date",
    "fieldtype": "Date",
    "label": "Warranty Start Date"
-  },
-  {
-   "fetch_from": "vin_serial_no.warranty_period_years",
-   "fieldname": "warranty_period_years",
-   "fieldtype": "Int",
-   "label": "Warranty Period (Years)"
   },
   {
    "fieldname": "job_card_information_section",
@@ -350,7 +347,7 @@
   {
    "fieldname": "terms_and_conditions",
    "fieldtype": "Text Editor",
-   "label": "Terms and Conditions"
+   "label": "Service Terms and Conditions"
   },
   {
    "fieldname": "technician_and_customer_section",
@@ -485,12 +482,6 @@
    "options": "Vehicles Service Inspection Items"
   },
   {
-   "default": "0",
-   "fieldname": "additional_repairs_required",
-   "fieldtype": "Check",
-   "label": "Additional Repairs Required"
-  },
-  {
    "fetch_from": "customer.customer_name",
    "fieldname": "customer_name",
    "fieldtype": "Data",
@@ -539,7 +530,7 @@
   {
    "fieldname": "service_reason",
    "fieldtype": "Small Text",
-   "label": "Service Reason"
+   "label": "Service Comment"
   },
   {
    "fieldname": "column_break_yqr6",
@@ -614,6 +605,7 @@
   {
    "fieldname": "scan_disk",
    "fieldtype": "Data",
+   "hidden": 1,
    "label": "Scan Disk",
    "options": "Barcode"
   },
@@ -753,18 +745,6 @@
    "search_index": 1
   },
   {
-   "fieldname": "billing_category",
-   "fieldtype": "Link",
-   "label": "Billing Category",
-   "options": "Service Billing Category"
-  },
-  {
-   "default": "0",
-   "fieldname": "vor",
-   "fieldtype": "Check",
-   "label": "VOR"
-  },
-  {
    "depends_on": "eval: doc.vor == 1",
    "fieldname": "eta_date",
    "fieldtype": "Date",
@@ -774,6 +754,34 @@
    "fieldname": "submitted_to_dms",
    "fieldtype": "Datetime",
    "label": "Submitted To DMS"
+  },
+  {
+   "fetch_from": "vin_serial_no.warranty_period_years",
+   "fieldname": "warranty_period_months",
+   "fieldtype": "Int",
+   "label": "Warranty Period (months)"
+  },
+  {
+   "fetch_from": "vin_serial_no.description",
+   "fieldname": "model_description",
+   "fieldtype": "Data",
+   "label": "Model Description"
+  },
+  {
+   "fieldname": "additional_service_information_section",
+   "fieldtype": "Section Break",
+   "label": "Additional Service Information"
+  },
+  {
+   "fieldname": "column_break_lunc",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "system_status",
+   "fieldtype": "Select",
+   "label": "System Status",
+   "options": "Conditionally Approved\nConditionally Declined",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
@@ -793,7 +801,7 @@
    "link_fieldname": "services"
   }
  ],
- "modified": "2025-05-23 10:32:11.655725",
+ "modified": "2025-10-16 14:14:26.663859",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicles Service",
@@ -836,6 +844,7 @@
    "write": 1
   }
  ],
+ "row_format": "Dynamic",
  "show_title_field_in_link": 1,
  "sort_field": "modified",
  "sort_order": "DESC",

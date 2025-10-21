@@ -385,11 +385,10 @@ frappe.ui.form.on("Vehicle Stock", {
 		if (frm.doc.warranty_start_date) {
 			let startDate = new Date(frm.doc.warranty_start_date);
 
-			frm.doc.warranty_end_date = new Date(
-				startDate.setFullYear(
-					startDate.getFullYear() + frm.doc.warranty_period_years,
-				),
-			);
+			let months = cint(frm.doc.warranty_period_years);
+
+        	let endDate = frappe.datetime.add_months(startDate, months);
+        	frm.set_value("warranty_end_date", frappe.datetime.obj_to_str(endDate));
 
 			frm.refresh_field("warranty_end_date");
 		}

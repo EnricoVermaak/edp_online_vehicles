@@ -226,6 +226,8 @@
    "default": "Pending",
    "fieldname": "status",
    "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "Status",
    "options": "Warranty Status",
    "reqd": 1
@@ -238,7 +240,7 @@
   {
    "fieldname": "summary",
    "fieldtype": "Small Text",
-   "label": "Summary"
+   "label": "Claim Description"
   },
   {
    "fieldname": "column_break_nj0t",
@@ -388,6 +390,7 @@
    "fetch_from": "customer.customer_full_name",
    "fieldname": "customer_name",
    "fieldtype": "Data",
+   "in_standard_filter": 1,
    "label": "Customer Name",
    "read_only": 1
   },
@@ -602,7 +605,7 @@
    "link_fieldname": "warranty"
   }
  ],
- "modified": "2025-05-23 11:30:22.444696",
+ "modified": "2025-10-16 14:03:35.896622",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicles Warranty Claims",
@@ -622,6 +625,7 @@
    "write": 1
   }
  ],
+ "row_format": "Dynamic",
  "show_title_field_in_link": 1,
  "sort_field": "modified",
  "sort_order": "DESC",

@@ -10,13 +10,19 @@
   "column_break_hmho",
   "status",
   "type",
-  "integration_end_point",
   "section_break_ztxx",
   "request_datetime",
   "request",
   "section_break_nlso",
   "response_datetime",
-  "response"
+  "response_status",
+  "response",
+  "section_break_rkjy",
+  "soap_method",
+  "integration_end_point",
+  "column_break_gatq",
+  "hq_order_no",
+  "floorplan"
  ],
  "fields": [
   {
@@ -27,7 +33,7 @@
   },
   {
    "fieldname": "request",
-   "fieldtype": "Small Text",
+   "fieldtype": "Code",
    "in_list_view": 1,
    "label": "Request"
   },
@@ -39,7 +45,7 @@
   },
   {
    "fieldname": "response",
-   "fieldtype": "Small Text",
+   "fieldtype": "Code",
    "in_list_view": 1,
    "label": "Response"
   },
@@ -80,7 +86,7 @@
    "in_list_view": 1,
    "in_standard_filter": 1,
    "label": "Status",
-   "options": "Pending\nSuccessful\nFailed"
+   "options": "Pending\nProcessed\nSuccessful\nFailed\nError"
   },
   {
    "fieldname": "type",
@@ -97,13 +103,44 @@
    "in_standard_filter": 1,
    "label": "Integration End Point ",
    "options": "Integration End Point"
+  },
+  {
+   "fieldname": "soap_method",
+   "fieldtype": "Data",
+   "label": "Soap Method"
+  },
+  {
+   "fieldname": "response_status",
+   "fieldtype": "Small Text",
+   "label": "Response Status"
+  },
+  {
+   "fieldname": "floorplan",
+   "fieldtype": "Data",
+   "in_standard_filter": 1,
+   "label": "Floorplan"
+  },
+  {
+   "fieldname": "hq_order_no",
+   "fieldtype": "Link",
+   "label": "HQ Order No",
+   "options": "Head Office Vehicle Orders"
+  },
+  {
+   "fieldname": "section_break_rkjy",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_gatq",
+   "fieldtype": "Column Break"
   }
  ],
+ "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-05-22 18:47:12.418360",
+ "modified": "2025-10-14 07:47:10.639189",
  "modified_by": "Administrator",
- "module": "Edp Online Vehicles",
+ "module": "EDP Online Vehicles",
  "name": "Vehicle Tracking",
  "owner": "Administrator",
  "permissions": [
@@ -120,6 +157,7 @@
    "write": 1
   }
  ],
+ "row_format": "Dynamic",
  "search_fields": "vin_serial_no",
  "sort_field": "modified",
  "sort_order": "DESC",

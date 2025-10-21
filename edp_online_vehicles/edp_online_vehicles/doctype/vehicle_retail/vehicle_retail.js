@@ -673,6 +673,10 @@ frappe.ui.form.on("Vehicles Sale Items", {
 				}
 			});
 	},
+
+	retail_amount(frm, cdt, cdn) {
+		update_total_retail_excl(frm);
+	}
 });
 
 const calculate_sub_total = (frm, field_name, table_name) => {
@@ -687,4 +691,12 @@ const calculate_sub_total = (frm, field_name, table_name) => {
 		field_name,
 		sub_total,
 	);
+};
+
+const update_total_retail_excl = (frm) => {
+    let total = 0;
+    for (const row of frm.doc.vehicles_sale_items || []) {
+        total += flt(row.retail_amount);
+    }
+    frm.set_value("total_retail_excl", total);
 };

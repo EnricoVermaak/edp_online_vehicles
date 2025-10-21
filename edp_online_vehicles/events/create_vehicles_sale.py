@@ -1,7 +1,7 @@
 from datetime import datetime
 
 import frappe
-
+from frappe.utils import add_months
 
 @frappe.whitelist()
 def create_vehicles_sale(
@@ -145,6 +145,7 @@ def remove_from_stock_on_sale(docname):
 
 			# Fetch the warranty_period from the related model
 			warranty_period = frappe.get_value("Model Administration", stock_doc.model, "warranty_period")
+			service_period = frappe.get_value("Model Administration", stock_doc.model, "service_period")
 
 			# Calculate warranty_end_date
 			if warranty_period:
@@ -156,6 +157,22 @@ def remove_from_stock_on_sale(docname):
 				warranty_end_date = warranty_end_datetime.strftime("%Y-%m-%d")
 			else:
 				warranty_end_date = None
+    
+    
+	
+			
+			# Calculate service_end_date
+			if service_period:
+				service_start_datetime = datetime.strptime(current_date, "%Y-%m-%d")
+				# service_period_years is actually in months
+				service_end_datetime = add_months(service_start_datetime, int(service_period))
+				service_end_date = service_end_datetime.strftime("%Y-%m-%d")
+			else:
+				service_end_date = None
+			
+
+
+
 
 			# Update the Vehicle Stock document
 			if doc.customer:
@@ -168,6 +185,9 @@ def remove_from_stock_on_sale(docname):
 			stock_doc.retail_date = doc.retail_date
 			stock_doc.warranty_start_date = current_date
 			stock_doc.warranty_end_date = warranty_end_date
+
+			stock_doc.service_start_date = current_date
+			stock_doc.service_end_date = service_end_date
 
 			# # Update the Serial No document with warranty period and expiry date
 			# serial_doc.warranty_expiry_date = warranty_end_date

@@ -37,8 +37,10 @@
   "colours_tab",
   "exterior_section",
   "model_colours",
+  "add_colour",
   "interior_section",
   "interior_colours",
+  "add_interior_colour",
   "model_pictures_tab",
   "exterior_images_section",
   "front_image",
@@ -380,7 +382,8 @@
    "fieldname": "model_colours",
    "fieldtype": "Table",
    "label": "Exterior Colours",
-   "options": "Model Colours"
+   "options": "Model Colours",
+   "read_only": 1
   },
   {
    "fieldname": "model_pictures_tab",
@@ -692,7 +695,8 @@
    "fieldname": "interior_colours",
    "fieldtype": "Table",
    "label": "Interior Colours",
-   "options": "Interior Model Colour"
+   "options": "Interior Model Colours",
+   "read_only": 1
   },
   {
    "fieldname": "exterior_section",
@@ -751,6 +755,16 @@
    "label": "Default Service Plan",
    "link_filters": "[[\"Vehicles Service Plan Administration\",\"status\",\"=\",\"Active\"]]",
    "options": "Vehicles Service Plan Administration"
+  },
+  {
+   "fieldname": "add_colour",
+   "fieldtype": "Button",
+   "label": "Add Colour"
+  },
+  {
+   "fieldname": "add_interior_colour",
+   "fieldtype": "Button",
+   "label": "Add Colour"
   }
  ],
  "image_field": "model_default_image",
@@ -777,7 +791,7 @@
    "link_fieldname": "model"
   }
  ],
- "modified": "2025-10-13 14:57:06.631557",
+ "modified": "2025-10-20 19:29:31.263215",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Model Administration",
