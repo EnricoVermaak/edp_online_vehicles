@@ -19,6 +19,7 @@ frappe.ui.form.on("Vehicle Stock", {
 					row.vin_serial_no = frm.doc.name;
 					row.model = frm.doc.model;
 					row.colour = frm.doc.colour;
+					row.interior_colour = frm.doc.interior_colour;
 
 					frappe.set_route("Form", doc.doctype, doc.name);
 				});
@@ -396,13 +397,9 @@ frappe.ui.form.on("Vehicle Stock", {
 	last_service_date(frm, dt, dn) {
 		if (frm.doc.last_service_date) {
 			let startDate = new Date(frm.doc.last_service_date);
-
-			frm.doc.next_service_due_date = new Date(
-				startDate.setMonth(
-					startDate.getMonth() + frm.doc.service_period_years,
-				),
-			);
-
+			let months = cint(frm.doc.service_period_years);
+			let endDate = frappe.datetime.add_months(startDate, months);
+			frm.set_value("next_service_due_date", frappe.datetime.obj_to_str(endDate));
 			frm.refresh_field("next_service_due_date");
 		}
 	},
@@ -461,3 +458,42 @@ function addMonths(date, months) {
 	result.setMonth(result.getMonth() + months);
 	return result;
 }
+
+
+
+frappe.ui.form.on("Vehicle Stock", {
+	refresh(frm) {
+		// Exterior Colour (links to Model Colour)
+		frm.set_query("colour", function () {
+			return {
+				filters: {
+					discontinued: 0,
+					model: frm.doc.model || ""
+				}
+			};
+		});
+
+		// Interior Colour (links to Interior Model Colour)
+		frm.set_query("interior_colour", function () {
+			return {
+				filters: {
+					discontinued: 0,
+					model: frm.doc.model || ""
+				}
+			};
+		});
+
+		// Disable colour fields if no model is selected
+		frm.toggle_enable("colour", !!frm.doc.model);
+		frm.toggle_enable("interior_colour", !!frm.doc.model);
+	},
+
+	model(frm) {
+	// Clear colour fields when model changes
+	frm.set_value("colour", null);
+	frm.set_value("interior_colour", null);
+	frm.toggle_enable("colour", !!frm.doc.model);
+	frm.toggle_enable("interior_colour", !!frm.doc.model);
+	}
+});
+

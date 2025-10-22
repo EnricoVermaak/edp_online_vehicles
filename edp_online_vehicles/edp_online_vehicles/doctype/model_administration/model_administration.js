@@ -31,9 +31,6 @@ frappe.ui.form.on("Model Administration", {
 
 
 
-
-
-
 // Dialog to add exterior model colour
 frappe.ui.form.on("Model Administration", {
     add_colour(frm) {
@@ -54,14 +51,17 @@ frappe.ui.form.on("Model Administration", {
                     fieldtype: "Data",
                     reqd: 1
                 },
-                {
-                    fieldtype: "Section Break"
-                },
+                { fieldtype: "Section Break" },
                 {
                     fieldtype: "Button",
                     label: "Edit Full Form",
                     click() {
-                        frappe.new_doc("Model Colour");
+                        frappe.model.with_doctype("Model Colour", function() {
+                            let doc = frappe.model.get_new_doc("Model Colour");
+                            doc.model = d.get_value("model");
+                            doc.colour = d.get_value("colour");
+                            frappe.set_route("Form", doc.doctype, doc.name);
+                        });
                         d.hide();
                     }
                 }
@@ -77,7 +77,7 @@ frappe.ui.form.on("Model Administration", {
                             colour: values.colour
                         }
                     },
-                    callback: function (r) {
+                    callback: function(r) {
                         if (!r.exc) {
                             frappe.msgprint(`New Model Colour <b>${r.message.name}</b> created`);
                             frm.reload_doc();
@@ -93,15 +93,11 @@ frappe.ui.form.on("Model Administration", {
 });
 
 
-
-
-
-
 // Dialog to add interior model colour
 frappe.ui.form.on("Model Administration", {
     add_interior_colour(frm) {
         let d = new frappe.ui.Dialog({
-            title: "Add Model Colour",
+            title: "Add Interior Model Colour",
             fields: [
                 {
                     label: "Model",
@@ -117,14 +113,17 @@ frappe.ui.form.on("Model Administration", {
                     fieldtype: "Data",
                     reqd: 1
                 },
-                {
-                    fieldtype: "Section Break"
-                },
+                { fieldtype: "Section Break" },
                 {
                     fieldtype: "Button",
                     label: "Edit Full Form",
                     click() {
-                        frappe.new_doc("Interior Model Colour");
+                        frappe.model.with_doctype("Interior Model Colour", function() {
+                            let doc = frappe.model.get_new_doc("Interior Model Colour");
+                            doc.model = d.get_value("model");
+                            doc.colour = d.get_value("colour");
+                            frappe.set_route("Form", doc.doctype, doc.name);
+                        });
                         d.hide();
                     }
                 }
@@ -140,7 +139,7 @@ frappe.ui.form.on("Model Administration", {
                             colour: values.colour
                         }
                     },
-                    callback: function (r) {
+                    callback: function(r) {
                         if (!r.exc) {
                             frappe.msgprint(`New Interior Model Colour <b>${r.message.name}</b> created`);
                             frm.reload_doc();
@@ -154,10 +153,6 @@ frappe.ui.form.on("Model Administration", {
         d.show();
     }
 });
-
-
-
-
 
 
 

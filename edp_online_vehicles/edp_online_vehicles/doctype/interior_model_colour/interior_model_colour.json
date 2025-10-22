@@ -1,50 +1,59 @@
 {
  "actions": [],
  "allow_rename": 1,
- "creation": "2025-10-13 14:13:50.563081",
+ "creation": "2025-10-22 09:41:54.491967",
  "doctype": "DocType",
- "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
   "model",
   "colour",
-  "factory_colour_code",
+  "oem_colour_code",
+  "naamsa_colour_code",
+  "natis_colour_code",
   "discontinued"
  ],
  "fields": [
+  {
+   "fieldname": "model",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Model",
+   "options": "Model Administration",
+   "reqd": 1
+  },
   {
    "fieldname": "colour",
    "fieldtype": "Data",
    "in_list_view": 1,
    "label": "Colour",
-   "reqd": 1,
-   "unique": 1
+   "reqd": 1
   },
   {
-   "fieldname": "factory_colour_code",
+   "fieldname": "oem_colour_code",
    "fieldtype": "Data",
-   "in_list_view": 1,
-   "label": "Factory Colour Code"
+   "label": "OEM Colour Code"
   },
   {
    "default": "0",
    "fieldname": "discontinued",
    "fieldtype": "Check",
-   "in_list_view": 1,
    "label": "Discontinued"
   },
   {
-   "fieldname": "model",
-   "fieldtype": "Link",
-   "label": "Model",
-   "options": "Model Administration",
-   "reqd": 1
+   "fieldname": "naamsa_colour_code",
+   "fieldtype": "Data",
+   "label": "Naamsa Colour Code"
+  },
+  {
+   "fieldname": "natis_colour_code",
+   "fieldtype": "Data",
+   "label": "Natis Colour Code"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-10-20 17:41:25.898662",
+ "modified": "2025-10-22 11:24:49.374704",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Interior Model Colour",
@@ -64,11 +73,11 @@
   }
  ],
  "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
  "search_fields": "colour,model",
  "show_title_field_in_link": 1,
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": [],
- "title_field": "colour",
- "track_changes": 1
+ "title_field": "colour"
 }
