@@ -1,5 +1,5 @@
 (() => {
-  // frappe-html:/home/frappe/frappe-bench/apps/edp_online_vehicles/edp_online_vehicles/edp_online_vehicles/dashboard/stock_availability.html
+  // frappe-html:/home/mc/frappe-bench/apps/edp_online_vehicles/edp_online_vehicles/edp_online_vehicles/dashboard/stock_availability.html
   frappe.templates["stock_availability"] = `<div class="stock-levels">
 	<div class="result">
 	</div>
@@ -9,7 +9,7 @@
 </div>
 `;
 
-  // frappe-html:/home/frappe/frappe-bench/apps/edp_online_vehicles/edp_online_vehicles/edp_online_vehicles/dashboard/stock_availability_list.html
+  // frappe-html:/home/mc/frappe-bench/apps/edp_online_vehicles/edp_online_vehicles/edp_online_vehicles/dashboard/stock_availability_list.html
   frappe.templates["stock_availability_list"] = `<style>
     th.rotate {
         height: 120px;
@@ -1363,14 +1363,14 @@
 										<table>
 											<tbody>
 												<tr><th>Model Code</th><td>${modelData.model_code || ""}</td></tr>
-												<tr><th>Description</th><td>${modelData.description || ""}</td></tr>
+												<tr><th>Description</th><td>${modelData.model_description || ""}</td></tr>
 												<tr><th>Model Year</th><td>${modelData.model_year || ""}</td></tr>
 												<tr><th>Range</th><td>${modelData.range || ""}</td></tr>
 												<tr><th>Category</th><td>${modelData.category || ""}</td></tr>
-												<tr><th>Class</th><td>${modelData.class || ""}</td></tr>
+												<tr><th>Class</th><td>${modelData.class_ || ""}</td></tr>
 												<tr><th>M&M Code</th><td>${modelData.mm_code || ""}</td></tr>
-												<tr><th>Dealer Billing</th><td>${modelData.dealer_billing || ""}</td></tr>
-												<tr><th>Suggested Retail</th><td>${modelData.suggested_retail || ""}</td></tr>
+												<tr><th>Dealer Billing</th><td>${modelData.dealer_billing_excl || ""}</td></tr>
+												<tr><th>Suggested Retail</th><td>${modelData.suggested_retail_excl || ""}</td></tr>
 												<tr><th>Engine Displacement</th><td>${modelData.engine_displacement || ""}</td></tr>
 											</tbody>
 										</table>
@@ -1756,4 +1756,4 @@
     }
   };
 })();
-//# sourceMappingURL=stock_availability.bundle.BOSCPGCH.js.map
+//# sourceMappingURL=stock_availability.bundle.JMUUX7LJ.js.map

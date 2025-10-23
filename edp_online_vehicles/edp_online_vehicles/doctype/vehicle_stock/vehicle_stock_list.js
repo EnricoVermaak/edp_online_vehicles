@@ -23,6 +23,9 @@ frappe.listview_settings["Vehicle Stock"] = {
 	},
 
 	onload: function (listview) {
+		// Hide the default "New" button
+		$('[data-label="Add Vehicle Stock"]').hide();
+
 		listview.page.add_actions_menu_item(__("UON sftp"), function () {
 				frappe.call({
 							///home/frappe/frappe-bench/apps/edp_online_vehicles/edp_online_vehicles/events/uon_integration.py

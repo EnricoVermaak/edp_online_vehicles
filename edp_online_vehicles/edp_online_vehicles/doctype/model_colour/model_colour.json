@@ -24,7 +24,7 @@
   {
    "fieldname": "oem_colour_code",
    "fieldtype": "Data",
-   "label": "Oem Colour Code"
+   "label": "OEM Colour Code"
   },
   {
    "fieldname": "naamsa_colour_code",
@@ -59,7 +59,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-10-21 13:46:31.992397",
+ "modified": "2025-10-22 10:10:54.087225",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Model Colour",

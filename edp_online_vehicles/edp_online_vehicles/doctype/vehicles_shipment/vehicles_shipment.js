@@ -927,54 +927,40 @@ function incrementStockNumber(stockNumber) {
 
 
 
-
-
-
-
-// vehicles total calculation
-
+// Vehcile counter
 frappe.ui.form.on("Vehicles Shipment", {
-	refresh(frm) {
-		frm.trigger("calculate_total_vehicles");
-	},
+  refresh(frm) {
+    frm.trigger("calculate_total_vehicles");
+  },
 
-	vehicles_shipment_items_add(frm) {
-		frm.trigger("calculate_total_vehicles");
-	},
+  calculate_total_vehicles(frm) {
+    const total = (frm.doc.vehicles_shipment_items || []).filter(
+      row => row.model_code || row.vin_serial_no
+    ).length;
 
-	vehicles_shipment_items_remove(frm) {
-		frm.trigger("calculate_total_vehicles");
-	},
-
-	calculate_total_vehicles(frm) {
-		let total = 0;
-
-		if (frm.doc.vehicles_shipment_items?.length) {
-			total = frm.doc.vehicles_shipment_items.filter(row =>
-				row.model_code || row.vin_serial_no
-			).length;
-		}
-
-		frm.set_value("total_vehicles", total);
-		frm.refresh_field("total_vehicles");
-		frm.toggle_display("total_vehicles", total > 0);
-	}
+    frm.set_value("total_vehicles", total);
+    frm.refresh_field("total_vehicles");
+    frm.toggle_display("total_vehicles", total > 0);
+  }
 });
 
 frappe.ui.form.on("Vehicles Shipment Items", {
-	model_code(frm) {
-		frm.trigger("calculate_total_vehicles");
-	},
-	vin_serial_no(frm) {
-		frm.trigger("calculate_total_vehicles");
-	},
-	cost_price_excl(frm) {
-		frm.trigger("calculate_total_vehicles");
-	},
-	form_render(frm) {
-		frm.trigger("calculate_total_vehicles");
-	}
+  vehicles_shipment_items_add(frm, cdt, cdn) {
+    frm.trigger("calculate_total_vehicles");
+  },
+
+  vehicles_shipment_items_remove(frm, cdt, cdn) {
+    frm.trigger("calculate_total_vehicles");
+  },
+
+  model_code(frm) { frm.trigger("calculate_total_vehicles"); },
+  vin_serial_no(frm) { frm.trigger("calculate_total_vehicles"); },
+  cost_price_excl(frm) { frm.trigger("calculate_total_vehicles"); },
+  form_render(frm) { frm.trigger("calculate_total_vehicles"); }
 });
+
+
+
 
 
 frappe.ui.form.on("Vehicles Shipment", {

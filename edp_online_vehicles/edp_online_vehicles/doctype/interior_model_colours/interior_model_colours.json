@@ -1,7 +1,7 @@
 {
  "actions": [],
  "allow_rename": 1,
- "creation": "2025-10-21 21:58:06.195315",
+ "creation": "2025-10-21 22:01:22.345983",
  "doctype": "DocType",
  "editable_grid": 1,
  "engine": "InnoDB",
@@ -34,7 +34,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-10-21 22:00:02.363549",
+ "modified": "2025-10-21 22:02:04.959497",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Interior Model Colours",

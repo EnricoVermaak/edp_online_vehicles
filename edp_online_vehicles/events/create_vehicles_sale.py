@@ -1,7 +1,8 @@
 from datetime import datetime
 
 import frappe
-from frappe.utils import add_months
+from frappe.utils import nowdate, add_months
+from datetime import datetime
 
 @frappe.whitelist()
 def create_vehicles_sale(
@@ -140,38 +141,30 @@ def remove_from_stock_on_sale(docname):
 		equip_doc = frappe.get_value("Vehicle Stock", {"vin_serial_no": stock.vin_serial_no}, "name")
 
 		if equip_doc:
-			current_date = frappe.utils.nowdate()
+			current_date = nowdate()
 			stock_doc = frappe.get_doc("Vehicle Stock", equip_doc, ignore_permissions=True)
 
-			# Fetch the warranty_period from the related model
+			# Fetch periods (in months)
 			warranty_period = frappe.get_value("Model Administration", stock_doc.model, "warranty_period")
 			service_period = frappe.get_value("Model Administration", stock_doc.model, "service_period")
 
+
+
 			# Calculate warranty_end_date
 			if warranty_period:
-				int(warranty_period) * 365
 				warranty_start_datetime = datetime.strptime(current_date, "%Y-%m-%d")
-				warranty_end_datetime = warranty_start_datetime.replace(
-					year=warranty_start_datetime.year + int(warranty_period)
-				)
+				warranty_end_datetime = add_months(warranty_start_datetime, int(warranty_period))
 				warranty_end_date = warranty_end_datetime.strftime("%Y-%m-%d")
 			else:
 				warranty_end_date = None
-    
-    
-	
-			
+
 			# Calculate service_end_date
 			if service_period:
 				service_start_datetime = datetime.strptime(current_date, "%Y-%m-%d")
-				# service_period_years is actually in months
 				service_end_datetime = add_months(service_start_datetime, int(service_period))
 				service_end_date = service_end_datetime.strftime("%Y-%m-%d")
 			else:
 				service_end_date = None
-			
-
-
 
 
 			# Update the Vehicle Stock document
