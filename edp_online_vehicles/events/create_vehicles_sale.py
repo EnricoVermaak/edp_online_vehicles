@@ -144,11 +144,9 @@ def remove_from_stock_on_sale(docname):
 			current_date = nowdate()
 			stock_doc = frappe.get_doc("Vehicle Stock", equip_doc, ignore_permissions=True)
 
-			# Fetch periods (in months)
+			# Fetch periods (in months) from Model Administration
 			warranty_period = frappe.get_value("Model Administration", stock_doc.model, "warranty_period")
 			service_period = frappe.get_value("Model Administration", stock_doc.model, "service_period")
-
-
 
 			# Calculate warranty_end_date
 			if warranty_period:
@@ -178,10 +176,19 @@ def remove_from_stock_on_sale(docname):
 			stock_doc.retail_date = doc.retail_date
 			stock_doc.warranty_start_date = current_date
 			stock_doc.warranty_end_date = warranty_end_date
+			
+			# Set the warranty period field (this field is named years but contains months)
+			if warranty_period:
+				stock_doc.warranty_period_years = int(warranty_period)
 
 			stock_doc.service_start_date = current_date
 			stock_doc.service_end_date = service_end_date
+			
+			# Set the service period field (this field is named years but contains months)
+			if service_period:
+				stock_doc.service_period_years = int(service_period)
 
+	
 			# # Update the Serial No document with warranty period and expiry date
 			# serial_doc.warranty_expiry_date = warranty_end_date
 			# serial_doc.warranty_period = warranty_period_days
@@ -192,7 +199,8 @@ def remove_from_stock_on_sale(docname):
 			stock_doc.add_comment("Comment", comment)
 
 			stock_doc.save(ignore_permissions=True)
-
+			
+	
 			now = datetime.now()
 			user = frappe.session.user
 
