@@ -8,9 +8,6 @@
   },
   {
    "card": "Vehicles Incidents"
-  },
-  {
-   "card": "Maintenance Required"
   }
  ],
  "charts": [
@@ -30,7 +27,7 @@
  "idx": 11,
  "is_default": 0,
  "is_standard": 1,
- "modified": "2025-06-11 13:41:19.586673",
+ "modified": "2025-10-22 10:38:13.492978",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicle Overview",

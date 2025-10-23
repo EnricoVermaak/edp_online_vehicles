@@ -263,105 +263,6 @@
   {
    "hidden": 0,
    "is_query_report": 0,
-   "label": "Vehicles",
-   "link_count": 9,
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Card Break"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Vehicle Stock Availability",
-   "link_count": 0,
-   "link_to": "vehicle_stock_availa",
-   "link_type": "Page",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Master Stock",
-   "link_count": 0,
-   "link_to": "Vehicle Stock",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Reserved Vehicles",
-   "link_count": 0,
-   "link_to": "Reserved Vehicles",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Retail",
-   "link_count": 0,
-   "link_to": "Vehicle Retail",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Recon",
-   "link_count": 0,
-   "link_to": "Vehicles Recon",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Buy Back",
-   "link_count": 0,
-   "link_to": "Vehicle Buy Back",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Dealer Claims",
-   "link_count": 0,
-   "link_to": "Dealer Claims",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Price List",
-   "link_count": 0,
-   "link_to": "Price List",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Microdots",
-   "link_count": 0,
-   "link_to": "Vehicles Microdots",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
    "label": "Reports",
    "link_count": 8,
    "link_type": "DocType",
@@ -447,9 +348,88 @@
    "link_type": "Report",
    "onboard": 0,
    "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Vehicles",
+   "link_count": 7,
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Vehicle Stock Availability",
+   "link_count": 0,
+   "link_to": "vehicle_stock_availa",
+   "link_type": "Page",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Master Stock",
+   "link_count": 0,
+   "link_to": "Vehicle Stock",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Reserved Vehicles",
+   "link_count": 0,
+   "link_to": "Reserved Vehicles",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Retail",
+   "link_count": 0,
+   "link_to": "Vehicle Retail",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Recon",
+   "link_count": 0,
+   "link_to": "Vehicles Recon",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Buy Back",
+   "link_count": 0,
+   "link_to": "Vehicle Buy Back",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Dealer Claims",
+   "link_count": 0,
+   "link_to": "Dealer Claims",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
   }
  ],
- "modified": "2025-09-30 09:49:08.135235",
+ "modified": "2025-10-23 08:57:41.154307",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicles",

@@ -11,7 +11,7 @@ frappe.ui.form.on("Vehicle Retail", {
 	refresh(frm) {
 		if (frm.doc.docstatus == 1) {
 			frm.toggle_enable(["status"], false);
-			frm.toggle_enable(["retail_date"], false);
+			//frm.toggle_enable(["retail_date"], false);
 
 			if (frappe.user.has_role("Vehicles Administrator")) {
 				frm.add_custom_button(__("Reverse Retail"), () => {

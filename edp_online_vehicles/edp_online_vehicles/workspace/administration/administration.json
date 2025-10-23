@@ -1,6 +1,6 @@
 {
  "charts": [],
- "content": "[{\"id\":\"tHb3yxthkR\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Vehicle Administration</b></span>\",\"col\":12}},{\"id\":\"yeIL1t6DzP\",\"type\":\"onboarding\",\"data\":{\"onboarding_name\":\"Vehicle Administration\",\"col\":12}},{\"id\":\"DnNtsmxpty\",\"type\":\"card\",\"data\":{\"card_name\":\"Models\",\"col\":4}},{\"id\":\"45j9TjuVPN\",\"type\":\"card\",\"data\":{\"card_name\":\"General\",\"col\":4}}]",
+ "content": "[{\"id\":\"tHb3yxthkR\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Vehicle Administration</b></span>\",\"col\":12}},{\"id\":\"DnNtsmxpty\",\"type\":\"card\",\"data\":{\"card_name\":\"Models\",\"col\":4}},{\"id\":\"45j9TjuVPN\",\"type\":\"card\",\"data\":{\"card_name\":\"General\",\"col\":4}},{\"id\":\"eSSVoNjG6T\",\"type\":\"card\",\"data\":{\"card_name\":\"Reports\",\"col\":4}}]",
  "creation": "2025-01-06 16:17:51.751764",
  "custom_blocks": [],
  "docstatus": 0,
@@ -225,55 +225,6 @@
   {
    "hidden": 0,
    "is_query_report": 0,
-   "label": "Models",
-   "link_count": 4,
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Card Break"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Model Administration",
-   "link_count": 0,
-   "link_to": "Model Administration",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Model Conversion",
-   "link_count": 0,
-   "link_to": "Model Conversion",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Model Colours",
-   "link_count": 0,
-   "link_to": "Model Colour",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Shipment",
-   "link_count": 0,
-   "link_to": "Vehicles Shipment",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
    "label": "General",
    "link_count": 6,
    "link_type": "DocType",
@@ -339,9 +290,127 @@
    "link_type": "DocType",
    "onboard": 0,
    "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Models",
+   "link_count": 5,
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Model Administration",
+   "link_count": 0,
+   "link_to": "Model Administration",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Model Conversion",
+   "link_count": 0,
+   "link_to": "Model Conversion",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Model Colours",
+   "link_count": 0,
+   "link_to": "Model Colour",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Shipment",
+   "link_count": 0,
+   "link_to": "Vehicles Shipment",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Microdots",
+   "link_count": 0,
+   "link_to": "Vehicles Microdots",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Reports",
+   "link_count": 5,
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "Model Administration",
+   "link_count": 0,
+   "link_to": "Model Administration Report",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "AA Report",
+   "link_count": 0,
+   "link_to": "AA Report",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "NAAMSA",
+   "link_count": 0,
+   "link_to": "NAAMSA Report",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "Shipment",
+   "link_count": 0,
+   "link_to": "Vehicles Shipment Report",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "Vehicles In Transit",
+   "link_count": 0,
+   "link_to": "Vehicles in Transit",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
   }
  ],
- "modified": "2025-09-30 09:49:08.322403",
+ "modified": "2025-10-22 10:35:57.688333",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Administration",

@@ -214,7 +214,7 @@
    "fieldname": "interior_colour",
    "fieldtype": "Link",
    "label": "Interior Colour",
-   "options": "Interior Model Colour"
+   "options": "Model Colour"
   }
  ],
  "index_web_pages_for_search": 1,
