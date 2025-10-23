@@ -92,14 +92,24 @@ frappe.ui.form.on("Vehicle Order", {
 
 						resultDate.setDate(resultDate.getDate() + days);
 
-						frm.set_value("requested_delivery_date", resultDate);
+						// Convert Date object to YYYY-MM-DD format for Date field
+						let dateString = resultDate.getFullYear() + '-' + 
+							String(resultDate.getMonth() + 1).padStart(2, '0') + '-' + 
+							String(resultDate.getDate()).padStart(2, '0');
+
+						frm.set_value("requested_delivery_date", dateString);
 					} else {
 						let today = new Date();
 						let resultDate = new Date(today);
 
 						resultDate.setDate(resultDate.getDate() + 30);
 
-						frm.set_value("requested_delivery_date", resultDate);
+						// Convert Date object to YYYY-MM-DD format for Date field
+						let dateString = resultDate.getFullYear() + '-' + 
+							String(resultDate.getMonth() + 1).padStart(2, '0') + '-' + 
+							String(resultDate.getDate()).padStart(2, '0');
+
+						frm.set_value("requested_delivery_date", dateString);
 					}
 				});
 		} else {
