@@ -5,15 +5,19 @@
 import frappe
 from frappe import _
 from frappe.model.document import Document
-from frappe.utils import add_years
+from frappe.utils import add_years, add_months
 
 
 class VehicleStock(Document):
 	def validate(self):
+		
 		if self.warranty_period_years and self.warranty_start_date:
-			self.warranty_end_date = add_years(self.warranty_start_date, self.warranty_period_years)
+			# Convert the period to months for calculation (field is named years but contains months)
+			self.warranty_end_date = add_months(self.warranty_start_date, int(self.warranty_period_years))
+			
 		if self.service_period_years and self.service_start_date:
-			self.service_end_date = add_years(self.service_start_date, self.service_period_years)
+			# Convert the period to months for calculation (field is named years but contains months)
+			self.service_end_date = add_months(self.service_start_date, int(self.service_period_years))
 
 	def before_insert(self):
 		if self.type == "Used":
