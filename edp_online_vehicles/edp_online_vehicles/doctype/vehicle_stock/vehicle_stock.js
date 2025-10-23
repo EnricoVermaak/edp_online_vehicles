@@ -394,6 +394,18 @@ frappe.ui.form.on("Vehicle Stock", {
 			frm.refresh_field("warranty_end_date");
 		}
 	},
+	service_start_date(frm, dt, dn) {
+		if (frm.doc.service_start_date) {
+			let startDate = new Date(frm.doc.service_start_date);
+
+			let months = cint(frm.doc.service_period_years);
+
+        	let endDate = frappe.datetime.add_months(startDate, months);
+        	frm.set_value("service_end_date", frappe.datetime.obj_to_str(endDate));
+
+			frm.refresh_field("service_end_date");
+		}
+	},
 	last_service_date(frm, dt, dn) {
 		if (frm.doc.last_service_date) {
 			let startDate = new Date(frm.doc.last_service_date);
@@ -496,4 +508,5 @@ frappe.ui.form.on("Vehicle Stock", {
 	frm.toggle_enable("interior_colour", !!frm.doc.model);
 	}
 });
+
 

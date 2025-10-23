@@ -36,8 +36,7 @@
   "column_break_6kva",
   "service_start_date",
   "service_end_date",
-  "last_load_test_date",
-  "next_load_test_date",
+
   "warranty_tab",
   "warranty_period_years",
   "warranty_km_hours_limit",
@@ -192,18 +191,6 @@
    "label": "Warranty End Date"
   },
   {
-   "fetch_from": "vin_serial_no.last_load_test_date",
-   "fieldname": "last_load_test_date",
-   "fieldtype": "Date",
-   "label": "Last Load Test Date"
-  },
-  {
-   "fetch_from": "vin_serial_no.next_load_test_date",
-   "fieldname": "next_load_test_date",
-   "fieldtype": "Date",
-   "label": "Next Load Test Date"
-  },
-  {
    "fieldname": "contract_no",
    "fieldtype": "Data",
    "label": "Contract No",
@@ -281,7 +268,7 @@
   {
    "group": "Service",
    "link_doctype": "Vehicles Service",
-   "link_fieldname": "vinserial_no"
+   "link_fieldname": "vin_serial_no"
   },
   {
    "group": "Incidents",
