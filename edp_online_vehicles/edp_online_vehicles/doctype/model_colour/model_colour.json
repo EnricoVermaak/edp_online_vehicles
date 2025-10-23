@@ -10,7 +10,8 @@
   "oem_colour_code",
   "naamsa_colour_code",
   "natis_colour_code",
-  "discontinued"
+  "discontinued",
+  "type"
  ],
  "fields": [
   {
@@ -48,11 +49,17 @@
    "label": "Model",
    "options": "Model Administration",
    "reqd": 1
+  },
+  {
+   "fieldname": "type",
+   "fieldtype": "Select",
+   "label": "Type",
+   "options": "Exterior\nInterior"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-01-08 08:17:56.811186",
+ "modified": "2025-10-21 13:46:31.992397",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Model Colour",
@@ -71,6 +78,7 @@
    "write": 1
   }
  ],
+ "row_format": "Dynamic",
  "search_fields": "colour,model",
  "show_title_field_in_link": 1,
  "sort_field": "modified",

@@ -30,7 +30,7 @@ class DealerCustomer(Document):
 					cust_doc.save(ignore_permissions=True)
 		else:
 			if frappe.db.exists("Customer", {"custom_customer_code": self.id_no}):
-				cust_name = frappe.db.get_value("Customer", {"custom_customer_code": self.id_no} "name")
+				cust_name = frappe.db.get_value("Customer", {"custom_customer_code": self.id_no}, "name")
 				if cust_name:
 					cust_doc = frappe.get_doc("Customer", cust_name)
 					updated = False

@@ -12,15 +12,15 @@ app_license = "mit"
 required_apps = ["erpnext", "hrms","insights"]
 
 # Each item in the list will be shown as an app in the apps page
-add_to_apps_screen = [
-	{
-		"name": "edp_online_vehicles",
-		# "logo": "/assets/edp_online_vehicles/logo.png",
-		"title": "Edp Online",
-		"route": "/edp_online_vehicles",
-		# "has_permission": "edp_online_vehicles.api.permission.has_app_permission"
-	}
-]
+# add_to_apps_screen = [
+# 	{
+# 		"name": "edp_online_vehicles",
+# 		# "logo": "/assets/edp_online_vehicles/logo.png",
+# 		"title": "Edp Online",
+# 		"route": "/edp_online_vehicles",
+# 		# "has_permission": "edp_online_vehicles.api.permission.has_app_permission"
+# 	}
+# ]
 
 # Includes in <head>
 # ------------------

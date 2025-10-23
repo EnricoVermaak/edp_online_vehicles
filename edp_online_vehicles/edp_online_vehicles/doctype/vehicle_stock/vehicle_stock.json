@@ -743,8 +743,7 @@
    "fieldname": "interior_colour",
    "fieldtype": "Link",
    "label": "Interior Colour",
-   "options": "Interior Model Colour",
-   "reqd": 1
+   "options": "Model Colour"
   }
  ],
  "image_field": "image",
@@ -791,7 +790,7 @@
    "link_fieldname": "vin_serial_no"
   }
  ],
- "modified": "2025-10-20 16:21:12.512771",
+ "modified": "2025-10-21 14:12:36.090016",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicle Stock",
