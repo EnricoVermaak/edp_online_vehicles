@@ -38,7 +38,11 @@ def get_hq_data(model=None):
 	for row in data:
 		colour = row.get("colour", "")
 
-		formatted_colour = colour.split(" - ")[0]
+		# Handle None colour values
+		if colour:
+			formatted_colour = colour.split(" - ")[0]
+		else:
+			formatted_colour = ""
 
 		vehicle_data = {
 			"Range": row.get("range", ""),
@@ -88,7 +92,11 @@ def get_dealer_data(model=None):
 	for row in data:
 		colour = row.get("colour", "")
 
-		formatted_colour = colour.split(" - ")[0]
+		# Handle None colour values
+		if colour:
+			formatted_colour = colour.split(" - ")[0]
+		else:
+			formatted_colour = ""
 
 		vehicle_data = {
 			"Range": row.get("range", ""),
@@ -169,7 +177,11 @@ def get_pipline_data(model=None, date=None):
 	for row in data:
 		colour = row.get("colour", "")
 
-		formatted_colour = colour.split(" - ")[0]
+		# Handle None colour values
+		if colour:
+			formatted_colour = colour.split(" - ")[0]
+		else:
+			formatted_colour = ""
 
 		vehicle_data = {
 			"Range": row.get("range", ""),
@@ -266,7 +278,11 @@ def get_unconfirmed_data(model=None):
 	for row in data:
 		colour = row.get("colour", "")
 
-		formatted_colour = colour.split(" - ")[0]
+		# Handle None colour values
+		if colour:
+			formatted_colour = colour.split(" - ")[0]
+		else:
+			formatted_colour = ""
 
 		vehicle_data = {
 			"Range": row.get("range", ""),

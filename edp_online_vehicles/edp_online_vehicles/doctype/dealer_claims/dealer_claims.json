@@ -30,8 +30,9 @@
   "part_percentage_discount",
   "vehicle_percentage_discount",
   "section_break_fbqi",
-  "po_number",
   "invoice_number",
+  "column_break_nwrl",
+  "invoice_date",
   "claim_type_section",
   "claim_category",
   "column_break_qvrd",
@@ -330,16 +331,11 @@
    "fieldtype": "Section Break"
   },
   {
-   "fieldname": "po_number",
-   "fieldtype": "Data",
-   "in_standard_filter": 1,
-   "label": "PO Number"
-  },
-  {
    "fieldname": "invoice_number",
    "fieldtype": "Data",
    "in_standard_filter": 1,
-   "label": "Invoice Number"
+   "label": "Invoice Number",
+   "reqd": 1
   },
   {
    "fieldname": "documents_tab",
@@ -350,11 +346,21 @@
    "fieldname": "invoice_document",
    "fieldtype": "Attach",
    "label": "Invoice Document"
+  },
+  {
+   "fieldname": "column_break_nwrl",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "invoice_date",
+   "fieldtype": "Date",
+   "label": "Invoice Date",
+   "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-10-14 12:50:42.613966",
+ "modified": "2025-10-23 16:19:39.311176",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Dealer Claims",

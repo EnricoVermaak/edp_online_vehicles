@@ -1,4 +1,4 @@
-/* ../../../../../tmp/tmp-309674-Yq3JnqRBZBsz/edp_online_vehicles/edp_online_vehicles/public/scss/edp_online.bundle.css */
+/* ../../../../../tmp/tmp-3987225-kdtsWp3s95yk/edp_online_vehicles/edp_online_vehicles/public/scss/edp_online.bundle.css */
 .part-order-app {
   display: grid;
   grid-template-columns: repeat(10, minmax(0, 1fr));
@@ -97,8 +97,8 @@
   border-radius: var(--border-radius-md);
 }
 .part-order-app .seperator {
-  margin-right: var(--margin-sm);
-  margin-left: var(--margin-md);
+  margin-left: var(--margin-sm);
+  margin-right: var(--margin-md);
   border-bottom: 1px solid var(--gray-300);
 }
 .part-order-app .primary-action,
@@ -183,7 +183,7 @@
   display: flex;
   margin: var(--margin-sm);
   justify-content: flex-end;
-  left: 0px;
+  right: 0px;
 }
 .part-order-app > .items-selector > .items-container > .item-wrapper .item-display {
   display: flex;
@@ -206,8 +206,8 @@
   justify-content: center;
   min-height: 3.5rem;
   height: 3.5rem;
-  padding-right: var(--padding-sm);
   padding-left: var(--padding-sm);
+  padding-right: var(--padding-sm);
 }
 .part-order-app > .items-selector > .items-container > .item-wrapper > .item-detail > .item-name {
   display: flex;
@@ -262,7 +262,7 @@
   height: 3rem;
   border-radius: 50%;
   color: var(--text-light);
-  margin-left: var(--margin-md);
+  margin-right: var(--margin-md);
 }
 .part-order-app > .customer-cart-container > .customer-section > .customer-details > .customer-display > .customer-image > img {
   border-radius: 50%;
@@ -273,7 +273,7 @@
 .part-order-app > .customer-cart-container > .customer-section > .customer-details > .customer-display > .customer-name-desc {
   display: flex;
   flex-direction: column;
-  margin-left: auto;
+  margin-right: auto;
 }
 .part-order-app > .customer-cart-container > .customer-section > .customer-details > .customer-display > .customer-name-desc > .customer-name {
   font-weight: 700;
@@ -304,9 +304,9 @@
   height: 100%;
   overflow-x: hidden;
   overflow-y: scroll;
-  margin-left: -12px;
-  padding-left: 12px;
-  margin-right: -10px;
+  margin-right: -12px;
+  padding-right: 12px;
+  margin-left: -10px;
 }
 .part-order-app > .customer-cart-container > .customer-section > .customer-transactions > .no-transactions-placeholder {
   height: 100%;
@@ -333,7 +333,7 @@
 }
 .part-order-app > .customer-cart-container > .legend-section > .legend-field p {
   align-self: stretch;
-  text-align: right;
+  text-align: left;
   margin: 0;
 }
 .part-order-app > .customer-cart-container > .cart-container {
@@ -365,12 +365,12 @@
   flex: 1 1 0%;
 }
 .part-order-app > .customer-cart-container > .cart-container > .abs-cart-container > .cart-header > .qty-header {
-  margin-left: var(--margin-lg);
+  margin-right: var(--margin-lg);
   text-align: center;
 }
 .part-order-app > .customer-cart-container > .cart-container > .abs-cart-container > .cart-header > .rate-amount-header {
-  text-align: left;
-  margin-left: var(--margin-sm);
+  text-align: right;
+  margin-right: var(--margin-sm);
 }
 .part-order-app > .customer-cart-container > .cart-container > .abs-cart-container .no-item-wrapper {
   display: flex;
@@ -394,7 +394,7 @@
   align-items: center;
   padding: var(--padding-sm);
   border-radius: var(--border-radius-md);
-  margin-left: var(--margin-sm);
+  margin-right: var(--margin-sm);
 }
 .part-order-app > .customer-cart-container > .cart-container > .abs-cart-container > .cart-items-section > .cart-item-wrapper:hover {
   background-color: var(--control-bg);
@@ -407,7 +407,7 @@
   height: 2rem;
   border-radius: var(--border-radius-md);
   color: var(--text-light);
-  margin-left: var(--margin-md);
+  margin-right: var(--margin-md);
 }
 .part-order-app > .customer-cart-container > .cart-container > .abs-cart-container > .cart-items-section > .cart-item-wrapper > .item-abbr {
   font-size: var(--text-lg);
@@ -429,20 +429,20 @@
 .part-order-app > .customer-cart-container > .cart-container > .abs-cart-container > .cart-items-section > .cart-item-wrapper > .item-qty-rate {
   display: flex;
   flex-shrink: 0;
-  text-align: left;
-  margin-right: var(--margin-md);
+  text-align: right;
+  margin-left: var(--margin-md);
 }
 .part-order-app > .customer-cart-container > .cart-container > .abs-cart-container > .cart-items-section > .cart-item-wrapper > .item-qty-rate > .item-qty {
   display: flex;
   align-items: center;
-  margin-left: var(--margin-lg);
+  margin-right: var(--margin-lg);
   font-weight: 700;
 }
 .part-order-app > .customer-cart-container > .cart-container > .abs-cart-container > .cart-items-section > .cart-item-wrapper > .item-qty-rate > .item-rate-amount {
   display: flex;
   flex-direction: column;
   flex-shrink: 0;
-  text-align: left;
+  text-align: right;
 }
 .part-order-app > .customer-cart-container > .cart-container > .abs-cart-container > .cart-items-section > .cart-item-wrapper > .item-qty-rate > .item-rate-amount > .item-rate {
   font-weight: 700;
@@ -470,7 +470,7 @@
   width: 100%;
 }
 .part-order-app > .customer-cart-container > .cart-container > .abs-cart-container > .cart-totals-section > .add-discount-wrapper .discount-icon {
-  margin-left: var(--margin-sm);
+  margin-right: var(--margin-sm);
 }
 .part-order-app > .customer-cart-container > .cart-container > .abs-cart-container > .cart-totals-section > .add-discount-wrapper .edit-discount-btn {
   display: flex;
@@ -599,18 +599,18 @@
   flex-direction: column;
   font-weight: 500;
   font-size: var(--text-sm);
-  margin-right: var(--margin-md);
+  margin-left: var(--margin-md);
 }
 .part-order-app .invoice-wrapper > .invoice-total-status > .invoice-total {
   margin-bottom: var(--margin-xs);
   font-size: var(--text-base);
   font-weight: 700;
-  text-align: left;
+  text-align: right;
 }
 .part-order-app .invoice-wrapper > .invoice-total-status > .invoice-status {
   display: flex;
   align-items: center;
-  justify-content: left;
+  justify-content: right;
 }
 .part-order-app > .item-details-container {
   grid-column: span 4/span 4;
@@ -632,7 +632,7 @@
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  margin-left: var(--margin-md);
+  margin-right: var(--margin-md);
 }
 .part-order-app > .item-details-container > .item-display > .item-name-desc-price > .item-name {
   font-size: var(--text-3xl);
@@ -653,7 +653,7 @@
   width: 11rem;
   height: 11rem;
   border-radius: var(--border-radius-md);
-  margin-right: var(--margin-md);
+  margin-left: var(--margin-md);
   color: var(--gray-500);
 }
 .part-order-app > .item-details-container > .item-display > .item-image > .item-abbr {
@@ -672,7 +672,7 @@
 }
 .part-order-app > .item-details-container > .discount-section > .item-rate {
   font-weight: 500;
-  margin-left: var(--margin-sm);
+  margin-right: var(--margin-sm);
   text-decoration: line-through;
 }
 .part-order-app > .item-details-container > .discount-section > .item-discount {
@@ -725,7 +725,7 @@
 }
 .part-order-app > .payment-container > .payment-modes > .payment-mode-wrapper > .mode-of-payment > .pay-amount {
   display: inline;
-  float: left;
+  float: right;
   font-weight: 700;
 }
 .part-order-app > .payment-container > .payment-modes > .payment-mode-wrapper > .mode-of-payment > .mode-of-payment-control {
@@ -736,7 +736,7 @@
 }
 .part-order-app > .payment-container > .payment-modes > .payment-mode-wrapper > .mode-of-payment > .loyalty-amount-name {
   display: none;
-  float: left;
+  float: right;
   font-weight: 700;
   white-space: nowrap;
   overflow: hidden;
@@ -781,7 +781,7 @@
 .part-order-app > .payment-container > .fields-numpad-container > .fields-section .invoice-fields {
   overflow-y: scroll;
   height: 100%;
-  padding-left: var(--padding-sm);
+  padding-right: var(--padding-sm);
 }
 .part-order-app > .payment-container > .fields-numpad-container > .number-pad {
   flex: 1;
@@ -832,9 +832,9 @@
   font-weight: 700;
 }
 .part-order-app > .payment-container > .totals-section > .totals > .seperator-y {
-  margin-right: var(--margin-sm);
   margin-left: var(--margin-sm);
-  border-left: 1px solid var(--gray-300);
+  margin-right: var(--margin-sm);
+  border-right: 1px solid var(--gray-300);
 }
 .part-order-app > .payment-container > .totals-section > .number-pad {
   display: none;
@@ -911,7 +911,7 @@
   flex-direction: column;
   align-items: flex-start;
   justify-content: flex-end;
-  padding-left: var(--padding-sm);
+  padding-right: var(--padding-sm);
 }
 .part-order-app > .past-order-summary > .invoice-summary-wrapper > .abs-container > .upper-section > .left-section > .customer-name {
   font-size: var(--text-2xl);
@@ -974,16 +974,16 @@
 }
 .part-order-app > .past-order-summary > .invoice-summary-wrapper > .abs-container > .summary-container > .item-row-wrapper > .item-name {
   font-weight: 500;
-  margin-left: var(--margin-md);
+  margin-right: var(--margin-md);
 }
 .part-order-app > .past-order-summary > .invoice-summary-wrapper > .abs-container > .summary-container > .item-row-wrapper > .item-qty {
   font-weight: 500;
-  margin-right: auto;
+  margin-left: auto;
 }
 .part-order-app > .past-order-summary > .invoice-summary-wrapper > .abs-container > .summary-container > .item-row-wrapper > .item-rate-disc {
   display: flex;
-  text-align: left;
-  margin-right: var(--margin-md);
+  text-align: right;
+  margin-left: var(--margin-md);
   justify-content: flex-end;
 }
 .part-order-app > .past-order-summary > .invoice-summary-wrapper > .abs-container > .summary-container > .item-row-wrapper > .item-rate-disc > .item-disc {
@@ -991,7 +991,7 @@
 }
 .part-order-app > .past-order-summary > .invoice-summary-wrapper > .abs-container > .summary-container > .item-row-wrapper > .item-rate-disc > .item-rate {
   font-weight: 500;
-  margin-right: var(--margin-md);
+  margin-left: var(--margin-md);
 }
 .part-order-app > .past-order-summary > .invoice-summary-wrapper > .abs-container > .summary-container > .grand-total {
   font-weight: 700;
@@ -1049,10 +1049,10 @@
     font-size: var(--text-sm) !important;
   }
   .part-order-app .control-input-wrapper {
-    padding-right: 0.15rem;
+    padding-left: 0.15rem;
   }
   .part-order-app .pay-amount {
-    margin-right: 0.2rem;
+    margin-left: 0.2rem;
   }
   .part-order-app .past-order-list {
     grid-column: span 6/span 1;
@@ -1064,7 +1064,7 @@
   height: 10px;
   background: red;
   border-radius: 50%;
-  margin-left: 5px;
+  margin-right: 5px;
 }
 [data-page-route="List/Vehicles Dealer to Dealer Order/List"] .list-subject {
   max-width: 25px;
@@ -1072,4 +1072,4 @@
 [data-page-route="List/Vehicles Dealer to Dealer Order/List"] .list-subject span:not(.select-like) {
   display: none;
 }
-/*# sourceMappingURL=edp_online.bundle.RV3J76XR.css.map */
+/*# sourceMappingURL=edp_online.bundle.YX77TAR2.css.map */

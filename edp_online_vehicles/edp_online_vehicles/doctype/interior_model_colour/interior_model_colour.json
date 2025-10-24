@@ -1,7 +1,7 @@
 {
  "actions": [],
  "allow_rename": 1,
- "creation": "2025-10-22 09:41:54.491967",
+ "creation": "2025-10-23 14:35:44.447638",
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
@@ -26,18 +26,13 @@
    "fieldtype": "Data",
    "in_list_view": 1,
    "label": "Colour",
-   "reqd": 1
+   "reqd": 1,
+   "unique": 1
   },
   {
    "fieldname": "oem_colour_code",
    "fieldtype": "Data",
    "label": "OEM Colour Code"
-  },
-  {
-   "default": "0",
-   "fieldname": "discontinued",
-   "fieldtype": "Check",
-   "label": "Discontinued"
   },
   {
    "fieldname": "naamsa_colour_code",
@@ -48,12 +43,18 @@
    "fieldname": "natis_colour_code",
    "fieldtype": "Data",
    "label": "Natis Colour Code"
+  },
+  {
+   "default": "0",
+   "fieldname": "discontinued",
+   "fieldtype": "Check",
+   "label": "Discontinued"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-10-22 11:24:49.374704",
+ "modified": "2025-10-23 14:57:58.854325",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Interior Model Colour",
@@ -74,7 +75,7 @@
  ],
  "row_format": "Dynamic",
  "rows_threshold_for_grid_search": 20,
- "search_fields": "colour,model",
+ "search_fields": "colour, model",
  "show_title_field_in_link": 1,
  "sort_field": "modified",
  "sort_order": "DESC",
