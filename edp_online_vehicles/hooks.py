@@ -26,7 +26,7 @@ required_apps = ["erpnext", "hrms","insights"]
 # ------------------
 
 # include js, css files in header of desk.html
-app_include_css = "edp_online.bundle.css"
+app_include_css = "edp_online_vehicles.bundle.css"
 app_include_js = [
 	"edp_online1.bundle.js",
 	"/assets/edp_online_vehicles/js/recon_restrictions.js",
@@ -41,7 +41,7 @@ app_include_js = [
 # include js, css files in header of web template
 web_include_css = "/assets/edp_online_vehicles/css/edp.css"
 web_include_js = [
-	"edp_online.bundle.js",
+	"edp_online_vehicles.bundle.js",
 	"/assets/edp_online_vehicles/js/session_expiration_redirect.js",
 ]
 
