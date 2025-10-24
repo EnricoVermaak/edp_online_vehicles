@@ -1363,14 +1363,14 @@
 										<table>
 											<tbody>
 												<tr><th>Model Code</th><td>${modelData.model_code || ""}</td></tr>
-												<tr><th>Description</th><td>${modelData.model_description || ""}</td></tr>
+												<tr><th>Description</th><td>${modelData.description || ""}</td></tr>
 												<tr><th>Model Year</th><td>${modelData.model_year || ""}</td></tr>
 												<tr><th>Range</th><td>${modelData.range || ""}</td></tr>
 												<tr><th>Category</th><td>${modelData.category || ""}</td></tr>
-												<tr><th>Class</th><td>${modelData.class_ || ""}</td></tr>
+												<tr><th>Class</th><td>${modelData.class || ""}</td></tr>
 												<tr><th>M&M Code</th><td>${modelData.mm_code || ""}</td></tr>
-												<tr><th>Dealer Billing</th><td>${modelData.dealer_billing_excl || ""}</td></tr>
-												<tr><th>Suggested Retail</th><td>${modelData.suggested_retail_excl || ""}</td></tr>
+												<tr><th>Dealer Billing</th><td>${modelData.dealer_billing || ""}</td></tr>
+												<tr><th>Suggested Retail</th><td>${modelData.suggested_retail || ""}</td></tr>
 												<tr><th>Engine Displacement</th><td>${modelData.engine_displacement || ""}</td></tr>
 											</tbody>
 										</table>
@@ -1756,8 +1756,4 @@
     }
   };
 })();
-<<<<<<<< Updated upstream:edp_online_vehicles/public/dist/js/stock_availability.bundle.QF7B6OAF.js
-//# sourceMappingURL=stock_availability.bundle.QF7B6OAF.js.map
-========
 //# sourceMappingURL=stock_availability.bundle.K3JLGBGP.js.map
->>>>>>>> Stashed changes:edp_online_vehicles/public/dist/js/stock_availability.bundle.K3JLGBGP.js
