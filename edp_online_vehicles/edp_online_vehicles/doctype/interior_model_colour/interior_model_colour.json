@@ -26,8 +26,7 @@
    "fieldtype": "Data",
    "in_list_view": 1,
    "label": "Colour",
-   "reqd": 1,
-   "unique": 1
+   "reqd": 1
   },
   {
    "fieldname": "oem_colour_code",
@@ -54,7 +53,7 @@
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-10-23 14:57:58.854325",
+ "modified": "2025-10-24 10:35:35.047302",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Interior Model Colour",

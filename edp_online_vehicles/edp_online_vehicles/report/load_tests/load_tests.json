@@ -1,5 +1,6 @@
 {
  "add_total_row": 1,
+ "add_translate_data": 0,
  "columns": [],
  "creation": "2024-03-14 10:17:11.195595",
  "disabled": 1,
@@ -10,7 +11,7 @@
  "is_standard": "Yes",
  "json": "{}",
  "letterhead": null,
- "modified": "2024-07-17 09:38:47.865352",
+ "modified": "2025-10-24 09:49:10.473815",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Load Tests",
@@ -23,5 +24,6 @@
   {
    "role": "System Manager"
   }
- ]
+ ],
+ "timeout": 0
 }

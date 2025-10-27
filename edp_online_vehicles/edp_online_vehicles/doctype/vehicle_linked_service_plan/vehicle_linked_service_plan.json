@@ -1,0 +1,104 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-10-24 08:45:53.890849",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "created_datetime",
+  "vin__serial_no",
+  "model_description",
+  "model_code",
+  "column_break_kfqh",
+  "status",
+  "service_plan",
+  "service_km_hours_limit",
+  "service_period_limit_months"
+ ],
+ "fields": [
+  {
+   "default": "Today",
+   "fieldname": "created_datetime",
+   "fieldtype": "Datetime",
+   "label": "Created Date/Time",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_kfqh",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "Pending Activation\nActive\nExpired\nCancelled"
+  },
+  {
+   "fieldname": "vin__serial_no",
+   "fieldtype": "Link",
+   "label": "VIN / Serial No",
+   "options": "Vehicle Stock"
+  },
+  {
+   "fetch_from": "vin__serial_no.description",
+   "fieldname": "model_description",
+   "fieldtype": "Data",
+   "label": "Model Description",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "vin__serial_no.model",
+   "fieldname": "model_code",
+   "fieldtype": "Data",
+   "label": "Model Code",
+   "read_only": 1
+  },
+  {
+   "fieldname": "service_plan",
+   "fieldtype": "Link",
+   "label": "Service Plan",
+   "options": "Vehicles Service Plan Administration"
+  },
+  {
+   "fetch_from": "vin__serial_no.service_km_hours_limit",
+   "fieldname": "service_km_hours_limit",
+   "fieldtype": "Int",
+   "label": "Service KM/ Hours Limit",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "service_plan.service_period_months",
+   "fieldname": "service_period_limit_months",
+   "fieldtype": "Int",
+   "label": "Service Period Limit (Months)",
+   "read_only": 1
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2025-10-24 09:38:15.935754",
+ "modified_by": "Administrator",
+ "module": "Edp Online Vehicles",
+ "name": "Vehicle Linked Service Plan",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

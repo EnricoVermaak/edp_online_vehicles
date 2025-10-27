@@ -377,12 +377,14 @@
   {
    "fieldname": "service_start_date",
    "fieldtype": "Date",
-   "label": "Service Start Date"
+   "label": "Service Start Date",
+   "read_only": 1
   },
   {
    "fieldname": "service_end_date",
    "fieldtype": "Date",
-   "label": "Service End Date"
+   "label": "Service End Date",
+   "read_only": 1
   },
   {
    "fetch_from": "model.model_default_image",
@@ -790,7 +792,7 @@
    "link_fieldname": "vin_serial_no"
   }
  ],
- "modified": "2025-10-22 14:48:12.435712",
+ "modified": "2025-10-24 16:37:57.337069",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicle Stock",

@@ -1,0 +1,34 @@
+{
+ "add_total_row": 0,
+ "add_translate_data": 0,
+ "columns": [],
+ "creation": "2024-08-19 16:09:19.197491",
+ "disabled": 0,
+ "docstatus": 0,
+ "doctype": "Report",
+ "filters": [],
+ "idx": 1,
+ "is_standard": "Yes",
+ "letterhead": null,
+ "modified": "2025-10-24 09:49:08.457817",
+ "modified_by": "Administrator",
+ "module": "Edp Online Vehicles",
+ "name": "Available Vehicles Stock",
+ "owner": "Administrator",
+ "prepared_report": 0,
+ "ref_doctype": "Vehicle Stock",
+ "report_name": "Available Vehicles Stock",
+ "report_type": "Script Report",
+ "roles": [
+  {
+   "role": "Vehicles Administrator"
+  },
+  {
+   "role": "System Manager"
+  },
+  {
+   "role": "Customer"
+  }
+ ],
+ "timeout": 0
+}

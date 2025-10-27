@@ -7,9 +7,12 @@
  "engine": "InnoDB",
  "field_order": [
   "bank",
+  "plan",
   "code",
+  "evolve_account_no",
   "balance",
-  "updated_on"
+  "updated_on",
+  "dealer_reference"
  ],
  "fields": [
   {
@@ -30,21 +33,36 @@
   {
    "fieldname": "code",
    "fieldtype": "Data",
-   "in_list_view": 1,
    "label": "Code"
   },
   {
    "fieldname": "updated_on",
    "fieldtype": "Datetime",
    "label": "Updated On"
+  },
+  {
+   "fieldname": "plan",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Plan"
+  },
+  {
+   "fieldname": "dealer_reference",
+   "fieldtype": "Data",
+   "label": "Dealer Reference"
+  },
+  {
+   "fieldname": "evolve_account_no",
+   "fieldtype": "Data",
+   "label": "Evolve Account No"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-10-04 11:58:23.574478",
+ "modified": "2025-09-15 08:56:02.992056",
  "modified_by": "Administrator",
- "module": "Edp Online Vehicles",
+ "module": "EDP Online Vehicles",
  "name": "Vehicles Floorplan",
  "owner": "Administrator",
  "permissions": [],

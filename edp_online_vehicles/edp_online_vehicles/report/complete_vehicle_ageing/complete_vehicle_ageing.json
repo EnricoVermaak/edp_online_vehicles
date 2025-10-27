@@ -1,22 +1,23 @@
 {
  "add_total_row": 1,
+ "add_translate_data": 0,
  "columns": [],
  "creation": "2024-12-05 08:34:57.660137",
  "disabled": 0,
  "docstatus": 0,
  "doctype": "Report",
  "filters": [],
- "idx": 0,
+ "idx": 36,
  "is_standard": "Yes",
  "letterhead": null,
- "modified": "2024-12-20 14:20:58.059334",
+ "modified": "2025-10-24 09:49:08.530236",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
- "name": "Complete Vehicles Ageing",
+ "name": "Complete Vehicle Ageing",
  "owner": "Administrator",
  "prepared_report": 0,
  "ref_doctype": "Vehicle Stock",
- "report_name": "Complete Vehicles Ageing",
+ "report_name": "Complete Vehicle Ageing",
  "report_type": "Script Report",
  "roles": [
   {
@@ -25,5 +26,6 @@
   {
    "role": "Vehicles Administrator"
   }
- ]
+ ],
+ "timeout": 0
 }
