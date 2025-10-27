@@ -1,5 +1,6 @@
 {
  "add_total_row": 1,
+ "add_translate_data": 0,
  "columns": [],
  "creation": "2024-10-04 12:28:47.228307",
  "disabled": 0,
@@ -9,7 +10,7 @@
  "idx": 1,
  "is_standard": "Yes",
  "letterhead": null,
- "modified": "2025-07-08 14:16:51.734561",
+ "modified": "2025-10-24 09:49:07.068662",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Retail Between Dates",

@@ -9,8 +9,9 @@
  "filters": [],
  "idx": 55,
  "is_standard": "Yes",
+ "json": "{}",
  "letterhead": null,
- "modified": "2025-07-04 15:42:02.744030",
+ "modified": "2025-10-24 09:49:06.551850",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicle Stock",
@@ -18,16 +19,10 @@
  "prepared_report": 0,
  "ref_doctype": "Vehicle Stock",
  "report_name": "Vehicle Stock",
- "report_type": "Script Report",
+ "report_type": "Report Builder",
  "roles": [
   {
    "role": "System Manager"
-  },
-  {
-   "role": "Vehicles Administrator"
-  },
-  {
-   "role": "Dealer Vehicle Administrator"
   }
  ],
  "timeout": 0

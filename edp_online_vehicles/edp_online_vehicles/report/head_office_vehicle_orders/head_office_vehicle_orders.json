@@ -1,5 +1,6 @@
 {
  "add_total_row": 0,
+ "add_translate_data": 0,
  "columns": [
   {
    "fieldname": "name",
@@ -80,7 +81,7 @@
  "json": "{\"filters\":[[\"Head Office Vehicle Orders\",\"status\",\"in\",[\"Pending\",\"Processed\"],false]],\"fields\":[[\"name\",\"Head Office Vehicle Orders\"],[\"docstatus\",\"Head Office Vehicle Orders\"],[\"order_placed_by\",\"Head Office Vehicle Orders\"],[\"order_type\",\"Head Office Vehicle Orders\"],[\"status\",\"Head Office Vehicle Orders\"],[\"order_datetime\",\"Head Office Vehicle Orders\"],[\"model\",\"Head Office Vehicle Orders\"],[\"description\",\"Head Office Vehicle Orders\"],[\"colour\",\"Head Office Vehicle Orders\"],[\"vinserial_no\",\"Head Office Vehicle Orders\"],[\"purpose\",\"Head Office Vehicle Orders\"],[\"dealer_order_no\",\"Head Office Vehicle Orders\"]],\"order_by\":\"`tabHead Office Vehicle Orders`.`modified` desc\",\"add_totals_row\":0,\"page_length\":20,\"column_widths\":{\"name\":160,\"order_placed_by\":168,\"order_type\":120,\"status\":120,\"order_datetime\":120,\"model\":203,\"description\":277,\"colour\":102,\"vinserial_no\":189,\"purpose\":120,\"dealer_order_no\":120},\"group_by\":null}",
  "letter_head": "Mahindra Letter Head",
  "letterhead": null,
- "modified": "2025-05-08 10:56:08.489561",
+ "modified": "2025-10-24 09:49:07.145632",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Head Office Vehicle Orders",

@@ -1,15 +1,16 @@
 {
  "add_total_row": 0,
+ "add_translate_data": 0,
  "columns": [],
  "creation": "2024-10-11 17:25:13.634318",
  "disabled": 0,
  "docstatus": 0,
  "doctype": "Report",
  "filters": [],
- "idx": 1,
+ "idx": 56,
  "is_standard": "Yes",
  "letterhead": null,
- "modified": "2025-01-22 10:27:03.702943",
+ "modified": "2025-10-24 09:49:06.934497",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "NAAMSA Report",
@@ -24,6 +25,9 @@
   },
   {
    "role": "Vehicles Administrator"
+  },
+  {
+   "role": "Dealer Vehicle Administrator"
   }
  ],
  "timeout": 0

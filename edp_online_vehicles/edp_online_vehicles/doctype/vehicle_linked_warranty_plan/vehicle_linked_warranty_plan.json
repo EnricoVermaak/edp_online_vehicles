@@ -9,7 +9,13 @@
   "column_break_vlrc",
   "status",
   "section_break_okup",
-  "vin_serial_no"
+  "vin_serial_no",
+  "model_description",
+  "model_code",
+  "column_break_djzf",
+  "warranty_plan",
+  "warranty_limit_km_hours",
+  "warranty_period_months"
  ],
  "fields": [
   {
@@ -23,7 +29,7 @@
    "fieldname": "status",
    "fieldtype": "Select",
    "label": "Status",
-   "options": "Active\nInactive"
+   "options": "Pending Activation\nActive\nExpired\nCancelled"
   },
   {
    "fieldname": "column_break_vlrc",
@@ -38,12 +44,50 @@
    "fieldtype": "Link",
    "label": "VIN/ Serial No",
    "options": "Vehicle Stock"
+  },
+  {
+   "fetch_from": "vin_serial_no.description",
+   "fieldname": "model_description",
+   "fieldtype": "Data",
+   "label": "Model Description ",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "vin_serial_no.model",
+   "fieldname": "model_code",
+   "fieldtype": "Data",
+   "label": "Model Code",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_djzf",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "warranty_plan",
+   "fieldtype": "Link",
+   "label": "Warranty Plan",
+   "options": "Vehicles Warranty Plan Administration"
+  },
+  {
+   "fetch_from": "warranty_plan.warranty_odo_limit",
+   "fieldname": "warranty_limit_km_hours",
+   "fieldtype": "Int",
+   "label": "Warranty Limit (KM/ Hours)",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "warranty_plan.warranty_period_months",
+   "fieldname": "warranty_period_months",
+   "fieldtype": "Int",
+   "label": "Warranty Period (Months)",
+   "read_only": 1
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-10-15 11:04:39.934527",
+ "modified": "2025-10-24 08:38:21.842273",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicle Linked Warranty Plan",

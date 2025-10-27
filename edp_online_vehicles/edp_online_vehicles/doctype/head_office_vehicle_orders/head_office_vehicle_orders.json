@@ -381,7 +381,7 @@
    "read_only": 1
   },
   {
-   "depends_on": "eval: doc.vinserial_no\n",
+   "depends_on": "eval: doc.vinserial_no && !doc.__unsaved == 1\r\n",
    "fieldname": "un_allocate",
    "fieldtype": "Button",
    "label": "Un-Allocate"
@@ -544,6 +544,7 @@
  "is_submittable": 1,
  "links": [],
  "modified": "2025-10-26 23:20:40.877420",
+ "modified": "2025-10-24 13:33:48.468486",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Head Office Vehicle Orders",

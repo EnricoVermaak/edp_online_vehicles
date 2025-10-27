@@ -1,15 +1,16 @@
 {
  "add_total_row": 0,
+ "add_translate_data": 0,
  "columns": [],
  "creation": "2024-08-26 15:52:02.697667",
  "disabled": 0,
  "docstatus": 0,
  "doctype": "Report",
  "filters": [],
- "idx": 54,
+ "idx": 109,
  "is_standard": "Yes",
  "letterhead": null,
- "modified": "2025-01-22 10:26:42.464514",
+ "modified": "2025-10-24 09:49:06.783987",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "AA Report",
@@ -24,6 +25,12 @@
   },
   {
    "role": "Customer"
+  },
+  {
+   "role": "Dealer Vehicle Administrator"
+  },
+  {
+   "role": "Vehicles Administrator"
   }
  ],
  "timeout": 0

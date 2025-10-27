@@ -1,5 +1,6 @@
 {
  "add_total_row": 0,
+ "add_translate_data": 0,
  "columns": [],
  "creation": "2024-07-17 10:04:24.245105",
  "disabled": 0,
@@ -8,10 +9,10 @@
  "filters": [],
  "idx": 0,
  "is_standard": "Yes",
- "json": "{\"filters\":[[\"Vehicles Load Test\",\"load_test_status\",\"!=\",\"Pending\",false]],\"fields\":[[\"name\",\"vehicles Load Test\"],[\"docstatus\",\"vehicles Load Test\"],[\"vin_serial_no\",\"vehicles Load Test\"],[\"tested_on\",\"vehicles Load Test\"],[\"tested_by\",\"vehicles Load Test\"],[\"next_load_test\",\"vehicles Load Test\"],[\"next_inspection_date\",\"vehicles Load Test\"],[\"model\",\"vehicles Load Test\"],[\"owner\",\"vehicles Load Test\"],[\"brand\",\"vehicles Load Test\"],[\"creation\",\"vehicles Load Test\"],[\"current_location\",\"vehicles Load Test\"],[\"customer\",\"vehicles Load Test\"],[\"customer_name\",\"vehicles Load Test\"],[\"forks_serial_no\",\"vehicles Load Test\"],[\"modified_by\",\"vehicles Load Test\"],[\"modified\",\"vehicles Load Test\"],[\"_liked_by\",\"vehicles Load Test\"],[\"load_test_status\",\"vehicles Load Test\"],[\"load_test_template\",\"vehicles Load Test\"],[\"load_tested_at\",\"vehicles Load Test\"],[\"mast_model_mm\",\"vehicles Load Test\"],[\"load_test_at\",\"vehicles Load Test\"],[\"tested_by_signature\",\"vehicles Load Test\"],[\"tested_by_full_name\",\"vehicles Load Test\"],[\"standard_capacity\",\"vehicles Load Test\"],[\"required_load_test_pass_rate\",\"vehicles Load Test\"],[\"rated_capacity_kg\",\"vehicles Load Test\"],[\"hour_meter\",\"vehicles Load Test\"],[\"model_year\",\"vehicles Load Test\"],[\"model_description\",\"vehicles Load Test\"]],\"order_by\":\"`tabVehicles Load Test`.`modified` desc\",\"add_totals_row\":true,\"page_length\":20,\"column_widths\":{\"name\":120,\"docstatus\":120,\"vin_serial_no\":120,\"tested_on\":120,\"tested_by\":120,\"next_load_test\":120,\"next_inspection_date\":120,\"model\":120,\"owner\":120,\"brand\":120,\"creation\":120,\"current_location\":120,\"customer\":120,\"customer_name\":120,\"forks_serial_no\":120,\"modified_by\":120,\"modified\":120,\"_liked_by\":120,\"load_test_status\":120,\"load_test_template\":120,\"load_tested_at\":120,\"mast_model_mm\":120,\"load_test_at\":120,\"tested_by_signature\":120,\"tested_by_full_name\":120,\"standard_capacity\":120,\"required_load_test_pass_rate\":120,\"rated_capacity_kg\":120,\"hour_meter\":120,\"model_year\":120,\"model_description\":120},\"group_by\":null}",
+ "json": "{\"filters\":[[\"Vehicles Load Test\",\"load_test_status\",\"!=\",\"Pending\",false]],\"fields\":[[\"name\",\"Vehicles Load Test\"],[\"docstatus\",\"Vehicles Load Test\"],[\"vin_serial_no\",\"Vehicles Load Test\"],[\"tested_on\",\"Vehicles Load Test\"],[\"tested_by\",\"Vehicles Load Test\"],[\"next_load_test\",\"Vehicles Load Test\"],[\"next_inspection_date\",\"Vehicles Load Test\"],[\"model\",\"Vehicles Load Test\"],[\"owner\",\"Vehicles Load Test\"],[\"brand\",\"Vehicles Load Test\"],[\"creation\",\"Vehicles Load Test\"],[\"current_location\",\"Vehicles Load Test\"],[\"customer\",\"Vehicles Load Test\"],[\"customer_name\",\"Vehicles Load Test\"],[\"forks_serial_no\",\"Vehicles Load Test\"],[\"modified_by\",\"Vehicles Load Test\"],[\"modified\",\"Vehicles Load Test\"],[\"_liked_by\",\"Vehicles Load Test\"],[\"load_test_status\",\"Vehicles Load Test\"],[\"load_test_template\",\"Vehicles Load Test\"],[\"load_tested_at\",\"Vehicles Load Test\"],[\"mast_model_mm\",\"Vehicles Load Test\"],[\"load_test_at\",\"Vehicles Load Test\"],[\"tested_by_signature\",\"Vehicles Load Test\"],[\"tested_by_full_name\",\"Vehicles Load Test\"],[\"standard_capacity\",\"Vehicles Load Test\"],[\"required_load_test_pass_rate\",\"Vehicles Load Test\"],[\"rated_capacity_kg\",\"Vehicles Load Test\"],[\"hour_meter\",\"Vehicles Load Test\"],[\"model_year\",\"Vehicles Load Test\"],[\"model_description\",\"Vehicles Load Test\"]],\"order_by\":\"`tabVehicles Load Test`.`modified` desc\",\"add_totals_row\":true,\"page_length\":20,\"column_widths\":{\"name\":120,\"docstatus\":120,\"vin_serial_no\":120,\"tested_on\":120,\"tested_by\":120,\"next_load_test\":120,\"next_inspection_date\":120,\"model\":120,\"owner\":120,\"brand\":120,\"creation\":120,\"current_location\":120,\"customer\":120,\"customer_name\":120,\"forks_serial_no\":120,\"modified_by\":120,\"modified\":120,\"_liked_by\":120,\"load_test_status\":120,\"load_test_template\":120,\"load_tested_at\":120,\"mast_model_mm\":120,\"load_test_at\":120,\"tested_by_signature\":120,\"tested_by_full_name\":120,\"standard_capacity\":120,\"required_load_test_pass_rate\":120,\"rated_capacity_kg\":120,\"hour_meter\":120,\"model_year\":120,\"model_description\":120},\"group_by\":null}",
  "letter_head": "HQ Letterhead",
  "letterhead": null,
- "modified": "2024-07-17 10:06:07.206847",
+ "modified": "2025-10-24 09:49:11.626258",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Completed Load Tests",
@@ -26,9 +27,7 @@
   },
   {
    "role": "Aftersales Manager"
-  },
-  {
-   "role": "Service Administrator"
   }
- ]
+ ],
+ "timeout": 0
 }

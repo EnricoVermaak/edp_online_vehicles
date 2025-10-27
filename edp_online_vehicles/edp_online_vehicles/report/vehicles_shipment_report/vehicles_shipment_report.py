@@ -60,7 +60,7 @@ def get_columns():
 		{"label": _("Jet No"), "fieldname": "jet_no", "fieldtype": "Data", "width": 150},
 		{"label": _("Frame No"), "fieldname": "frame_no", "fieldtype": "Data", "width": 150},
 		{"label": _("Colour"), "fieldname": "colour", "fieldtype": "Data", "width": 150},
-		{"label": _("Colour Code"), "fieldname": "colour_code", "fieldtype": "Data", "width": 150},
+		#{"label": _("Colour Code"), "fieldname": "colour_code", "fieldtype": "Data", "width": 150},
 		{
 			"label": _("Cost Price (Excl)"),
 			"fieldname": "cost_price_excl",
@@ -111,7 +111,7 @@ def get_data(filters):
 			items.jet_no,
 			items.frame_no,
 			items.colour,
-			items.colour_code,
+			#items.colour_code,
 			items.cost_price_excl,
 		)
 		.orderby(shipment.vessel_name)
