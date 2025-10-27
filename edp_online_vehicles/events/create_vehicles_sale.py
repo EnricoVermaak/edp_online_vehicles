@@ -4,6 +4,43 @@ import frappe
 from frappe.utils import nowdate, add_months
 from datetime import datetime
 
+
+def update_vehicle_linked_warranty_plans_on_retail(vin_serial_no, retail_date):
+	# Update Vehicle Linked Warranty Plans when vehicle is retailed
+	try:
+		linked_warranties = frappe.get_all(
+			"Vehicle Linked Warranty Plan",
+			filters={
+				"vin_serial_no": vin_serial_no,
+				"status": "Pending Activation"
+			},
+			fields=["name", "warranty_plan_description"]
+		)
+		
+		for warranty in linked_warranties:
+			warranty_doc = frappe.get_doc("Vehicle Linked Warranty Plan", warranty.name, ignore_permissions=True)
+			
+			warranty_doc.status = "Active"
+			
+			warranty_doc.warranty_start_date = retail_date
+			
+			period_months = frappe.get_value(
+				"Vehicles Warranty Plan Administration",
+				warranty.warranty_plan_description,
+				"warranty_period_months"
+			)
+			
+			if period_months:
+				warranty_start_datetime = datetime.strptime(retail_date, "%Y-%m-%d")
+				warranty_end_datetime = add_months(warranty_start_datetime, int(period_months))
+				warranty_doc.warranty_end_date = warranty_end_datetime.strftime("%Y-%m-%d")
+			
+			warranty_doc.save(ignore_permissions=True)
+			frappe.db.commit()
+			
+	except Exception as e:
+		frappe.log_error(f"Error updating Vehicle Linked Warranty Plans on retail: {str(e)}")
+
 @frappe.whitelist()
 def create_vehicles_sale(
 	vehicles_data, dealer, status, sale_type, finance_method, sales_person, customer, finance_by
@@ -200,7 +237,10 @@ def remove_from_stock_on_sale(docname):
 
 			stock_doc.save(ignore_permissions=True)
 			
-	
+			# Update Vehicle Linked Warranty Plans to Active status
+			update_vehicle_linked_warranty_plans_on_retail(stock.vin_serial_no, current_date)
+			
+
 			now = datetime.now()
 			user = frappe.session.user
 

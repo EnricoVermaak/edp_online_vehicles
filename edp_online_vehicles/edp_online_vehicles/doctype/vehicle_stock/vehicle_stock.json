@@ -330,12 +330,14 @@
   {
    "fieldname": "warranty_start_date",
    "fieldtype": "Date",
-   "label": "Warranty Start Date"
+   "label": "Warranty Start Date",
+   "read_only": 1
   },
   {
    "fieldname": "warranty_end_date",
    "fieldtype": "Date",
-   "label": "Warranty End Date"
+   "label": "Warranty End Date",
+   "read_only": 1
   },
   {
    "fieldname": "service_tab",
@@ -792,7 +794,7 @@
    "link_fieldname": "vin_serial_no"
   }
  ],
- "modified": "2025-10-24 16:37:57.337069",
+ "modified": "2025-10-27 13:17:04.594949",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicle Stock",
