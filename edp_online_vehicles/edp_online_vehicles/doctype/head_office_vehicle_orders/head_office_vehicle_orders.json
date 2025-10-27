@@ -41,6 +41,7 @@
   "credit_note_comment",
   "total_excl_vat",
   "credit_note",
+  "check_credit_note",
   "sap_integration_section",
   "integration_retry_count",
   "failed_integration",
@@ -440,8 +441,7 @@
   {
    "fieldname": "sap_invoice_no",
    "fieldtype": "Data",
-   "label": "SAP Invoice No",
-   "read_only": 1
+   "label": "SAP Invoice No"
   },
   {
    "fieldname": "sap_invoice",
@@ -533,12 +533,17 @@
    "fieldtype": "Data",
    "label": "Transaction ID",
    "read_only": 1
+  },
+  {
+   "fieldname": "check_credit_note",
+   "fieldtype": "Button",
+   "label": "Check Credit Note"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-10-15 06:41:23.160750",
+ "modified": "2025-10-26 23:20:40.877420",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Head Office Vehicle Orders",

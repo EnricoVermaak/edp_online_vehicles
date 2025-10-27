@@ -852,6 +852,58 @@ frappe.ui.form.on("Head Office Vehicle Orders", {
 	status(frm) {
 		toggle_vin_serial_requirement(frm);
 	},
+
+	check_invoice(frm) {
+		frappe.call({
+			method: "edp_online_vehicles_mahindrasa.integrations.sap_integration.request_sap_invoice",
+			args: {
+				docname: frm.doc.name,
+			},
+			freeze: true,
+			freeze_message: __("Checking Invoice..."),
+			callback: function(r) {
+				if (r.message) {
+					frappe.show_alert({
+						message: r.message,
+						indicator: "green"
+					}, 5);
+				}
+				frm.reload_doc();
+			},
+			error: function(r) {
+				frappe.show_alert({
+					message: r.message || __("Failed to check invoice"),
+					indicator: "red"
+				}, 5);
+			}
+		});
+	},
+
+	check_credit_note(frm) {
+		frappe.call({
+			method: "edp_online_vehicles_mahindrasa.integrations.sap_integration.request_sap_credit_note",
+			args: {
+				docname: frm.doc.name,
+			},
+			freeze: true,
+			freeze_message: __("Requesting Credit Note..."),
+			callback: function(r) {
+				if (r.message) {
+					frappe.show_alert({
+						message: r.message,
+						indicator: "green"
+					}, 5);
+				}
+				frm.reload_doc();
+			},
+			error: function(r) {
+				frappe.show_alert({
+					message: r.message || __("Failed to request credit note"),
+					indicator: "red"
+				}, 5);
+			}
+		});
+	}
 });
 
 function toggle_vin_serial_requirement(frm) {

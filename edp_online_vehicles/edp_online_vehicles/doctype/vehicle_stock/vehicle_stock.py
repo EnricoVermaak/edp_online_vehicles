@@ -10,13 +10,17 @@ from frappe.utils import add_years, add_months
 
 class VehicleStock(Document):
 	def validate(self):
+ 
+		self.update_warranty_period()
+		self.update_warranty_km_hours_limit()
+		self.sort_warranty_plans_by_creation()
 		
 		if self.warranty_period_years and self.warranty_start_date:
-			# Convert the period to months for calculation (field is named years but contains months)
+			# Convert the period to months for calculation
 			self.warranty_end_date = add_months(self.warranty_start_date, int(self.warranty_period_years))
 			
 		if self.service_period_years and self.service_start_date:
-			# Convert the period to months for calculation (field is named years but contains months)
+			# Convert the period to months for calculation
 			self.service_end_date = add_months(self.service_start_date, int(self.service_period_years))
 
 	def before_insert(self):
@@ -153,6 +157,44 @@ class VehicleStock(Document):
 			self.save()
 
 			return "Confirm"
+
+	def update_warranty_period(self):
+		if hasattr(self, 'table_pcgj') and self.table_pcgj:
+			total_months = 0
+			for plan in self.table_pcgj:
+				if plan.period_months:
+					total_months += int(plan.period_months)
+			self.warranty_period_years = total_months
+		else:
+			self.warranty_period_years = 0
+
+	def sort_warranty_plans_by_creation(self):
+		if hasattr(self, 'table_pcgj') and self.table_pcgj:
+			# Sort by creation date of linked Warranty Plan Administration
+			def get_creation_time(plan):
+				if plan.warranty_plan_description:
+					return frappe.db.get_value(
+						"Vehicles Warranty Plan Administration",
+						plan.warranty_plan_description,
+						"creation"
+					) or frappe.utils.now()
+				return frappe.utils.now()
+			
+			self.table_pcgj.sort(key=lambda x: (get_creation_time(x), x.idx or 999))
+			
+			# Update idx to reflect the sorted order
+			for idx, plan in enumerate(self.table_pcgj, start=1):
+				plan.idx = idx
+
+	def update_warranty_km_hours_limit(self):
+		if hasattr(self, 'table_pcgj') and self.table_pcgj:
+			max_odo_limit = 0
+			
+			for warranty_plan in self.table_pcgj:
+				if warranty_plan.warranty_odo_limit and warranty_plan.warranty_odo_limit > max_odo_limit:
+					max_odo_limit = warranty_plan.warranty_odo_limit
+			
+			self.warranty_km_hours_limit = int(max_odo_limit) if max_odo_limit > 0 else None
 
 	def increment_stock_number(self, stock_number):
 		# Split the prefix and number part
