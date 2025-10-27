@@ -35,11 +35,6 @@
    "label": "Last Service Date"
   },
   {
-   "fieldname": "last_load_test_date",
-   "fieldtype": "Date",
-   "label": "Last Load Test Date"
-  },
-  {
    "fieldname": "model",
    "fieldtype": "Link",
    "label": "Model"
@@ -290,19 +285,6 @@
    "fieldtype": "Date",
    "hidden": 0,
    "label": "Last Load Test Date",
-   "max_length": 0,
-   "max_value": 0,
-   "precision": "",
-   "read_only": 0,
-   "reqd": 0,
-   "show_in_filter": 0
-  },
-  {
-   "allow_read_on_all_link_options": 0,
-   "fieldname": "next_load_test_date",
-   "fieldtype": "Date",
-   "hidden": 0,
-   "label": "Next Load Test Date",
    "max_length": 0,
    "max_value": 0,
    "precision": "",

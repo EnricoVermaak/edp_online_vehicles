@@ -1642,14 +1642,6 @@
     "parenttype": "Web Form"
    },
    {
-    "fieldname": "last_load_test_date",
-    "fieldtype": "Date",
-    "label": "Last Load Test Date",
-    "parent": "Vehicles",
-    "parentfield": "list_columns",
-    "parenttype": "Web Form"
-   },
-   {
     "fieldname": "model",
     "fieldtype": "Link",
     "label": "Model",
@@ -2064,28 +2056,6 @@
     "fieldtype": "Date",
     "hidden": 0,
     "label": "Last Load Test Date",
-    "mandatory_depends_on": null,
-    "max_length": 0,
-    "max_value": 0,
-    "options": null,
-    "parent": "Vehicles",
-    "parentfield": "web_form_fields",
-    "parenttype": "Web Form",
-    "precision": "",
-    "read_only": 0,
-    "read_only_depends_on": null,
-    "reqd": 0,
-    "show_in_filter": 0
-   },
-   {
-    "allow_read_on_all_link_options": 0,
-    "default": null,
-    "depends_on": null,
-    "description": null,
-    "fieldname": "next_load_test_date",
-    "fieldtype": "Date",
-    "hidden": 0,
-    "label": "Next Load Test Date",
     "mandatory_depends_on": null,
     "max_length": 0,
     "max_value": 0,
