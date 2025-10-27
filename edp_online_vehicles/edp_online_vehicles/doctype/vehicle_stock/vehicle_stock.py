@@ -27,14 +27,14 @@ class VehicleStock(Document):
 			# Convert the period to months for calculation (field is named years but contains months)
 			self.service_end_date = add_months(self.service_start_date, int(self.service_period_years))			
 
-		linked_plans = frappe.get_all("Vehicle Linked Service Plan", filters={"vin_serial_no": self.name}, pluck="name")
-		for plan_name in linked_plans:
-			plan = frappe.get_doc("Vehicle Linked Service Plan",plan_name)
-			if self.availability_status == "Sold":
-				plan.status = "Active"
-			elif self.availability_status == "Available":
-				plan.status = "Pending Activation"
-			plan.save(ignore_permissions=True)
+		# linked_plans = frappe.get_all("Vehicle Linked Service Plan", filters={"vin_serial_no": self.name}, pluck="name")
+		# for plan_name in linked_plans:
+		# 	plan = frappe.get_doc("Vehicle Linked Service Plan",plan_name)
+		# 	if self.availability_status == "Sold":
+		# 		plan.status = "Active"
+		# 	elif self.availability_status == "Available":
+		# 		plan.status = "Pending Activation"
+		# 	plan.save(ignore_permissions=True)
 
 	def before_insert(self):
 		if self.type == "Used":
