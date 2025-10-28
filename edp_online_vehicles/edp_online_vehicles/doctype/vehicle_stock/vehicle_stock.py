@@ -10,7 +10,7 @@ from frappe.utils import add_years, add_months, today
 
 class VehicleStock(Document):
 	def validate(self):
-		
+ 
 		self.service_period_years = sum([row.period_months or 0 for row in self.table_gtny])
 
 		self.service_km_hours_limit = max([row.odo_limit or 0 for row in self.table_gtny], default=0)
@@ -18,7 +18,7 @@ class VehicleStock(Document):
 		if self.availability_status == "Sold" and not self.service_start_date:
 			self.service_start_date = frappe.utils.today()
 			self.service_end_date = add_months(self.service_start_date, self.service_period_years or 0)
- 
+
 		self.update_warranty_period()
 		self.update_warranty_km_hours_limit()
 		self.sort_warranty_plans_by_creation()
@@ -30,7 +30,7 @@ class VehicleStock(Document):
 		if self.service_period_years and self.service_start_date:
 			# Convert the period to months for calculation
 			self.service_end_date = add_months(self.service_start_date, int(self.service_period_years))
-
+	
 		# linked_plans = frappe.get_all("Vehicle Linked Service Plan", filters={"vin_serial_no": self.name}, pluck="name")
 		# for plan_name in linked_plans:
 		# 	plan = frappe.get_doc("Vehicle Linked Service Plan",plan_name)
@@ -38,7 +38,8 @@ class VehicleStock(Document):
 		# 		plan.status = "Active"
 		# 	elif self.availability_status == "Available":
 		# 		plan.status = "Pending Activation"
-		# 	plan.save(ignore_permissions=True)
+		# 	plan.save(ignore_permissions=True)	
+
 
 	def before_insert(self):
 		if self.type == "Used":
