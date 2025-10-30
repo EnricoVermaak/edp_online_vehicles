@@ -26,76 +26,145 @@ frappe.ui.form.on("Vehicles Shipment", {
 				});
 		}
 
-		if (!frm.doc.__islocal && frm.doc.docstatus === 0) {
-			frm.add_custom_button(__("Receive"), function () {
-				frappe.dom.freeze();
+		frm.add_custom_button(__("Receive"), function () {
+			frappe.dom.freeze();
 
-				var selected_items = [];
-				var promises = [];
+			var selected_items = [];
+			var promises = [];
 
-				frm.doc["vehicles_shipment_items"].forEach(function (row) {
-					if (row.__checked) {
-						if (!row.target_warehouse) {
-							frappe.model.set_value(
-								row.doctype,
-								row.name,
-								"target_warehouse",
-								frm.doc.target_warehouse,
-							);
-						}
-
-						if (!row.colour) {
-							frappe.throw(
-								"Please ensure all selected vehicles have colours assigned to them.",
-							);
-						}
-
-						if (row.vin_serial_no) {
-							const promise = frappe.db
-								.get_doc("Vehicle Stock Settings")
-								.then((setting_doc) => {
-									if (
-										setting_doc.automatically_create_stock_number
-									) {
-										var lastStockNo = stockNo;
-
-										const nextStockNo =
-											incrementStockNumber(lastStockNo);
-										console.log(nextStockNo);
-
-										frappe.model.set_value(
-											row.doctype,
-											row.name,
-											"stock_no",
-											nextStockNo,
-										);
-									}
-
-									selected_items.push(row);
-								});
-							promises.push(promise);
-						} else {
-							frappe.throw(
-								"Please ensure all selected vehicles have VIN/Serial No's assigned to them.",
-							);
-						}
+			frm.doc["vehicles_shipment_items"].forEach(function (row) {
+				if (row.__checked) {
+					if (!row.target_warehouse) {
+						frappe.model.set_value(
+							row.doctype,
+							row.name,
+							"target_warehouse",
+							frm.doc.target_warehouse
+						);
 					}
+
+					if (!row.colour) {
+						frappe.throw(
+							"Please ensure all selected vehicles have colours assigned to them."
+						);
+					}
+
+					if (row.vin_serial_no) {
+						const promise = frappe.db
+							.get_doc("Vehicle Stock Settings")
+							.then((setting_doc) => {
+								if (setting_doc.automatically_create_stock_number) {
+									var lastStockNo = stockNo;
+									const nextStockNo = incrementStockNumber(lastStockNo);
+									console.log(nextStockNo);
+
+									frappe.model.set_value(
+										row.doctype,
+										row.name,
+										"stock_no",
+										nextStockNo
+									);
+								}
+								selected_items.push(row);
+							});
+						promises.push(promise);
+					} else {
+						frappe.throw(
+							"Please ensure all selected vehicles have VIN/Serial No's assigned to them."
+						);
+					}
+				}
+			});
+
+			// Wait for all promises to resolve
+			Promise.all(promises).then(() => {
+				// Update Stockno counter in Vehicle Stock Settings
+				frappe.call({
+					method: "edp_online_vehicles.events.update_stock_settings.update_stock_no",
+					args: {
+						stockNo: stockNo,
+					},
 				});
 
-				// Wait for all promises to resolve
-				Promise.all(promises).then(() => {
-					//Update Stockno counter in Vehicle Stock Settings
-					frappe.call({
-						method: "edp_online_vehicles.events.update_stock_settings.update_stock_no",
-						args: {
-							stockNo: stockNo,
-						},
+				if (selected_items.length > 0) {
+					// ------------------------------------------------------
+					// 🟢 Create Vehicle Linked Warranty & Service Plan Logic
+					// ------------------------------------------------------
+					let creation_promises = [];
+
+					selected_items.forEach((row) => {
+						let vin_serial = row.vin_serial_no;
+						let model_code = row.model_code;
+
+						// Skip if missing VIN or Model Code
+						if (!vin_serial || !model_code) {
+							console.warn("⚠️ Missing VIN or Model Code for:", row.name);
+							return;
+						}
+
+						// Create docs only if status is Received
+						if (row.status !== "Received") {
+							console.log("⏸️ Skipped:", row.name, "(Status not Received)");
+							return;
+						}
+						let p = frappe.db.get_doc("Model Administration", model_code).then((model_doc) => {
+							let default_plan = model_doc.default_service_plan;
+
+							if (default_plan) {
+								// 1️⃣ Create Vehicle Linked Warranty Plan
+								frappe.call({
+									method: "frappe.client.insert",
+									args: {
+										doc: {
+											doctype: "Vehicle Linked Warranty Plan",
+											vin_serial_no: vin_serial,
+											warranty_plan: default_plan,
+											status: "Pending Activation" 
+										},
+									},
+									callback: function (r) {
+										console.log("✅ Warranty Plan Created:", r.message?.name);
+									},
+								});
+
+								// 2️⃣ Create Vehicle Linked Service Plan
+								frappe.call({
+									method: "frappe.client.insert",
+									args: {
+										doc: {
+											doctype: "Vehicle Linked Service Plan",
+											vin__serial_no: vin_serial,
+											service_plan: default_plan,
+											status: "Pending Activation"
+										},
+									},
+									callback: function (r) {
+										console.log("✅ Service Plan Created:", r.message?.name);
+									},
+								});
+							} else {
+								console.warn(
+									"⚠️ No default_service_plan found for model:",
+									model_code
+								);
+							}
+						});
+
+						creation_promises.push(p);
 					});
 
-					if (selected_items.length > 0) {
-						frm.call("create_stock_entry", {
+					Promise.all(creation_promises).then(() => {
+						console.log("🎯 All Warranty & Service Plan docs created successfully!");
+					});
+
+					// ------------------------------------------------------
+					// 🟢 Continue with stock entry logic
+					// ------------------------------------------------------
+					frm
+						.call("create_stock_entry", {
 							selected_items: JSON.stringify(selected_items),
-						}).then((r) => {
+						})
+						.then((r) => {
 							if (r.message) {
 								if (r.message == "Received") {
 									for (let row of selected_items) {
@@ -103,12 +172,11 @@ frappe.ui.form.on("Vehicles Shipment", {
 											row.doctype,
 											row.name,
 											"status",
-											"Received",
+											"Received"
 										);
 									}
 
 									frappe.dom.unfreeze();
-
 									frm.save_or_update();
 
 									const host = window.location.hostname;
@@ -120,178 +188,23 @@ frappe.ui.form.on("Vehicles Shipment", {
 
 									if (isMahindra) {
 										frappe.call({
-											method: "edp_online_vehicles.events.tac_integration.tac_landing_outgoing",
+											method:
+												"edp_online_vehicles.events.tac_integration.tac_landing_outgoing",
 											args: {
-												selected_items:
-													JSON.stringify(
-														selected_items,
-													),
+												selected_items: JSON.stringify(selected_items),
 											},
 										});
 									}
 								}
 							}
 						});
-					} else {
-						frappe.dom.unfreeze();
-						frappe.throw("Please Select at least One Item.");
-					}
-				});
+				} else {
+					frappe.dom.unfreeze();
+					frappe.throw("Please Select at least One Item.");
+				}
 			});
+		});
 
-			frm.add_custom_button(__("Reserve"), function () {
-				let selectedRows = frm.doc["vehicles_shipment_items"].filter(
-					(row) => row.__checked,
-				);
-
-				if (selectedRows.length === 0) {
-					frappe.throw("Please select at least one item.");
-				}
-				if (selectedRows.length > 1) {
-					frappe.throw("Please select only one vehicle.");
-				}
-
-				let selectedRow = selectedRows[0];
-
-				if (!selectedRow.colour) {
-					frappe.throw(
-						"Please ensure the selected vehicle has a colour assigned.",
-					);
-				}
-				if (!selectedRow.vin_serial_no) {
-					frappe.throw(
-						"Please ensure the selected vehicle has a VIN/Serial No assigned.",
-					);
-				}
-				if (!selectedRow.target_warehouse) {
-					frappe.model.set_value(
-						selectedRow.doctype,
-						selectedRow.name,
-						"target_warehouse",
-						frm.doc.target_warehouse,
-					);
-				}
-
-				let vinno = selectedRow.vin_serial_no;
-				let model = selectedRow.model_code;
-				let colour = selectedRow.colour;
-				let dealer = frm.doc.dealer;
-
-				const dialog = new frappe.ui.Dialog({
-					title: __("Reserve Stock"),
-					fields: [
-						{
-							label: __("Dealer"),
-							fieldname: "dealer",
-							fieldtype: "Link",
-							options: "Company",
-							default: dealer,
-							read_only: 1,
-						},
-						{
-							label: __("Customer"),
-							fieldname: "customer",
-							fieldtype: "Link",
-							options: "Dealer Customer",
-						},
-						{
-							label: __("Status"),
-							fieldname: "status",
-							fieldtype: "Select",
-							options: ["Reserved"],
-							default: "Reserved",
-							read_only: 1,
-						},
-						{
-							label: __("Reserve Reason"),
-							fieldname: "reserve_reason",
-							fieldtype: "Small Text",
-							reqd: 1,
-						},
-						{
-							label: __("Reserve From Date"),
-							fieldname: "reserve_from_date",
-							fieldtype: "Date",
-							default: frappe.datetime.get_today(),
-							reqd: 1,
-						},
-						{
-							label: __("Reserve To Date"),
-							fieldname: "reserve_to_date",
-							fieldtype: "Date",
-						},
-						{
-							label: __("Vehicles"),
-							fieldname: "selected_Vehicles",
-							fieldtype: "Table",
-							read_only: 1,
-							cannot_add_rows: false,
-							in_place_edit: false,
-							fields: [
-								{
-									fieldname: "vin_serial_no",
-									fieldtype: "Link",
-									in_list_view: 1,
-									label: "VIN/ Serial No",
-									options: "Vehicle Stock",
-									read_only: 1,
-								},
-							],
-							data: [
-								{
-									vin_serial_no: vinno,
-								},
-							],
-						},
-					],
-					primary_action_label: __("Reserve"),
-					primary_action(values) {
-						let order = values.back_order;
-
-						if (
-							values.reserve_to_date &&
-							values.reserve_to_date < values.reserve_from_date
-						) {
-							frappe.msgprint(
-								__(
-									"Reserve To Date cannot be earlier than Reserve From Date.",
-								),
-							);
-							return;
-						}
-
-						frappe.call({
-							method: "edp_online_vehicles.events.create_reserve_doc.create_shipment_reserve_doc",
-							args: {
-								vinno: vinno,
-								dealer: values.dealer,
-								customer: values.customer,
-								reserve_reason: values.reserve_reason,
-								reserve_from_date: values.reserve_from_date,
-								reserve_to_date: values.reserve_to_date,
-								head_office_vehicle_order: order,
-							},
-							callback: function (response) {
-								frm.doc["vehicles_shipment_items"].forEach(
-									(row) => {
-										if (row.__checked) {
-											row.reserve_to_order = order;
-											return;
-										}
-									},
-								);
-
-								frm.save();
-							},
-						});
-
-						dialog.hide();
-					},
-				});
-
-				dialog.show();
-			});
-		}
 
 		frm.set_query(
 			"colour",
@@ -760,9 +673,9 @@ function handle_custom_buttons(frm) {
 																	df.fieldtype
 																]
 																	? value_formatter_map[
-																			df
-																				.fieldtype
-																		](value)
+																		df
+																			.fieldtype
+																	](value)
 																	: value;
 														}
 													});
@@ -805,7 +718,7 @@ function handle_custom_buttons(frm) {
 																	) => {
 																		const fieldname =
 																			fieldnames[
-																				ci
+																			ci
 																			];
 																		const df =
 																			frappe.meta.get_docfield(
@@ -823,11 +736,11 @@ function handle_custom_buttons(frm) {
 																						.fieldtype
 																				]
 																					? value_formatter_map[
-																							df
-																								.fieldtype
-																						](
-																							value,
-																						)
+																						df
+																							.fieldtype
+																					](
+																						value,
+																					)
 																					: value;
 																		}
 																	},
@@ -845,7 +758,7 @@ function handle_custom_buttons(frm) {
 																// Move to the next row after the current one is done
 																processRow(
 																	rowIndex +
-																		1,
+																	1,
 																);
 															} else {
 																// Notify user of failure to create color
@@ -854,8 +767,8 @@ function handle_custom_buttons(frm) {
 																		message:
 																			__(
 																				"Failed to create color '" +
-																					model_colour_name +
-																					"'.",
+																				model_colour_name +
+																				"'.",
 																			),
 																		title: __(
 																			"Error",
@@ -868,7 +781,7 @@ function handle_custom_buttons(frm) {
 																// Move to the next row if color creation fails
 																processRow(
 																	rowIndex +
-																		1,
+																	1,
 																);
 															}
 														},
@@ -929,34 +842,34 @@ function incrementStockNumber(stockNumber) {
 
 // Vehcile counter
 frappe.ui.form.on("Vehicles Shipment", {
-  refresh(frm) {
-    frm.trigger("calculate_total_vehicles");
-  },
+	refresh(frm) {
+		frm.trigger("calculate_total_vehicles");
+	},
 
-  calculate_total_vehicles(frm) {
-    const total = (frm.doc.vehicles_shipment_items || []).filter(
-      row => row.model_code || row.vin_serial_no
-    ).length;
+	calculate_total_vehicles(frm) {
+		const total = (frm.doc.vehicles_shipment_items || []).filter(
+			row => row.model_code || row.vin_serial_no
+		).length;
 
-    frm.set_value("total_vehicles", total);
-    frm.refresh_field("total_vehicles");
-    frm.toggle_display("total_vehicles", total > 0);
-  }
+		frm.set_value("total_vehicles", total);
+		frm.refresh_field("total_vehicles");
+		frm.toggle_display("total_vehicles", total > 0);
+	}
 });
 
 frappe.ui.form.on("Vehicles Shipment Items", {
-  vehicles_shipment_items_add(frm, cdt, cdn) {
-    frm.trigger("calculate_total_vehicles");
-  },
+	vehicles_shipment_items_add(frm, cdt, cdn) {
+		frm.trigger("calculate_total_vehicles");
+	},
 
-  vehicles_shipment_items_remove(frm, cdt, cdn) {
-    frm.trigger("calculate_total_vehicles");
-  },
+	vehicles_shipment_items_remove(frm, cdt, cdn) {
+		frm.trigger("calculate_total_vehicles");
+	},
 
-  model_code(frm) { frm.trigger("calculate_total_vehicles"); },
-  vin_serial_no(frm) { frm.trigger("calculate_total_vehicles"); },
-  cost_price_excl(frm) { frm.trigger("calculate_total_vehicles"); },
-  form_render(frm) { frm.trigger("calculate_total_vehicles"); }
+	model_code(frm) { frm.trigger("calculate_total_vehicles"); },
+	vin_serial_no(frm) { frm.trigger("calculate_total_vehicles"); },
+	cost_price_excl(frm) { frm.trigger("calculate_total_vehicles"); },
+	form_render(frm) { frm.trigger("calculate_total_vehicles"); }
 });
 
 
@@ -964,7 +877,7 @@ frappe.ui.form.on("Vehicles Shipment Items", {
 
 
 frappe.ui.form.on("Vehicles Shipment", {
-  refresh: function (frm) {
+	refresh: function (frm) {
 		frm.set_query("colour", "vehicles_shipment_items", function (doc, cdt, cdn) {
 			const row = frappe.get_doc(cdt, cdn);
 			return {

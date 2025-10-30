@@ -6,11 +6,15 @@
  "engine": "InnoDB",
  "field_order": [
   "created_datetime",
+  "activation_date_time",
+  "expiration_date_time",
+  "column_break_kfqh",
+  "status",
+  "section_break_eriy",
   "vin__serial_no",
   "model_description",
   "model_code",
-  "column_break_kfqh",
-  "status",
+  "column_break_doyv",
   "service_plan",
   "service_km_hours_limit",
   "service_period_limit_months"
@@ -30,12 +34,16 @@
   {
    "fieldname": "status",
    "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "Status",
    "options": "Pending Activation\nActive\nExpired\nCancelled"
   },
   {
    "fieldname": "vin__serial_no",
    "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "VIN / Serial No",
    "options": "Vehicle Stock"
   },
@@ -43,6 +51,8 @@
    "fetch_from": "vin__serial_no.description",
    "fieldname": "model_description",
    "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "Model Description",
    "read_only": 1
   },
@@ -56,6 +66,8 @@
   {
    "fieldname": "service_plan",
    "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "Service Plan",
    "options": "Vehicles Service Plan Administration"
   },
@@ -63,6 +75,7 @@
    "fetch_from": "vin__serial_no.service_km_hours_limit",
    "fieldname": "service_km_hours_limit",
    "fieldtype": "Int",
+   "in_list_view": 1,
    "label": "Service KM/ Hours Limit",
    "read_only": 1
   },
@@ -70,14 +83,33 @@
    "fetch_from": "service_plan.service_period_months",
    "fieldname": "service_period_limit_months",
    "fieldtype": "Int",
+   "in_list_view": 1,
    "label": "Service Period Limit (Months)",
    "read_only": 1
+  },
+  {
+   "fieldname": "activation_date_time",
+   "fieldtype": "Datetime",
+   "label": "Activation Date/ Time"
+  },
+  {
+   "fieldname": "expiration_date_time",
+   "fieldtype": "Datetime",
+   "label": "Expiration Date/ Time"
+  },
+  {
+   "fieldname": "section_break_eriy",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_doyv",
+   "fieldtype": "Column Break"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-10-24 09:38:15.935754",
+ "modified": "2025-10-30 09:42:08.807460",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicle Linked Service Plan",
