@@ -1,5 +1,9 @@
 (() => {
+<<<<<<< HEAD:edp_online_vehicles/public/dist/js/stock_availability.bundle.BTHB3O7T.js
   // frappe-html:/home/frappe/frappe-bench/apps/edp_online_vehicles/edp_online_vehicles/edp_online_vehicles/dashboard/stock_availability.html
+=======
+  // frappe-html:/home/mc/frappe-bench/apps/edp_online_vehicles/edp_online_vehicles/edp_online_vehicles/dashboard/stock_availability.html
+>>>>>>> 27a2cf5c380e76b21323b7d31120cfe6876513d1:edp_online_vehicles/public/dist/js/stock_availability.bundle.PMI6LQNN.js
   frappe.templates["stock_availability"] = `<div class="stock-levels">
 	<div class="result">
 	</div>
@@ -9,7 +13,11 @@
 </div>
 `;
 
+<<<<<<< HEAD:edp_online_vehicles/public/dist/js/stock_availability.bundle.BTHB3O7T.js
   // frappe-html:/home/frappe/frappe-bench/apps/edp_online_vehicles/edp_online_vehicles/edp_online_vehicles/dashboard/stock_availability_list.html
+=======
+  // frappe-html:/home/mc/frappe-bench/apps/edp_online_vehicles/edp_online_vehicles/edp_online_vehicles/dashboard/stock_availability_list.html
+>>>>>>> 27a2cf5c380e76b21323b7d31120cfe6876513d1:edp_online_vehicles/public/dist/js/stock_availability.bundle.PMI6LQNN.js
   frappe.templates["stock_availability_list"] = `<style>
     th.rotate {
         height: 120px;
@@ -1756,4 +1764,8 @@
     }
   };
 })();
+<<<<<<< HEAD:edp_online_vehicles/public/dist/js/stock_availability.bundle.BTHB3O7T.js
 //# sourceMappingURL=stock_availability.bundle.BTHB3O7T.js.map
+=======
+//# sourceMappingURL=stock_availability.bundle.PMI6LQNN.js.map
+>>>>>>> 27a2cf5c380e76b21323b7d31120cfe6876513d1:edp_online_vehicles/public/dist/js/stock_availability.bundle.PMI6LQNN.js
