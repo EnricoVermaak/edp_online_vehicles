@@ -40,7 +40,7 @@ frappe.pages["vehicle_stock_availa"].on_page_load = function (wrapper) {
 			});
 		});
 
-	frappe.require("stock_availability.bundle.js", function () {
+	frappe.require("stock_availability_veh.bundle.js", function () {
 		page.stock_availability =
 			new edp_online_vehicles.edp_online_vehicles.StockAvailability({
 				parent: page.main,
