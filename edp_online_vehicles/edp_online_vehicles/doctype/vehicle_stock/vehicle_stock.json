@@ -330,14 +330,12 @@
   {
    "fieldname": "warranty_start_date",
    "fieldtype": "Date",
-   "label": "Warranty Start Date",
-   "read_only": 1
+   "label": "Warranty Start Date"
   },
   {
    "fieldname": "warranty_end_date",
    "fieldtype": "Date",
-   "label": "Warranty End Date",
-   "read_only": 1
+   "label": "Warranty End Date"
   },
   {
    "fieldname": "service_tab",
@@ -650,8 +648,8 @@
   {
    "fieldname": "original_purchasing_dealer",
    "fieldtype": "Data",
-   "hidden": 1,
-   "label": "Original Purchasing Dealer"
+   "label": "Original Purchasing Dealer",
+   "read_only": 1
   },
   {
    "fetch_from": "model.range",
@@ -794,7 +792,7 @@
    "link_fieldname": "vin_serial_no"
   }
  ],
- "modified": "2025-10-27 13:17:04.594949",
+ "modified": "2025-10-29 16:14:09.147242",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicle Stock",

@@ -1,9 +1,5 @@
 (() => {
-<<<<<<<< HEAD:edp_online_vehicles/public/dist/js/stock_availability.bundle.QF7B6OAF.js
   // frappe-html:/home/frappe/frappe-bench/apps/edp_online_vehicles/edp_online_vehicles/edp_online_vehicles/dashboard/stock_availability.html
-========
-  // frappe-html:/home/mc/frappe-bench/apps/edp_online_vehicles/edp_online_vehicles/edp_online_vehicles/dashboard/stock_availability.html
->>>>>>>> 615af8410fed88256e28ad03afd118301d4e2e45:edp_online_vehicles/public/dist/js/stock_availability.bundle.PMI6LQNN.js
   frappe.templates["stock_availability"] = `<div class="stock-levels">
 	<div class="result">
 	</div>
@@ -13,11 +9,7 @@
 </div>
 `;
 
-<<<<<<<< HEAD:edp_online_vehicles/public/dist/js/stock_availability.bundle.QF7B6OAF.js
   // frappe-html:/home/frappe/frappe-bench/apps/edp_online_vehicles/edp_online_vehicles/edp_online_vehicles/dashboard/stock_availability_list.html
-========
-  // frappe-html:/home/mc/frappe-bench/apps/edp_online_vehicles/edp_online_vehicles/edp_online_vehicles/dashboard/stock_availability_list.html
->>>>>>>> 615af8410fed88256e28ad03afd118301d4e2e45:edp_online_vehicles/public/dist/js/stock_availability.bundle.PMI6LQNN.js
   frappe.templates["stock_availability_list"] = `<style>
     th.rotate {
         height: 120px;
@@ -1377,13 +1369,8 @@
 												<tr><th>Category</th><td>${modelData.category || ""}</td></tr>
 												<tr><th>Class</th><td>${modelData.class_ || ""}</td></tr>
 												<tr><th>M&M Code</th><td>${modelData.mm_code || ""}</td></tr>
-<<<<<<<< HEAD:edp_online_vehicles/public/dist/js/stock_availability.bundle.QF7B6OAF.js
-												<tr><th>Dealer Billing</th><td>${modelData.dealer_billing_excl || ""}</td></tr>
-												<tr><th>Suggested Retail</th><td>${modelData.suggested_retail_excl || ""}</td></tr>
-========
 												<tr><th>Dealer Billing</th><td>R${modelData.dealer_billing_excl || ""}</td></tr>
 												<tr><th>Suggested Retail</th><td>R${modelData.suggested_retail_excl || ""}</td></tr>
->>>>>>>> 615af8410fed88256e28ad03afd118301d4e2e45:edp_online_vehicles/public/dist/js/stock_availability.bundle.PMI6LQNN.js
 												<tr><th>Engine Displacement</th><td>${modelData.engine_displacement || ""}</td></tr>
 											</tbody>
 										</table>
@@ -1769,8 +1756,4 @@
     }
   };
 })();
-<<<<<<<< HEAD:edp_online_vehicles/public/dist/js/stock_availability.bundle.QF7B6OAF.js
-//# sourceMappingURL=stock_availability.bundle.QF7B6OAF.js.map
-========
-//# sourceMappingURL=stock_availability.bundle.PMI6LQNN.js.map
->>>>>>>> 615af8410fed88256e28ad03afd118301d4e2e45:edp_online_vehicles/public/dist/js/stock_availability.bundle.PMI6LQNN.js
+//# sourceMappingURL=stock_availability.bundle.BTHB3O7T.js.map

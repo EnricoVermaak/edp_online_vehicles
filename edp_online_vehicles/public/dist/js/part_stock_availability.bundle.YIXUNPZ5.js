@@ -124,11 +124,7 @@
     }
   };
 
-<<<<<<<< HEAD:edp_online_vehicles/public/dist/js/part_stock_availability.bundle.YIXUNPZ5.js
   // frappe-html:/home/frappe/frappe-bench/apps/edp_online_vehicles/edp_online_vehicles/edp_online_vehicles/page/part_stock_availabil/part_stock_availability_list.html
-========
-  // frappe-html:/home/mc/frappe-bench/apps/edp_online_vehicles/edp_online_vehicles/edp_online_vehicles/page/part_stock_availabil/part_stock_availability_list.html
->>>>>>>> 615af8410fed88256e28ad03afd118301d4e2e45:edp_online_vehicles/public/dist/js/part_stock_availability.bundle.YGH7PC4A.js
   frappe.templates["part_stock_availability_list"] = `<style>
     th.rotate {
         height: 120px;
@@ -631,11 +627,7 @@
 </div>
 `;
 
-<<<<<<<< HEAD:edp_online_vehicles/public/dist/js/part_stock_availability.bundle.YIXUNPZ5.js
   // frappe-html:/home/frappe/frappe-bench/apps/edp_online_vehicles/edp_online_vehicles/edp_online_vehicles/page/part_stock_availabil/part_stock_availability.html
-========
-  // frappe-html:/home/mc/frappe-bench/apps/edp_online_vehicles/edp_online_vehicles/edp_online_vehicles/page/part_stock_availabil/part_stock_availability.html
->>>>>>>> 615af8410fed88256e28ad03afd118301d4e2e45:edp_online_vehicles/public/dist/js/part_stock_availability.bundle.YGH7PC4A.js
   frappe.templates["part_stock_availability"] = `<div class="stock-levels">
 	<div class="result">
 	</div>
@@ -645,8 +637,4 @@
 </div>
 `;
 })();
-<<<<<<<< HEAD:edp_online_vehicles/public/dist/js/part_stock_availability.bundle.YIXUNPZ5.js
 //# sourceMappingURL=part_stock_availability.bundle.YIXUNPZ5.js.map
-========
-//# sourceMappingURL=part_stock_availability.bundle.YGH7PC4A.js.map
->>>>>>>> 615af8410fed88256e28ad03afd118301d4e2e45:edp_online_vehicles/public/dist/js/part_stock_availability.bundle.YGH7PC4A.js

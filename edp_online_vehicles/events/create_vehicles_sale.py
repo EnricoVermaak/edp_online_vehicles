@@ -236,6 +236,12 @@ def remove_from_stock_on_sale(docname):
 			stock_doc.add_comment("Comment", comment)
 
 			stock_doc.save(ignore_permissions=True)
+
+			linked_plans = frappe.get_all("Vehicle Linked Service Plan", filters={"vin__serial_no": stock.vin_serial_no}, pluck="name")
+			for plan_name in linked_plans:
+				plan_doc = frappe.get_doc("Vehicle Linked Service Plan", plan_name)
+				plan_doc.status = "Active"
+				plan_doc.save(ignore_permissions=True)
 			
 			# Update Vehicle Linked Warranty Plans to Active status
 			update_vehicle_linked_warranty_plans_on_retail(stock.vin_serial_no, current_date)

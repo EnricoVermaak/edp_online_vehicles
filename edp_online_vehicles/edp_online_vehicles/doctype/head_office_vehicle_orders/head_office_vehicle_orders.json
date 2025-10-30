@@ -435,8 +435,7 @@
   {
    "fieldname": "sap_sales_order_no",
    "fieldtype": "Data",
-   "label": "SAP Sales Order No",
-   "read_only": 1
+   "label": "SAP Sales Order No"
   },
   {
    "fieldname": "sap_invoice_no",
@@ -446,8 +445,7 @@
   {
    "fieldname": "sap_invoice",
    "fieldtype": "Attach",
-   "label": "SAP Invoice",
-   "read_only": 1
+   "label": "SAP Invoice"
   },
   {
    "fieldname": "sap_integration_response",
@@ -525,8 +523,7 @@
   {
    "fieldname": "failed_integration",
    "fieldtype": "Data",
-   "label": "Failed Integration",
-   "read_only": 1
+   "label": "Failed Integration"
   },
   {
    "fieldname": "transaction_id",
@@ -543,8 +540,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-10-26 23:20:40.877420",
- "modified": "2025-10-24 13:33:48.468486",
+ "modified": "2025-10-30 11:41:17.743958",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Head Office Vehicle Orders",

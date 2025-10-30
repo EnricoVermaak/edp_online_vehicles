@@ -22,6 +22,7 @@ class VehicleStock(Document):
 		self.update_warranty_period()
 		self.update_warranty_km_hours_limit()
 		self.sort_warranty_plans_by_creation()
+		self.sort_service_plans_by_creation()
 		
 		if self.warranty_period_years and self.warranty_start_date:
 			# Convert the period to months for calculation
@@ -30,15 +31,6 @@ class VehicleStock(Document):
 		if self.service_period_years and self.service_start_date:
 			# Convert the period to months for calculation
 			self.service_end_date = add_months(self.service_start_date, int(self.service_period_years))
-
-		# linked_plans = frappe.get_all("Vehicle Linked Service Plan", filters={"vin_serial_no": self.name}, pluck="name")
-		# for plan_name in linked_plans:
-		# 	plan = frappe.get_doc("Vehicle Linked Service Plan",plan_name)
-		# 	if self.availability_status == "Sold":
-		# 		plan.status = "Active"
-		# 	elif self.availability_status == "Available":
-		# 		plan.status = "Pending Activation"
-		# 	plan.save(ignore_permissions=True)
 
 	def before_insert(self):
 		if self.type == "Used":
@@ -223,3 +215,19 @@ class VehicleStock(Document):
 
 		# Combine prefix and incremented number
 		return prefix + incremented_number
+
+	def sort_service_plans_by_creation(self):
+		if hasattr(self, 'table_gtny') and self.table_gtny:
+			def get_creation_time(plan):
+				if plan.service_plan_description:
+					return frappe.db.get_value(
+						"Vehicles Service Plan Administration",
+						plan.service_plan_description,
+						"creation"
+					) or frappe.utils.now()
+				return frappe.utils.now()
+ 
+			self.table_gtny.sort(key=lambda x: (get_creation_time(x), x.idx or 999))
+ 
+			for idx, plan in enumerate(self.table_gtny, start=1):
+				plan.idx = idx
