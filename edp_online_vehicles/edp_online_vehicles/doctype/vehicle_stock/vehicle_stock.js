@@ -147,28 +147,8 @@ frappe.ui.form.on("Vehicle Stock", {
 			};
 		});
 	},
-	refresh: function(frm) {
-		frappe.msgprint("Vehicle Stock Report Loaded");
-	},
-    setup: function(frm) {
-        // ✅ Filter for Warranty Plans
-        frm.set_query('warranty_plan_description', 'table_pcgj', function() {
-            return {
-                filters: {
-                    status: 'Active'
-                }
-            };
-        });
+	
 
-        // // ✅ Filter for Service Plans
-        frm.set_query('service_plan_description', 'table_gtny', function() {
-            return {
-                filters: {
-                    status: 'Active'
-                }
-            };
-        });
-    },
 
 	onload(frm, dt, dn) {
 		get_odo_reading(frm, dt, dn);

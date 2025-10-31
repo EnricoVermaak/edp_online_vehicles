@@ -11,8 +11,33 @@ class VehicleLinkedWarrantyPlan(Document):
 	
 	def on_update(self):
 		if self.has_value_changed("warranty_plan"):
-
 			self.add_to_vehicle_stock_warranty_table()
+
+		# -------------------- START: Custom Code for Active Plans --------------------
+		# Step 1: Check if current status is Active
+		if self.status == "Active":
+			# Step 2: Get all active warranty plans
+			active_plans = frappe.get_all(
+				"Vehicle Linked Warranty Plan",
+				filters={"status": "Active"},
+				fields=["name", "vin_serial_no"]
+			)
+
+			# Step 3: Loop through all active plans
+			for plan in active_plans:
+				if plan.vin_serial_no:
+					# Step 4: Get the linked Vehicle Stock document
+					vehicle_stock = frappe.get_doc("Vehicle Stock", plan.vin_serial_no)
+
+					# Step 5: Add a new row in child table
+					new_row = vehicle_stock.append("table_pcgj", {})
+					new_row.warranty_plan_description = plan.name
+
+					# Step 6: Save the updated Vehicle Stock document
+					vehicle_stock.save(ignore_permissions=True)
+
+			frappe.msgprint("All active warranty plans have been added to Vehicle Stock child table.")
+		# -------------------- END: Custom Code for Active Plans --------------------
 	
 	def on_trash(self):
 		self.remove_from_vehicle_stock_warranty_table()
