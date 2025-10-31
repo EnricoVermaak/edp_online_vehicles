@@ -15,18 +15,18 @@
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "Service Plan Description",
-   "options": "Vehicles Service Plan Administration",
+   "options": "Vehicle Linked Service Plan",
    "reqd": 1
   },
   {
-   "fetch_from": "service_plan_description.service_period_months",
+   "fetch_from": "service_plan_description.service_period_limit_months",
    "fieldname": "period_months",
    "fieldtype": "Int",
    "in_list_view": 1,
    "label": "Period (Months)"
   },
   {
-   "fetch_from": "service_plan_description.service_odo_limit",
+   "fetch_from": "service_plan_description.service_km_hours_limit",
    "fieldname": "odo_limit",
    "fieldtype": "Float",
    "in_list_view": 1,
@@ -38,7 +38,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-10-15 11:21:52.759277",
+ "modified": "2025-10-31 12:07:14.294985",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Service Plan View",

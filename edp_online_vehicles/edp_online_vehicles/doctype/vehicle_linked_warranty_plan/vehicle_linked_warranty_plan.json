@@ -96,18 +96,20 @@
   {
    "fieldname": "activation_date_time",
    "fieldtype": "Datetime",
-   "label": "Activation Date/ Time"
+   "label": "Activation Date/ Time",
+   "read_only": 1
   },
   {
    "fieldname": "expiration_date_time",
    "fieldtype": "Datetime",
-   "label": "Expiration Date/ Time"
+   "label": "Expiration Date/ Time",
+   "read_only": 1
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-10-30 11:09:57.789537",
+ "modified": "2025-10-31 12:21:29.467014",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicle Linked Warranty Plan",

@@ -16,7 +16,7 @@
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "Warranty Plan Description",
-   "options": "Vehicles Warranty Plan Administration",
+   "options": "Vehicle Linked Warranty Plan",
    "reqd": 1
   },
   {
@@ -28,7 +28,7 @@
    "read_only": 1
   },
   {
-   "fetch_from": "warranty_plan_description.warranty_odo_limit",
+   "fetch_from": "warranty_plan_description.warranty_limit_km_hours",
    "fieldname": "warranty_odo_limit",
    "fieldtype": "Int",
    "in_list_view": 1,
@@ -40,7 +40,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-10-15 11:18:00.136720",
+ "modified": "2025-10-31 12:13:52.936330",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Warranty Plan View",
