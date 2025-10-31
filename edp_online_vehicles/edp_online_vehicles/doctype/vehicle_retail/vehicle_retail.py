@@ -23,7 +23,6 @@ class VehicleRetail(Document):
             frappe.db.commit()
 
     # ---- Update Linked Service Plan ----
-    @frappe.whitelist()
     def update_linked_service_plan(self, vehicle_retail_name):
         doc = frappe.get_doc("Vehicle Retail", vehicle_retail_name)
         activation_date = now_datetime()
@@ -45,7 +44,6 @@ class VehicleRetail(Document):
         frappe.db.commit()
 
     # ---- Update Linked Warranty Plan ----
-    @frappe.whitelist()
     def update_linked_warranty_plan(self, vehicle_retail_name):
         doc = frappe.get_doc("Vehicle Retail", vehicle_retail_name)
         activation_date = now_datetime()
