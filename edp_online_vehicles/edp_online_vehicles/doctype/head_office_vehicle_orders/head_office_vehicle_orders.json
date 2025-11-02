@@ -28,6 +28,10 @@
   "sap_integration_response",
   "column_break_yfez",
   "sap_sales_order_no",
+  "sap_net_price",
+  "sap_tax",
+  "sap_total_amount",
+  "sap_bank_approval_date",
   "sales_order_type",
   "sap_invoice_no",
   "invoice_amount",
@@ -439,6 +443,30 @@
    "read_only": 1
   },
   {
+   "fieldname": "sap_net_price",
+   "fieldtype": "Currency",
+   "label": "SAP Net Price",
+   "read_only": 1
+  },
+  {
+   "fieldname": "sap_tax",
+   "fieldtype": "Currency",
+   "label": "SAP Tax",
+   "read_only": 1
+  },
+  {
+   "fieldname": "sap_total_amount",
+   "fieldtype": "Currency",
+   "label": "SAP Total Amount",
+   "read_only": 1
+  },
+  {
+   "fieldname": "sap_bank_approval_date",
+   "fieldtype": "Date",
+   "label": "SAP Bank Approval Date",
+   "read_only": 1
+  },
+  {
    "fieldname": "sap_invoice_no",
    "fieldtype": "Data",
    "label": "SAP Invoice No"
@@ -544,7 +572,6 @@
  "is_submittable": 1,
  "links": [],
  "modified": "2025-10-26 23:20:40.877420",
- "modified": "2025-10-24 13:33:48.468486",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Head Office Vehicle Orders",
