@@ -63,6 +63,9 @@
   "bank_integration_section",
   "max_retries",
   "php_timeout",
+  "sap_integration_section",
+  "sap_token",
+  "sap_token_expires_at",
   "servers_section",
   "integration_servers"
  ],
@@ -420,6 +423,23 @@
    "fieldname": "php_timeout",
    "fieldtype": "Int",
    "label": "PHP Timeout (Seconds)"
+  },
+  {
+   "fieldname": "sap_integration_section",
+   "fieldtype": "Section Break",
+   "label": "SAP Integration"
+  },
+  {
+   "fieldname": "sap_token",
+   "fieldtype": "Password",
+   "label": "SAP Token",
+   "read_only": 1
+  },
+  {
+   "fieldname": "sap_token_expires_at",
+   "fieldtype": "Datetime",
+   "label": "SAP Token Expires At",
+   "read_only": 1
   },
   {
    "fieldname": "integration_servers",

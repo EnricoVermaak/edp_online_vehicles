@@ -190,12 +190,39 @@ class VehicleStock(Document):
 		if hasattr(self, 'table_pcgj') and self.table_pcgj:
 			# Sort by creation date of linked Warranty Plan Administration
 			def get_creation_time(plan):
-				if plan.warranty_plan_description:
-					return frappe.db.get_value(
-						"Vehicles Warranty Plan Administration",
-						plan.warranty_plan_description,
-						"creation"
-					) or frappe.utils.now()
+				try:
+					if plan.warranty_plan_description:
+						if frappe.db.exists("Vehicle Linked Warranty Plan", plan.warranty_plan_description):
+							linked_plan = frappe.db.get_value(
+								"Vehicle Linked Warranty Plan",
+								plan.warranty_plan_description,
+								["warranty_plan", "creation"],
+								as_dict=True
+							)
+							
+							if linked_plan and linked_plan.get("warranty_plan"):
+								creation_value = frappe.db.get_value(
+									"Vehicles Warranty Plan Administration",
+									linked_plan.warranty_plan,
+									"creation"
+								)
+								if creation_value:
+									return frappe.utils.get_datetime(creation_value)
+							
+							if linked_plan and linked_plan.get("creation"):
+								return frappe.utils.get_datetime(linked_plan.creation)
+						
+						elif frappe.db.exists("Vehicles Warranty Plan Administration", plan.warranty_plan_description):
+							creation_value = frappe.db.get_value(
+								"Vehicles Warranty Plan Administration",
+								plan.warranty_plan_description,
+								"creation"
+							)
+							if creation_value:
+								return frappe.utils.get_datetime(creation_value)
+				except Exception:
+					pass
+				
 				return frappe.utils.now()
 			
 			self.table_pcgj.sort(key=lambda x: (get_creation_time(x), x.idx or 999))

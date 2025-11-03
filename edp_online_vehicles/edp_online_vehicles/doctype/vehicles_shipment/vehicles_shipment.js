@@ -25,7 +25,6 @@ frappe.ui.form.on("Vehicles Shipment", {
 					}
 				});
 		}
-
 		frm.add_custom_button(__("Receive"), function () {
 			frappe.dom.freeze();
 
@@ -107,47 +106,25 @@ frappe.ui.form.on("Vehicles Shipment", {
 							console.log("⏸️ Skipped:", row.name, "(Status not Received)");
 							return;
 						}
-						let p = frappe.db.get_doc("Model Administration", model_code).then((model_doc) => {
-							let default_plan = model_doc.default_service_plan;
 
-							if (default_plan) {
-								// 1️⃣ Create Vehicle Linked Warranty Plan
-								frappe.call({
-									method: "frappe.client.insert",
-									args: {
-										doc: {
-											doctype: "Vehicle Linked Warranty Plan",
-											vin_serial_no: vin_serial,
-											warranty_plan: default_plan,
-											status: "Pending Activation" 
-										},
-									},
-									callback: function (r) {
-										console.log("✅ Warranty Plan Created:", r.message?.name);
-									},
-								});
-
-								// 2️⃣ Create Vehicle Linked Service Plan
-								frappe.call({
-									method: "frappe.client.insert",
-									args: {
-										doc: {
-											doctype: "Vehicle Linked Service Plan",
-											vin__serial_no: vin_serial,
-											service_plan: default_plan,
-											status: "Pending Activation"
-										},
-									},
-									callback: function (r) {
-										console.log("✅ Service Plan Created:", r.message?.name);
-									},
-								});
-							} else {
-								console.warn(
-									"⚠️ No default_service_plan found for model:",
-									model_code
-								);
-							}
+						// ✅ Call Backend Python API
+						let p = frappe.call({
+							method: "edp_online_vehicles.events.vehicles_contract_expired.create_vehicle_plans",
+							args: {
+								vin_serial_no: vin_serial,
+								model_code: model_code,
+								status: row.status,
+							},
+							callback: function (r) {
+								if (r.message) {
+									console.log(`✅ Plans Created for ${vin_serial}:`, r.message);
+								} else {
+									console.warn(`⚠️ No response for ${vin_serial}`);
+								}
+							},
+							error: function (err) {
+								console.error("❌ Error creating plans:", err);
+							},
 						});
 
 						creation_promises.push(p);
@@ -204,6 +181,7 @@ frappe.ui.form.on("Vehicles Shipment", {
 				}
 			});
 		});
+
 
 
 		frm.set_query(
