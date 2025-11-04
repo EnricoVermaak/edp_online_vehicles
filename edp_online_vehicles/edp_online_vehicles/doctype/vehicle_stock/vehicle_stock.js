@@ -500,6 +500,16 @@ frappe.ui.form.on("Vehicle Stock", {
 		// Disable colour fields if no model is selected
 		frm.toggle_enable("colour", !!frm.doc.model);
 		frm.toggle_enable("interior_colour", !!frm.doc.model);
+
+		// Set filter for warranty plan description in child table
+		frm.set_query("warranty_plan_description", "table_pcgj", function () {
+			return {
+				filters: {
+					vin_serial_no: frm.doc.name || frm.doc.vin_serial_no || "",
+					status: ["!=", "Active"]
+				}
+			};
+		});
 	},
 
 	model(frm) {

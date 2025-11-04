@@ -109,7 +109,7 @@
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-10-31 12:21:29.467014",
+ "modified": "2025-11-04 11:12:56.947824",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicle Linked Warranty Plan",
@@ -130,7 +130,9 @@
  ],
  "row_format": "Dynamic",
  "rows_threshold_for_grid_search": 20,
+ "show_title_field_in_link": 1,
  "sort_field": "modified",
  "sort_order": "DESC",
- "states": []
+ "states": [],
+ "title_field": "warranty_plan"
 }

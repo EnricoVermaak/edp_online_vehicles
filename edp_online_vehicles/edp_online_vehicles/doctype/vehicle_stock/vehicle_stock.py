@@ -38,7 +38,114 @@ class VehicleStock(Document):
 		# 		plan.status = "Active"
 		# 	elif self.availability_status == "Available":
 		# 		plan.status = "Pending Activation"
-		# 	plan.save(ignore_permissions=True)	
+		# 	plan.save(ignore_permissions=True)
+	
+	def on_update(self):
+		self._handle_deleted_warranty_plans()
+		self._handle_added_warranty_plans()
+	
+	def _handle_added_warranty_plans(self):
+		if not hasattr(self, 'table_pcgj'):
+			return
+		
+		doc_before_save = self.get_doc_before_save()
+		if not doc_before_save or not hasattr(doc_before_save, 'table_pcgj'):
+			# If no previous state, check all current plans
+			previous_plans = set()
+		else:
+			previous_plans = {
+				row.warranty_plan_description 
+				for row in doc_before_save.table_pcgj 
+				if row.warranty_plan_description
+			}
+		
+		current_plans = {
+			row.warranty_plan_description 
+			for row in self.table_pcgj 
+			if row.warranty_plan_description
+		}
+		
+		# Find newly added plans
+		added_plans = current_plans - previous_plans
+		
+		# Update status to Active for newly added plans
+		for plan_description in added_plans:
+			linked_plan_name = None
+			
+			# Check if it's a Vehicle Linked Warranty Plan name
+			if frappe.db.exists("Vehicle Linked Warranty Plan", plan_description):
+				linked_plan_name = plan_description
+			else:
+				# If not, find the Vehicle Linked Warranty Plan by warranty_plan and vin_serial_no
+				linked_plan = frappe.db.get_value(
+					"Vehicle Linked Warranty Plan",
+					{"warranty_plan": plan_description, "vin_serial_no": self.name},
+					"name"
+				)
+				if linked_plan:
+					linked_plan_name = linked_plan
+			
+			# Update status to Active if found
+			if linked_plan_name:
+				try:
+					linked_plan_doc = frappe.get_doc("Vehicle Linked Warranty Plan", linked_plan_name)
+					if linked_plan_doc.status != "Active":
+						linked_plan_doc.status = "Active"
+						linked_plan_doc.save(ignore_permissions=True)
+						frappe.db.commit()
+				except Exception as e:
+					frappe.log_error(f"Error updating status for Vehicle Linked Warranty Plan {linked_plan_name}: {str(e)}")
+	
+	def _handle_deleted_warranty_plans(self):
+		if not hasattr(self, 'table_pcgj'):
+			return
+		
+		doc_before_save = self.get_doc_before_save()
+		if not doc_before_save or not hasattr(doc_before_save, 'table_pcgj'):
+			return
+		
+		previous_plans = {
+			row.warranty_plan_description 
+			for row in doc_before_save.table_pcgj 
+			if row.warranty_plan_description
+		}
+		
+		current_plans = {
+			row.warranty_plan_description 
+			for row in self.table_pcgj 
+			if row.warranty_plan_description
+		}
+		
+		deleted_plans = previous_plans - current_plans
+		
+		for plan_description in deleted_plans:
+			linked_plan_name = None
+			
+			# Check if it's a Vehicle Linked Warranty Plan name
+			if frappe.db.exists("Vehicle Linked Warranty Plan", plan_description):
+				linked_plan_name = plan_description
+			else:
+				# If not, find the Vehicle Linked Warranty Plan by warranty_plan and vin_serial_no
+				linked_plan = frappe.db.get_value(
+					"Vehicle Linked Warranty Plan",
+					{"warranty_plan": plan_description, "vin_serial_no": self.name},
+					"name"
+				)
+				if linked_plan:
+					linked_plan_name = linked_plan
+			
+			# Change status to Cancelled only if it's still Active (user manually deleted row)
+			# If status was already changed programmatically (Expired, Pending Activation), leave it as is
+			if linked_plan_name:
+				try:
+					linked_plan_doc = frappe.get_doc("Vehicle Linked Warranty Plan", linked_plan_name)
+					# Only set to Cancelled if status is still Active (indicates manual deletion)
+					if linked_plan_doc.status == "Active":
+						linked_plan_doc.status = "Cancelled"
+						linked_plan_doc.save(ignore_permissions=True)
+						frappe.db.commit()
+				except Exception as e:
+					frappe.log_error(f"Error updating status for Vehicle Linked Warranty Plan {linked_plan_name}: {str(e)}")	
 
 
 	def before_insert(self):
