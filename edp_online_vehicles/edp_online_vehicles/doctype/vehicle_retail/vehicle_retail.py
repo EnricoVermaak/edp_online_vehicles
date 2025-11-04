@@ -7,9 +7,11 @@ from frappe.utils import add_months, now_datetime
 
 
 class VehicleRetail(Document):
+
     def on_submit(self):
-        self.update_linked_service_plan(self.name)
-        self.update_linked_warranty_plan(self.name)
+        # Call both update methods after submission
+        self.update_linked_service_plan()
+        self.update_linked_warranty_plan()
 
     @frappe.whitelist()
     def update_dealer_customer(self):
@@ -20,17 +22,16 @@ class VehicleRetail(Document):
             dealer_cust_doc.phone = self.customer_phone
             dealer_cust_doc.address = self.customer_address
             dealer_cust_doc.save(ignore_permissions=True)
-            frappe.db.commit()
+            frappe.db.commit()  
 
     # ---- Update Linked Service Plan ----
-    def update_linked_service_plan(self, vehicle_retail_name):
-        doc = frappe.get_doc("Vehicle Retail", vehicle_retail_name)
+    def update_linked_service_plan(self):
         activation_date = now_datetime()
-        for row in doc.get("vehicles_sale_items"):
+        for row in self.get("vehicles_sale_items"):
             if row.vin_serial_no:
                 linked_docs = frappe.get_all(
                     "Vehicle Linked Service Plan",
-                    filters={"vin__serial_no": row.vin_serial_no},
+                    filters={"vin__serial_no": row.vin_serial_no},  
                     fields=["name", "service_period_limit_months"]
                 )
                 for record in linked_docs:
@@ -41,13 +42,11 @@ class VehicleRetail(Document):
                     linked_doc.expiration_date_time = expiration_date
                     linked_doc.status = "Active"
                     linked_doc.save(ignore_permissions=True)
-        frappe.db.commit()
 
     # ---- Update Linked Warranty Plan ----
-    def update_linked_warranty_plan(self, vehicle_retail_name):
-        doc = frappe.get_doc("Vehicle Retail", vehicle_retail_name)
+    def update_linked_warranty_plan(self):
         activation_date = now_datetime()
-        for row in doc.get("vehicles_sale_items"):
+        for row in self.get("vehicles_sale_items"):
             if row.vin_serial_no:
                 linked_docs = frappe.get_all(
                     "Vehicle Linked Warranty Plan",
@@ -62,7 +61,6 @@ class VehicleRetail(Document):
                     linked_doc.expiration_date_time = expiration_date
                     linked_doc.status = "Active"
                     linked_doc.save(ignore_permissions=True)
-        frappe.db.commit()
 
-    # ---- Combined Function (called from JS) ----
-  
+
+       

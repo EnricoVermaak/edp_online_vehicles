@@ -91,44 +91,44 @@ frappe.ui.form.on("Vehicles Shipment", {
 					// ------------------------------------------------------
 					let creation_promises = [];
 
-					selected_items.forEach((row) => {
-						let vin_serial = row.vin_serial_no;
-						let model_code = row.model_code;
+					// selected_items.forEach((row) => {
+					// 	let vin_serial = row.vin_serial_no;
+					// 	let model_code = row.model_code;
 
-						// Skip if missing VIN or Model Code
-						if (!vin_serial || !model_code) {
-							console.warn("⚠️ Missing VIN or Model Code for:", row.name);
-							return;
-						}
+					// 	// Skip if missing VIN or Model Code
+					// 	if (!vin_serial || !model_code) {
+					// 		console.warn("⚠️ Missing VIN or Model Code for:", row.name);
+					// 		return;
+					// 	}
 
-						// Create docs only if status is Received
-						if (row.status !== "Received") {
-							console.log("⏸️ Skipped:", row.name, "(Status not Received)");
-							return;
-						}
+					// 	// Create docs only if status is Received
+					// 	if (row.status !== "Received") {
+					// 		console.log("⏸️ Skipped:", row.name, "(Status not Received)");
+					// 		return;
+					// 	}
 
-						// ✅ Call Backend Python API
-						let p = frappe.call({
-							method: "edp_online_vehicles.events.vehicles_contract_expired.create_vehicle_plans",
-							args: {
-								vin_serial_no: vin_serial,
-								model_code: model_code,
-								status: row.status,
-							},
-							callback: function (r) {
-								if (r.message) {
-									console.log(`✅ Plans Created for ${vin_serial}:`, r.message);
-								} else {
-									console.warn(`⚠️ No response for ${vin_serial}`);
-								}
-							},
-							error: function (err) {
-								console.error("❌ Error creating plans:", err);
-							},
-						});
+					// 	// ✅ Call Backend Python API
+					// 	let p = frappe.call({
+					// 		method: "edp_online_vehicles.events.vehicles_contract_expired.create_vehicle_plans",
+					// 		args: {
+					// 			vin_serial_no: vin_serial,
+					// 			model_code: model_code,
+					// 			status: row.status,
+					// 		},
+					// 		callback: function (r) {
+					// 			if (r.message) {
+					// 				console.log(`✅ Plans Created for ${vin_serial}:`, r.message);
+					// 			} else {
+					// 				console.warn(`⚠️ No response for ${vin_serial}`);
+					// 			}
+					// 		},
+					// 		error: function (err) {
+					// 			console.error("❌ Error creating plans:", err);
+					// 		},
+					// 	});
 
-						creation_promises.push(p);
-					});
+					// 	creation_promises.push(p);
+					// });
 
 					Promise.all(creation_promises).then(() => {
 						console.log("🎯 All Warranty & Service Plan docs created successfully!");

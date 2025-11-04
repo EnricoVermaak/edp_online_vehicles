@@ -322,6 +322,7 @@ frappe.ui.form.on("Vehicle Retail", {
 			.then((response) => {
 				if (response.message) {
 					let data = response.message;
+					log
 					let full_name =
 						(data.customer_name || "") +
 						" " +

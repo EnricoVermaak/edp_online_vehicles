@@ -6,13 +6,31 @@ import frappe
 from frappe import _
 from frappe.model.document import Document
 from frappe.utils import add_years, add_months, today
+from frappe.utils import get_datetime, now_datetime
+
 
 
 class VehicleStock(Document):
 	def validate(self):
- 
-		self.service_period_years = sum([row.period_months or 0 for row in self.table_gtny])
+		seen = set()
+		unique_rows_pcgj = []
+		for row in self.table_pcgj:
+			if row.warranty_plan_description not in seen:
+				seen.add(row.warranty_plan_description)
+				unique_rows_pcgj.append(row)
+		self.table_pcgj = unique_rows_pcgj
 
+		# -------- Remove duplicates in table_gtny based on service_plan_description --------
+		seen1 = set()
+		unique_rows_gtny = []
+		for row in self.table_gtny:
+			if row.service_plan_description not in seen1:
+				seen1.add(row.service_plan_description)
+				unique_rows_gtny.append(row)
+		self.table_gtny = unique_rows_gtny
+
+		# -------- Original code --------
+		self.service_period_years = sum([row.period_months or 0 for row in self.table_gtny])
 		self.service_km_hours_limit = max([row.odo_limit or 0 for row in self.table_gtny], default=0)
 
 		if self.availability_status == "Sold" and not self.service_start_date:
@@ -22,14 +40,15 @@ class VehicleStock(Document):
 		self.update_warranty_period()
 		self.update_warranty_km_hours_limit()
 		self.sort_warranty_plans_by_creation()
-		
+
 		if self.warranty_period_years and self.warranty_start_date:
 			# Convert the period to months for calculation
 			self.warranty_end_date = add_months(self.warranty_start_date, int(self.warranty_period_years))
-			
+
 		if self.service_period_years and self.service_start_date:
 			# Convert the period to months for calculation
 			self.service_end_date = add_months(self.service_start_date, int(self.service_period_years))
+<<<<<<< Updated upstream
 	
 		# linked_plans = frappe.get_all("Vehicle Linked Service Plan", filters={"vin_serial_no": self.name}, pluck="name")
 		# for plan_name in linked_plans:
@@ -146,6 +165,8 @@ class VehicleStock(Document):
 						frappe.db.commit()
 				except Exception as e:
 					frappe.log_error(f"Error updating status for Vehicle Linked Warranty Plan {linked_plan_name}: {str(e)}")	
+=======
+>>>>>>> Stashed changes
 
 
 	def before_insert(self):
@@ -293,10 +314,11 @@ class VehicleStock(Document):
 		else:
 			self.warranty_period_years = 0
 
+
 	def sort_warranty_plans_by_creation(self):
 		if hasattr(self, 'table_pcgj') and self.table_pcgj:
-			# Sort by creation date of linked Warranty Plan Administration
 			def get_creation_time(plan):
+<<<<<<< Updated upstream
 				try:
 					if plan.warranty_plan_description:
 						if frappe.db.exists("Vehicle Linked Warranty Plan", plan.warranty_plan_description):
@@ -332,11 +354,31 @@ class VehicleStock(Document):
 				
 				return frappe.utils.now()
 			
+=======
+				if plan.warranty_plan_description:
+					creation = frappe.db.get_value(
+						"Vehicles Warranty Plan Administration",
+						plan.warranty_plan_description,
+						"creation"
+					)
+					# 🔹 Improvement #1 → Safe conversion
+					if creation:
+						creation = get_datetime(creation)   # converts string → datetime
+					else:
+						creation = now_datetime()           # fallback
+					return creation
+				# 🔹 Improvement #2 → Always return valid datetime
+				return now_datetime()
+
+			# 🔹 Improvement #3 → Sorting safe, no mixed types now
+>>>>>>> Stashed changes
 			self.table_pcgj.sort(key=lambda x: (get_creation_time(x), x.idx or 999))
-			
-			# Update idx to reflect the sorted order
+
+			# 🔹 Improvement #4 → idx update same as before (no change)
 			for idx, plan in enumerate(self.table_pcgj, start=1):
 				plan.idx = idx
+
+
 
 	def update_warranty_km_hours_limit(self):
 		if hasattr(self, 'table_pcgj') and self.table_pcgj:

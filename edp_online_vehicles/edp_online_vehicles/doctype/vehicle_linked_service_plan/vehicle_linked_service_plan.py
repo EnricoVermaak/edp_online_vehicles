@@ -8,21 +8,24 @@ from frappe.model.document import Document
 class VehicleLinkedServicePlan(Document):
 	def on_update(self):
 		if self.status == "Active":
-			# Step 2: Get all active service plans
-			active_plans = frappe.get_all(
-				"Vehicle Linked Service Plan",
-				filters={"status": "Active"},
-				fields=["name", "vin__serial_no"]
-			)
+			if frappe.db.exists("Vehicle Stock", self.vin__serial_no):
+				vehicle_stock = frappe.get_doc("Vehicle Stock", self.vin__serial_no)
+				vehicle_stock.append("table_gtny", {
+					"service_plan_description": self.name
+				})
+				vehicle_stock.save(ignore_permissions=True)
 
-			for plan in active_plans:
-				if plan.vin__serial_no:
-					if frappe.db.exists("Vehicle Stock", plan.vin__serial_no):
-						vehicle_stock = frappe.get_doc("Vehicle Stock", plan.vin__serial_no)
+			# active_plans = frappe.get_all(
+			# 	"Vehicle Linked Service Plan",
+			# 	filters={"status": "Active"},
+			# 	fields=["name", "vin__serial_no"]
+			# )
 
-						new_row = vehicle_stock.append("table_gtny", {})
-						new_row.service_plan_description = plan.name
+			# for plan in active_plans:
+			# 	if plan.vin__serial_no:
 
-						vehicle_stock.save(ignore_permissions=True)
+			# 			new_row = vehicle_stock.append("table_gtny", {})
+			# 			new_row.service_plan_description = plan.name
 
-			frappe.msgprint("All active service plans have been added to Vehicle Stock child table.")
+
+			# frappe.msgprint("All active service plans have been added to Vehicle Stock child table.")

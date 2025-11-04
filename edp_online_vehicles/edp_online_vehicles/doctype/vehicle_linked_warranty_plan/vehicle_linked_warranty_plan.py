@@ -33,6 +33,7 @@ class VehicleLinkedWarrantyPlan(Document):
 	
 	def on_update(self):
 		if self.has_value_changed("warranty_plan"):
+<<<<<<< Updated upstream
 			self._update_title()  # Update title when warranty plan changes
 			# Only add to vehicle stock table if status is Active
 			if self.status == self.STATUS_ACTIVE:
@@ -40,6 +41,19 @@ class VehicleLinkedWarrantyPlan(Document):
 		
 		if self.has_value_changed("status"):
 			self._handle_status_change()
+=======
+			self.add_to_vehicle_stock_warranty_table()
+
+		if self.status == "Active":
+			if frappe.db.exists("Vehicle Stock", self.vin_serial_no):
+				vehicle_stock = frappe.get_doc("Vehicle Stock", self.vin_serial_no)
+				vehicle_stock.append("table_pcgj", {
+					"warranty_plan_description": self.name
+				})
+				vehicle_stock.save(ignore_permissions=True)
+
+		
+>>>>>>> Stashed changes
 	
 	def on_trash(self):
 		self.remove_from_vehicle_stock_warranty_table()
