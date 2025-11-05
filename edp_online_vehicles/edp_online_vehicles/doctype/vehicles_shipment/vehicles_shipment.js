@@ -29,6 +29,7 @@ frappe.ui.form.on("Vehicles Shipment", {
 			frappe.dom.freeze();
 
 			var selected_items = [];
+			var selected_rows = [];
 			var promises = [];
 
 			frm.doc["vehicles_shipment_items"].forEach(function (row) {
@@ -72,8 +73,17 @@ frappe.ui.form.on("Vehicles Shipment", {
 							"Please ensure all selected vehicles have VIN/Serial No's assigned to them."
 						);
 					}
+					selected_rows.push(row);
+
 				}
 			});
+			frappe.call({
+				method: "edp_online_vehicles.events.linked_plans.create_linked_plans",
+				args: { selected_items: JSON.stringify(selected_rows) },
+				}).then(() => {
+					console.log("✅ Plans created successfully!");
+			});
+
 
 			// Wait for all promises to resolve
 			Promise.all(promises).then(() => {

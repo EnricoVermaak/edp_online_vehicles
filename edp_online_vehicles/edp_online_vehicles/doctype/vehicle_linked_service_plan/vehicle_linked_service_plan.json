@@ -40,14 +40,6 @@
    "options": "Pending Activation\nActive\nExpired\nCancelled"
   },
   {
-   "fieldname": "vin__serial_no",
-   "fieldtype": "Link",
-   "in_list_view": 1,
-   "in_standard_filter": 1,
-   "label": "VIN / Serial No",
-   "options": "Vehicle Stock"
-  },
-  {
    "fetch_from": "vin__serial_no.description",
    "fieldname": "model_description",
    "fieldtype": "Data",
@@ -106,12 +98,20 @@
   {
    "fieldname": "column_break_doyv",
    "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "vin__serial_no",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "VIN / Serial No",
+   "options": "Vehicle Stock"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-11-05 12:59:15.060665",
+ "modified": "2025-11-05 18:44:12.636600",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicle Linked Service Plan",
