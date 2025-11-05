@@ -31,45 +31,48 @@ class VehiclesShipment(Document):
 				base_date = self.eta_harbour or nowdate()
 				self.eta_harbour = add_days(base_date, sla_days)
 
-	# def on_submit(self):			
-		# if len(self.vehicles_shipment_items) > 0:
-		for row in self.vehicles_shipment_items:
-			# Run only if status == "Received"
-			if row.status == "Received" and frappe.db.exists("Vehicle Stock", row.vin_serial_no):
-				vin_serial = row.vin_serial_no
-				model_code = row.model_code
-
-				if not vin_serial or not model_code:
-					frappe.log_error(f"Missing VIN or Model for row {row.name}", "VehicleShipment Validate")
+	def on_submit(self):			
+		if len(self.vehicles_shipment_items) > 0:
+			for row in self.vehicles_shipment_items:
+				if row.created_status == "1":
 					continue
-				self.create_vehicle_plans(vin_serial, model_code)
+				# Run only if status == "Received"
+				if row.status == "Received":
+					vin_serial = row.vin_serial_no
+					model_code = row.model_code
+
+					if not vin_serial or not model_code:
+						frappe.log_error(f"Missing VIN or Model for row {row.name}", "VehicleShipment Validate")
+						continue
+					self.create_vehicle_plans(vin_serial, model_code)
+					row.created_status = "1"
+			frappe.db.commit()
 
 	@frappe.whitelist()
-	def create_vehicle_plans(self,vin_serial_no, model_code):
+	def create_vehicle_plans(self, vin_serial_no, model_code):
 		model_doc = frappe.get_doc("Model Administration", model_code)
 		default_plan = model_doc.default_service_plan
 		default_warranty = model_doc.default_warranty_plan
-           
-		if not default_plan:
-			return f"No default service plan found for {model_code}"
 
-		# Create Vehicle Linked Warranty Plan
-		warranty_plan = frappe.get_doc({
-			"doctype": "Vehicle Linked Warranty Plan",
-			"vin_serial_no": vin_serial_no,
-			"warranty_plan": default_warranty,
-			"status": "Pending Activation"
-		})
-		warranty_plan.insert(ignore_permissions=True)
+		if default_warranty:
+			# Create Vehicle Linked Warranty Plan
+			warranty_plan = frappe.get_doc({
+				"doctype": "Vehicle Linked Warranty Plan",
+				"vin_serial_no": vin_serial_no,
+				"warranty_plan": default_warranty,
+				"status": "Pending Activation"
+			})
+			warranty_plan.insert(ignore_permissions=True)
 
-		# Create Vehicle Linked Service Plan
-		service_plan = frappe.get_doc({
-			"doctype": "Vehicle Linked Service Plan",
-			"vin__serial_no": vin_serial_no,
-			"service_plan": default_plan,
-			"status": "Pending Activation"
-		})
-		service_plan.insert(ignore_permissions=True)
+		if default_plan:
+			# Create Vehicle Linked Service Plan
+			service_plan = frappe.get_doc({
+				"doctype": "Vehicle Linked Service Plan",
+				"vin__serial_no": vin_serial_no,
+				"service_plan": default_plan,
+				"status": "Pending Activation"
+			})
+			service_plan.insert(ignore_permissions=True)
 
 		frappe.db.commit()
 
