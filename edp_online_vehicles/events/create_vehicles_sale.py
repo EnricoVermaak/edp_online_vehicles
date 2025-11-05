@@ -151,7 +151,7 @@ def remove_from_stock_on_sale(docname):
 		# Calculate warranty_end_date based on retail date as start
 		retail_date = doc.retail_date or current_date
 		if warranty_period:
-			warranty_start_datetime = datetime.strptime(retail_date, "%Y-%m-%d")
+			warranty_start_datetime = datetime.strptime(str(retail_date), "%Y-%m-%d")
 			warranty_end_datetime = add_months(warranty_start_datetime, int(warranty_period))
 			warranty_end_date = warranty_end_datetime.strftime("%Y-%m-%d")
 		else:
