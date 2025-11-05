@@ -45,7 +45,12 @@ class VehiclesShipment(Document):
 					frappe.log_error(f"Missing VIN or Model for row {row.name}", "VehicleShipment Validate")
 					continue
 				self.create_vehicle_plans(vin_serial, model_code)
-				row.created_status = "1"
+				frappe.db.set_value(
+				"Vehicles Shipment Items",
+				row.name,
+				"created_status",
+				"1"
+			)
 		frappe.db.commit()
 
 	@frappe.whitelist()
