@@ -31,22 +31,22 @@ class VehiclesShipment(Document):
 				base_date = self.eta_harbour or nowdate()
 				self.eta_harbour = add_days(base_date, sla_days)
 
-	def on_submit(self):			
-		if len(self.vehicles_shipment_items) > 0:
-			for row in self.vehicles_shipment_items:
-				if row.created_status == "1":
-					continue
-				# Run only if status == "Received"
-				if row.status == "Received":
-					vin_serial = row.vin_serial_no
-					model_code = row.model_code
+	# def on_submit(self):			
+	# 	if len(self.vehicles_shipment_items) > 0:
+		for row in self.vehicles_shipment_items:
+			if row.created_status == "1":
+				continue
+			# Run only if status == "Received"
+			if row.status == "Received":
+				vin_serial = row.vin_serial_no
+				model_code = row.model_code
 
-					if not vin_serial or not model_code:
-						frappe.log_error(f"Missing VIN or Model for row {row.name}", "VehicleShipment Validate")
-						continue
-					self.create_vehicle_plans(vin_serial, model_code)
-					row.created_status = "1"
-			frappe.db.commit()
+				if not vin_serial or not model_code:
+					frappe.log_error(f"Missing VIN or Model for row {row.name}", "VehicleShipment Validate")
+					continue
+				self.create_vehicle_plans(vin_serial, model_code)
+				row.created_status = "1"
+		frappe.db.commit()
 
 	@frappe.whitelist()
 	def create_vehicle_plans(self, vin_serial_no, model_code):
