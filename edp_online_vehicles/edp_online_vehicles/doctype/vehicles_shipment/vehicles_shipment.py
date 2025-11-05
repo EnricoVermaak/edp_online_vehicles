@@ -35,7 +35,7 @@ class VehiclesShipment(Document):
 		# if len(self.vehicles_shipment_items) > 0:
 		for row in self.vehicles_shipment_items:
 			# Run only if status == "Received"
-			if row.status == "Received" and not frappe.db.exists("Vehicle Stock", row.vin_serial_no):
+			if row.status == "Received" and frappe.db.exists("Vehicle Stock", row.vin_serial_no):
 				vin_serial = row.vin_serial_no
 				model_code = row.model_code
 
