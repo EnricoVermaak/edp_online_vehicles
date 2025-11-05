@@ -48,7 +48,8 @@ class VehiclesShipment(Document):
 	def create_vehicle_plans(self,vin_serial_no, model_code):
 		model_doc = frappe.get_doc("Model Administration", model_code)
 		default_plan = model_doc.default_service_plan
-
+		default_warranty = model_doc.default_warranty_plan
+           
 		if not default_plan:
 			return f"No default service plan found for {model_code}"
 
@@ -56,7 +57,7 @@ class VehiclesShipment(Document):
 		warranty_plan = frappe.get_doc({
 			"doctype": "Vehicle Linked Warranty Plan",
 			"vin_serial_no": vin_serial_no,
-			"warranty_plan": default_plan,
+			"warranty_plan": default_warranty,
 			"status": "Pending Activation"
 		})
 		warranty_plan.insert(ignore_permissions=True)

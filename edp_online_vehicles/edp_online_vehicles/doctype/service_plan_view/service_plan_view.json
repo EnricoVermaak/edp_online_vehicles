@@ -5,18 +5,20 @@
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
+  "service_plan_no",
   "service_plan_description",
   "period_months",
   "odo_limit"
  ],
  "fields": [
   {
+   "fetch_from": "service_plan_no.service_plan",
    "fieldname": "service_plan_description",
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "Service Plan Description",
    "options": "Vehicle Linked Service Plan",
-   "reqd": 1
+   "read_only": 1
   },
   {
    "fetch_from": "service_plan_description.service_period_limit_months",
@@ -32,13 +34,21 @@
    "in_list_view": 1,
    "label": "Odo Limit",
    "read_only": 1
+  },
+  {
+   "fieldname": "service_plan_no",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Service Plan No",
+   "options": "Vehicle Linked Service Plan",
+   "reqd": 1
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-10-31 12:07:14.294985",
+ "modified": "2025-11-05 13:00:23.515136",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Service Plan View",

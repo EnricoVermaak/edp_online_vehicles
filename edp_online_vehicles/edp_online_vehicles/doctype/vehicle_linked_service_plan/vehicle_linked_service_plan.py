@@ -11,7 +11,9 @@ class VehicleLinkedServicePlan(Document):
 			if frappe.db.exists("Vehicle Stock", self.vin__serial_no):
 				vehicle_stock = frappe.get_doc("Vehicle Stock", self.vin__serial_no)
 				vehicle_stock.append("table_gtny", {
-					"service_plan_description": self.name
+					"service_plan_no": self.name,
+					"period_months": self.service_period_limit_months,
+					"odo_limit": self.service_km_hours_limit
 				})
 				vehicle_stock.save(ignore_permissions=True)
 

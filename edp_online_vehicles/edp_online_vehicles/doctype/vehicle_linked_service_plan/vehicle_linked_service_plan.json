@@ -72,7 +72,7 @@
    "options": "Vehicles Service Plan Administration"
   },
   {
-   "fetch_from": "vin__serial_no.service_km_hours_limit",
+   "fetch_from": "service_plan.service_odo_limit",
    "fieldname": "service_km_hours_limit",
    "fieldtype": "Int",
    "in_list_view": 1,
@@ -111,7 +111,7 @@
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-10-31 12:20:47.270186",
+ "modified": "2025-11-05 12:59:15.060665",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicle Linked Service Plan",
