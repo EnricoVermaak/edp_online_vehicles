@@ -68,12 +68,10 @@
    "mandatory_depends_on": "eval:(doc.customer_type == \"Individual\" || doc.customer_type == \"Foreigner\");"
   },
   {
-   "allow_in_quick_entry": 1,
    "fieldname": "customer_type",
    "fieldtype": "Link",
    "label": "Customer Type",
-   "options": "Fleet Customer Category",
-   "reqd": 1
+   "options": "Fleet Customer Category"
   },
   {
    "fieldname": "from_lead",
@@ -321,7 +319,7 @@
    "link_fieldname": "customer"
   }
  ],
- "modified": "2025-07-03 11:10:29.073984",
+ "modified": "2025-11-05 12:32:32.387552",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Fleet Customer",

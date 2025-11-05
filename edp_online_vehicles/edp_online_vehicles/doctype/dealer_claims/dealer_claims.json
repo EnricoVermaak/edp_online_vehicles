@@ -17,6 +17,10 @@
   "column_break_fkvk",
   "dealer",
   "final_status_date",
+  "claim_pending_info_date",
+  "pending_info_age",
+  "claim_updated_date",
+  "updated_claim_age",
   "fleet_section",
   "company_registration_no",
   "search",
@@ -356,11 +360,35 @@
    "fieldtype": "Date",
    "label": "Invoice Date",
    "reqd": 1
+  },
+  {
+   "fieldname": "claim_pending_info_date",
+   "fieldtype": "Datetime",
+   "label": "Claim Pending Info Date",
+   "read_only": 1
+  },
+  {
+   "fieldname": "pending_info_age",
+   "fieldtype": "Int",
+   "label": "Pending Info Age",
+   "read_only": 1
+  },
+  {
+   "fieldname": "claim_updated_date",
+   "fieldtype": "Datetime",
+   "label": "Claim Updated Date",
+   "read_only": 1
+  },
+  {
+   "fieldname": "updated_claim_age",
+   "fieldtype": "Int",
+   "label": "Updated Claim Age",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-10-23 16:19:39.311176",
+ "modified": "2025-11-05 14:01:23.015326",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Dealer Claims",

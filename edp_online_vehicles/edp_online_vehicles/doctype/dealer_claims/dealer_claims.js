@@ -12,6 +12,32 @@ frappe.ui.form.on("Dealer Claims", {
 		}
 		// listview.page.add_actions_menu_item(__('Delete Dos'), function() {
 	},
+	table_exgk_add: function(frm, cdt, cdn) {
+        let row = locals[cdt][cdn];
+
+        frappe.ui.form.on(cdt, {
+            vin_serial_no: function(frm, cdt2, cdn2) {
+                let child_row = locals[cdt2][cdn2];
+                if(child_row.vin_serial_no) {
+                    frappe.call({
+                        method: "frappe.client.get",
+                        args: {
+                            doctype: "Vehicle Stock",
+                            name: child_row.vin_serial_no
+                        },
+                        callback: function(r) {
+                            if(r.message) {
+                                if(r.message.dealer != frm.doc.dealer) {
+                                    frappe.msgprint("Vehicle was not purchased by the selected dealership on this claim.");
+                                    frappe.model.set_value(cdt2, cdn2, "vin_serial_no", ""); // optional: clear wrong VIN
+                                }
+                            }
+                        }
+                    });
+                }
+            }
+        });
+    },
 	refresh(frm) {
 		let is_allowed = frappe.user_roles.includes("Vehicles Administrator");
 		frm.toggle_enable("claim_amt", is_allowed);

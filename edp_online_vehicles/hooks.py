@@ -209,13 +209,21 @@ doc_events = {
 		"on_submit": "edp_online_vehicles.events.check_sales_invoice.check_sales_invoice_on_payment"
 	},
 	"Item": {"after_insert": "edp_online_vehicles.events.check_item_settings.check_item_settings"},
+    "Dealer Claims": {
+        "validate": "edp_online_vehicles.edp_online_vehicles.doctype.dealer_claims.dealer_claims.dealer"
+    },
 }
+
 
 # Scheduled Tasks
 # ---------------
 
 scheduler_events = {
-	"daily": ["edp_online_vehicles.events.reserved_vehicles.update_reserved_vehicles_status"],
+	"daily": [
+        	"edp_online_vehicles.events.reserved_vehicles.update_reserved_vehicles_status",
+            "edp_online_vehicles.edp_online_vehicles.doctype.dealer_claims.dealer_claims.update_claim_age",
+        ],
+        
 	"cron": {
 		"* * * * *": [
 			"edp_online_vehicles.events.check_orders.check_orders_schedule",
@@ -224,7 +232,6 @@ scheduler_events = {
 		]
 	},
 }
-
 # Testing
 # -------
 
