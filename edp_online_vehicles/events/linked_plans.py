@@ -16,7 +16,7 @@ def create_vehicle_plans(vin_serial_no, model_code):
     default_warranty = model_doc.default_warranty_plan
 
     if default_warranty:
-        warranty_plan = frappe.get_doc({
+        frappe.get_doc({
             "doctype": "Vehicle Linked Warranty Plan",
             "vin_serial_no": vin_serial_no,
             "warranty_plan": default_warranty,
@@ -24,12 +24,11 @@ def create_vehicle_plans(vin_serial_no, model_code):
         }).insert(ignore_permissions=True)
 
     if default_plan:
-        service_plan = frappe.get_doc({
+        frappe.get_doc({
             "doctype": "Vehicle Linked Service Plan",
             "vin__serial_no": vin_serial_no,
             "service_plan": default_plan,
             "status": "Pending Activation",
         }).insert(ignore_permissions=True)
 
-    frappe.db.commit()
     return "Plans created successfully!"
