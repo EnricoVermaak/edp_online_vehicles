@@ -99,18 +99,71 @@ class DealerClaims(Document):
 			)
 			st.insert(ignore_permissions=True)
 			frappe.db.commit()
+                  
 
-
+@frappe.whitelist()
 def dealer(doc, method):
-    # Step 1: Validate that all VIN/Serial Numbers belong to vehicles purchased from the selected dealership
+    # 🔹 1. Prevent double cancellation of the same document
+    if (doc.claim_status or "").strip().lower() == "cancelled":
+        existing_status = frappe.db.get_value("Dealer Claims", doc.name, "claim_status")
+        if existing_status and existing_status.strip().lower() == "cancelled":
+            frappe.throw("This claim is already cancelled. You cannot cancel it again.")
+
+        # 🔹 2. Prevent another document with same VIN & category from being cancelled again
+        for row in doc.table_exgk:
+            if row.vin_serial_no:
+                existing_cancelled = frappe.db.sql(
+                    """
+                    SELECT parent.name
+                    FROM `tabVehicles Item` AS child
+                    JOIN `tabDealer Claims` AS parent
+                    ON child.parent = parent.name
+                    WHERE parent.claim_category = %s
+                    AND parent.claim_status = 'Cancelled'
+                    AND child.vin_serial_no = %s
+                    AND parent.name != %s
+                    """,
+                    (doc.claim_category, row.vin_serial_no, doc.name),
+                )
+                if existing_cancelled:
+                    frappe.throw(
+                        f"Vehicle ({row.vin_serial_no}) has already been cancelled under the same claim category."
+                    )
+        return  # agar cancel check pass kar gaya to exit karo
+
+    # 🔹 3. Normal validation for vehicle and duplicate VIN
     for row in doc.table_exgk:
         if row.vin_serial_no:
+            # Check if the vehicle belongs to this dealer
             vehicle = frappe.get_doc("Vehicle Stock", row.vin_serial_no)
-            if vehicle.original_purchasing_dealer and vehicle.original_purchasing_dealer != doc.dealer:
-                frappe.throw("Vehicle was not purchased by the selected dealership on this claim.")
+            if (
+                vehicle.original_purchasing_dealer
+                and vehicle.original_purchasing_dealer != doc.dealer
+            ):
+                frappe.throw(
+                    "Vehicle was not purchased by the selected dealership on this claim."
+                )
 
-    if (doc.claim_status or "").strip().lower() == "cancelled":
-        return
+            # Check if this VIN has already been claimed under the same category (excluding cancelled)
+            existing_claim = frappe.db.sql(
+                """
+                SELECT parent.name
+                FROM `tabVehicles Item` AS child
+                JOIN `tabDealer Claims` AS parent
+                ON child.parent = parent.name
+                WHERE parent.claim_category = %s
+                AND child.vin_serial_no = %s
+                AND parent.name != %s
+                AND parent.claim_status != 'Cancelled'
+                """,
+                (doc.claim_category, row.vin_serial_no, doc.name),
+            )
+
+            if existing_claim:
+                frappe.throw(
+                    f"VIN {row.vin_serial_no} has already been claimed under category '{doc.claim_category}' "
+                    f"in claim {existing_claim[0][0]}. Duplicate claim not allowed."
+                )
 
     # Step 2: Validate mandatory fields based on claim category and description
     category_doc = frappe.get_doc("Dealer Claim Category", doc.claim_category)
