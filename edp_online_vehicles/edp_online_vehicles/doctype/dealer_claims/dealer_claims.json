@@ -2,7 +2,7 @@
  "actions": [],
  "allow_import": 1,
  "allow_rename": 1,
- "autoname": "format:DC-{MM}{YY}-{#######}",
+ "autoname": "DC3.######",
  "creation": "2024-09-19 12:54:42.533446",
  "doctype": "DocType",
  "engine": "InnoDB",
@@ -388,11 +388,11 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-11-05 14:01:23.015326",
+ "modified": "2025-11-06 10:45:07.184181",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Dealer Claims",
- "naming_rule": "Expression",
+ "naming_rule": "By \"Naming Series\" field",
  "owner": "Administrator",
  "permissions": [
   {
