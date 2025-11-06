@@ -158,12 +158,23 @@ def dealer(doc, method):
                 """,
                 (doc.claim_category, row.vin_serial_no, doc.name),
             )
+            
 
             if existing_claim:
-                frappe.throw(
-                    f"VIN {row.vin_serial_no} has already been claimed under category '{doc.claim_category}' "
-                    f"in claim {existing_claim[0][0]}. Duplicate claim not allowed."
+                link = f"<a href='/app/dealer-claims/{existing_claim[0][0]}' target='_blank'>{existing_claim[0][0]}</a>"
+
+                frappe.msgprint(
+                    f"VIN '<strong>{row.vin_serial_no}</strong>' has already been claimed under category '<strong>{doc.claim_category}</strong>' "
+                    f"in claim {link}. Duplicate claim not allowed.",
+                    indicator='red',  
+                    alert=False       
                 )
+
+                # Document ko save hone se rokne ke liye
+                raise frappe.ValidationError("Duplicate claim not allowed.")
+
+
+
 
     # Step 2: Validate mandatory fields based on claim category and description
     category_doc = frappe.get_doc("Dealer Claim Category", doc.claim_category)
@@ -194,17 +205,21 @@ def dealer(doc, method):
         if frappe.db.exists("Dealer Claims", {"invoice_number": doc.invoice_number, "name": ["!=", doc.name]}):
             frappe.throw(f"Invoice Number '{doc.invoice_number}' already exists in another record.")
 
-    try:
+    # Step 4: Ensure invoice_number is unique across Dealer Claims
+    if (doc.invoice_number or "").strip():
+        if frappe.db.exists("Dealer Claims", {"invoice_number": doc.invoice_number, "name": ["!=", doc.name]}):
+            frappe.throw(f"Invoice Number '{doc.invoice_number}' already exists in another record.")
 
+    try:
         if not doc.claim_category:
             return
 
         claim_category = frappe.get_doc("Dealer Claim Category", doc.claim_category)
-
         common_vins = []
 
+        # Sab VINs ke liye comparison
         for row in claim_category.claim_types:
-            print(f"Checking Row -> Sale Type: {row.sale_type}, Claim Type Code: {row.claim_type_code}")
+
             if not row.sale_type:
                 continue
 
@@ -219,18 +234,22 @@ def dealer(doc, method):
                 vr_vins = [v.vin_serial_no for v in vr_doc.vehicles_sale_items]
                 claim_vins = [t.vin_serial_no for t in doc.table_exgk]
 
-
                 for vin in claim_vins:
-                    if vin in vr_vins and vin not in common_vins:
-                        common_vins.append(vin)
-
+                    if vin in vr_vins:
+                        if vin not in common_vins:
+                            common_vins.append(vin)
+                    else:
+                        frappe.msgprint(f"VIN <strong>{vin}</strong> does not match Sale Type <strong>{row.sale_type}</strong>")
 
     except Exception as e:
-        frappe.log_error(title="Dealer Claims Validate Error", message=frappe.get_traceback())
-        print(f"❌ Error during validate: {e}")
+        frappe.msgprint(f"Error: {str(e)}")
+        frappe.log_error(frappe.get_traceback(), "Claim Category Validation Error")
 
-    # Step 5: Send email if claim status is "Claim Updated"
-    if doc.claim_status == "Claim Updated":
+
+
+
+    # Step 5: Send email if claim status is "Claim Submitted"
+    if doc.claim_status == "Claim Submitted":
         current_user = doc.owner or frappe.session.user
         user_email = frappe.db.get_value("User", current_user, "email")
 
@@ -240,19 +259,27 @@ def dealer(doc, method):
 
         subject = f"Dealer Claim Submission Confirmation – {doc.name}"
         message = f"""
-Dear {frappe.get_value('User', current_user, 'full_name') or 'User'},
+<html>
+<body style="font-family: Arial, sans-serif; color: #333; line-height: 1.6;">
+    <div style="max-width:600px; margin:auto; padding:20px; border:1px solid #ddd; border-radius:8px; background-color:#f9f9f9;">
+        <p style="font-size:16px; font-weight:bold;">Dear {frappe.get_value('User', current_user, 'full_name') or 'User'},</p>
 
-Thank you for submitting your dealer claim.
-Your claim has been successfully received by our system and is currently being reviewed.
+        <p>Thank you for submitting your dealer claim. Your claim has been successfully received by our system and is currently being reviewed.</p>
 
-Claim Details:
-Claim Reference Number: {doc.name}
-Dealer Name: {doc.dealer or 'N/A'}
-Date Submitted: {doc.invoice_date or 'N/A'}
-Claim Type: {doc.claim_description or 'N/A'}
+        <div style="margin:15px 0; padding:15px; background-color:#fff; border:1px solid #eee; border-radius:6px;">
+            <p><strong>Claim Reference Number:</strong> {doc.name}</p>
+            <p><strong>Dealer Name:</strong> {doc.dealer or 'N/A'}</p>
+            <p><strong>Date Submitted:</strong> {doc.invoice_date or 'N/A'}</p>
+            <p><strong>Claim Type:</strong> {doc.claim_description or 'N/A'}</p>
+        </div>
 
-Kind regards,
-Customer Support Team
+        <p style="margin-top:30px; font-size:14px; color:#555;">
+            Kind regards,<br>
+            Customer Support Team
+        </p>
+    </div>
+</body>
+</html>
 """
 
         frappe.sendmail(
@@ -263,6 +290,7 @@ Customer Support Team
         )
 
         frappe.msgprint("Email sent successfully")
+
 
 
 
