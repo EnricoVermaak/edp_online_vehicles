@@ -209,8 +209,7 @@ Customer Support Team
             now=True
         )
 
-        frappe.msgprint(f" Email sent to {user_email}")
-        print(f"Email sent successfully to {user_email}")
+        frappe.msgprint("Email sent successfully")
 
 
 
