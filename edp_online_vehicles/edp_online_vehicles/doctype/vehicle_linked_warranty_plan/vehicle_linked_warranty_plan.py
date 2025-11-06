@@ -3,9 +3,20 @@
 
 import frappe
 from frappe.model.document import Document
+from frappe.utils import now_datetime, add_months
 
 
 class VehicleLinkedWarrantyPlan(Document):
+
+    def validate(self):
+        # ---- Date Set Logic ----
+        activation_date = now_datetime()
+        months = self.warranty_period_months or 0
+        expiration_date = add_months(activation_date, months)
+
+        # Set values in fields
+        self.activation_date_time = activation_date
+        self.expiration_date_time = expiration_date
     # Constants
     STATUS_ACTIVE = "Active"
     

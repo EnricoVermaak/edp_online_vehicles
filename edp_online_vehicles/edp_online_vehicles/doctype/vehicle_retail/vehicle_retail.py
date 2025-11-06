@@ -26,7 +26,6 @@ class VehicleRetail(Document):
 
     # ---- Update Linked Service Plan ----
     def update_linked_service_plan(self):
-        activation_date = now_datetime()
         for row in self.get("vehicles_sale_items"):
             if row.vin_serial_no:
                 linked_docs = frappe.get_all(
@@ -36,10 +35,6 @@ class VehicleRetail(Document):
                 )
                 for record in linked_docs:
                     linked_doc = frappe.get_doc("Vehicle Linked Service Plan", record.name)
-                    months = record.service_period_limit_months or 0
-                    expiration_date = add_months(activation_date, months)
-                    linked_doc.activation_date_time = activation_date
-                    linked_doc.expiration_date_time = expiration_date
                     linked_doc.status = "Active"
                     linked_doc.save(ignore_permissions=True)
 
@@ -55,10 +50,6 @@ class VehicleRetail(Document):
                 )
                 for record in linked_docs:
                     linked_doc = frappe.get_doc("Vehicle Linked Warranty Plan", record.name)
-                    months = record.warranty_period_months or 0
-                    expiration_date = add_months(activation_date, months)
-                    linked_doc.activation_date_time = activation_date
-                    linked_doc.expiration_date_time = expiration_date
                     linked_doc.status = "Active"
                     linked_doc.save(ignore_permissions=True)
 
