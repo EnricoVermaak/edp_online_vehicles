@@ -67,15 +67,17 @@ frappe.ui.form.on("Dealer Claims", {
 	// 	});
 	// },
 	refresh(frm) {
-		// Child Table "table_exgk" ke link field "vin_serial_no" ka filter set karna
+		// Child table field filter for VIN
         frm.fields_dict["table_exgk"].grid.get_field("vin_serial_no").get_query = function(doc, cdt, cdn) {
-            // Agar fleet_customer selected nahi hai
+
+            // agar fleet_customer blank hai → saare Vehicle Stock records show karo
             if (!frm.doc.fleet_customer) {
-                frappe.msgprint("Please select a Fleet Customer first.");
-                return { filters: [["name", "=", "None"]] };
+                return {
+                    filters: {}
+                };
             }
 
-            // Filter: Vehicle Stock.fleet_no == Dealer Claims.fleet_customer
+            // otherwise, sirf unhi VINs ko dikhao jinka fleet_no == fleet_customer
             return {
                 filters: {
                     fleet_no: frm.doc.fleet_customer
