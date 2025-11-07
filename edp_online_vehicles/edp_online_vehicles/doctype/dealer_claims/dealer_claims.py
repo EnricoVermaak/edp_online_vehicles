@@ -136,13 +136,11 @@ def dealer(doc, method):
         if row.vin_serial_no:
             # Check if the vehicle belongs to this dealer
             vehicle = frappe.get_doc("Vehicle Stock", row.vin_serial_no)
-            if (
-                vehicle.original_purchasing_dealer
-                and vehicle.original_purchasing_dealer != doc.dealer
-            ):
+            if not vehicle.original_purchasing_dealer or vehicle.original_purchasing_dealer != doc.dealer:
                 frappe.throw(
                     "Vehicle was not purchased by the selected dealership on this claim."
                 )
+
 
             # Check if this VIN has already been claimed under the same category (excluding cancelled)
             existing_claim = frappe.db.sql(
@@ -187,11 +185,11 @@ def dealer(doc, method):
     if matching_row:
         if matching_row.vin_serial_no_mandatory:
             if not doc.table_exgk or len(doc.table_exgk) == 0:
-                frappe.throw("VIN/Serial Number list (table_exgk) is mandatory for this claim type.")
+                frappe.throw("VIN/Serial Number list is mandatory for this claim type.")
 
         if matching_row.parts_mandatory:
             if not doc.claim_parts or len(doc.claim_parts) == 0:
-                frappe.throw("Parts list (claim_parts) is mandatory for this claim type.")
+                frappe.throw("Claim Parts list is mandatory for this claim type.")
 
     # Step 3: Check for duplicate VIN/Serial Numbers in the claim
     vin_list = []
