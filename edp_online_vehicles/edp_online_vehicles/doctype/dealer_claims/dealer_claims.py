@@ -1,8 +1,8 @@
 # Copyright (c) 2024, NexTash and contributors
 # For license information, please see license.txt
 
-from datetime import datetime, date
 import frappe
+from datetime import datetime, date,time
 from frappe.model.document import Document
 from frappe.utils import now_datetime
 
@@ -203,21 +203,17 @@ def dealer(doc, method):
         if frappe.db.exists("Dealer Claims", {"invoice_number": doc.invoice_number, "name": ["!=", doc.name]}):
             frappe.throw(f"Invoice Number '{doc.invoice_number}' already exists in another record.")
 
-    # Step 4: Ensure invoice_number is unique across Dealer Claims
-    if (doc.invoice_number or "").strip():
-        if frappe.db.exists("Dealer Claims", {"invoice_number": doc.invoice_number, "name": ["!=", doc.name]}):
-            frappe.throw(f"Invoice Number '{doc.invoice_number}' already exists in another record.")
-
+# ...existing code...
     try:
         if not doc.claim_category:
             return
 
         claim_category = frappe.get_doc("Dealer Claim Category", doc.claim_category)
-        common_vins = []
+        claim_vins = [t.vin_serial_no.strip() for t in doc.table_exgk if t.vin_serial_no]
+        matched_vins = set()
 
-        # Sab VINs ke liye comparison
+        # Check each sale_type and mark vins that match any sale_type
         for row in claim_category.claim_types:
-
             if not row.sale_type:
                 continue
 
@@ -227,21 +223,35 @@ def dealer(doc, method):
                 fields=["name"]
             )
 
+            vr_vins = set()
             for v_doc in vehicle_retail_docs:
                 vr_doc = frappe.get_doc("Vehicle Retail", v_doc.name)
-                vr_vins = [v.vin_serial_no for v in vr_doc.vehicles_sale_items]
-                claim_vins = [t.vin_serial_no for t in doc.table_exgk]
+                for v in getattr(vr_doc, "vehicles_sale_items", []):
+                    if v.vin_serial_no:
+                        vr_vins.add(v.vin_serial_no.strip())
 
-                for vin in claim_vins:
-                    if vin in vr_vins:
-                        if vin not in common_vins:
-                            common_vins.append(vin)
-                    else:
-                        frappe.msgprint(f"VIN <strong>{vin}</strong> does not match Sale Type <strong>{row.sale_type}</strong>")
+            # mark matched vins for this sale_type
+            for vin in claim_vins:
+                if vin in vr_vins:
+                    matched_vins.add(vin)
+
+        # any claim VIN not in matched_vins is missing (report once)
+        missing_vins = [vin for vin in claim_vins if vin not in matched_vins]
+
+        if missing_vins:
+            msgs = [
+                f"VIN <strong>{vin}</strong> does not match any configured Sale Type."
+                for vin in missing_vins
+            ]
+            frappe.msgprint("<br>".join(msgs), indicator="red", alert=False)
+            raise frappe.ValidationError("VIN/Sale Type mismatch found.")
 
     except Exception as e:
+        if isinstance(e, frappe.ValidationError):
+            raise
         frappe.msgprint(f"Error: {str(e)}")
         frappe.log_error(frappe.get_traceback(), "Claim Category Validation Error")
+# ...existing code...
 
 
 
@@ -262,18 +272,21 @@ def dealer(doc, method):
     <div style="max-width:600px; margin:auto; padding:20px; border:1px solid #ddd; border-radius:8px; background-color:#f9f9f9;">
         <p style="font-size:16px; font-weight:bold;">Dear {frappe.get_value('User', current_user, 'full_name') or 'User'},</p>
 
-        <p>Thank you for submitting your dealer claim. Your claim has been successfully received by our system and is currently being reviewed.</p>
+        <p>Thank you for submitting your dealer claim.</p>
+        <p>Your claim has been successfully received by our system and is currently being reviewed.</p>
 
         <div style="margin:15px 0; padding:15px; background-color:#fff; border:1px solid #eee; border-radius:6px;">
-            <p><strong>Claim Reference Number:</strong> {doc.name}</p>
-            <p><strong>Dealer Name:</strong> {doc.dealer or 'N/A'}</p>
-            <p><strong>Date Submitted:</strong> {doc.invoice_date or 'N/A'}</p>
-            <p><strong>Claim Type:</strong> {doc.claim_description or 'N/A'}</p>
+        <p style="margin-bottom:8px; font-weight:bold;">Claim Details:</p>
+        <ul style="margin:0; padding-left:20px; line-height:1.6;">
+            <li><strong>Claim Reference Number:</strong> {doc.name}</li>
+            <li><strong>Dealer Name:</strong> {doc.dealer or 'N/A'}</li>
+            <li><strong>Date Submitted:</strong> {doc.claim_datetime or 'N/A'}</li>
+            <li><strong>Claim Type:</strong> {doc.claim_description or 'N/A'}</li>
+        </ul>
         </div>
 
         <p style="margin-top:30px; font-size:14px; color:#555;">
-            Kind regards,<br>
-            Customer Support Team
+            Kind regards
         </p>
     </div>
 </body>
@@ -287,7 +300,6 @@ def dealer(doc, method):
             now=True
         )
 
-        frappe.msgprint("Email sent successfully")
 
 
 

@@ -90,9 +90,9 @@
   {
    "default": "Now",
    "fieldname": "claim_datetime",
-   "fieldtype": "Datetime",
+   "fieldtype": "Date",
    "in_list_view": 1,
-   "label": "Claim Date/Time",
+   "label": "Claim Date",
    "read_only": 1,
    "reqd": 1
   },
@@ -388,7 +388,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-11-06 10:45:07.184181",
+ "modified": "2025-11-07 14:51:52.163147",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Dealer Claims",

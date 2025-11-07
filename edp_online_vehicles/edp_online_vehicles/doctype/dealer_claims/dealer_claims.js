@@ -67,6 +67,24 @@ frappe.ui.form.on("Dealer Claims", {
 	// 	});
 	// },
 	refresh(frm) {
+		// Child Table "table_exgk" ke link field "vin_serial_no" ka filter set karna
+        frm.fields_dict["table_exgk"].grid.get_field("vin_serial_no").get_query = function(doc, cdt, cdn) {
+            // Agar fleet_customer selected nahi hai
+            if (!frm.doc.fleet_customer) {
+                frappe.msgprint("Please select a Fleet Customer first.");
+                return { filters: [["name", "=", "None"]] };
+            }
+
+            // Filter: Vehicle Stock.fleet_no == Dealer Claims.fleet_customer
+            return {
+                filters: {
+                    fleet_no: frm.doc.fleet_customer
+                }
+            };
+        };
+
+
+
 		let is_allowed = frappe.user_roles.includes("Vehicles Administrator");
 		frm.toggle_enable("claim_amt", is_allowed);
 
