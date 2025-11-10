@@ -103,48 +103,43 @@ class DealerClaims(Document):
 
 @frappe.whitelist()
 def dealer(doc=None, vinno=None, dealer=None, claim_type_code=None, docname=None):
-    # 🔹 Parse doc agar string ya dict me aaya ho
+    # Normalize `doc` so it's always a Frappe Doc object (handles JSON string / dict / name)
     if doc:
-        # Agar doc JSON string hai to parse karo
         if isinstance(doc, str):
             try:
-                doc = frappe.parse_json(doc)
-            except Exception as e:
-                frappe.throw(f"Invalid doc JSON: {str(e)}")
-        # Agar dict hai, get_doc se Frappe Doc object banao
+                doc_parsed = frappe.parse_json(doc)
+            except Exception:
+                frappe.throw("Invalid JSON for 'doc'")
+            doc = doc_parsed
         if isinstance(doc, dict):
+            # dict -> Doc object
             doc = frappe.get_doc(doc)
-    
-    # 🔹 Agar docname diya ho to DB se fetch
     elif docname and frappe.db.exists("Dealer Claims", docname):
         doc = frappe.get_doc("Dealer Claims", docname)
-    # 🔹 Agar vinno diya ho to DB se fetch
-    elif vinno and frappe.db.exists("Dealer Claims", {"vinno": vinno}):
-        doc = frappe.get_doc("Dealer Claims", {"vinno": vinno})
-    else:
-        frappe.throw("Unable to load Dealer Claim document. It might not be saved yet.")
 
-        # 🔹 2. Prevent another document with same VIN & category from being cancelled again
-        for row in doc.table_exgk:
-            if row.vin_serial_no:
-                existing_cancelled = frappe.db.sql(
-                    """
-                    SELECT parent.name
-                    FROM `tabVehicles Item` AS child
-                    JOIN `tabDealer Claims` AS parent
+
+    # 🔹 2. Prevent another document with same VIN & category from being cancelled again
+    for row in getattr(doc, "table_exgk", []):
+        if row.vin_serial_no:
+            existing_cancelled = frappe.db.sql(
+                """
+                SELECT parent.name
+                FROM `tabVehicles Item` AS child
+                JOIN `tabDealer Claims` AS parent
                     ON child.parent = parent.name
-                    WHERE parent.claim_category = %s
+                WHERE parent.claim_category = %s
                     AND parent.claim_status = 'Cancelled'
                     AND child.vin_serial_no = %s
                     AND parent.name != %s
-                    """,
-                    (doc.claim_category, row.vin_serial_no, doc.name),
+                """,
+                (doc.claim_category, row.vin_serial_no, doc.name),
+            )
+            if existing_cancelled:
+                frappe.throw(
+                    f"Vehicle ({row.vin_serial_no}) has already been cancelled under the same claim category."
                 )
-                if existing_cancelled:
-                    frappe.throw(
-                        f"Vehicle ({row.vin_serial_no}) has already been cancelled under the same claim category."
-                    )
-        return  # agar cancel check pass kar gaya to exit karo
+
+    return  # agar cancel check pass kar gaya to exit karo
 
     # 🔹 3. Normal validation for vehicle and duplicate VIN
     for row in doc.table_exgk:
