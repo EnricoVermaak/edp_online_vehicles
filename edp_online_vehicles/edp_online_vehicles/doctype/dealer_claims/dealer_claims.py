@@ -104,7 +104,7 @@ class DealerClaims(Document):
 @frappe.whitelist()
 def dealer(doc=None, method=None):
     # 🔹 1. Prevent double cancellation of the same document
-    if (doc.claim_status or "").strip().lower() == "cancelled":
+    if (doc.claim_status or "").strip().lower() == "Cancelled":
         existing_status = frappe.db.get_value("Dealer Claims", doc.name, "claim_status")
         if existing_status and existing_status.strip().lower() == "cancelled":
             frappe.throw("This claim is already cancelled. You cannot cancel it again.")
