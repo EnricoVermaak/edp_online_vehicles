@@ -103,19 +103,37 @@ class DealerClaims(Document):
 
 @frappe.whitelist()
 def dealer(doc=None, vinno=None, dealer=None, claim_type_code=None, docname=None):
-    # Normalize `doc` so it's always a Frappe Doc object (handles JSON string / dict / name)
-    if doc:
-        if isinstance(doc, str):
-            try:
-                doc_parsed = frappe.parse_json(doc)
-            except Exception:
-                frappe.throw("Invalid JSON for 'doc'")
-            doc = doc_parsed
-        if isinstance(doc, dict):
-            # dict -> Doc object
-            doc = frappe.get_doc(doc)
-    elif docname and frappe.db.exists("Dealer Claims", docname):
+    # Normalize `doc` to always be a Frappe Doc object
+    if not doc and docname and frappe.db.exists("Dealer Claims", docname):
         doc = frappe.get_doc("Dealer Claims", docname)
+
+    elif doc:
+        # Case 1: doc is a string (could be JSON or docname)
+        if isinstance(doc, str):
+            # Try parsing as JSON first
+            try:
+                parsed = frappe.parse_json(doc)
+                if isinstance(parsed, dict):
+                    doc = frappe.get_doc(parsed)
+                else:
+                    # If not dict, maybe it's just a docname
+                    doc = frappe.get_doc("Dealer Claims", doc)
+            except Exception:
+                # If JSON fails, assume it's a docname
+                if frappe.db.exists("Dealer Claims", doc):
+                    doc = frappe.get_doc("Dealer Claims", doc)
+                else:
+                    frappe.throw("Invalid doc or docname provided.")
+        
+        # Case 2: doc is already a dict (from form submit)
+        elif isinstance(doc, dict):
+            doctype = doc.get("doctype")
+            if doctype != "Dealer Claims":
+                frappe.throw("Expected doctype 'Dealer Claims'")
+            doc = frappe.get_doc(doc)
+    
+    else:
+        frappe.throw("No document or docname provided.")
 
 
     # 🔹 2. Prevent another document with same VIN & category from being cancelled again
