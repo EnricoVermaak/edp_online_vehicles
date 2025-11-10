@@ -993,6 +993,3 @@ frappe.ui.form.on("Vehicles Item", {
     },
 });
 
-
-
-// Function to check if the frm exists in the database

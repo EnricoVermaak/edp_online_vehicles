@@ -102,7 +102,7 @@ class DealerClaims(Document):
                   
 
 @frappe.whitelist()
-def dealer(doc, method):
+def dealer(doc=None, method=None):
     # 🔹 1. Prevent double cancellation of the same document
     if (doc.claim_status or "").strip().lower() == "cancelled":
         existing_status = frappe.db.get_value("Dealer Claims", doc.name, "claim_status")
@@ -234,16 +234,32 @@ def dealer(doc, method):
                 if vin in vr_vins:
                     matched_vins.add(vin)
 
-        # any claim VIN not in matched_vins is missing (report once)
+# ...existing code...
         missing_vins = [vin for vin in claim_vins if vin not in matched_vins]
 
         if missing_vins:
-            msgs = [
-                f"VIN <strong>{vin}</strong> is not eligible for the selected claim type. Retail Sale Type does not match the allowed Sale Types."
+            sale_type = next((ct.sale_type for ct in claim_category.claim_types 
+                            if ct.claim_type_description == doc.claim_description), "N/A")
+            
+            # Create message string by joining list elements with <br>
+            message = "<br>".join([
+                f"VIN <strong>{vin}</strong> is not eligible for <strong>{doc.claim_description}</strong>. "
+                f"VIN was not retailed as <strong>{sale_type}</strong>."
                 for vin in missing_vins
-            ]
-            frappe.msgprint("<br>".join(msgs), indicator="red", alert=False)
-            raise frappe.ValidationError("VIN/Sale Type mismatch found.")
+            ])
+
+            # Update claim status
+            doc.claim_status = "Claim Declined"
+            
+            # Force save the status change
+            if doc.name:
+                frappe.db.set_value("Dealer Claims", doc.name, "claim_status", "Claim Declined")
+                frappe.db.commit()
+
+            # Show message and stop further processing 
+            frappe.msgprint(message, indicator="red", alert=False)
+# ...existing code...
+
 
     except Exception as e:
         if isinstance(e, frappe.ValidationError):
