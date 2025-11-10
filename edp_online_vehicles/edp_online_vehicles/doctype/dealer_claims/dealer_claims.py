@@ -102,18 +102,18 @@ class DealerClaims(Document):
                   
 
 @frappe.whitelist()
-def dealer(doc=None, docname=None, vinno=None, dealer=None, claim_type_code=None):
-    # 🔹 Case 1: doc bheja gaya ho (JSON form me)
+def dealer(doc=None, vinno=None, dealer=None, claim_type_code=None, docname=None):
     if doc:
-        try:
-            doc = frappe.parse_json(doc)
-            doc = frappe.get_doc(doc)  # memory me document object banao
-        except Exception as e:
-            frappe.throw(f"Invalid doc JSON: {str(e)}")
-
-    # 🔹 Case 2: agar doc nahi bheja gaya to docname/vinno se fetch karo
+        if isinstance(doc, str):
+            try:
+                doc = frappe.parse_json(doc)  # string -> dict
+                doc = frappe.get_doc(doc)      # dict -> Frappe Doc object
+            except Exception as e:
+                frappe.throw(f"Invalid doc JSON: {str(e)}")
+    # 2️⃣ Agar docname diya ho, DB se fetch karo
     elif docname and frappe.db.exists("Dealer Claims", docname):
         doc = frappe.get_doc("Dealer Claims", docname)
+    # 3️⃣ Fallback: vinno se fetch karo
     elif vinno and frappe.db.exists("Dealer Claims", {"vinno": vinno}):
         doc = frappe.get_doc("Dealer Claims", {"vinno": vinno})
     else:
