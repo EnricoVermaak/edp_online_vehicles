@@ -203,7 +203,6 @@ def dealer(doc, method):
         if frappe.db.exists("Dealer Claims", {"invoice_number": doc.invoice_number, "name": ["!=", doc.name]}):
             frappe.throw(f"Invoice Number '{doc.invoice_number}' already exists in another record.")
 
-# ...existing code...
     try:
         if not doc.claim_category:
             return
@@ -240,7 +239,7 @@ def dealer(doc, method):
 
         if missing_vins:
             msgs = [
-                f"VIN <strong>{vin}</strong> does not match any configured Sale Type."
+                f"VIN <strong>{vin}</strong> is not eligible for the selected claim type. Retail Sale Type does not match the allowed Sale Types."
                 for vin in missing_vins
             ]
             frappe.msgprint("<br>".join(msgs), indicator="red", alert=False)
@@ -251,7 +250,6 @@ def dealer(doc, method):
             raise
         frappe.msgprint(f"Error: {str(e)}")
         frappe.log_error(frappe.get_traceback(), "Claim Category Validation Error")
-# ...existing code...
 
 
 
