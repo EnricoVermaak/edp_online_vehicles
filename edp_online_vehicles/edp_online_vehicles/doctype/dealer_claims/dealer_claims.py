@@ -102,12 +102,22 @@ class DealerClaims(Document):
                   
 
 @frappe.whitelist()
-def dealer(doc=None, method=None):
-    # 🔹 1. Prevent double cancellation of the same document
-    if (doc.claim_status or "").strip().lower() == "Cancelled":
-        existing_status = frappe.db.get_value("Dealer Claims", doc.name, "claim_status")
-        if existing_status and existing_status.strip().lower() == "Cancelled":
-            frappe.throw("This claim is already cancelled. You cannot cancel it again.")
+def dealer(doc=None, docname=None, vinno=None, dealer=None, claim_type_code=None):
+    # 🔹 Case 1: doc bheja gaya ho (JSON form me)
+    if doc:
+        try:
+            doc = frappe.parse_json(doc)
+            doc = frappe.get_doc(doc)  # memory me document object banao
+        except Exception as e:
+            frappe.throw(f"Invalid doc JSON: {str(e)}")
+
+    # 🔹 Case 2: agar doc nahi bheja gaya to docname/vinno se fetch karo
+    elif docname and frappe.db.exists("Dealer Claims", docname):
+        doc = frappe.get_doc("Dealer Claims", docname)
+    elif vinno and frappe.db.exists("Dealer Claims", {"vinno": vinno}):
+        doc = frappe.get_doc("Dealer Claims", {"vinno": vinno})
+    else:
+        frappe.throw("Unable to load Dealer Claim document. It might not be saved yet.")
 
         # 🔹 2. Prevent another document with same VIN & category from being cancelled again
         for row in doc.table_exgk:

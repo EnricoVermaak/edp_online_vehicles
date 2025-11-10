@@ -974,9 +974,10 @@ frappe.ui.form.on("Vehicles Item", {
                     frappe.call({
                         method: "edp_online_vehicles.edp_online_vehicles.doctype.dealer_claims.dealer_claims.dealer",
                         args: {
-                            vinno: row.vin_serial_no,
-                            dealer: frm.doc.dealer,
-                            claim_type_code: frm.doc.claim_type_code,
+							doc: frm.doc, // optional
+							vinno: row.vin_serial_no,
+							dealer: frm.doc.dealer,
+							claim_type_code: frm.doc.claim_type_code,
                         },
                         callback: function (r) {
                             if (r.message && r.message.length > 0) {
