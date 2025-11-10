@@ -103,17 +103,22 @@ class DealerClaims(Document):
 
 @frappe.whitelist()
 def dealer(doc=None, vinno=None, dealer=None, claim_type_code=None, docname=None):
+    # 🔹 Parse doc agar string ya dict me aaya ho
     if doc:
+        # Agar doc JSON string hai to parse karo
         if isinstance(doc, str):
             try:
-                doc = frappe.parse_json(doc)  # string -> dict
-                doc = frappe.get_doc(doc)      # dict -> Frappe Doc object
+                doc = frappe.parse_json(doc)
             except Exception as e:
                 frappe.throw(f"Invalid doc JSON: {str(e)}")
-    # 2️⃣ Agar docname diya ho, DB se fetch karo
+        # Agar dict hai, get_doc se Frappe Doc object banao
+        if isinstance(doc, dict):
+            doc = frappe.get_doc(doc)
+    
+    # 🔹 Agar docname diya ho to DB se fetch
     elif docname and frappe.db.exists("Dealer Claims", docname):
         doc = frappe.get_doc("Dealer Claims", docname)
-    # 3️⃣ Fallback: vinno se fetch karo
+    # 🔹 Agar vinno diya ho to DB se fetch
     elif vinno and frappe.db.exists("Dealer Claims", {"vinno": vinno}):
         doc = frappe.get_doc("Dealer Claims", {"vinno": vinno})
     else:
