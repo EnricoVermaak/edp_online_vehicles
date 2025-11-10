@@ -103,135 +103,26 @@ class DealerClaims(Document):
 
 @frappe.whitelist()
 def dealer(doc=None, vinno=None, dealer=None, claim_type_code=None, docname=None):
-    # Normalize `doc` to always be a Frappe Doc object
-    if not doc and docname and frappe.db.exists("Dealer Claims", docname):
-        doc = frappe.get_doc("Dealer Claims", docname)
-
-    elif doc:
-        # Case 1: doc is a string (could be JSON or docname)
-        if isinstance(doc, str):
-            # Try parsing as JSON first
-            try:
-                parsed = frappe.parse_json(doc)
-                if isinstance(parsed, dict):
-                    doc = frappe.get_doc(parsed)
-                else:
-                    # If not dict, maybe it's just a docname
-                    doc = frappe.get_doc("Dealer Claims", doc)
-            except Exception:
-                # If JSON fails, assume it's a docname
-                if frappe.db.exists("Dealer Claims", doc):
-                    doc = frappe.get_doc("Dealer Claims", doc)
-                else:
-                    frappe.throw("Invalid doc or docname provided.")
-        
-        # Case 2: doc is already a dict (from form submit)
-        elif isinstance(doc, dict):
-            doctype = doc.get("doctype")
-            if doctype != "Dealer Claims":
-                frappe.throw("Expected doctype 'Dealer Claims'")
-            doc = frappe.get_doc(doc)
-    
-    else:
-        frappe.throw("No document or docname provided.")
-
-
-    # 🔹 2. Prevent another document with same VIN & category from being cancelled again
-    for row in getattr(doc, "table_exgk", []):
-        if row.vin_serial_no:
-            existing_cancelled = frappe.db.sql(
-                """
-                SELECT parent.name
-                FROM `tabVehicles Item` AS child
-                JOIN `tabDealer Claims` AS parent
-                    ON child.parent = parent.name
-                WHERE parent.claim_category = %s
-                    AND parent.claim_status = 'Cancelled'
-                    AND child.vin_serial_no = %s
-                    AND parent.name != %s
-                """,
-                (doc.claim_category, row.vin_serial_no, doc.name),
-            )
-            if existing_cancelled:
-                frappe.throw(
-                    f"Vehicle ({row.vin_serial_no}) has already been cancelled under the same claim category."
-                )
-
-    return  # agar cancel check pass kar gaya to exit karo
-
-    # 🔹 3. Normal validation for vehicle and duplicate VIN
-    for row in doc.table_exgk:
-        if row.vin_serial_no:
-            # Check if the vehicle belongs to this dealer
-            vehicle = frappe.get_doc("Vehicle Stock", row.vin_serial_no)
-            if not vehicle.original_purchasing_dealer or vehicle.original_purchasing_dealer != doc.dealer:
-                frappe.throw(
-                    "Vehicle was not purchased by the selected dealership on this claim."
-                )
-
-
-            # Check if this VIN has already been claimed under the same category (excluding cancelled)
-            existing_claim = frappe.db.sql(
-                """
-                SELECT parent.name
-                FROM `tabVehicles Item` AS child
-                JOIN `tabDealer Claims` AS parent
-                ON child.parent = parent.name
-                WHERE parent.claim_category = %s
-                AND child.vin_serial_no = %s
-                AND parent.name != %s
-                AND parent.claim_status != 'Cancelled'
-                """,
-                (doc.claim_category, row.vin_serial_no, doc.name),
-            )
-            
-
-            if existing_claim:
-                link = f"<a href='/app/dealer-claims/{existing_claim[0][0]}' target='_blank'>{existing_claim[0][0]}</a>"
-
-                frappe.msgprint(
-                    f"VIN '<strong>{row.vin_serial_no}</strong>' has already been claimed under category '<strong>{doc.claim_category}</strong>' "
-                    f"in claim {link}. Duplicate claim not allowed.",
-                    indicator='red',  
-                    alert=False       
-                )
-
-                # Document ko save hone se rokne ke liye
-                raise frappe.ValidationError("Duplicate claim not allowed.")
-
-
-
-
-    # Step 2: Validate mandatory fields based on claim category and description
-    category_doc = frappe.get_doc("Dealer Claim Category", doc.claim_category)
-    matching_row = None
-    for row in category_doc.claim_types:
-        if row.claim_type_description == doc.claim_description:
-            matching_row = row
-            break
-
-    if matching_row:
-        if matching_row.vin_serial_no_mandatory:
-            if not doc.table_exgk or len(doc.table_exgk) == 0:
-                frappe.throw("VIN/Serial Number list is mandatory for this claim type.")
-
-        if matching_row.parts_mandatory:
-            if not doc.claim_parts or len(doc.claim_parts) == 0:
-                frappe.throw("Claim Parts list is mandatory for this claim type.")
-
-    # Step 3: Check for duplicate VIN/Serial Numbers in the claim
-    vin_list = []
-    for row in doc.table_exgk:
-        if row.vin_serial_no in vin_list:
-            frappe.throw(f"Duplicate VIN Serial No found: {row.vin_serial_no}")
-        vin_list.append(row.vin_serial_no)
-
-    # Step 4: Ensure invoice_number is unique across Dealer Claims
-    if (doc.invoice_number or "").strip():
-        if frappe.db.exists("Dealer Claims", {"invoice_number": doc.invoice_number, "name": ["!=", doc.name]}):
-            frappe.throw(f"Invoice Number '{doc.invoice_number}' already exists in another record.")
-
     try:
+        # Convert JSON string to dict if needed
+        if isinstance(doc, str):
+            try:
+                doc = frappe.parse_json(doc)
+            except Exception:
+                frappe.throw("Invalid JSON for doc parameter")
+        
+        # Convert dict to Doc object
+        if isinstance(doc, dict):
+            doc = frappe.get_doc(doc)
+        
+        # Load from DB if docname provided
+        elif docname and frappe.db.exists("Dealer Claims", docname):
+            doc = frappe.get_doc("Dealer Claims", docname)
+            
+        if not doc:
+            frappe.throw("No valid document or docname provided")
+
+        # Validate claim category exists
         if not doc.claim_category:
             return
 
@@ -239,7 +130,7 @@ def dealer(doc=None, vinno=None, dealer=None, claim_type_code=None, docname=None
         claim_vins = [t.vin_serial_no.strip() for t in doc.table_exgk if t.vin_serial_no]
         matched_vins = set()
 
-        # Check each sale_type and mark vins that match any sale_type
+        # Check each sale_type and mark vins that match
         for row in claim_category.claim_types:
             if not row.sale_type:
                 continue
@@ -257,46 +148,42 @@ def dealer(doc=None, vinno=None, dealer=None, claim_type_code=None, docname=None
                     if v.vin_serial_no:
                         vr_vins.add(v.vin_serial_no.strip())
 
-            # mark matched vins for this sale_type
+            # Mark matched vins for this sale_type
             for vin in claim_vins:
                 if vin in vr_vins:
                     matched_vins.add(vin)
 
-# ...existing code...
+        # Find VINs not matching sale_type
         missing_vins = [vin for vin in claim_vins if vin not in matched_vins]
 
         if missing_vins:
-            sale_type = next((ct.sale_type for ct in claim_category.claim_types 
-                            if ct.claim_type_description == doc.claim_description), "N/A")
-            
-            # Create message string by joining list elements with <br>
+            sale_type = next(
+                (ct.sale_type for ct in claim_category.claim_types 
+                 if ct.claim_type_description == doc.claim_description),
+                "N/A"
+            )
+
+            # Create message for unmatched VINs
             message = "<br>".join([
                 f"VIN <strong>{vin}</strong> is not eligible for <strong>{doc.claim_description}</strong>. "
                 f"VIN was not retailed as <strong>{sale_type}</strong>."
                 for vin in missing_vins
             ])
 
-            # Update claim status
+            # Update and persist claim status
             doc.claim_status = "Claim Declined"
-            
-            # Force save the status change
             if doc.name:
                 frappe.db.set_value("Dealer Claims", doc.name, "claim_status", "Claim Declined")
                 frappe.db.commit()
 
-            # Show message and stop further processing 
+            # Show message and stop processing
             frappe.msgprint(message, indicator="red", alert=False)
-# ...existing code...
-
 
     except Exception as e:
         if isinstance(e, frappe.ValidationError):
             raise
         frappe.msgprint(f"Error: {str(e)}")
         frappe.log_error(frappe.get_traceback(), "Claim Category Validation Error")
-
-
-
 
     # Step 5: Send email if claim status is "Claim Submitted"
     if doc.claim_status == "Claim Submitted":
@@ -318,13 +205,13 @@ def dealer(doc=None, vinno=None, dealer=None, claim_type_code=None, docname=None
         <p>Your claim has been successfully received by our system and is currently being reviewed.</p>
 
         <div style="margin:15px 0; padding:15px; background-color:#fff; border:1px solid #eee; border-radius:6px;">
-        <p style="margin-bottom:8px; font-weight:bold;">Claim Details:</p>
-        <ul style="margin:0; padding-left:20px; line-height:1.6;">
-            <li><strong>Claim Reference Number:</strong> {doc.name}</li>
-            <li><strong>Dealer Name:</strong> {doc.dealer or 'N/A'}</li>
-            <li><strong>Date Submitted:</strong> {doc.claim_datetime or 'N/A'}</li>
-            <li><strong>Claim Type:</strong> {doc.claim_description or 'N/A'}</li>
-        </ul>
+            <p style="margin-bottom:8px; font-weight:bold;">Claim Details:</p>
+            <ul style="margin:0; padding-left:20px; line-height:1.6;">
+                <li><strong>Claim Reference Number:</strong> {doc.name}</li>
+                <li><strong>Dealer Name:</strong> {doc.dealer or 'N/A'}</li>
+                <li><strong>Date Submitted:</strong> {doc.claim_datetime or 'N/A'}</li>
+                <li><strong>Claim Type:</strong> {doc.claim_description or 'N/A'}</li>
+            </ul>
         </div>
 
         <p style="margin-top:30px; font-size:14px; color:#555;">
@@ -341,8 +228,6 @@ def dealer(doc=None, vinno=None, dealer=None, claim_type_code=None, docname=None
             message=message,
             now=True
         )
-
-
 
 
 
