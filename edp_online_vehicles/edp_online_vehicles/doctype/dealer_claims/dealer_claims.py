@@ -209,7 +209,6 @@ def dealer(doc=None, vinno=None, dealer=None, claim_type_code=None, docname=None
         if frappe.db.exists("Dealer Claims", {"invoice_number": doc.invoice_number, "name": ["!=", doc.name]}):
             frappe.throw(f"Invoice Number '{doc.invoice_number}' already exists in another record.")
 
-# ...existing code...
     try:
         if isinstance(doc, str):
             try:
@@ -287,7 +286,6 @@ def dealer(doc=None, vinno=None, dealer=None, claim_type_code=None, docname=None
             raise
         frappe.msgprint(f"Error: {str(e)}")
         frappe.log_error(frappe.get_traceback(), "Claim Category Validation Error")
-# ...existing code...
 
 
 
@@ -308,15 +306,10 @@ def dealer(doc=None, vinno=None, dealer=None, claim_type_code=None, docname=None
     <div style="max-width:600px; margin:auto; padding:20px; border:1px solid #ddd; border-radius:8px; background-color:#f9f9f9;">
         <p style="font-size:16px; font-weight:bold;">Dear {frappe.get_value('User', current_user, 'full_name') or 'User'},</p>
 
-        <p>Thank you for submitting your dealer claim. Your claim has been successfully received by our system and is currently being reviewed.</p>
         <p>Thank you for submitting your dealer claim.</p>
         <p>Your claim has been successfully received by our system and is currently being reviewed.</p>
 
         <div style="margin:15px 0; padding:15px; background-color:#fff; border:1px solid #eee; border-radius:6px;">
-            <p><strong>Claim Reference Number:</strong> {doc.name}</p>
-            <p><strong>Dealer Name:</strong> {doc.dealer or 'N/A'}</p>
-            <p><strong>Date Submitted:</strong> {doc.invoice_date or 'N/A'}</p>
-            <p><strong>Claim Type:</strong> {doc.claim_description or 'N/A'}</p>
         <p style="margin-bottom:8px; font-weight:bold;">Claim Details:</p>
         <ul style="margin:0; padding-left:20px; line-height:1.6;">
             <li><strong>Claim Reference Number:</strong> {doc.name}</li>
@@ -328,8 +321,6 @@ def dealer(doc=None, vinno=None, dealer=None, claim_type_code=None, docname=None
 
         <p style="margin-top:30px; font-size:14px; color:#555;">
             Kind regards,<br>
-            Customer Support Team
-            Kind regards
         </p>
     </div>
 </body>
@@ -343,7 +334,6 @@ def dealer(doc=None, vinno=None, dealer=None, claim_type_code=None, docname=None
             now=True
         )
 
-        frappe.msgprint("Email sent successfully")
 
 
 
