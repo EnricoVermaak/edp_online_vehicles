@@ -210,8 +210,11 @@ doc_events = {
 	},
 	"Item": {"after_insert": "edp_online_vehicles.events.check_item_settings.check_item_settings"},
     "Dealer Claims": {
-        "validate": "edp_online_vehicles.edp_online_vehicles.doctype.dealer_claims.dealer_claims.dealer"
+        "validate": "edp_online_vehicles.edp_online_vehicles.doctype.dealer_claims.dealer_claims.dealer",
+		"after_save": "edp_online_vehicles.edp_online_vehicles.doctype.dealer_claims.dealer_claims.after_save"
     },
+
+
 }
 
 

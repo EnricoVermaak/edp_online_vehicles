@@ -16,20 +16,19 @@ class DealerClaims(Document):
 		if self.claim_status == "Claim Updated" and not self.claim_updated_date:
 			self.claim_updated_date = now_datetime()
 
-		# 1️⃣ Auto-submit if status becomes Remittance
-		if self.claim_status == "Remittance":
-			self.submit()
+		# ⚠️ ❌ Remove this - causes recursion
+		# if self.claim_status == "Remittance":
+		#     self.save()
 
 		# 2️⃣ Only proceed if there's *any* status
-		if not self.claim_status:
-			return
-
-		if not self.name:
+		if not self.claim_status or not self.name:
 			return
 
 		# 3️⃣ Check if a Status Tracker exists
 		tracker_name = frappe.db.get_value(
-			"Status Tracker", {"status_doctype": "Dealer Claims", "document": self.name}, "name"
+			"Status Tracker",
+			{"status_doctype": "Dealer Claims", "document": self.name},
+			"name"
 		)
 		if not tracker_name:
 			return
@@ -74,12 +73,22 @@ class DealerClaims(Document):
 		# 1️⃣1️⃣ Append a new row to the status_tracking_table
 		st.append(
 			"status_tracking_table",
-			{"status": self.claim_status, "status_updated_on": now_datetime(), "time_elapsed": elapsed_str},
+			{
+				"status": self.claim_status,
+				"status_updated_on": now_datetime(),
+				"time_elapsed": elapsed_str,
+			},
 		)
 
 		# 1️⃣2️⃣ Save the updated tracker
 		st.save(ignore_permissions=True)
 		frappe.db.commit()
+          
+	def after_save(self):
+		if self.claim_status == "Remittance" and self.docstatus == 0:
+			self.submit()
+
+
 
 	def after_insert(self):
 		tracker_name = frappe.db.get_value(
@@ -160,17 +169,42 @@ def dealer(doc=None, vinno=None, dealer=None, claim_type_code=None, docname=None
 
 
             if existing_claim:
-                link = f"<a href='/app/dealer-claims/{existing_claim[0][0]}' target='_blank'>{existing_claim[0][0]}</a>"
+                # Bypass duplicate claim check if status is "Remittance"
+                if doc.claim_status == "Remittance":
+                    pass
+                else:
+                    # Get all existing claims for this VIN and category
+                    existing_claims_list = frappe.db.sql(
+                        """
+                        SELECT parent.name
+                        FROM `tabVehicles Item` AS child
+                        JOIN `tabDealer Claims` AS parent
+                        ON child.parent = parent.name
+                        WHERE parent.claim_category = %s
+                        AND child.vin_serial_no = %s
+                        AND parent.name != %s
+                        AND parent.claim_status != 'Cancelled'
+                        """,
+                        (doc.claim_category, row.vin_serial_no, doc.name),
+                    )
+                    
+                    # Create links for all existing claims
+                    claim_links = []
+                    for claim in existing_claims_list:
+                        claim_link = f"<a href='/app/dealer-claims/{claim[0]}' target='_blank'>{claim[0]}</a>"
+                        claim_links.append(claim_link)
+                    
+                    links_html = ", ".join(claim_links)
 
-                frappe.msgprint(
-                    f"VIN '<strong>{row.vin_serial_no}</strong>' has already been claimed under category '<strong>{doc.claim_category}</strong>' "
-                    f"in claim {link}. Duplicate claim not allowed.",
-                    indicator='red',  
-                    alert=False       
-                )
+                    frappe.msgprint(
+                        f"VIN '<strong>{row.vin_serial_no}</strong>' has already been claimed under category '<strong>{doc.claim_category}</strong>' "
+                        f"in claim(s): {links_html}. Duplicate claim not allowed.",
+                        indicator='red',  
+                        alert=False       
+                    )
 
-                # Document ko save hone se rokne ke liye
-                raise frappe.ValidationError("Duplicate claim not allowed.")
+                    # Document ko save hone se rokne ke liye
+                    raise frappe.ValidationError("Duplicate claim not allowed.")
 
 
 
@@ -201,13 +235,10 @@ def dealer(doc=None, vinno=None, dealer=None, claim_type_code=None, docname=None
 
     # Step 4: Ensure invoice_number is unique across Dealer Claims
     if (doc.invoice_number or "").strip():
-        if frappe.db.exists("Dealer Claims", {"invoice_number": doc.invoice_number, "name": ["!=", doc.name]}):
-            frappe.throw(f"Invoice Number '{doc.invoice_number}' already exists in another record.")
-
-    # Step 4: Ensure invoice_number is unique across Dealer Claims
-    if (doc.invoice_number or "").strip():
-        if frappe.db.exists("Dealer Claims", {"invoice_number": doc.invoice_number, "name": ["!=", doc.name]}):
-            frappe.throw(f"Invoice Number '{doc.invoice_number}' already exists in another record.")
+        # Bypass invoice number check if status is "Remittance"
+        if doc.claim_status != "Remittance":
+            if frappe.db.exists("Dealer Claims", {"invoice_number": doc.invoice_number, "name": ["!=", doc.name]}):
+                frappe.throw(f"Invoice Number '{doc.invoice_number}' already exists in another record.")
 
     try:
         if isinstance(doc, str):
