@@ -113,33 +113,61 @@ class DealerClaims(Document):
 
 @frappe.whitelist()
 def dealer(doc=None, vinno=None, dealer=None, claim_type_code=None, docname=None):
-    # 🔹 1. Prevent double cancellation of the same document
-    if (doc.claim_status or "").strip().lower() == "Cancelled":
-        existing_status = frappe.db.get_value("Dealer Claims", doc.name, "claim_status")
-        if existing_status and existing_status.strip().lower() == "Cancelled":
-            frappe.throw("This claim is already cancelled. You cannot cancel it again.")
+    # Normalize `doc` to always be a Frappe Doc object
+    if not doc and docname and frappe.db.exists("Dealer Claims", docname):
+        doc = frappe.get_doc("Dealer Claims", docname)
 
-        # 🔹 2. Prevent another document with same VIN & category from being cancelled again
-        for row in doc.table_exgk:
-            if row.vin_serial_no:
-                existing_cancelled = frappe.db.sql(
-                    """
-                    SELECT parent.name
-                    FROM `tabVehicles Item` AS child
-                    JOIN `tabDealer Claims` AS parent
-                    ON child.parent = parent.name
-                    WHERE parent.claim_category = %s
-                    AND parent.claim_status = 'Cancelled'
-                    AND child.vin_serial_no = %s
-                    AND parent.name != %s
-                    """,
-                    (doc.claim_category, row.vin_serial_no, doc.name),
+    # ...existing code...
+    elif doc:
+        # Case 1: doc is a string (could be JSON or docname)
+        try:
+            # Convert JSON string to dict if needed
+            if isinstance(doc, str):
+                # Try parsing as JSON first
+                try:
+                    parsed = frappe.parse_json(doc)
+                    if isinstance(parsed, dict):
+                        doc = frappe.get_doc(parsed)
+                    else:
+                        # If not dict, maybe it's just a docname
+                        doc = frappe.get_doc("Dealer Claims", doc)
+                except Exception:
+                    # If JSON fails, assume it's a docname
+                    if frappe.db.exists("Dealer Claims", doc):
+                        doc = frappe.get_doc("Dealer Claims", doc)
+                    else:
+                        frappe.throw("Invalid doc or docname provided.")
+            # Case 2: doc is already a dict (from form submit)
+            elif isinstance(doc, dict):
+                doctype = doc.get("doctype")
+                if doctype != "Dealer Claims":
+                    frappe.throw("Expected doctype 'Dealer Claims'")
+            # Convert dict to Doc object
+            if isinstance(doc, dict):
+                doc = frappe.get_doc(doc)
+        except Exception:
+            frappe.throw("No document or docname provided.")
+
+    # 🔹 2. Prevent another document with same VIN & category from being cancelled again
+    for row in doc.table_exgk:
+        if row.vin_serial_no:
+            existing_cancelled = frappe.db.sql(
+                """
+                SELECT parent.name
+                FROM `tabVehicles Item` AS child
+                JOIN `tabDealer Claims` AS parent
+                ON child.parent = parent.name
+                WHERE parent.claim_category = %s
+                AND parent.claim_status = 'Cancelled'
+                AND child.vin_serial_no = %s
+                AND parent.name != %s
+                """,
+                (doc.claim_category, row.vin_serial_no, doc.name),
+            )
+            if existing_cancelled:
+                frappe.throw(
+                    f"Vehicle ({row.vin_serial_no}) has already been cancelled under the same claim category."
                 )
-                if existing_cancelled:
-                    frappe.throw(
-                        f"Vehicle ({row.vin_serial_no}) has already been cancelled under the same claim category."
-                    )
-        return  # agar cancel check pass kar gaya to exit karo
 
     # 🔹 3. Normal validation for vehicle and duplicate VIN
     for row in doc.table_exgk:
@@ -150,7 +178,6 @@ def dealer(doc=None, vinno=None, dealer=None, claim_type_code=None, docname=None
                 frappe.throw(
                     "Vehicle was not purchased by the selected dealership on this claim."
                 )
-
 
             # Check if this VIN has already been claimed under the same category (excluding cancelled)
             existing_claim = frappe.db.sql(
@@ -166,7 +193,6 @@ def dealer(doc=None, vinno=None, dealer=None, claim_type_code=None, docname=None
                 """,
                 (doc.claim_category, row.vin_serial_no, doc.name),
             )
-
 
             if existing_claim:
                 # Bypass duplicate claim check if status is "Remittance"
@@ -205,9 +231,6 @@ def dealer(doc=None, vinno=None, dealer=None, claim_type_code=None, docname=None
 
                     # Document ko save hone se rokne ke liye
                     raise frappe.ValidationError("Duplicate claim not allowed.")
-
-
-
 
     # Step 2: Validate mandatory fields based on claim category and description
     category_doc = frappe.get_doc("Dealer Claim Category", doc.claim_category)
@@ -318,9 +341,6 @@ def dealer(doc=None, vinno=None, dealer=None, claim_type_code=None, docname=None
         frappe.msgprint(f"Error: {str(e)}")
         frappe.log_error(frappe.get_traceback(), "Claim Category Validation Error")
 
-
-
-
     # Step 5: Send email if claim status is "Claim Submitted"
     if doc.claim_status == "Claim Submitted":
         current_user = doc.owner or frappe.session.user
@@ -364,8 +384,6 @@ def dealer(doc=None, vinno=None, dealer=None, claim_type_code=None, docname=None
             message=message,
             now=True
         )
-
-
 
 
 
