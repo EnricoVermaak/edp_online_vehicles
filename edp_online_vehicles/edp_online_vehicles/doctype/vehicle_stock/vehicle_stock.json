@@ -132,8 +132,7 @@
    "fieldname": "stock_no",
    "fieldtype": "Data",
    "label": "Stock No",
-   "read_only": 1,
-   "unique": 1
+   "read_only": 1
   },
   {
    "fieldname": "alternative_stock_no",
