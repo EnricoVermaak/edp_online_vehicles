@@ -18,6 +18,56 @@ $(document).ready(function () {
 });
 
 frappe.ui.form.on("Vehicles Service", {
+service_type(frm) {
+
+        if (!frm.doc.service_type) {
+            frm.set_value("service_parts_items", []);
+            frm.set_value("service_labour_items", []);
+            return;
+        }
+
+        frm.set_value("service_parts_items", []);
+        frm.set_value("service_labour_items", []);
+
+        frappe.call({
+            method: "frappe.client.get",
+            args: {
+                doctype: "Service Schedules",
+                name: frm.doc.service_type
+            },
+            callback: function(r) {
+                if (!r.message) return;
+
+                let doc = r.message;
+
+                let parts_items = [];
+                let labour_items = [];
+
+                (doc.service_parts_items || []).forEach(row => {
+                    parts_items.push({
+                        item: row.item,
+                        description: row.description,
+                        qty: row.qty,
+                        price_excl: row.price_excl,
+                        total_excl: row.total_excl
+                    });
+                });
+
+                (doc.service_labour_items || []).forEach(row => {
+                    labour_items.push({
+                        item: row.item,
+                        description: row.description,
+                        duration_hours: row.duration_hours,
+                        rate_hour: row.rate_hour,
+                        total_excl: row.total_excl
+                    });
+                });
+
+                frm.set_value("service_parts_items", parts_items);
+                frm.set_value("service_labour_items", labour_items);
+            }
+        });
+    },
 	onload(frm) {
 		if (frm.doc.vehicles_incidents) {
 			frappe.db
@@ -375,7 +425,7 @@ frappe.ui.form.on("Vehicles Service", {
 								() => {
 									if (
 										!frm.doc.service_parts_items.length >
-											0 &&
+										0 &&
 										!frm.doc.service_labour_items.length > 0
 									) {
 										frappe.throw(
@@ -885,8 +935,8 @@ frappe.ui.form.on("Vehicles Service", {
 										);
 										frappe.throw(
 											"The entered odometer reading cannot be lower than the previous service reading of " +
-												biggest_reading +
-												".",
+											biggest_reading +
+											".",
 										);
 									}
 								});
@@ -1161,3 +1211,5 @@ function incrementStockNumber(stockNumber) {
 	// Combine prefix and incremented number
 	return prefix + incrementedNumber;
 }
+
+
