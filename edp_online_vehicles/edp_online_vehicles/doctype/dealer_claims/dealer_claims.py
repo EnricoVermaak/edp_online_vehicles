@@ -148,28 +148,7 @@ def dealer(doc=None, vinno=None, dealer=None, claim_type_code=None, docname=None
         except Exception:
             frappe.throw("No document or docname provided.")
 
-    # 🔹 2. Prevent another document with same VIN & category from being cancelled again
-    for row in doc.table_exgk:
-        if row.vin_serial_no:
-            existing_cancelled = frappe.db.sql(
-                """
-                SELECT parent.name
-                FROM `tabVehicles Item` AS child
-                JOIN `tabDealer Claims` AS parent
-                ON child.parent = parent.name
-                WHERE parent.claim_category = %s
-                AND parent.claim_status = 'Cancelled'
-                AND child.vin_serial_no = %s
-                AND parent.name != %s
-                """,
-                (doc.claim_category, row.vin_serial_no, doc.name),
-            )
-            if existing_cancelled:
-                frappe.throw(
-                    f"Vehicle ({row.vin_serial_no}) has already been cancelled under the same claim category."
-                )
-
-    # 🔹 3. Normal validation for vehicle and duplicate VIN
+    # 🔹 2. Normal validation for vehicle and duplicate VIN
     for row in doc.table_exgk:
         if row.vin_serial_no:
             # Check if the vehicle belongs to this dealer
@@ -256,11 +235,20 @@ def dealer(doc=None, vinno=None, dealer=None, claim_type_code=None, docname=None
             frappe.throw(f"Duplicate VIN Serial No found: {row.vin_serial_no}")
         vin_list.append(row.vin_serial_no)
 
-    # Step 4: Ensure invoice_number is unique across Dealer Claims
+    # Step 4: Ensure invoice_number is unique across Dealer Claims (excluding cancelled)
     if (doc.invoice_number or "").strip():
         # Bypass invoice number check if status is "Remittance"
         if doc.claim_status != "Remittance":
-            if frappe.db.exists("Dealer Claims", {"invoice_number": doc.invoice_number, "name": ["!=", doc.name]}):
+            existing_invoice = frappe.db.get_all(
+                "Dealer Claims",
+                filters={
+                    "invoice_number": doc.invoice_number,
+                    "name": ["!=", doc.name],
+                    "claim_status": ["!=", "Cancelled"]
+                },
+                limit=1
+            )
+            if existing_invoice:
                 frappe.throw(f"Invoice Number '{doc.invoice_number}' already exists in another record.")
 
     try:

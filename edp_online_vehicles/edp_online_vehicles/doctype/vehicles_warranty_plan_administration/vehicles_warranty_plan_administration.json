@@ -19,6 +19,7 @@
   "warranty_dealer_billing_excl",
   "retail_price_excl",
   "parts_covered_tab",
+  "flag_parts_outside_of_this_warranty_claim_parts_list",
   "items"
  ],
  "fields": [
@@ -104,11 +105,18 @@
    "fieldtype": "Table",
    "label": "Items",
    "options": "Warranty Plan Part Item"
+  },
+  {
+   "default": "0",
+   "description": "By selecting this option the system will flag all parts not included in the list of parts not in this warranty plan.",
+   "fieldname": "flag_parts_outside_of_this_warranty_claim_parts_list",
+   "fieldtype": "Check",
+   "label": "Flag Parts Outside of This Warranty Claim Parts List"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-10-13 15:07:08.471659",
+ "modified": "2025-11-18 11:42:45.524845",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicles Warranty Plan Administration",

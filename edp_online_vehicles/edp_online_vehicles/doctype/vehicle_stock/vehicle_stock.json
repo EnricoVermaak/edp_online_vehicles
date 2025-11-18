@@ -648,8 +648,9 @@
   },
   {
    "fieldname": "original_purchasing_dealer",
-   "fieldtype": "Data",
-   "label": "Original Purchasing Dealer"
+   "fieldtype": "Link",
+   "label": "Original Purchasing Dealer",
+   "options": "Company"
   },
   {
    "fetch_from": "model.range",
@@ -792,7 +793,7 @@
    "link_fieldname": "vin_serial_no"
   }
  ],
- "modified": "2025-11-05 11:48:49.387294",
+ "modified": "2025-11-13 14:27:34.726750",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicle Stock",

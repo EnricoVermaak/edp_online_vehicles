@@ -199,6 +199,15 @@ def remove_from_stock_on_sale(docname):
 
 		stock_doc.save(ignore_permissions=True)
 
+		# Sync Fleet Customer linked vehicles if this is a fleet sale
+		if doc.fleet_customer:
+			try:
+				from edp_online_vehicles_mahindrasa.events.fleet_linking import sync_fleet_customer_vehicles
+				sync_fleet_customer_vehicles(doc.fleet_customer)
+			except ImportError:
+				# If mahindrasa app not available, skip
+				pass
+
 		# Update all linked warranty plans to Active on retail
 		linked_warranties = frappe.get_all(
 			"Vehicle Linked Warranty Plan",
@@ -270,7 +279,11 @@ def return_to_stock_on_sale(docname):
 		new_issue.insert(ignore_permissions=True)
 		new_issue.submit()
 
+		# Store fleet_customer before clearing for sync
+		fleet_customer_to_sync = stock_doc.fleet_customer if hasattr(stock_doc, 'fleet_customer') and stock_doc.fleet_customer else None
+
 		stock_doc.customer = ""
+		stock_doc.fleet_customer = ""
 		stock_doc.dealer = doc.dealer
 		stock_doc.warranty_start_date = ""
 		stock_doc.warranty_end_date = ""
@@ -281,6 +294,15 @@ def return_to_stock_on_sale(docname):
 		stock_doc.add_comment("Comment", comment)
 
 		stock_doc.save(ignore_permissions=True)
+
+		# Sync Fleet Customer linked vehicles to remove this vehicle
+		if fleet_customer_to_sync:
+			try:
+				from edp_online_vehicles_mahindrasa.events.fleet_linking import sync_fleet_customer_vehicles
+				sync_fleet_customer_vehicles(fleet_customer_to_sync)
+			except ImportError:
+				# If mahindrasa app not available, skip
+				pass
 
 		stock_doc.vin_serial_no
 

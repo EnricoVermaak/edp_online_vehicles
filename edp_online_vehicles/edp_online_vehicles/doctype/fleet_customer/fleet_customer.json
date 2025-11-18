@@ -308,7 +308,7 @@
  "links": [
   {
    "link_doctype": "Vehicle Stock",
-   "link_fieldname": "customer"
+   "link_fieldname": "fleet_customer"
   },
   {
    "link_doctype": "Vehicles Service",

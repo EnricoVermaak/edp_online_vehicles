@@ -20,6 +20,7 @@
   "date_of_failure",
   "odo_reading",
   "status",
+  "type",
   "vehicle_information_section",
   "engine_no",
   "brand",
@@ -592,6 +593,13 @@
    "fieldname": "submitted_to_dms",
    "fieldtype": "Datetime",
    "label": "Submitted To DMS"
+  },
+  {
+   "default": "Normal",
+   "fieldname": "type",
+   "fieldtype": "Select",
+   "label": "Type",
+   "options": "Normal\nGoodwill"
   }
  ],
  "index_web_pages_for_search": 1,
@@ -605,7 +613,7 @@
    "link_fieldname": "warranty"
   }
  ],
- "modified": "2025-10-16 14:03:35.896622",
+ "modified": "2025-11-18 11:57:12.005500",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicles Warranty Claims",

@@ -12,6 +12,7 @@
   "model_description",
   "interval",
   "period_months",
+  "allow_duplicate_services",
   "parts_tab",
   "service_parts_items",
   "labour_tab",
@@ -26,6 +27,7 @@
    "fieldname": "model_code",
    "fieldtype": "Link",
    "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "Model Code",
    "options": "Model Administration",
    "reqd": 1
@@ -68,11 +70,18 @@
    "fieldname": "period_months",
    "fieldtype": "Int",
    "label": "Period (Months)"
+  },
+  {
+   "default": "0",
+   "description": "If this option is checked a user will be able to load multiple services under this service schedule.",
+   "fieldname": "allow_duplicate_services",
+   "fieldtype": "Check",
+   "label": "Allow Duplicate Services"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-10-13 16:55:19.290932",
+ "modified": "2025-11-18 11:26:35.055554",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Service Schedules",

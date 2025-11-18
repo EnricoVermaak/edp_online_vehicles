@@ -88,7 +88,7 @@ frappe.ui.form.on("Dealer Claims", {
 
 
 		let is_allowed = frappe.user_roles.includes("Vehicles Administrator");
-		frm.toggle_enable("claim_amt", is_allowed);
+		// frm.toggle_enable("claim_amt", is_allowed);
 
 		// frm.fields_dict['documents'].grid.get_field('document').reqd = true;
 		frm.fields_dict["documents"].grid.wrapper
