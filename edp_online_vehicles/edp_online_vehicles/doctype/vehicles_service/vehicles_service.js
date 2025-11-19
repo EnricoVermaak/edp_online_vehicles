@@ -18,56 +18,86 @@ $(document).ready(function () {
 });
 
 frappe.ui.form.on("Vehicles Service", {
-service_type(frm) {
+	service_type(frm) {
 
-        if (!frm.doc.service_type) {
-            frm.set_value("service_parts_items", []);
-            frm.set_value("service_labour_items", []);
-            return;
-        }
+		if (!frm.doc.service_type) {
+			frm.set_value("service_parts_items", []);
+			frm.set_value("service_labour_items", []);
+			return;
+		}
 
-        frm.set_value("service_parts_items", []);
-        frm.set_value("service_labour_items", []);
+		frm.set_value("service_parts_items", []);
+		frm.set_value("service_labour_items", []);
 
-        frappe.call({
-            method: "frappe.client.get",
-            args: {
-                doctype: "Service Schedules",
-                name: frm.doc.service_type
-            },
-            callback: function(r) {
-                if (!r.message) return;
+		frappe.call({
+			method: "frappe.client.get",
+			args: {
+				doctype: "Service Schedules",
+				name: frm.doc.service_type
+			},
+			callback: function (r) {
+				if (!r.message) return;
 
-                let doc = r.message;
+				let doc = r.message;
 
-                let parts_items = [];
-                let labour_items = [];
+				let parts_items = [];
+				let labour_items = [];
 
-                (doc.service_parts_items || []).forEach(row => {
-                    parts_items.push({
-                        item: row.item,
-                        description: row.description,
-                        qty: row.qty,
-                        price_excl: row.price_excl,
-                        total_excl: row.total_excl
-                    });
-                });
+				(doc.service_parts_items || []).forEach(row => {
+					parts_items.push({
+						item: row.item,
+						description: row.description,
+						qty: row.qty,
+						price_excl: row.price_excl,
+						total_excl: row.total_excl
+					});
+				});
 
-                (doc.service_labour_items || []).forEach(row => {
-                    labour_items.push({
-                        item: row.item,
-                        description: row.description,
-                        duration_hours: row.duration_hours,
-                        rate_hour: row.rate_hour,
-                        total_excl: row.total_excl
-                    });
-                });
+				(doc.service_labour_items || []).forEach(row => {
+					labour_items.push({
+						item: row.item,
+						description: row.description,
+						duration_hours: row.duration_hours,
+						rate_hour: row.rate_hour,
+						total_excl: row.total_excl
+					});
+				});
 
-                frm.set_value("service_parts_items", parts_items);
-                frm.set_value("service_labour_items", labour_items);
-            }
-        });
-    },
+				frm.set_value("service_parts_items", parts_items);
+				frm.set_value("service_labour_items", labour_items);
+			}
+		});
+	},
+	dealer: function (frm) {
+		if (!frm.doc.dealer) {
+			return;
+		}
+
+		// Fetch values from Vehicles doctype
+		frappe.db.get_doc('Company', frm.doc.dealer)
+			.then(vehicle => {
+				console.log(vehicle);
+
+
+				// 1) Reset both child tables
+				frm.clear_table('service_labour_items');
+				frm.clear_table('service_parts_items');
+
+				// ----------------------------
+				//  CHILD TABLE 1
+				// ----------------------------
+				let labour_row = frm.add_child('service_labour_items');
+				labour_row.rate_hour = vehicle.custom_service_labour_rate || 0;
+
+				// ----------------------------
+				//  CHILD TABLE 2
+				// ----------------------------
+				let parts_row = frm.add_child('service_parts_items');
+				parts_row.price_excl = vehicle.custom_warranty_labour_rate || 0;
+
+				frm.refresh_fields();
+			});
+	},
 	onload(frm) {
 		if (frm.doc.vehicles_incidents) {
 			frappe.db
@@ -141,10 +171,11 @@ service_type(frm) {
 				query: "edp_online_vehicles.events.service_type.service_type_query",
 				filters: {
 					model_code: frm.doc.model,
-					vin_serial_no: frm.doc.vin_serial_no,
+					vin_serial_no: frm.doc.vin_serial_no,  // correct key
 				},
 			};
 		});
+
 		frm.set_query("inspection_template", () => {
 			return {
 				filters: {

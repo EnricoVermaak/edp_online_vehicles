@@ -8,6 +8,9 @@ from frappe.model.mapper import get_mapped_doc
 
 
 class VehiclesService(Document):
+
+
+
 	def before_save(self):
 		for row in self.attach_documents:
 			file_url = row.document
