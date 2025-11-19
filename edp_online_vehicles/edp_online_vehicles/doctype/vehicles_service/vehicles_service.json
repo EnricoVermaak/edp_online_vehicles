@@ -569,6 +569,7 @@
   {
    "fieldname": "service_status",
    "fieldtype": "Link",
+   "in_list_view": 1,
    "in_standard_filter": 1,
    "label": "Status",
    "options": "Service Status",
@@ -801,7 +802,7 @@
    "link_fieldname": "services"
   }
  ],
- "modified": "2025-11-19 14:50:55.241894",
+ "modified": "2025-11-19 19:14:19.202799",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicles Service",
