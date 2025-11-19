@@ -5,6 +5,7 @@
 
 let codeReader;
 let previous_status_value = null;
+let odo_message_shown = false; 
 
 // Preload ZXing library and initialize the reader on page load
 $(document).ready(function () {
@@ -227,10 +228,13 @@ frappe.ui.form.on("Vehicles Service", {
 				debounceTimeout = setTimeout(() => {
 					if (!frm.doc.service_type) {
 						frm.set_value("odo_reading_hours", 0);
-						frappe.msgprint(
-							"Please select a service type before setting the Odo Reading",
-						);
-					} else {
+
+						if (!odo_message_shown) {
+							odo_message_shown = true;
+							frappe.msgprint("Please select a service type before setting the Odo Reading");
+						}
+					}
+					else {
 						if (frm.doc.odo_reading_hours > 0) {
 							frappe.db
 								.get_value(
@@ -1007,12 +1011,16 @@ frappe.ui.form.on("Vehicles Service", {
 
 		if (!frm.doc.service_type) {
 			frm.set_value("odo_reading_hours", 0);
-			frappe.msgprint(
-				"Please select a service type before setting the Odo Reading",
-			);
+
+			if (!odo_message_shown) {
+				odo_message_shown = true;
+				frappe.msgprint("Please select a service type before setting the Odo Reading Ahmad saeed");
+			}
+
 			frappe.validated = false;
 			return;
 		}
+
 
 		if (frm.doc.odo_reading_hours > 0) {
 			// Await both async calls in sequence
