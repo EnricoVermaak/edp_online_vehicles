@@ -67,30 +67,75 @@ function calculate_price(frm, cdt, cdn) {
         });
     });
 }
-
 frappe.ui.form.on('Service Schedules Labour Items', {
-	item: function (frm, cdt, cdn) {
-		let row = locals[cdt][cdn];
-		if (!row.item) return;
+
+    item(frm, cdt, cdn) {
+        let row = locals[cdt][cdn];
+        if (!row.item) return;
+
+        frappe.db.get_doc("Item", row.item).then(item_doc => {
+
+            frappe.model.set_value(cdt, cdn, "rate_hour", item_doc.custom_rate_hour || 0);
+            frappe.model.set_value(cdt, cdn, "duration_hours", item_doc.custom_duration_hours || 0);
+
+            let rate = item_doc.custom_rate_hour || 0;
+            let hours = item_doc.custom_duration_hours || 0;
+
+            frappe.model.set_value(cdt, cdn, "total_excl", rate * hours);
+
+            frm.refresh_field("service_labour_items");
+        });
+    },
+
+
+    rate_hour(frm, cdt, cdn) {
+        calculate_total(frm, cdt, cdn);
+    },
+
+    duration_hours(frm, cdt, cdn) {
+        calculate_total(frm, cdt, cdn);
+    }
+
+});
+
+
+function calculate_total(frm, cdt, cdn) {
+    let row = locals[cdt][cdn];
+
+    let total = (row.rate_hour || 0) * (row.duration_hours || 0);
+
+    frappe.model.set_value(cdt, cdn, "total_excl", total);
+    frm.refresh_field("service_labour_items");
+}
+
+
+
+
+
+
+// frappe.ui.form.on('Service Schedules Labour Items', {
+// 	item: function (frm, cdt, cdn) {
+// 		let row = locals[cdt][cdn];
+// 		if (!row.item) return;
 		
 
-		frappe.db.get_list('Item Price', {
-			filters: { item_code: row.item, price_list: 'Standard Selling' },
-			limit: 1,
-			fields: ['price_list_rate']
-		}).then(prices => {
-			let standard_rate = prices.length ? prices[0].price_list_rate : 0;
+// 		frappe.db.get_list('Item Price', {
+// 			filters: { item_code: row.item, price_list: 'Standard Selling' },
+// 			limit: 1,
+// 			fields: ['price_list_rate']
+// 		}).then(prices => {
+// 			let standard_rate = prices.length ? prices[0].price_list_rate : 0;
 
-			frappe.db.get_doc('Item', row.item).then(item_doc => {
-				let custom_gp = item_doc.custom_warranty_gp || 0;
-				let price = standard_rate * custom_gp;
+// 			frappe.db.get_doc('Item', row.item).then(item_doc => {
+// 				let custom_gp = item_doc.custom_warranty_gp || 0;
+// 				let price = standard_rate * custom_gp;
 
-				frappe.model.set_value(cdt, cdn, 'rate_hour', price);
-				frm.refresh_field('service_labour_items'); 
-			});
-		});
-	}
-});
+// 				frappe.model.set_value(cdt, cdn, 'rate_hour', price);
+// 				frm.refresh_field('service_labour_items'); 
+// 			});
+// 		});
+// 	}
+// });
 
 
 
