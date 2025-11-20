@@ -7,7 +7,7 @@ let microdot_fitted_by = "";
 frappe.ui.form.on("Vehicle Stock", {
 	refresh: function (frm) {
 		frm.add_custom_button(
-			"Sell Vehicle",
+			"Retail Vehicle",
 			function () {
 				frappe.model.with_doctype("Vehicle Retail", function () {
 					var doc = frappe.model.get_new_doc("Vehicle Retail");

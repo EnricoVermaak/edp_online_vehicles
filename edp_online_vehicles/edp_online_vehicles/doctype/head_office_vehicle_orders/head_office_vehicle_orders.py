@@ -311,6 +311,7 @@ class HeadOfficeVehicleOrders(Document):
 		if stock_doc:
 			stock_doc.availability_status = "Reserved"
 			stock_doc.hq_order_no = self.name
+			stock_doc.original_purchasing_dealer = self.order_placed_by
 
 			comment = f"Vehicle has been allocated to Head Office order: {self.name}"
 
