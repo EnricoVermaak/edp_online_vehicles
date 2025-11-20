@@ -1252,3 +1252,30 @@ function incrementStockNumber(stockNumber) {
 }
 
 
+// frappe.ui.form.on('Vehicles Service', {
+//     refresh: function(frm) {
+//         frm.page.set_title_sub("");
+
+//         if (frm.doc.service_status) {
+//             const color = {
+//                 "Pending": "orange",
+//                 "In Progress": "blue",
+//                 "In Service": "purple",
+//                 "Completed": "green",
+//                 "Rejected": "red",
+//                 "Cancelled": "darkgrey"
+//             }[frm.doc.service_status] || "gray";
+
+//             setTimeout(() => {
+//                 $(".title-text").nextAll(".indicator-pill").remove(); // purana hata do
+//                 $(".title-text").after(
+//                     `<span class="indicator-pill ${color}" style="margin-left:10px; font-size:13px;">${frm.doc.service_status}</span>`
+//                 );
+//             }, 100);
+//         }
+//     },
+
+//     service_status: function(frm) {
+//         frm.trigger('refresh');
+//     }
+// });

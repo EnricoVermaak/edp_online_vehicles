@@ -7,27 +7,48 @@ frappe.listview_settings['Vehicles Service'] = {
                 vinHeader.attr('title', 'Click to sort by Title');
             }
         }, 800);
-    },
-    // Overriding the indicator completely
-    get_indicator(doc) {
-        // Agr service_status blank hai
-        if (!doc.service_status) {
-            return ["No Status", "gray", "service_status,=,"];
+          if (listview.page.fields_dict.status) {
+            listview.page.fields_dict.status.$wrapper.hide();
         }
 
-        // Custom colors for service_status
-        const colors = {
-            "Pending": "orange",
-            "In Progress": "blue",
-            "Completed": "green",
-            "Canceled": "red"
-        };
+        // Status column ko service_status se replace kar do
+        listview.columns = listview.columns.map(col => {
+            if (col.df && col.df.fieldname === "status") {
+                col.df.fieldname = "service_status";
+                col.df.label = "Status";
+                col.df.fieldtype = "Select";
+            }
+            return col;
+        });
 
-        // Return custom indicator
-        return [
-            doc.service_status,                          // Label
-            colors[doc.service_status] || "blue",        // Color
-            `service_status,=,${doc.service_status}`     // Filter
-        ];
+        // Agar service_status column nahi mila to add kar do (pehli baar ke liye)
+        if (!listview.columns.find(c => c.df && c.df.fieldname === "service_status")) {
+            listview.columns.splice(1, 0, {  // title ke baad daal do
+                type: "Field",
+                df: {
+                    label: "Status",
+                    fieldname: "service_status",
+                    fieldtype: "Select"
+                }
+            });
+        }
+
+        listview.refresh();
+    },
+        formatters: {
+        service_status: function(value) {
+            if (!value) return "";
+            const colors = {
+                "Pending": "orange",
+                "In Progress": "blue",
+                "In Service": "purple",
+                "Completed": "green",
+                "Rejected": "red",
+                "Cancelled": "darkgrey"
+            };
+            const color = colors[value] || "gray";
+            return `<span class="indicator-pill ${color}">${value}</span>`;
+        }
     }
+    
 };
