@@ -385,6 +385,42 @@ frappe.ui.form.on("Vehicles Warranty Claims", {
 		});
 	},
 });
+frappe.ui.form.on('Warranty Part Item', {
+    part_no: function (frm, cdt, cdn) {
+
+        let row = locals[cdt][cdn];
+        if (!row.part_no) return;
+
+        console.log("Ahmad saeed");
+
+        // 1) Get Standard Selling Price
+        frappe.db.get_list('Item Price', {
+            filters: { 
+                item_code: row.part_no,       // FIXED
+                price_list: 'Standard Selling' 
+            },
+            limit: 1,
+            fields: ['price_list_rate']
+        }).then(prices => {
+
+            let standard_rate = prices.length ? prices[0].price_list_rate : 0;
+
+            // 2) Get Item Doc for custom GP
+            frappe.db.get_doc('Item', row.part_no).then(item_doc => {
+
+                let custom_gp = item_doc.custom_warranty_gp || 0;
+
+                // If custom_gp is percentage:
+                let price = standard_rate * custom_gp;
+
+                // Set price in child table
+                frappe.model.set_value(cdt, cdn, 'price', price);
+
+                frm.refresh_field('part_items');
+            });
+        });
+    }
+});
 
 frappe.ui.form.on("Extra Items", {
 	price_per_item_excl(frm, cdt, cdn) {

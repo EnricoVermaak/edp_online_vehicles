@@ -5,7 +5,9 @@
 
 let codeReader;
 let previous_status_value = null;
-let odo_message_shown = false; 
+let odo_message_shown = false;
+let odo_limit_message_shown = false;
+
 
 // Preload ZXing library and initialize the reader on page load
 $(document).ready(function () {
@@ -20,6 +22,8 @@ $(document).ready(function () {
 
 frappe.ui.form.on("Vehicles Service", {
 	service_type(frm) {
+		console.log(frm.doc.dealer);
+		
 
 		if (!frm.doc.service_type) {
 			frm.set_value("service_parts_items", []);
@@ -30,6 +34,7 @@ frappe.ui.form.on("Vehicles Service", {
 		frm.set_value("service_parts_items", []);
 		frm.set_value("service_labour_items", []);
 
+		// Pehle service schedule ka doc fetch karo
 		frappe.call({
 			method: "frappe.client.get",
 			args: {
@@ -37,6 +42,8 @@ frappe.ui.form.on("Vehicles Service", {
 				name: frm.doc.service_type
 			},
 			callback: function (r) {
+				console.log(r);
+				
 				if (!r.message) return;
 
 				let doc = r.message;
@@ -53,52 +60,62 @@ frappe.ui.form.on("Vehicles Service", {
 						total_excl: row.total_excl
 					});
 				});
+              
 
-				(doc.service_labour_items || []).forEach(row => {
-					labour_items.push({
-						item: row.item,
-						description: row.description,
-						duration_hours: row.duration_hours,
-						rate_hour: row.rate_hour,
-						total_excl: row.total_excl
+				frappe.db.get_doc('Company', frm.doc.dealer).then(company => {
+
+					let custom_rate = company.custom_service_labour_rate || 0;
+					console.log(custom_rate);
+
+
+					(doc.service_labour_items || []).forEach(row => {
+						labour_items.push({
+							item: row.item,
+							description: row.description,
+							duration_hours: row.duration_hours,
+							rate_hour: custom_rate,
+							total_excl: (row.duration_hours || 0) * custom_rate
+						});
 					});
+
+					frm.set_value("service_parts_items", parts_items);
+					frm.set_value("service_labour_items", labour_items);
 				});
 
-				frm.set_value("service_parts_items", parts_items);
-				frm.set_value("service_labour_items", labour_items);
 			}
 		});
 	},
-	dealer: function (frm) {
-		if (!frm.doc.dealer) {
-			return;
-		}
 
-		// Fetch values from Vehicles doctype
-		frappe.db.get_doc('Company', frm.doc.dealer)
-			.then(vehicle => {
-				console.log(vehicle);
+	// dealer: function (frm) {
+	// 	if (!frm.doc.dealer) {
+	// 		return;
+	// 	}
+
+	// 	// Fetch values from Vehicles doctype
+	// 	frappe.db.get_doc('Company', frm.doc.dealer)
+	// 		.then(vehicle => {
+	// 			console.log(vehicle);
 
 
-				// 1) Reset both child tables
-				frm.clear_table('service_labour_items');
-				frm.clear_table('service_parts_items');
+	// 			// 1) Reset both child tables
+	// 			frm.clear_table('service_labour_items');
+	// 			frm.clear_table('service_parts_items');
 
-				// ----------------------------
-				//  CHILD TABLE 1
-				// ----------------------------
-				let labour_row = frm.add_child('service_labour_items');
-				labour_row.rate_hour = vehicle.custom_service_labour_rate || 0;
+	// 			// ----------------------------
+	// 			//  CHILD TABLE 1
+	// 			// ----------------------------
+	// 			let labour_row = frm.add_child('service_labour_items');
+	// 			labour_row.rate_hour = vehicle.custom_service_labour_rate || 0;
 
-				// ----------------------------
-				//  CHILD TABLE 2
-				// ----------------------------
-				let parts_row = frm.add_child('service_parts_items');
-				parts_row.price_excl = vehicle.custom_warranty_labour_rate || 0;
+	// 			// ----------------------------
+	// 			//  CHILD TABLE 2
+	// 			// ----------------------------
+	// 			let parts_row = frm.add_child('service_parts_items');
+	// 			parts_row.price_excl = vehicle.custom_warranty_labour_rate || 0;
 
-				frm.refresh_fields();
-			});
-	},
+	// 			frm.refresh_fields();
+	// 		});
+	// },
 	onload(frm) {
 		if (frm.doc.vehicles_incidents) {
 			frappe.db
@@ -226,73 +243,65 @@ frappe.ui.form.on("Vehicles Service", {
 			function () {
 				clearTimeout(debounceTimeout);
 				debounceTimeout = setTimeout(() => {
+
 					if (!frm.doc.service_type) {
+
 						frm.set_value("odo_reading_hours", 0);
 
-						if (!odo_message_shown) {
-							odo_message_shown = true;
+						if (!odo_limit_message_shown) {
+							odo_limit_message_shown = true;
 							frappe.msgprint("Please select a service type before setting the Odo Reading");
 						}
+
+						return;
 					}
-					else {
-						if (frm.doc.odo_reading_hours > 0) {
-							frappe.db
-								.get_value(
-									"Service Schedules",
-									frm.doc.service_type,
-									"interval",
-								)
-								.then((r) => {
-									let interval = r.message.interval;
-									let max_allowance = 0;
-									let min_allowance = 0;
 
-									frappe.db
-										.get_value(
-											"Model Administration",
-											frm.doc.model,
-											[
-												"service_type_max_allowance",
-												"service_type_minimum_allowance",
-											],
-										)
-										.then((r) => {
-											max_allowance =
-												r.message
-													.service_type_max_allowance;
-											min_allowance =
-												r.message
-													.service_type_minimum_allowance;
+					if (frm.doc.odo_reading_hours > 0) {
 
-											let min_odo_value =
-												parseInt(interval) -
-												parseInt(min_allowance);
-											let max_odo_value =
-												parseInt(interval) +
-												parseInt(max_allowance);
+						frappe.db
+							.get_value("Service Schedules", frm.doc.service_type, "interval")
+							.then((r) => {
+								let interval = r.message.interval;
 
-											if (
-												frm.doc.odo_reading_hours <
-												min_odo_value
-											) {
+								frappe.db
+									.get_value("Model Administration", frm.doc.model, [
+										"service_type_max_allowance",
+										"service_type_minimum_allowance",
+									])
+									.then((r) => {
+										let max_allowance = r.message.service_type_max_allowance;
+										let min_allowance = r.message.service_type_minimum_allowance;
+
+										let min_odo_value = parseInt(interval) - parseInt(min_allowance);
+										let max_odo_value = parseInt(interval) + parseInt(max_allowance);
+
+										// 🚨 Show message ONLY ONE TIME
+										if (frm.doc.odo_reading_hours < min_odo_value) {
+
+											if (!odo_limit_message_shown) {
+												odo_limit_message_shown = true;
 												frappe.msgprint(
-													"Your vehicle hasn't reached its service threshold yet. Please check back when it meets the minimum mileage requirement.",
-												);
-											} else if (
-												frm.doc.odo_reading_hours >
-												max_odo_value
-											) {
-												frappe.msgprint(
-													"Your vehicle's mileage has exceeded the current service range. Please select the upcoming service schedule to maintain optimal performance.",
+													"Your vehicle hasn't reached its service threshold yet. Please check back when it meets the minimum mileage requirement."
 												);
 											}
-										});
-								});
-						}
+
+										} else if (frm.doc.odo_reading_hours > max_odo_value) {
+
+											if (!odo_limit_message_shown) {
+												odo_limit_message_shown = true;
+												frappe.msgprint(
+													"Your vehicle's mileage has exceeded the current service range. Please select the upcoming service schedule."
+												);
+											}
+										}
+									});
+							});
 					}
+
 				}, 20);
-			},
+			}
 		);
+
 
 		frm.add_custom_button(
 			__("Request for Service"),
@@ -1094,15 +1103,78 @@ frappe.ui.form.on("Vehicles Service", {
 			});
 	},
 });
+// -----------------------------------------------------
+// SERVICE LABOUR ITEMS → AUTO RATE + TOTAL
+// -----------------------------------------------------
+
+frappe.ui.form.on('Service Labour Items', {
+	item: function (frm, cdt, cdn) {
+		let row = locals[cdt][cdn];
+		if (!row.item) return;
+
+		// Company se custom rate lena
+		frappe.db.get_doc('Company', frm.doc.dealer).then(res => {
+
+			// Set rate for all rows
+			frm.doc.service_labour_items.forEach(r => {
+				r.rate_hour = res.custom_service_labour_rate;
+
+				// Total = duration * rate
+				r.total_excl = (r.duration_hours || 0) * (r.rate_hour || 0);
+			});
+
+			frm.refresh_field('service_labour_items');
+
+			// Update main totals
+			calculate_sub_total(frm, "labours_total_excl", "service_labour_items");
+			calculate_labour_hours(frm, "duration_total", "service_labour_items");
+		});
+	}
+});
+
+// -----------------------------------------------------
+// SERVICE PARTS ITEMS → AUTO PRICE
+// -----------------------------------------------------
+
+frappe.ui.form.on('Service Parts Items', {
+	item: function (frm, cdt, cdn) {
+		let row = locals[cdt][cdn];
+		if (!row.item) return;
+
+		// get standard price
+		frappe.db.get_list('Item Price', {
+			filters: { item_code: row.item, price_list: 'Standard Selling' },
+			limit: 1,
+			fields: ['price_list_rate']
+		}).then(prices => {
+
+			let standard_rate = prices.length ? prices[0].price_list_rate : 0;
+
+			frappe.db.get_doc('Item', row.item).then(item_doc => {
+				let custom_gp = item_doc.custom_service_gp || 0;
+				let price = standard_rate * custom_gp;
+
+				frappe.model.set_value(cdt, cdn, 'price_excl', price);
+
+				frm.refresh_field('service_parts_items');
+
+				calculate_sub_total(frm, "parts_total_excl", "service_parts_items");
+			});
+		});
+	}
+});
+
+// -----------------------------------------------------
+// UNIVERSAL EVENTS – PARTS
+// -----------------------------------------------------
 
 frappe.ui.form.on("Service Parts Items", {
+
 	item(frm, cdt, cdn) {
-		if (frm.doc.price_list) {
-			get_price(frm, cdt, cdn);
-		}
+		if (frm.doc.price_list) get_price(frm, cdt, cdn);
 	},
 
-	service_parts_items_remove(frm, cdt, cdn) {
+	service_parts_items_remove(frm) {
 		calculate_sub_total(frm, "parts_total_excl", "service_parts_items");
 	},
 
@@ -1114,18 +1186,22 @@ frappe.ui.form.on("Service Parts Items", {
 		calculate_total(frm, cdt, cdn);
 	},
 
-	total_excl(frm) {
+	total_excl(frm, cdt, cdn) {
 		calculate_sub_total(frm, "parts_total_excl", "service_parts_items");
 	},
 });
 
+// -----------------------------------------------------
+// UNIVERSAL EVENTS – LABOUR
+// -----------------------------------------------------
+
 frappe.ui.form.on("Service Labour Items", {
+
 	item(frm, cdt, cdn) {
-		if (frm.doc.price_list) {
-			get_price(frm, cdt, cdn);
-		}
+		if (frm.doc.price_list) get_price(frm, cdt, cdn);
 	},
-	service_labour_items_remove(frm, cdt, cdn) {
+
+	service_labour_items_remove(frm) {
 		calculate_sub_total(frm, "labours_total_excl", "service_labour_items");
 		calculate_labour_hours(frm, "duration_total", "service_labour_items");
 	},
@@ -1139,29 +1215,40 @@ frappe.ui.form.on("Service Labour Items", {
 		calculate_labour_hours(frm, "duration_total", "service_labour_items");
 	},
 
-	total_excl(frm) {
+	total_excl(frm, cdt, cdn) {
 		calculate_sub_total(frm, "labours_total_excl", "service_labour_items");
 	},
 });
 
+// -----------------------------------------------------
+// UNIVERSAL EVENTS – EXTRA ITEMS
+// -----------------------------------------------------
+
 frappe.ui.form.on("Extra Items", {
+
 	price_per_item_excl(frm, cdt, cdn) {
 		calculate_extra_total(frm, cdt, cdn);
 	},
+
 	qty(frm, cdt, cdn) {
 		calculate_extra_total(frm, cdt, cdn);
 	},
+
 	extras_remove(frm) {
 		calculate_sub_total(frm, "extra_cost_total_excl", "transaction_list");
 	},
-	total_excl(frm) {
+
+	total_excl(frm, cdt, cdn) {
 		calculate_sub_total(frm, "extra_cost_total_excl", "transaction_list");
 	},
 });
 
+// -----------------------------------------------------
+// HELPERS
+// -----------------------------------------------------
+
 const get_price = (frm, cdt, cdn) => {
 	let row = locals[cdt][cdn];
-
 	if (!row.item) return;
 
 	frappe.call({
@@ -1172,6 +1259,7 @@ const get_price = (frm, cdt, cdn) => {
 		},
 		callback: (r) => {
 			let price = r.message;
+
 			if (cdt == "Service Parts Items") {
 				frappe.model.set_value(cdt, cdn, "price_excl", price);
 			}
@@ -1182,72 +1270,58 @@ const get_price = (frm, cdt, cdn) => {
 	});
 };
 
+// PARTS TOTAL
 const calculate_total = (frm, cdt, cdn) => {
 	let row = locals[cdt][cdn];
-
-	if (!row.price_excl || !row.qty) return;
-
-	let total = row.price_excl * row.qty;
+	let total = (row.price_excl || 0) * (row.qty || 0);
 	frappe.model.set_value(cdt, cdn, "total_excl", total);
 };
 
+// LABOUR TOTAL
 const calculate_labour_total = (frm, cdt, cdn) => {
 	let row = locals[cdt][cdn];
-
-	if (!row.rate_hour || !row.duration_hours) return;
-
-	let total = row.rate_hour * row.duration_hours;
+	let total = (row.rate_hour || 0) * (row.duration_hours || 0);
 	frappe.model.set_value(cdt, cdn, "total_excl", total);
 };
 
+// EXTRA TOTAL
 const calculate_extra_total = (frm, cdt, cdn) => {
 	let row = locals[cdt][cdn];
-
-	if (!row.price_per_item_excl || !row.qty) return;
-	let total = row.price_per_item_excl * row.qty;
+	let total = (row.price_per_item_excl || 0) * (row.qty || 0);
 	frappe.model.set_value(cdt, cdn, "total_excl", total);
 };
 
+// SUB TOTAL
 const calculate_sub_total = (frm, field_name, table_name) => {
 	let sub_total = 0;
-	for (const row of frm.doc[table_name]) {
-		sub_total += row.total_excl;
+
+	for (const row of frm.doc[table_name] || []) {
+		sub_total += row.total_excl || 0;
 	}
 
-	frappe.model.set_value(
-		frm.doc.doctype,
-		frm.doc.name,
-		field_name,
-		sub_total,
-	);
+	frappe.model.set_value(frm.doc.doctype, frm.doc.name, field_name, sub_total);
 };
 
+// LABOUR HOURS
 const calculate_labour_hours = (frm, field_name, table_name) => {
 	let hours_total = 0;
 
-	for (const row of frm.doc[table_name]) {
-		hours_total += row.duration_hours;
+	for (const row of frm.doc[table_name] || []) {
+		hours_total += row.duration_hours || 0;
 	}
 
-	frappe.model.set_value(
-		frm.doc.doctype,
-		frm.doc.name,
-		field_name,
-		hours_total,
-	);
+	frappe.model.set_value(frm.doc.doctype, frm.doc.name, field_name, hours_total);
 };
 
+// STOCK NUMBER INCREMENT
 function incrementStockNumber(stockNumber) {
-	// Split the prefix and number part
 	const prefix = stockNumber.match(/[A-Za-z]+/)[0];
 	const number = stockNumber.match(/\d+/)[0];
 
-	// Increment the numeric part
 	const incrementedNumber = (parseInt(number, 10) + 1)
 		.toString()
 		.padStart(6, "0");
 
-	// Combine prefix and incremented number
 	return prefix + incrementedNumber;
 }
 
