@@ -69,25 +69,7 @@ function calculate_price(frm, cdt, cdn) {
 }
 frappe.ui.form.on('Service Schedules Labour Items', {
 
-    item(frm, cdt, cdn) {
-        let row = locals[cdt][cdn];
-        if (!row.item) return;
-
-        frappe.db.get_doc("Item", row.item).then(item_doc => {
-
-            frappe.model.set_value(cdt, cdn, "rate_hour", item_doc.custom_rate_hour || 0);
-            frappe.model.set_value(cdt, cdn, "duration_hours", item_doc.custom_duration_hours || 0);
-
-            let rate = item_doc.custom_rate_hour || 0;
-            let hours = item_doc.custom_duration_hours || 0;
-
-            frappe.model.set_value(cdt, cdn, "total_excl", rate * hours);
-
-            frm.refresh_field("service_labour_items");
-        });
-    },
-
-
+    // Trigger when rate_hour or duration_hours changes
     rate_hour(frm, cdt, cdn) {
         calculate_total(frm, cdt, cdn);
     },
@@ -98,15 +80,16 @@ frappe.ui.form.on('Service Schedules Labour Items', {
 
 });
 
-
+// Function to calculate total
 function calculate_total(frm, cdt, cdn) {
     let row = locals[cdt][cdn];
 
     let total = (row.rate_hour || 0) * (row.duration_hours || 0);
-
     frappe.model.set_value(cdt, cdn, "total_excl", total);
+
     frm.refresh_field("service_labour_items");
 }
+
 
 
 
