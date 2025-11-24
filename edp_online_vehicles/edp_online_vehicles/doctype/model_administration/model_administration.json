@@ -374,6 +374,7 @@
    "label": "Discount Tolerance (%)"
   },
   {
+   "depends_on": "eval: !doc.__islocal\r\n",
    "fieldname": "colours_tab",
    "fieldtype": "Tab Break",
    "label": "Colours"
@@ -791,7 +792,7 @@
    "link_fieldname": "model"
   }
  ],
- "modified": "2025-10-22 10:19:12.003482",
+ "modified": "2025-11-21 11:41:29.177527",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Model Administration",

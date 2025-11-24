@@ -13,7 +13,6 @@
   "batch_no",
   "vessel_name",
   "contract_no",
-  "model",
   "column_break_ifk7",
   "factory_order_date",
   "production_date",
@@ -213,18 +212,12 @@
    "fieldtype": "Select",
    "label": "Shipment Method",
    "options": "Container\nRoRo\nFlat Rack\nLoLo\nAir Freight"
-  },
-  {
-   "fieldname": "model",
-   "fieldtype": "Link",
-   "label": "Model",
-   "options": "Model Administration"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-10-21 11:25:54.460928",
+ "modified": "2025-11-21 09:39:08.311234",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicles Shipment",
