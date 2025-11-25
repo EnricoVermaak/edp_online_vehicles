@@ -23,7 +23,7 @@ $(document).ready(function () {
 frappe.ui.form.on("Vehicles Service", {
 	service_type(frm) {
 		console.log(frm.doc.dealer);
-		
+
 
 		if (!frm.doc.service_type) {
 			frm.set_value("service_parts_items", []);
@@ -43,7 +43,7 @@ frappe.ui.form.on("Vehicles Service", {
 			},
 			callback: function (r) {
 				console.log(r);
-				
+
 				if (!r.message) return;
 
 				let doc = r.message;
@@ -60,7 +60,7 @@ frappe.ui.form.on("Vehicles Service", {
 						total_excl: row.total_excl
 					});
 				});
-              
+
 
 				frappe.db.get_doc('Company', frm.doc.dealer).then(company => {
 
@@ -785,12 +785,12 @@ frappe.ui.form.on("Vehicles Service", {
 					if (existing_services.length > 0) {
 						frm.set_value("vin_serial_no", null);
 						frappe.throw(
-							"This vehicles was reported as stolen. Please contact Head Office immediately for more information",
+							"This vehicles was reported as stolen. Please contact Head Office immediately for more information"
 						);
 					} else {
 						let seven_days_ago = frappe.datetime.add_days(
 							frappe.datetime.get_today(),
-							-7,
+							-7
 						);
 
 						frappe.db
@@ -804,15 +804,63 @@ frappe.ui.form.on("Vehicles Service", {
 							.then((existing_services) => {
 								if (existing_services.length > 0) {
 									frappe.msgprint(
-										"Please be aware that a service request for this vehicle has been submitted within the last 7 days.",
+										"Please be aware that a service request for this vehicle has been submitted within the last 7 days."
 									);
 								}
 							});
 					}
 				});
 		}
+
 		frm.set_value("odo_reading_hours", null);
+
+		// **DATE RANGE CHECK (ADDED CODE — DO NOT REMOVE)**
+		if (frm.doc.vin_serial_no) {
+			frappe.call({
+				method: "edp_online_vehicles.events.service_type.check_service_date",
+				args: {
+					vin: frm.doc.vin_serial_no,
+				},
+				callback(r) {
+					if (!r.message) return;
+
+					if (!r.message.is_valid) {
+						console.log(r.message);
+
+						frappe.msgprint(
+							"Please note the selected vehicle falls outside the allocated service period parameters. Please contact Head Office for more information.",
+						);
+
+						// frm.set_value("service_type", "Other");
+					}
+				},
+			});
+		}
+		//  **END DATE RANGE CHECK**
+		if (frm.doc.vin_serial_no) {
+			frappe.call({
+				method: "edp_online_vehicles.events.service_type.check_warranty_date",
+				args: {
+					vin: frm.doc.vin_serial_no,
+				},
+				callback(r) {
+					if (!r.message) return;
+
+					if (!r.message.is_valid) {
+						console.log(r.message);
+
+						frappe.msgprint(
+							"Please note the selected vehicle falls outside the allocated warranty period. Please contact Head Office for more information."
+						);
+					}
+				},
+			});
+		}
+
 	},
+
+
+
 	inspection_template(frm, dt, dn) {
 		if (frm.doc.inspection_template) {
 			frm.doc.inspection_items = [];
