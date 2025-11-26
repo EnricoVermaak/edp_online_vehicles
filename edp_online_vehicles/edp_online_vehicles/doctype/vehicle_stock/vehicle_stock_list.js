@@ -750,6 +750,98 @@ frappe.listview_settings["Vehicle Stock"] = {
 				dialog.show();
 			});
 		}
+
+		if (frappe.user.has_role("Vehicles Administrator")) {
+			listview.page.add_actions_menu_item(__("Transfer to New Warehouse"), function () {
+				const selected_docs = listview.get_checked_items();
+
+				if (selected_docs.length === 0) {
+					frappe.msgprint(__("Please select at least one vehicle."));
+					return;
+				}
+
+				let vin = selected_docs.map((doc) => doc.name);
+
+				const dialog = new frappe.ui.Dialog({
+					title: __("Transfer to New Warehouse"),
+					fields: [
+						{
+							label: __("To Warehouse"),
+							fieldname: "to_warehouse",
+							fieldtype: "Link",
+							options: "Warehouse",
+							reqd: 1,
+						},
+						{
+							label: __("Vehicles"),
+							fieldname: "selected_Vehicles",
+							fieldtype: "Table",
+							read_only: 1,
+							cannot_add_rows: true,
+							in_place_edit: false,
+							fields: [
+								{
+									fieldname: "vin_serial_no",
+									fieldtype: "Link",
+									in_list_view: 1,
+									label: "VIN/ Serial No",
+									options: "Vehicle Stock",
+									read_only: 1,
+								},
+							],
+							data: vin.map((v) => ({ vin_serial_no: v })),
+						},
+					],
+					primary_action_label: __("Move"),
+					primary_action(values) {
+						if (!values.to_warehouse) {
+							frappe.msgprint(__("Please select a warehouse."));
+							return;
+						}
+
+						dialog.hide();
+
+						frappe.dom.freeze();
+
+						frappe.call({
+							method: "edp_online_vehicles.events.move_vin_to_new_warehouse.move_vin_to_new_warehouse",
+							args: {
+								docnames: selected_docs.map((doc) => doc.name),
+								to_warehouse: values.to_warehouse,
+							},
+							callback: function (r) {
+								frappe.dom.unfreeze();
+
+								if (r.message == "Success") {
+									frappe.show_alert(
+										{
+											message:
+												__(
+													"Vehicle/s successfully transferred to warehouse " +
+														values.to_warehouse,
+												),
+											indicator: "green",
+										},
+										10,
+									);
+									listview.refresh();
+								} else {
+									frappe.show_alert(
+										{
+											message: __("An error occurred during transfer."),
+											indicator: "red",
+										},
+										10,
+									);
+								}
+							},
+						});
+					},
+				});
+
+				dialog.show();
+			});
+		}
 	},
 };
 

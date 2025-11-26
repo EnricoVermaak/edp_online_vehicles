@@ -13,9 +13,12 @@
   "date_of_request",
   "reference_name",
   "section_break_m2pb",
+  "prev_warehouse",
+  "move_to_warehouse",
+  "column_break_oojr",
   "prev_customer",
   "prev_location",
-  "column_break_oojr",
+  "column_break_warehouse_customer",
   "new_customer",
   "new_location"
  ],
@@ -44,6 +47,22 @@
    "fieldtype": "Section Break"
   },
   {
+   "fieldname": "prev_warehouse",
+   "fieldtype": "Link",
+   "label": "Prev Warehouse",
+   "options": "Warehouse"
+  },
+  {
+   "fieldname": "move_to_warehouse",
+   "fieldtype": "Link",
+   "label": "Move To Warehouse",
+   "options": "Warehouse"
+  },
+  {
+   "fieldname": "column_break_oojr",
+   "fieldtype": "Column Break"
+  },
+  {
    "fieldname": "prev_customer",
    "fieldtype": "Link",
    "label": "Prev Customer",
@@ -55,7 +74,7 @@
    "label": "Prev Location"
   },
   {
-   "fieldname": "column_break_oojr",
+   "fieldname": "column_break_warehouse_customer",
    "fieldtype": "Column Break"
   },
   {
