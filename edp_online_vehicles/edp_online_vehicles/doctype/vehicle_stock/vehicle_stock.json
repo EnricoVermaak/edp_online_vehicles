@@ -717,7 +717,8 @@
   {
    "fieldname": "table_pcgj",
    "fieldtype": "Table",
-   "options": "Warranty Plan View"
+   "options": "Warranty Plan View",
+   "read_only": 1
   },
   {
    "fieldname": "service_plan_summary_section",
@@ -732,7 +733,8 @@
   {
    "fieldname": "table_gtny",
    "fieldtype": "Table",
-   "options": "Service Plan View"
+   "options": "Service Plan View",
+   "read_only": 1
   },
   {
    "fieldname": "section_break_llyx",
@@ -793,7 +795,7 @@
    "link_fieldname": "vin_serial_no"
   }
  ],
- "modified": "2025-11-20 08:38:28.862408",
+ "modified": "2025-11-26 14:43:59.367812",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicle Stock",
