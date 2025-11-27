@@ -391,8 +391,6 @@ frappe.ui.form.on('Warranty Part Item', {
         let row = locals[cdt][cdn];
         if (!row.part_no) return;
 
-        console.log("Ahmad saeed");
-
         // 1) Get Standard Selling Price
         frappe.db.get_list('Item Price', {
             filters: { 
@@ -409,9 +407,9 @@ frappe.ui.form.on('Warranty Part Item', {
             frappe.db.get_doc('Item', row.part_no).then(item_doc => {
 
                 let custom_gp = item_doc.custom_warranty_gp || 0;
-
+				let gp_percentage = custom_gp / 100;
                 // If custom_gp is percentage:
-                let price = standard_rate * custom_gp;
+                let price = standard_rate * gp_percentage;
 
                 // Set price in child table
                 frappe.model.set_value(cdt, cdn, 'price', price);
@@ -419,7 +417,16 @@ frappe.ui.form.on('Warranty Part Item', {
                 frm.refresh_field('part_items');
             });
         });
-    }
+    },
+	price(frm, cdt, cdn) {
+		calculate_part_sub_total(frm, "total_excl", "part_items");
+	},
+	qty(frm, cdt, cdn) {
+		calculate_part_sub_total(frm, "total_excl", "part_items");
+	},
+	part_items_remove(frm) {
+		calculate_part_sub_total(frm, "total_excl", "part_items");
+	}
 });
 
 frappe.ui.form.on("Extra Items", {
@@ -435,18 +442,6 @@ frappe.ui.form.on("Extra Items", {
 
 	total_excl(frm) {
 		calculate_sub_total(frm, "extra_cost_total_excl", "extra_items");
-	},
-});
-
-frappe.ui.form.on("Warranty Part Item", {
-	price(frm, cdt, cdn) {
-		calculate_part_sub_total(frm, "total_excl", "part_items");
-	},
-	qty(frm, cdt, cdn) {
-		calculate_part_sub_total(frm, "total_excl", "part_items");
-	},
-	part_items_remove(frm) {
-		calculate_part_sub_total(frm, "total_excl", "part_items");
 	},
 });
 

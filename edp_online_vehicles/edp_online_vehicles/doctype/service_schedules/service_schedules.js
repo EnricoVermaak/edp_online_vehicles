@@ -53,9 +53,9 @@ function calculate_price(frm, cdt, cdn) {
         frappe.db.get_doc('Item', row.item).then(item_doc => {
 
             let custom_gp = item_doc.custom_service_gp || 0;
-
+			let gp_percentage = custom_gp / 100;
             // --- 3) Price & Total Calculation ---
-            let price = standard_rate * custom_gp;
+            let price = standard_rate * gp_percentage;
             let total = price * (row.qty || 0);
 
             // --- 4) Set Values in Child Row ---
