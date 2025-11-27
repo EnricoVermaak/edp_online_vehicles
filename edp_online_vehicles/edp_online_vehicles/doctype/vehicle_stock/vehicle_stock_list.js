@@ -26,76 +26,76 @@ frappe.listview_settings["Vehicle Stock"] = {
 		// Hide the default "New" button
 		$('[data-label="Add Vehicle Stock"]').hide();
 
-		listview.page.add_actions_menu_item(__("UON sftp"), function () {
-				frappe.call({
-							///home/frappe/frappe-bench/apps/edp_online_vehicles/edp_online_vehicles/events/uon_integration.py
-							method: "edp_online_vehicles.events.uon_integration.uon_sftp",
-							args: {
-								// docnames: selected_docs.map((doc) => doc.name),
-								// company: company,
-								// user: frappe.session.user,
-							},
-							callback: function () {
-								// Final result will be shown via real-time updates from the backend
-							},
-						});
-			});
-		listview.page.add_actions_menu_item(__("outgoing_vehicles_stock"), function () {
-				frappe.call({
-							///home/frappe/frappe-bench/apps/edp_online_vehicles/edp_online_vehicles/events/uon_integration.py
-							method: "edp_online_vehicles.events.uon_integration.outgoing_vehicles_stock",
-							args: {
-								// docnames: selected_docs.map((doc) => doc.name),
-								// company: company,
-								// user: frappe.session.user,
-							},
-							callback: function () {
-								// Final result will be shown via real-time updates from the backend
-							},
-						});
-			});	
-		listview.page.add_actions_menu_item(__("outgoing_vehicles_in_transit"), function () {
-				frappe.call({
-							///home/frappe/frappe-bench/apps/edp_online_vehicles/edp_online_vehicles/events/uon_integration.py
-							method: "edp_online_vehicles.events.uon_integration.outgoing_vehicles_in_transit",
-							args: {
-								// docnames: selected_docs.map((doc) => doc.name),
-								// company: company,
-								// user: frappe.session.user,
-							},
-							callback: function () {
-								// Final result will be shown via real-time updates from the backend
-							},
-						});
-			});		
-		listview.page.add_actions_menu_item(__("outgoing_dealer_stock"), function () {
-				frappe.call({
-							///home/frappe/frappe-bench/apps/edp_online_vehicles/edp_online_vehicles/events/uon_integration.py
-							method: "edp_online_vehicles.events.uon_integration.outgoing_dealer_stock",
-							args: {
-								// docnames: selected_docs.map((doc) => doc.name),
-								// company: company,
-								// user: frappe.session.user,
-							},
-							callback: function () {
-								// Final result will be shown via real-time updates from the backend
-							},
-						});
-			});	
-		listview.page.add_actions_menu_item(__("outgoing_retail"), function () {
-				frappe.call({
-							///home/frappe/frappe-bench/apps/edp_online_vehicles/edp_online_vehicles/events/uon_integration.py
-							method: "edp_online_vehicles.events.uon_integration.outgoing_retail",
-							args: {
-								// docnames: selected_docs.map((doc) => doc.name),
-								// company: company,
-								// user: frappe.session.user,
-							},
-							callback: function () {
-								// Final result will be shown via real-time updates from the backend
-							},
-						});
-			});		
+		// listview.page.add_actions_menu_item(__("UON sftp"), function () {
+		// 		frappe.call({
+		// 					///home/frappe/frappe-bench/apps/edp_online_vehicles/edp_online_vehicles/events/uon_integration.py
+		// 					method: "edp_online_vehicles.events.uon_integration.uon_sftp",
+		// 					args: {
+		// 						// docnames: selected_docs.map((doc) => doc.name),
+		// 						// company: company,
+		// 						// user: frappe.session.user,
+		// 					},
+		// 					callback: function () {
+		// 						// Final result will be shown via real-time updates from the backend
+		// 					},
+		// 				});
+		// 	});
+		// listview.page.add_actions_menu_item(__("outgoing_vehicles_stock"), function () {
+		// 		frappe.call({
+		// 					///home/frappe/frappe-bench/apps/edp_online_vehicles/edp_online_vehicles/events/uon_integration.py
+		// 					method: "edp_online_vehicles.events.uon_integration.outgoing_vehicles_stock",
+		// 					args: {
+		// 						// docnames: selected_docs.map((doc) => doc.name),
+		// 						// company: company,
+		// 						// user: frappe.session.user,
+		// 					},
+		// 					callback: function () {
+		// 						// Final result will be shown via real-time updates from the backend
+		// 					},
+		// 				});
+		// 	});	
+		// listview.page.add_actions_menu_item(__("outgoing_vehicles_in_transit"), function () {
+		// 		frappe.call({
+		// 					///home/frappe/frappe-bench/apps/edp_online_vehicles/edp_online_vehicles/events/uon_integration.py
+		// 					method: "edp_online_vehicles.events.uon_integration.outgoing_vehicles_in_transit",
+		// 					args: {
+		// 						// docnames: selected_docs.map((doc) => doc.name),
+		// 						// company: company,
+		// 						// user: frappe.session.user,
+		// 					},
+		// 					callback: function () {
+		// 						// Final result will be shown via real-time updates from the backend
+		// 					},
+		// 				});
+		// 	});		
+		// listview.page.add_actions_menu_item(__("outgoing_dealer_stock"), function () {
+		// 		frappe.call({
+		// 					///home/frappe/frappe-bench/apps/edp_online_vehicles/edp_online_vehicles/events/uon_integration.py
+		// 					method: "edp_online_vehicles.events.uon_integration.outgoing_dealer_stock",
+		// 					args: {
+		// 						// docnames: selected_docs.map((doc) => doc.name),
+		// 						// company: company,
+		// 						// user: frappe.session.user,
+		// 					},
+		// 					callback: function () {
+		// 						// Final result will be shown via real-time updates from the backend
+		// 					},
+		// 				});
+		// 	});	
+		// listview.page.add_actions_menu_item(__("outgoing_retail"), function () {
+		// 		frappe.call({
+		// 					///home/frappe/frappe-bench/apps/edp_online_vehicles/edp_online_vehicles/events/uon_integration.py
+		// 					method: "edp_online_vehicles.events.uon_integration.outgoing_retail",
+		// 					args: {
+		// 						// docnames: selected_docs.map((doc) => doc.name),
+		// 						// company: company,
+		// 						// user: frappe.session.user,
+		// 					},
+		// 					callback: function () {
+		// 						// Final result will be shown via real-time updates from the backend
+		// 					},
+		// 				});
+		// 	});		
 		const default_dealer = frappe.defaults.get_default("company");
 		let dealers = "";
 

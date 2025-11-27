@@ -756,8 +756,8 @@
    "default": "0",
    "fieldname": "request_release",
    "fieldtype": "Check",
-   "hidden": 1,
-   "label": "Request Natis Release"
+   "label": "Request Natis Release",
+   "permlevel": 2
   }
  ],
  "image_field": "image",
@@ -804,7 +804,7 @@
    "link_fieldname": "vin_serial_no"
   }
  ],
- "modified": "2025-11-27 11:35:00.846735",
+ "modified": "2025-11-27 12:08:12.073774",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicle Stock",
