@@ -340,8 +340,6 @@ frappe.listview_settings["Vehicle Stock"] = {
 				},
 			});
 
-			let users = [];
-
 			Promise.all(checks).then((results) => {
 				if (results.every((status) => status)) {
 					Promise.all(dataPromises).then((VehicleData) => {
@@ -363,21 +361,6 @@ frappe.listview_settings["Vehicle Stock"] = {
 												name: ["in", dealers],
 											},
 										};
-									},
-									onchange: function () {
-										const dealer =
-											dialog.get_value("dealer");
-										if (dealer) {
-											frappe.call({
-												method: "edp_online_vehicles.events.set_filters.get_users",
-												args: { dealer: dealer },
-												callback: function (r) {
-													if (r.message) {
-														users = r.message;
-													}
-												},
-											});
-										}
 									},
 								},
 								{
@@ -417,12 +400,12 @@ frappe.listview_settings["Vehicle Stock"] = {
 									label: __("Sales Person"),
 									fieldname: "sales_person",
 									fieldtype: "Link",
-									options: "User",
+									options: "Sales Person",
 									reqd: 1,
 									get_query: function () {
 										return {
 											filters: {
-												name: ["in", users],
+												enabled: 1,
 											},
 										};
 									},
