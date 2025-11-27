@@ -69,6 +69,9 @@ def get_vehicles_stock_availability_status(status, vinno, docname):
 	for vin in vinno:
 		change_vehicles_stock_availability_status(availability_status, vin, docname)
 
+	if availability_status == "Sold":
+		remove_from_stock_on_sale(docname)
+
 	if automatically_submit_document == 1:
 		return True
 	else:
@@ -87,9 +90,6 @@ def change_vehicles_stock_availability_status(availability_status, vinno, docnam
 
 	stock_doc.save(ignore_permissions=True)
 	frappe.db.commit()
-
-	if availability_status == "Sold":
-		remove_from_stock_on_sale(docname)
 
 
 @frappe.whitelist()
@@ -247,7 +247,10 @@ def remove_from_stock_on_sale(docname):
 		message += "<br>".join(f"- {vin}" for vin in failed_vins)
 		frappe.msgprint(message)
 	else:
-		frappe.msgprint(f"Vehicles with VIN: {vinno} sold successfully.")
+		all_vins = ", ".join(
+			stock.vin_serial_no for stock in doc.vehicles_sale_items if stock.vin_serial_no
+		)
+		frappe.msgprint(f"Vehicles with VIN(s): {all_vins} sold successfully.")
 		return "Success"
 
 
