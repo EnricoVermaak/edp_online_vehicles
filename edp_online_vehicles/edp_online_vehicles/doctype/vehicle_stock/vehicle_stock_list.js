@@ -488,27 +488,43 @@ frappe.listview_settings["Vehicle Stock"] = {
 								if (values.finance_method === "Cash") {
 									values.finance_by = null;
 								}
-								frappe.call({
-									method: "edp_online_vehicles.events.create_vehicles_sale.create_vehicles_sale",
-									args: {
-										vehicles_data: VehicleData,
-										dealer: values.dealer,
-										status: values.status,
-										sale_type: values.sale_type,
-										finance_method: values.finance_method,
-										sales_person: values.sales_person,
-										customer: values.customer,
-										finance_by: values.finance_by,
-									},
-									callback: function (r) {
-										frappe.set_route(
-											"Form",
-											"Vehicle Retail",
-											r.message,
-										);
-										dialog.hide();
-									},
-								});
+						const dialogSaleItems =
+							dialog.get_value("vehicles_sale_items") || [];
+
+						frappe.model.with_doctype("Vehicle Retail", function () {
+							const retailDoc =
+								frappe.model.get_new_doc("Vehicle Retail");
+
+							retailDoc.dealer = values.dealer;
+							retailDoc.status = values.status;
+							retailDoc.sale_type = values.sale_type;
+							retailDoc.finance_method = values.finance_method;
+							retailDoc.sales_person = values.sales_person;
+							retailDoc.customer = values.customer;
+
+							if (values.finance_by) {
+								retailDoc.financed_by = values.finance_by;
+							}
+
+							dialogSaleItems.forEach((item) => {
+								const row = frappe.model.add_child(
+									retailDoc,
+									"vehicles_sale_items",
+								);
+								row.vin_serial_no = item.vin_serial_no;
+								row.model = item.model;
+								row.colour = item.colour;
+								row.interior_colour = item.interior_colour;
+								row.retail_amount = item.retail_amount;
+							});
+
+							frappe.set_route(
+								"Form",
+								retailDoc.doctype,
+								retailDoc.name,
+							);
+							dialog.hide();
+						});
 							},
 						});
 
