@@ -210,6 +210,7 @@
   {
    "fieldname": "shipment_method",
    "fieldtype": "Select",
+   "in_standard_filter": 1,
    "label": "Shipment Method",
    "options": "Container\nRoRo\nFlat Rack\nLoLo\nAir Freight"
   }
@@ -217,7 +218,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-11-21 09:39:08.311234",
+ "modified": "2025-11-27 10:08:19.663954",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicles Shipment",

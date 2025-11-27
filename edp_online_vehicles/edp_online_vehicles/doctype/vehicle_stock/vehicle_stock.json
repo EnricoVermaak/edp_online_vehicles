@@ -29,6 +29,7 @@
   "register_no",
   "natis_release_date",
   "fleet_no",
+  "request_release",
   "column_break_1tyr",
   "dealer",
   "type",
@@ -544,7 +545,8 @@
   {
    "fieldname": "natis_release_date",
    "fieldtype": "Date",
-   "label": "Natis Release Date"
+   "label": "Natis Release Date",
+   "read_only": 1
   },
   {
    "fieldname": "section_break_eern",
@@ -749,6 +751,13 @@
    "fieldtype": "Link",
    "label": "Interior Colour",
    "options": "Interior Model Colour"
+  },
+  {
+   "default": "0",
+   "fieldname": "request_release",
+   "fieldtype": "Check",
+   "hidden": 1,
+   "label": "Request Natis Release"
   }
  ],
  "image_field": "image",
@@ -795,7 +804,7 @@
    "link_fieldname": "vin_serial_no"
   }
  ],
- "modified": "2025-11-26 14:43:59.367812",
+ "modified": "2025-11-27 11:35:00.846735",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicle Stock",
