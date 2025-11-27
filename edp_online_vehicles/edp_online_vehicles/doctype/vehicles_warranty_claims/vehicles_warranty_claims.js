@@ -409,7 +409,7 @@ frappe.ui.form.on('Warranty Part Item', {
                 let custom_gp = item_doc.custom_warranty_gp || 0;
 				let gp_percentage = custom_gp / 100;
                 // If custom_gp is percentage:
-                let price = standard_rate * gp_percentage;
+                let price = standard_rate + (standard_rate * gp_percentage);
 
                 // Set price in child table
                 frappe.model.set_value(cdt, cdn, 'price', price);
