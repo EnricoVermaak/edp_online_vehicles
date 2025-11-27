@@ -13,5 +13,19 @@ def unreserve_vehicles(docnames):
 
 		stock_doc.save(ignore_permissions=True)
 
+		# Remove any Reserved Vehicles documents linked to this VIN
+		reserve_docs = frappe.get_all(
+			"Reserved Vehicles", filters={"vin_serial_no": stock_doc.name}, pluck="name"
+		)
+
+		for reserve_docname in reserve_docs:
+			reserve_doc = frappe.get_doc("Reserved Vehicles", reserve_docname)
+			reserve_doc.flags.ignore_permissions = True
+
+			if reserve_doc.docstatus == 1:
+				reserve_doc.cancel()
+
+			reserve_doc.delete()
+
 	frappe.db.commit()
 	return True
