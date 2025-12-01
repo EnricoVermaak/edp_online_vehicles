@@ -1374,18 +1374,7 @@ function incrementStockNumber(stockNumber) {
 }
 
 
-frappe.ui.form.on('Vehicles Service', {
-	refresh: function(frm) {
-    let table = frm.get_field("service_parts_items").grid;
 
-    table.df.allow_bulk_edit = true;
-    table.setup_allow_bulk_edit();
-
-    frappe.show_alert({
-        message: "Bulk Edit Enabled for Service Parts!",
-        indicator: "green"
-    });
-}
 
 //     refresh: function(frm) {
 //         frm.page.set_title_sub("");
@@ -1412,4 +1401,4 @@ frappe.ui.form.on('Vehicles Service', {
 //     service_status: function(frm) {
 //         frm.trigger('refresh');
 //     }
-});
+// });
