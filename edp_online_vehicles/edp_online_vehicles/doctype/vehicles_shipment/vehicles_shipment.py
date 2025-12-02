@@ -465,5 +465,5 @@ class VehiclesShipment(Document):
 
 		frappe.db.commit()
 
-		if reserved_count > 0:
-			frappe.msgprint(_(f"Stock reserved for {reserved_count} vehicle(s)"))
+		# if reserved_count > 0:
+		# 	frappe.msgprint(_(f"Stock reserved for {reserved_count} vehicle(s)"))
