@@ -44,7 +44,7 @@ frappe.ui.form.on("Vehicles Service", {
 			callback: function (r) {
 				console.log(r);
 				console.log("hello");
-				
+
 
 				if (!r.message) return;
 
@@ -364,12 +364,12 @@ frappe.ui.form.on("Vehicles Service", {
 
 											if (!odo_limit_message_shown) {
 												odo_limit_message_shown = true;
-												
+
 												frappe.db.get_value("Vehicle Stock", frm.doc.vin_serial_no, "model")
-												.then((r) => {
-													let model = r.message.model
-													frappe.model.set_value(dt, dn, "service_type", `SS-${model}-Other`);
-												})
+													.then((r) => {
+														let model = r.message.model
+														frappe.model.set_value(dt, dn, "service_type", `SS-${model}-Other`);
+													})
 												frappe.msgprint(
 													"Your vehicle hasn't reached its service threshold yet. Please check back when it meets the minimum mileage requirement."
 												);
@@ -993,7 +993,7 @@ frappe.ui.form.on("Vehicles Service", {
 			frm.refresh_field("standard_checklist");
 		}
 	},
-	odo_reading_hours(frm) {
+	odo_reading_hours(frm, dt, dn) {
 		if (frm.doc.odo_reading_hours) {
 			frappe.db
 				.get_single_value(
@@ -1027,6 +1027,12 @@ frappe.ui.form.on("Vehicles Service", {
 										frm.doc.odo_reading_hours <
 										biggest_reading
 									) {
+										frappe.db.get_value("Vehicle Stock", frm.doc.vin_serial_no, "model")
+											.then((r) => {
+												let model = r.message.model
+
+												frappe.model.set_value(dt, dn, "service_type", `SS-${model}-Other`);
+											});
 										frm.set_value(
 											"odo_reading_hours",
 											null,
@@ -1050,6 +1056,8 @@ frappe.ui.form.on("Vehicles Service", {
 	},
 
 	before_save: async function (frm) {
+		const dt = frm.doctype;
+		const dn = frm.doc.name;
 		if (!frm.doc.job_card_no) {
 			frappe.db
 				.get_doc("Vehicle Service Settings")
@@ -1114,6 +1122,13 @@ frappe.ui.form.on("Vehicles Service", {
 
 			// Validate the odometer reading against the computed range
 			if (frm.doc.odo_reading_hours < min_odo_value) {
+				frappe.db.get_value("Vehicle Stock", frm.doc.vin_serial_no, "model")
+					.then((r) => {
+						let model = r.message.model
+
+						frappe.model.set_value(dt, dn, "service_type", `SS-${model}-Other`);
+					});
+
 				frappe.msgprint(
 					"Your vehicle hasn't reached its service threshold yet. Please check back when it meets the minimum mileage requirement.",
 				);
