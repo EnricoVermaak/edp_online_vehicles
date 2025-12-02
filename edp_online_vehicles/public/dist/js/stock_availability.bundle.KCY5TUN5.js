@@ -872,6 +872,10 @@
         }
       }
       function open_vehicle_popup(vehicle_data) {
+        const is_dealer = frappe.user.has_role("Dealer Vehicle Administrator");
+        if (is_dealer) {
+          return;
+        }
         let count = vehicle_data.length;
         ensureStyleTag("vehicle-popup-css", `
 				#vehicle-popup {
@@ -1069,6 +1073,10 @@
         $popup.show();
       }
       function open_vehicle_shipment_popup(vehicle_data) {
+        const is_dealer = frappe.user.has_role("Dealer Vehicle Administrator");
+        if (is_dealer) {
+          return;
+        }
         let count = vehicle_data.length;
         ensureStyleTag("vehicle-popup-css", `
 				#vehicle-popup {
@@ -1756,4 +1764,4 @@
     }
   };
 })();
-//# sourceMappingURL=stock_availability.bundle.BTHB3O7T.js.map
+//# sourceMappingURL=stock_availability.bundle.KCY5TUN5.js.map
