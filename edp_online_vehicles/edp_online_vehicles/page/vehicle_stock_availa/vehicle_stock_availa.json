@@ -4,7 +4,7 @@
  "docstatus": 0,
  "doctype": "Page",
  "idx": 54,
- "modified": "2025-11-27 11:53:30.206661",
+ "modified": "2025-11-28 13:19:32.522213",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "vehicle_stock_availa",
@@ -13,9 +13,6 @@
  "roles": [
   {
    "role": "Dealer Vehicle Administrator"
-  },
-  {
-   "role": "Vehicles Administrator"
   }
  ],
  "script": null,
