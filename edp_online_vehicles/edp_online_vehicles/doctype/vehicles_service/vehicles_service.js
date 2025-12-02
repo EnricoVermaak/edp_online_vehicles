@@ -295,7 +295,7 @@ frappe.ui.form.on("Vehicles Service", {
 		previous_status_value = frm.doc.service_status;
 	},
 
-	refresh(frm) {
+	refresh(frm, dt, dn) {
 		if (!frm.doc.job_card_no) {
 			if (!frm.doc.job_card_no) {
 				frappe.db
@@ -364,6 +364,12 @@ frappe.ui.form.on("Vehicles Service", {
 
 											if (!odo_limit_message_shown) {
 												odo_limit_message_shown = true;
+												
+												frappe.db.get_value("Vehicle Stock", frm.doc.vin_serial_no, "model")
+												.then((r) => {
+													let model = r.message.model
+													frappe.model.set_value(dt, dn, "service_type", `SS-${model}-Other`);
+												})
 												frappe.msgprint(
 													"Your vehicle hasn't reached its service threshold yet. Please check back when it meets the minimum mileage requirement."
 												);
