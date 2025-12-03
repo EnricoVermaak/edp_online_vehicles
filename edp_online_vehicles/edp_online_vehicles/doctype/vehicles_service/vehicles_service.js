@@ -914,8 +914,10 @@ frappe.ui.form.on("Vehicles Service", {
 					if (!r.message) return;
 
 					if (!r.message.is_valid) {
-						console.log(r.message);
-
+						if (frm.doc.service_type && frm.doc.service_type.endsWith("-Other")) {
+							console.log("Already Other type from previous logic... skipping (service date).");
+							return;
+						}
 						frappe.msgprint(
 							"Please note the selected vehicle falls outside the allocated service period parameters. Please contact Head Office for more information."
 						);
@@ -952,18 +954,27 @@ frappe.ui.form.on("Vehicles Service", {
 					if (!r.message) return;
 
 					if (!r.message.is_valid) {
-						console.log(r.message);
+
+						// 👉 Ignore only if service_type ends with "-Other"
+						if (frm.doc.service_type && frm.doc.service_type.endsWith("-Other")) {
+							console.log("Already Other type... skipping update.");
+							return;
+						}
 
 						frappe.msgprint(
 							"Please note the selected vehicle falls outside the allocated warranty period. Please contact Head Office for more information."
 						);
-						frappe.db.get_value("Vehicle Stock", frm.doc.vin_serial_no, "model")
+
+						// Get model
+						frappe.db
+							.get_value("Vehicle Stock", frm.doc.vin_serial_no, "model")
 							.then((res) => {
 								let model = res.message.model;
 								let service_value = `SS-${model}-Other`;
 
-								console.log(service_value);
+								console.log("Setting:", service_value);
 
+								// ⭐ dt & dn best practice
 								let dt = frm.doctype;
 								let dn = frm.doc.name;
 
@@ -975,6 +986,7 @@ frappe.ui.form.on("Vehicles Service", {
 				},
 			});
 		}
+
 
 	},
 
