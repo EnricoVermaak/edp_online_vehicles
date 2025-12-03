@@ -81,7 +81,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-11-18 11:26:35.055554",
+ "modified": "2025-12-03 09:43:16.440503",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Service Schedules",
@@ -102,7 +102,6 @@
   }
  ],
  "row_format": "Dynamic",
- "show_title_field_in_link": 1,
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": [],

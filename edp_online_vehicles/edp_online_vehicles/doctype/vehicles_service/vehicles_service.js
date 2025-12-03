@@ -44,7 +44,7 @@ frappe.ui.form.on("Vehicles Service", {
 			callback: function (r) {
 				console.log(r);
 				console.log("hello");
-				
+
 
 				if (!r.message) return;
 
@@ -295,7 +295,7 @@ frappe.ui.form.on("Vehicles Service", {
 		previous_status_value = frm.doc.service_status;
 	},
 
-	refresh(frm) {
+	refresh(frm, dt, dn) {
 		if (!frm.doc.job_card_no) {
 			if (!frm.doc.job_card_no) {
 				frappe.db
@@ -364,6 +364,12 @@ frappe.ui.form.on("Vehicles Service", {
 
 											if (!odo_limit_message_shown) {
 												odo_limit_message_shown = true;
+
+												frappe.db.get_value("Vehicle Stock", frm.doc.vin_serial_no, "model")
+													.then((r) => {
+														let model = r.message.model
+														frappe.model.set_value(dt, dn, "service_type", `SS-${model}-Other`);
+													})
 												frappe.msgprint(
 													"Your vehicle hasn't reached its service threshold yet. Please check back when it meets the minimum mileage requirement."
 												);
@@ -898,7 +904,6 @@ frappe.ui.form.on("Vehicles Service", {
 
 		frm.set_value("odo_reading_hours", null);
 
-		// **DATE RANGE CHECK (ADDED CODE — DO NOT REMOVE)**
 		if (frm.doc.vin_serial_no) {
 			frappe.call({
 				method: "edp_online_vehicles.events.service_type.check_service_date",
@@ -909,17 +914,35 @@ frappe.ui.form.on("Vehicles Service", {
 					if (!r.message) return;
 
 					if (!r.message.is_valid) {
-						console.log(r.message);
-
+						if (frm.doc.service_type && frm.doc.service_type.endsWith("-Other")) {
+							console.log("Already Other type from previous logic... skipping (service date).");
+							return;
+						}
 						frappe.msgprint(
-							"Please note the selected vehicle falls outside the allocated service period parameters. Please contact Head Office for more information.",
+							"Please note the selected vehicle falls outside the allocated service period parameters. Please contact Head Office for more information."
 						);
 
-						// frm.set_value("service_type", "Other");
+						frappe.db.get_value("Vehicle Stock", frm.doc.vin_serial_no, "model")
+							.then((res) => {
+								let model = res.message.model;
+								let service_value = `SS-${model}-Other`;
+
+								console.log(service_value);
+
+								// ⭐ Correct dt & dn
+								let dt = frm.doctype;
+								let dn = frm.doc.name;
+
+								// ⭐ MOST RELIABLE (best practice)
+								frappe.model.set_value(dt, dn, "service_type", service_value);
+
+								frm.refresh_field("service_type");
+							});
 					}
 				},
 			});
 		}
+
 		//  **END DATE RANGE CHECK**
 		if (frm.doc.vin_serial_no) {
 			frappe.call({
@@ -931,15 +954,39 @@ frappe.ui.form.on("Vehicles Service", {
 					if (!r.message) return;
 
 					if (!r.message.is_valid) {
-						console.log(r.message);
+
+						// 👉 Ignore only if service_type ends with "-Other"
+						if (frm.doc.service_type && frm.doc.service_type.endsWith("-Other")) {
+							console.log("Already Other type... skipping update.");
+							return;
+						}
 
 						frappe.msgprint(
 							"Please note the selected vehicle falls outside the allocated warranty period. Please contact Head Office for more information."
 						);
+
+						// Get model
+						frappe.db
+							.get_value("Vehicle Stock", frm.doc.vin_serial_no, "model")
+							.then((res) => {
+								let model = res.message.model;
+								let service_value = `SS-${model}-Other`;
+
+								console.log("Setting:", service_value);
+
+								// ⭐ dt & dn best practice
+								let dt = frm.doctype;
+								let dn = frm.doc.name;
+
+								frappe.model.set_value(dt, dn, "service_type", service_value);
+
+								frm.refresh_field("service_type");
+							});
 					}
 				},
 			});
 		}
+
 
 	},
 
@@ -987,7 +1034,7 @@ frappe.ui.form.on("Vehicles Service", {
 			frm.refresh_field("standard_checklist");
 		}
 	},
-	odo_reading_hours(frm) {
+	odo_reading_hours(frm, dt, dn) {
 		if (frm.doc.odo_reading_hours) {
 			frappe.db
 				.get_single_value(
@@ -1021,6 +1068,12 @@ frappe.ui.form.on("Vehicles Service", {
 										frm.doc.odo_reading_hours <
 										biggest_reading
 									) {
+										frappe.db.get_value("Vehicle Stock", frm.doc.vin_serial_no, "model")
+											.then((r) => {
+												let model = r.message.model
+
+												frappe.model.set_value(dt, dn, "service_type", `SS-${model}-Other`);
+											});
 										frm.set_value(
 											"odo_reading_hours",
 											null,
@@ -1044,6 +1097,8 @@ frappe.ui.form.on("Vehicles Service", {
 	},
 
 	before_save: async function (frm) {
+		const dt = frm.doctype;
+		const dn = frm.doc.name;
 		if (!frm.doc.job_card_no) {
 			frappe.db
 				.get_doc("Vehicle Service Settings")
@@ -1108,6 +1163,13 @@ frappe.ui.form.on("Vehicles Service", {
 
 			// Validate the odometer reading against the computed range
 			if (frm.doc.odo_reading_hours < min_odo_value) {
+				frappe.db.get_value("Vehicle Stock", frm.doc.vin_serial_no, "model")
+					.then((r) => {
+						let model = r.message.model
+
+						frappe.model.set_value(dt, dn, "service_type", `SS-${model}-Other`);
+					});
+
 				frappe.msgprint(
 					"Your vehicle hasn't reached its service threshold yet. Please check back when it meets the minimum mileage requirement.",
 				);
