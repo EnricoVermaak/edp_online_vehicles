@@ -904,7 +904,6 @@ frappe.ui.form.on("Vehicles Service", {
 
 		frm.set_value("odo_reading_hours", null);
 
-		// **DATE RANGE CHECK (ADDED CODE — DO NOT REMOVE)**
 		if (frm.doc.vin_serial_no) {
 			frappe.call({
 				method: "edp_online_vehicles.events.service_type.check_service_date",
@@ -918,14 +917,30 @@ frappe.ui.form.on("Vehicles Service", {
 						console.log(r.message);
 
 						frappe.msgprint(
-							"Please note the selected vehicle falls outside the allocated service period parameters. Please contact Head Office for more information.",
+							"Please note the selected vehicle falls outside the allocated service period parameters. Please contact Head Office for more information."
 						);
 
-						// frm.set_value("service_type", "Other");
+						frappe.db.get_value("Vehicle Stock", frm.doc.vin_serial_no, "model")
+							.then((res) => {
+								let model = res.message.model;
+								let service_value = `SS-${model}-Other`;
+
+								console.log(service_value);
+
+								// ⭐ Correct dt & dn
+								let dt = frm.doctype;
+								let dn = frm.doc.name;
+
+								// ⭐ MOST RELIABLE (best practice)
+								frappe.model.set_value(dt, dn, "service_type", service_value);
+
+								frm.refresh_field("service_type");
+							});
 					}
 				},
 			});
 		}
+
 		//  **END DATE RANGE CHECK**
 		if (frm.doc.vin_serial_no) {
 			frappe.call({
@@ -942,6 +957,20 @@ frappe.ui.form.on("Vehicles Service", {
 						frappe.msgprint(
 							"Please note the selected vehicle falls outside the allocated warranty period. Please contact Head Office for more information."
 						);
+						frappe.db.get_value("Vehicle Stock", frm.doc.vin_serial_no, "model")
+							.then((res) => {
+								let model = res.message.model;
+								let service_value = `SS-${model}-Other`;
+
+								console.log(service_value);
+
+								let dt = frm.doctype;
+								let dn = frm.doc.name;
+
+								frappe.model.set_value(dt, dn, "service_type", service_value);
+
+								frm.refresh_field("service_type");
+							});
 					}
 				},
 			});
