@@ -93,6 +93,7 @@ class VehiclesShipment(Document):
 		eq_stock = self.create_vehicles_stock_entries(selected_items)
 		eq_card = self.create_vehicles_card(selected_items)
 		order_update = self.check_head_office_orders(selected_items)
+		self.create_reserve_doc(selected_items)
 		frappe.db.commit()
 		if (
 			stock_entry == "Received"
@@ -390,3 +391,79 @@ class VehiclesShipment(Document):
 			return "Received"
 
 
+
+
+	def create_reserve_doc(self, selected_items=None):
+		if not selected_items:
+			return
+
+		# Check the setting once for all items
+		auto_reserve_stock = frappe.db.get_single_value(
+			'Vehicle Stock Settings', 
+			'automatically_reserve_stock'
+		)
+
+		if not auto_reserve_stock:
+			return
+
+		dealer = None
+		reserved_count = 0
+
+		for item in selected_items:
+			# Validate required fields
+			if not item.get("vin_serial_no"):
+				frappe.throw(_("Serial No is missing for item"))
+
+			if not item.get("target_warehouse"):
+				frappe.throw(_("Target warehouse is missing for item"))
+
+			if not item.get("model_code"):
+				frappe.throw(_("Model code is missing for an item."))
+
+			# Get dealer from item or self
+			dealer = item.get("dealer") or self.dealer
+
+			if not dealer:
+				frappe.throw(_("Dealer is missing for item"))
+
+			# Check if Vehicle Stock exists (should exist after create_vehicles_stock_entries)
+			if not frappe.db.exists("Vehicle Stock", item.get("vin_serial_no")):
+				frappe.log_error(
+					f"Vehicle Stock not found for VIN: {item.get('vin_serial_no')}", 
+					"create_reserve_doc"
+				)
+				continue
+
+			# Check if already reserved
+			if frappe.db.exists("Reserved Vehicles", item.get("vin_serial_no")):
+				continue
+
+			# Create Reserved Vehicles document
+			new_doc = frappe.new_doc('Reserved Vehicles')
+			new_doc.vin_serial_no = item.get("vin_serial_no")
+			new_doc.dealer = dealer
+
+			if item.get("customer"):
+				new_doc.customer = item.get("customer")
+
+			new_doc.status = 'Reserved'
+			new_doc.reserve_reason = 'Automatically Reserved'
+			new_doc.reserve_from_date = nowdate()
+
+			if item.get("reserve_to_date"):
+				new_doc.reserve_to_date = item.get("reserve_to_date")
+
+			new_doc.insert(ignore_permissions=True)
+
+			# Update Vehicle Stock availability status
+			stock_doc = frappe.get_doc('Vehicle Stock', item.get("vin_serial_no"))
+			stock_doc.availability_status = 'Reserved'
+			stock_doc.reserve_reason = 'Automatically Reserved'
+			stock_doc.save(ignore_permissions=True)
+
+			reserved_count += 1
+
+		frappe.db.commit()
+
+		# if reserved_count > 0:
+		# 	frappe.msgprint(_(f"Stock reserved for {reserved_count} vehicle(s)"))

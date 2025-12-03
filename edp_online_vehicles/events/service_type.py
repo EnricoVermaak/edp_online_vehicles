@@ -3,51 +3,46 @@ import json
 from frappe.utils import nowdate, getdate
 @frappe.whitelist()
 def service_type_query(doctype, txt, searchfield, start, page_len, filters):
-    # Convert filters to dict if it is string
-    if isinstance(filters, str):
-        filters = json.loads(filters)
-
+    # Initialize filters for Service Schedules
     service_schedule_filters = {}
-    model_code = filters.get("model_code")
-    if model_code:
-        service_schedule_filters["model_code"] = model_code
 
-    used_service_type_names = []
-    vin_serial_no = str(filters.get("vin_serial_no")) if filters.get("vin_serial_no") else None
+    # Apply filters based on passed arguments
+    if filters.get("model_code"):
+        service_schedule_filters["model_code"] = filters.get("model_code")
 
-
+    # Get the Vehicles VIN number/serial number from Vehicles Service if provided
+    vin_serial_no = filters.get("vin_serial_no")
     if vin_serial_no:
-        used_services = frappe.get_all(
-            "Vehicles Service",
-            filters={"vin_serial_no": vin_serial_no},
-            fields=["service_type"]
+        vehicles_service_filters = {"vin_serial_no": vin_serial_no}
+        # Fetch the service types associated with the given Vehicles VIN number/serial number
+        used_service_types_data = frappe.get_all(
+            "Vehicles Service", filters=vehicles_service_filters, fields=["service_type"]
         )
-        used_service_type_names = [d["service_type"] for d in used_services]
+        used_service_type_names = (
+            [d["service_type"] for d in used_service_types_data] if used_service_types_data else []
+        )
+    else:
+        used_service_type_names = []
 
-    all_services = frappe.get_all(
-        "Service Schedules",
-        filters=service_schedule_filters,
-        fields=["name","interval"]
+    # Get all service types from Service Schedules based on filters
+    all_service_types = frappe.get_all(
+        "Service Schedules", fields=["name"], filters=service_schedule_filters
     )
+    all_service_type_names = [d["name"] for d in all_service_types] if all_service_types else []
 
-    # Format services as list of tuples (value, label)
-    all_service_tuples = [(d['name'], f"{d['name']} - {d['interval']}") for d in all_services]
+    # Filter out the used service types from all service types
+    available_service_types = []
+    mm_services = []
+    if filters.get("model_code"):
+        mm_services = [[f"SS-{filters.get('model_code')}-Major"], [f"SS-{filters.get('model_code')}-Minor"]]
 
-    # Only show services not already used
-    available_services = [t for t in all_service_tuples if t[0] not in used_service_type_names]
+    for service_type in all_service_type_names:
+        if service_type not in used_service_type_names:
+            available_service_types.append([service_type])
 
-    # Add Major/Minor services for model_code if not used
-    if model_code:
-        major_minor_services = [
-            (f"SS-{model_code}-Major", f"SS-{model_code}-Major"),
-            (f"SS-{model_code}-Minor", f"SS-{model_code}-Minor")
-        ]
-        for s in major_minor_services:
-            if s[0] not in used_service_type_names and s not in available_services:
-                available_services.append(s)
+    available_service_types.extend(mm_services)
 
-    return available_services
-
+    return available_service_types
 
 
 

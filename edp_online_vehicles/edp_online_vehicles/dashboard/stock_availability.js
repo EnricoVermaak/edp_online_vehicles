@@ -378,6 +378,12 @@ edp_online_vehicles.edp_online_vehicles.StockAvailability = class StockAvailabil
 		}
 
 		function open_vehicle_popup(vehicle_data) {
+			// Don't show popup at all for Dealer Vehicle Administrator
+			const is_dealer = frappe.user.has_role("Dealer Vehicle Administrator");
+			if (is_dealer) {
+				return;
+			}
+
 			let count = vehicle_data.length;
 			ensureStyleTag('vehicle-popup-css', `
 				#vehicle-popup {
@@ -621,6 +627,12 @@ edp_online_vehicles.edp_online_vehicles.StockAvailability = class StockAvailabil
 		}
 
 		function open_vehicle_shipment_popup(vehicle_data) {
+			// Don't show popup at all for Dealer Vehicle Administrator
+			const is_dealer = frappe.user.has_role("Dealer Vehicle Administrator");
+			if (is_dealer) {
+				return;
+			}
+
 			let count = vehicle_data.length;
 			ensureStyleTag('vehicle-popup-css', `
 				#vehicle-popup {

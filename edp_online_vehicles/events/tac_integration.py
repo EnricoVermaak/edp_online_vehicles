@@ -11,11 +11,13 @@ import paramiko
 @frappe.whitelist()
 def tac_landing_outgoing(selected_items):
 	selected_items = json.loads(selected_items)
-	folder_path = "/home/frappe/frappe-bench/apps/edp_online_vehicles/edp_online_vehicles/tac_integration/tac_outgoing"
-	error_log_folder = "/home/frappe/frappe-bench/apps/edp_online_vehicles/edp_online_vehicles/integration_errors/tac_outgoing"
+	app_path = frappe.get_app_path("edp_online_vehicles")
+	folder_path = os.path.join(app_path, "edp_online_vehicles", "tac_integration", "tac_outgoing")
+	error_log_folder = os.path.join(app_path, "edp_online_vehicles", "integration_errors", "tac_outgoing")
 
 	# Ensure the error log folder exists
 	os.makedirs(error_log_folder, exist_ok=True)
+	os.makedirs(folder_path, exist_ok=True)
 
 	now = datetime.now()
 
@@ -67,11 +69,13 @@ def tac_landing_outgoing(selected_items):
 
 @frappe.whitelist()
 def tac_delivery_outgoing(vinno, model, model_desc, colour, dealer):
-	folder_path = "/home/frappe/frappe-bench/apps/edp_online_vehicles/edp_online_vehicles/tac_integration/tac_outgoing"
-	error_log_folder = "/home/frappe/frappe-bench/apps/edp_online_vehicles/edp_online_vehicles/integration_errors/tac_outgoing"
+	app_path = frappe.get_app_path("edp_online_vehicles")
+	folder_path = os.path.join(app_path, "edp_online_vehicles", "tac_integration", "tac_outgoing")
+	error_log_folder = os.path.join(app_path, "edp_online_vehicles", "integration_errors", "tac_outgoing")
 
 	# Ensure the error log folder exists
 	os.makedirs(error_log_folder, exist_ok=True)
+	os.makedirs(folder_path, exist_ok=True)
 
 	now = datetime.now()
 
@@ -143,15 +147,17 @@ def tac_delivery_outgoing(vinno, model, model_desc, colour, dealer):
 
 @frappe.whitelist()
 def read_tac_file():
-	incoming_folder = "/home/frappe/frappe-bench/apps/edp_online_vehicles/edp_online_vehicles/tac_integration/tac_incoming"
+	app_path = frappe.get_app_path("edp_online_vehicles")
+	incoming_folder = os.path.join(app_path, "edp_online_vehicles", "tac_integration", "tac_incoming")
 	processed_folder = os.path.join(incoming_folder, "Processed")
-	error_log_folder = "/home/frappe/frappe-bench/apps/edp_online_vehicles/edp_online_vehicles/integration_errors/tac_incoming"
+	error_log_folder = os.path.join(app_path, "edp_online_vehicles", "integration_errors", "tac_incoming")
 	empty_files_folder = os.path.join(error_log_folder, "empty_files")
 
 	# Ensure the required folders exist
 	os.makedirs(processed_folder, exist_ok=True)
 	os.makedirs(error_log_folder, exist_ok=True)
 	os.makedirs(empty_files_folder, exist_ok=True)
+	os.makedirs(incoming_folder, exist_ok=True)
 
 	try:
 		process_all_files(incoming_folder, processed_folder, error_log_folder, empty_files_folder)
@@ -270,8 +276,9 @@ def tac_sftp():
 	username = "tacuser"
 	password = "T@cUs3r2025"
 
-	tac_incoming_folder = "/home/frappe/frappe-bench/apps/edp_online_vehicles/edp_online_vehicles/tac_integration/tac_incoming"
-	tac_outgoing_folder = "/home/frappe/frappe-bench/apps/edp_online_vehicles/edp_online_vehicles/tac_integration/tac_outgoing"
+	app_path = frappe.get_app_path("edp_online_vehicles")
+	tac_incoming_folder = os.path.join(app_path, "edp_online_vehicles", "tac_integration", "tac_incoming")
+	tac_outgoing_folder = os.path.join(app_path, "edp_online_vehicles", "tac_integration", "tac_outgoing")
 
 	remote_incoming_folder = "/Incoming"
 	remote_outgoing_folder = "/Outgoing"
