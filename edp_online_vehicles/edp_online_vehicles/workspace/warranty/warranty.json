@@ -97,7 +97,7 @@
    "type": "Link"
   }
  ],
- "modified": "2025-10-15 14:18:10.148816",
+ "modified": "2025-12-03 10:56:06.298196",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Warranty",
@@ -109,9 +109,12 @@
  "roles": [
   {
    "role": "System Administrator"
+  },
+  {
+   "role": "Maintenance User"
   }
  ],
- "sequence_id": 10.0,
+ "sequence_id": 17.0,
  "shortcuts": [],
  "title": "Warranty"
 }

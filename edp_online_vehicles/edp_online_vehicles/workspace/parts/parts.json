@@ -354,7 +354,7 @@
    "type": "Link"
   }
  ],
- "modified": "2025-11-27 12:57:37.194137",
+ "modified": "2025-12-03 10:57:24.167520",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Parts",
@@ -369,6 +369,9 @@
   },
   {
    "role": "Vehicles Administrator"
+  },
+  {
+   "role": "Maintenance User"
   }
  ],
  "sequence_id": 13.0,
