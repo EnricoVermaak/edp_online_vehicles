@@ -141,11 +141,13 @@ permission_query_conditions = {
 	"Vehicles Warranty Claims": "edp_online_vehicles.permissions.vehicles_warranty_query",
 	"Request for Service": "edp_online_vehicles.permissions.request_for_service_query",
 	"Vehicles Load Test": "edp_online_vehicles.permissions.vehicles_load_test_query",
+	"Vehicles PDI Inspection": "edp_online_vehicles.permissions.vehicles_pdi_inspection_query",
+	"Vehicle Buy Back": "edp_online_vehicles.permissions.vehicle_buy_back_query",
 }
-#
-# has_permission = {
-# 	"Event": "frappe.desk.doctype.event.event.has_permission",
-# }
+
+has_permission = {
+	"Vehicles PDI Inspection": "edp_online_vehicles.edp_online_vehicles.doctype.vehicles_pdi_inspection.vehicles_pdi_inspection.has_permission",
+}
 
 # DocType Class
 # ---------------

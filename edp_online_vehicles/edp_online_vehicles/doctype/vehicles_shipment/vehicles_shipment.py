@@ -397,7 +397,6 @@ class VehiclesShipment(Document):
 		if not selected_items:
 			return
 
-		# Check the setting once for all items
 		auto_reserve_stock = frappe.db.get_single_value(
 			'Vehicle Stock Settings', 
 			'automatically_reserve_stock'
