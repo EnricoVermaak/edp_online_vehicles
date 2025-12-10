@@ -331,8 +331,8 @@ frappe.ui.form.on("Vehicles Warranty Claims", {
 		previous_status_value = frm.doc.status;
 	},
 	vin_serial_no: function (frm) {
-		if(frm.doc.part_items && frm.doc.part_items.length > 0){
-		setTimeout(() => reapply_all_row_colors(frm), 300);
+		if (frm.doc.part_items && frm.doc.part_items.length > 0) {
+			setTimeout(() => reapply_all_row_colors(frm), 300);
 		}
 
 		// if (frm.doc.odo_reading) {
@@ -458,8 +458,6 @@ frappe.ui.form.on("Vehicles Warranty Claims", {
 					if (!r.message.is_valid) {
 
 						if (frm.doc.type !== "Goodwill") {
-							console.log("type");
-
 							frm.set_value("type", "Goodwill");
 						}
 
@@ -473,8 +471,17 @@ frappe.ui.form.on("Vehicles Warranty Claims", {
 		};
 		frappe.db.get_doc("Vehicle Stock", frm.doc.vin_serial_no).then(vehicle => {
 			if (frm.doc.odo_reading > vehicle.warranty_km_hours_limit) {
+				if (frm.doc.type !== "Goodwill") {
+					console.log("type");
+
+					frm.set_value("type", "Goodwill");
+				}
+
 				frappe.msgprint(
-					"A Please note the selected vehicle falls outside the allocated warranty period parameters. Please contact Head Office for more information"
+					"Please note the selected vehicle falls outside the allocated warranty period parameters. Please contact Head Office for more information"
+				);
+				frappe.msgprint(
+					"Please. note the selected vehicle falls outside the allocated warranty period parameters. Please contact Head Office for more information"
 				);
 
 
