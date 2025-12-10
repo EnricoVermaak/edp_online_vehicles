@@ -349,7 +349,7 @@
    "type": "Link"
   }
  ],
- "modified": "2025-10-23 15:37:20.295774",
+ "modified": "2025-12-10 13:37:41.227818",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicles",
@@ -374,7 +374,7 @@
    "doc_view": "List",
    "label": "Available HQ Stock",
    "link_to": "Vehicle Stock",
-   "stats_filter": "[[\"Vehicle Stock\",\"availability_status\",\"=\",\"Available\",false],[\"Vehicle Stock\",\"dealer\",\"=\",\"Tecwise\",false]]",
+   "stats_filter": "[[\"Vehicle Stock\",\"availability_status\",\"=\",\"Available\",false],[\"Vehicle Stock\",\"dealer\",\"=\",\"Mahindra SA\",false]]",
    "type": "DocType"
   },
   {
@@ -382,7 +382,15 @@
    "doc_view": "List",
    "label": "Available Dealer Stock",
    "link_to": "Vehicle Stock",
-   "stats_filter": "[[\"Vehicle Stock\",\"availability_status\",\"=\",\"Available\",false],[\"Vehicle Stock\",\"dealer\",\"!=\",\"Tecwise\",false]]",
+   "stats_filter": "[[\"Vehicle Stock\",\"availability_status\",\"=\",\"Available\",false],[\"Vehicle Stock\",\"dealer\",\"!=\",\"Mahindra SA\",false]]",
+   "type": "DocType"
+  },
+  {
+   "color": "Orange",
+   "doc_view": "List",
+   "label": "Reserved Dealer Stock",
+   "link_to": "Vehicle Stock",
+   "stats_filter": "[[\"Vehicle Stock\",\"availability_status\",\"=\",\"Reserved\",false],[\"Vehicle Stock\",\"dealer\",\"!=\",\"Mahindra SA\",false]]",
    "type": "DocType"
   },
   {
@@ -395,17 +403,9 @@
   {
    "color": "Orange",
    "doc_view": "List",
-   "label": "Reserved Dealer Stock",
-   "link_to": "Vehicle Stock",
-   "stats_filter": "[[\"Vehicle Stock\",\"availability_status\",\"=\",\"Reserved\",false],[\"Vehicle Stock\",\"dealer\",\"!=\",\"Tecwise\",false]]",
-   "type": "DocType"
-  },
-  {
-   "color": "Orange",
-   "doc_view": "List",
    "label": "HQ Reserved Stock",
    "link_to": "Vehicle Stock",
-   "stats_filter": "[[\"Vehicle Stock\",\"availability_status\",\"=\",\"Reserved\",false],[\"Vehicle Stock\",\"dealer\",\"=\",\"Tecwise\",false]]",
+   "stats_filter": "[[\"Vehicle Stock\",\"availability_status\",\"=\",\"Reserved\",false],[\"Vehicle Stock\",\"dealer\",\"=\",\"Mahindra SA\",false]]",
    "type": "DocType"
   },
   {

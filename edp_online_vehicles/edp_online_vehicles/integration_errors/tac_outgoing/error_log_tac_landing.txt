@@ -1,0 +1,1 @@
+[2025-12-04 10:05:57]: Error writing file for VIN TVN000056: Could not find Integration End Point : TAC
