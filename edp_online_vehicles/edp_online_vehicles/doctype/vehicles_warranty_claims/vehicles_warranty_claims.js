@@ -331,31 +331,60 @@ frappe.ui.form.on("Vehicles Warranty Claims", {
 	},
 	vin_serial_no:function(frm) {
 	
-		if (frm.doc.odo_reading) {
-			frappe.db.get_doc("Vehicle Stock", frm.doc.vin_serial_no)
-				.then(vehicle => {
+		// if (frm.doc.odo_reading) {
+		// 	frappe.db.get_doc("Vehicle Stock", frm.doc.vin_serial_no)
+		// 		.then(vehicle => {
 
-					let odo = frm.doc.odo_reading;
-					let isValid = false;
+		// 			let odo = frm.doc.odo_reading;
+		// 			let isValid = false;
 
-					if (vehicle.table_pcgj && vehicle.table_pcgj.length > 0) {
-						console.log(vehicle.table_pcgj);
+		// 			if (vehicle.table_pcgj && vehicle.table_pcgj.length > 0) {
+		// 				console.log(vehicle.table_pcgj);
 
 
-						vehicle.table_pcgj.forEach(row => {
-							let maxLimit = row.warranty_odo_limit || 0;
+		// 				vehicle.table_pcgj.forEach(row => {
+		// 					let maxLimit = row.warranty_odo_limit || 0;
 
-							if (odo >= 0 && odo <= maxLimit) {
-								isValid = true;
-							}
-						});
-					}
+		// 					if (odo >= 0 && odo <= maxLimit) {
+		// 						isValid = true;
+		// 					}
+		// 				});
+		// 			}
 
-					if (!isValid) {
-						frappe.msgprint("Odometer reading is outside the warranty limit!");
-					}
-				});
-		}
+		// 			if (!isValid) {
+		// 				frappe.msgprint("Odometer reading is outside the warranty limit!");
+		// 			}
+		// 		});
+		// }
+        if (!frm.doc.vin_serial_no) return;
+
+        // Get linked Vehicle Stock record
+        frappe.db.get_doc("Vehicle Stock", frm.doc.vin_serial_no)
+        .then(stock_doc => {
+
+            let rows = stock_doc.table_pcgj || [];
+            if (rows.length === 0) {
+                return;
+            }
+			// Extract all warranty_odo_limit values from child table
+            let limits = rows.map(r => r.warranty_odo_limit);
+
+            // Find max value
+            let max_limit = Math.max(...limits);
+
+            let current_odo = frm.doc.odo_reading;
+
+            if (!current_odo) {
+                frappe.msgprint("Please enter ODO Reading first.");
+                return;
+            }
+
+            // Compare current odo with max limit
+            if (current_odo > max_limit) {
+                frappe.msgprint("Odometer reading is outside the warranty limit!");
+            }
+        });
+    
 
 		if (frm.is_new()) {
 			frappe.db
@@ -507,3 +536,52 @@ const calculate_part_sub_total = (frm, field_name, table_name) => {
 		sub_total,
 	);
 };
+
+    // vin_serial_no: function(frm) {
+
+    //     if (!frm.doc.vin_serial_no) return;
+
+    //     frappe.db.get_doc("Vehicle Stock", frm.doc.vin_serial_no)
+    //     .then(stock_doc => {
+
+    //         let current_odo = frm.doc.odo_reading;
+
+    //         if (!current_odo) {
+    //             frappe.msgprint("Please enter ODO Reading first.");
+    //             return;
+    //         }
+
+    //         // ========== Child Table 1 ==========
+    //         let rows1 = stock_doc.table_pcgj || [];
+
+    //         if (rows1.length > 0) {
+    //             let limits1 = rows1.map(r => r.warranty_odo_limit);
+    //             let max1 = Math.max(...limits1);
+
+    //             if (current_odo > max1) {
+    //                 frappe.msgprint({
+    //                     title: "Warranty ODO Limit Exceeded",
+    //                     indicator: "red",
+    //                     message: `ODO Reading (${current_odo}) is greater than Warranty ODO Limit (${max1}) from child table PCGJ.`
+    //                 });
+    //             }
+    //         }
+
+    //         // ========== Child Table 2 ==========
+    //         let rows2 = stock_doc.table_gtny || [];
+
+    //         if (rows2.length > 0) {
+    //             let limits2 = rows2.map(r => r.odo_limit);
+    //             let max2 = Math.max(...limits2);
+
+    //             if (current_odo > max2) {
+    //                 frappe.msgprint({
+    //                     title: "ODO Limit (GTNY Table) Exceeded",
+    //                     indicator: "red",
+    //                     message: `ODO Reading (${current_odo}) is greater than ODO Limit (${max2}) from child table GTNY.`
+    //                 });
+    //             }
+    //         }
+
+    //     });
+    // }
