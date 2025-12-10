@@ -446,7 +446,7 @@ frappe.ui.form.on("Vehicles Warranty Claims", {
 		});
 
 
-		if (frm.doc.vin_serial_no) {
+		if (frm.doc.vin_serial_no && frm.doc.type !== "Goodwill") {
 			frappe.call({
 				method: "edp_online_vehicles.events.service_type.check_warranty_date",
 				args: {
@@ -468,25 +468,18 @@ frappe.ui.form.on("Vehicles Warranty Claims", {
 
 				},
 			});
-		};
-		frappe.db.get_doc("Vehicle Stock", frm.doc.vin_serial_no).then(vehicle => {
-			if (frm.doc.odo_reading > vehicle.warranty_km_hours_limit) {
-				if (frm.doc.type !== "Goodwill") {
-					console.log("type");
+			frappe.db.get_doc("Vehicle Stock", frm.doc.vin_serial_no).then(vehicle => {
+				if (frm.doc.odo_reading > vehicle.warranty_km_hours_limit) {
+					if (frm.doc.type !== "Goodwill") {
+						frm.set_value("type", "Goodwill");
+					}
 
-					frm.set_value("type", "Goodwill");
+					frappe.msgprint(
+						"Please note the selected vehicle falls outside the allocated warranty period parameters. Please contact Head Office for more information"
+					);
 				}
-
-				frappe.msgprint(
-					"Please note the selected vehicle falls outside the allocated warranty period parameters. Please contact Head Office for more information"
-				);
-				frappe.msgprint(
-					"Please. note the selected vehicle falls outside the allocated warranty period parameters. Please contact Head Office for more information"
-				);
-
-
-			}
-		});
+			});
+		};
 	},
 });
 frappe.ui.form.on('Warranty Part Item', {
@@ -536,7 +529,6 @@ frappe.ui.form.on('Warranty Part Item', {
 	part_items_remove(frm, cdt, cdn) {
 		calculate_part_sub_total(frm, "total_excl", "part_items");
 		let row = locals[cdt][cdn];
-		console.log("row has is removed");
 		setTimeout(() => reapply_colors(frm), 100);
 	},
 	part_items_add: function (frm, cdt, cdn) {
@@ -662,7 +654,6 @@ function validate_part_item(frm, row) {
 		args: { vin: frm.doc.vin_serial_no },
 		callback: function (r) {
 			let allowed_items = r.message || [];
-			console.log("Allowed items:", allowed_items);
 
 			if (!allowed_items.includes(row.part_no)) {
 				set_row_color(frm, row, "#ffdddd");
