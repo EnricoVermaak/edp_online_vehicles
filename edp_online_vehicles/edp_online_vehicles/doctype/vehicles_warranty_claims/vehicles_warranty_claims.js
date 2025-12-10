@@ -18,6 +18,9 @@ $(document).ready(function () {
 
 frappe.ui.form.on("Vehicles Warranty Claims", {
 	refresh(frm) {
+		frm.doc.part_items.forEach(function (row) {
+			check_part_no_and_color(frm, row);
+		});
 		frm.add_custom_button(
 			__("Sales Order"),
 			() => {
@@ -329,8 +332,8 @@ frappe.ui.form.on("Vehicles Warranty Claims", {
 		}
 		previous_status_value = frm.doc.status;
 	},
-	vin_serial_no:function(frm) {
-	
+	vin_serial_no: function (frm) {
+
 		// if (frm.doc.odo_reading) {
 		// 	frappe.db.get_doc("Vehicle Stock", frm.doc.vin_serial_no)
 		// 		.then(vehicle => {
@@ -356,35 +359,35 @@ frappe.ui.form.on("Vehicles Warranty Claims", {
 		// 			}
 		// 		});
 		// }
-        if (!frm.doc.vin_serial_no) return;
+		if (!frm.doc.vin_serial_no) return;
 
-        // Get linked Vehicle Stock record
-        frappe.db.get_doc("Vehicle Stock", frm.doc.vin_serial_no)
-        .then(stock_doc => {
+		// Get linked Vehicle Stock record
+		frappe.db.get_doc("Vehicle Stock", frm.doc.vin_serial_no)
+			.then(stock_doc => {
 
-            let rows = stock_doc.table_pcgj || [];
-            if (rows.length === 0) {
-                return;
-            }
-			// Extract all warranty_odo_limit values from child table
-            let limits = rows.map(r => r.warranty_odo_limit);
+				let rows = stock_doc.table_pcgj || [];
+				if (rows.length === 0) {
+					return;
+				}
+				// Extract all warranty_odo_limit values from child table
+				let limits = rows.map(r => r.warranty_odo_limit);
 
-            // Find max value
-            let max_limit = Math.max(...limits);
+				// Find max value
+				let max_limit = Math.max(...limits);
 
-            let current_odo = frm.doc.odo_reading;
+				let current_odo = frm.doc.odo_reading;
 
-            if (!current_odo) {
-                frappe.msgprint("Please enter ODO Reading first.");
-                return;
-            }
+				if (!current_odo) {
+					frappe.msgprint("Please enter ODO Reading first.");
+					return;
+				}
 
-            // Compare current odo with max limit
-            if (current_odo > max_limit) {
-                frappe.msgprint("Odometer reading is outside the warranty limit!");
-            }
-        });
-    
+				// Compare current odo with max limit
+				if (current_odo > max_limit) {
+					frappe.msgprint("Odometer reading is outside the warranty limit!");
+				}
+			});
+
 
 		if (frm.is_new()) {
 			frappe.db
@@ -439,6 +442,24 @@ frappe.ui.form.on("Vehicles Warranty Claims", {
 				}
 			},
 		});
+
+
+		if (frm.doc.vin_serial_no) {
+			frappe.call({
+				method: "edp_online_vehicles.events.service_type.check_warranty_date",
+				args: {
+					vin: frm.doc.vin_serial_no,
+				},
+				callback(r) {
+					if (!r.message) return;
+
+					if (!r.message.is_valid) {
+						frappe.msgprint(
+							"Please note the selected vehicle falls outside the allocated warranty period parameters. Please contact Head Office for more information");
+					}
+				},
+			});
+		}
 	},
 });
 frappe.ui.form.on('Warranty Part Item', {
@@ -473,6 +494,10 @@ frappe.ui.form.on('Warranty Part Item', {
 				frm.refresh_field('part_items');
 			});
 		});
+
+		check_part_no_and_color(frm, row);
+
+
 	},
 	price(frm, cdt, cdn) {
 		calculate_part_sub_total(frm, "total_excl", "part_items");
@@ -537,51 +562,43 @@ const calculate_part_sub_total = (frm, field_name, table_name) => {
 	);
 };
 
-    // vin_serial_no: function(frm) {
+function set_row_color(frm, row, color) {
+	if (frm.fields_dict['part_items'] && frm.fields_dict['part_items'].grid) {
+		let grid = frm.fields_dict['part_items'].grid;
 
-    //     if (!frm.doc.vin_serial_no) return;
+		// Find the exact row by matching doc.name
+		let grid_row = grid.grid_rows.find(r => r.doc.name === row.name);
+		if (grid_row) {
+			$(grid_row.wrapper).css('background-color', color);
+		}
+	} else {
+		setTimeout(() => set_row_color(frm, row, color), 50);
+	}
+}
+function check_part_no_and_color(frm, row) {
+	if (!row.part_no) return;
 
-    //     frappe.db.get_doc("Vehicle Stock", frm.doc.vin_serial_no)
-    //     .then(stock_doc => {
+	frappe.db.get_list('Vehicles Warranty Plan Administration', { fields: ['name'], limit: 0 })
+		.then(plans => {
+			let promises = plans.map(p =>
+				frappe.db.get_doc('Vehicles Warranty Plan Administration', p.name)
+					.then(doc => doc.items || [])
+			);
 
-    //         let current_odo = frm.doc.odo_reading;
+			Promise.all(promises).then(all_items_arrays => {
+				let all_items = all_items_arrays.flatMap(arr => arr.map(i => i.item));
+				set_row_color(frm, row, all_items.includes(row.part_no) ? '' : '#E8A2A2');
+			});
+		});
+}
 
-    //         if (!current_odo) {
-    //             frappe.msgprint("Please enter ODO Reading first.");
-    //             return;
-    //         }
-
-    //         // ========== Child Table 1 ==========
-    //         let rows1 = stock_doc.table_pcgj || [];
-
-    //         if (rows1.length > 0) {
-    //             let limits1 = rows1.map(r => r.warranty_odo_limit);
-    //             let max1 = Math.max(...limits1);
-
-    //             if (current_odo > max1) {
-    //                 frappe.msgprint({
-    //                     title: "Warranty ODO Limit Exceeded",
-    //                     indicator: "red",
-    //                     message: `ODO Reading (${current_odo}) is greater than Warranty ODO Limit (${max1}) from child table PCGJ.`
-    //                 });
-    //             }
-    //         }
-
-    //         // ========== Child Table 2 ==========
-    //         let rows2 = stock_doc.table_gtny || [];
-
-    //         if (rows2.length > 0) {
-    //             let limits2 = rows2.map(r => r.odo_limit);
-    //             let max2 = Math.max(...limits2);
-
-    //             if (current_odo > max2) {
-    //                 frappe.msgprint({
-    //                     title: "ODO Limit (GTNY Table) Exceeded",
-    //                     indicator: "red",
-    //                     message: `ODO Reading (${current_odo}) is greater than ODO Limit (${max2}) from child table GTNY.`
-    //                 });
-    //             }
-    //         }
-
-    //     });
-    // }
+// Set row color (same as before)
+function set_row_color(frm, row, color) {
+	if (frm.fields_dict['part_items'] && frm.fields_dict['part_items'].grid) {
+		let grid = frm.fields_dict['part_items'].grid;
+		let grid_row = grid.grid_rows.find(r => r.doc.name === row.name);
+		if (grid_row) $(grid_row.wrapper).css('background-color', color);
+	} else {
+		setTimeout(() => set_row_color(frm, row, color), 50);
+	}
+}
