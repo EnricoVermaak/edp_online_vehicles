@@ -18,9 +18,7 @@ $(document).ready(function () {
 
 frappe.ui.form.on("Vehicles Warranty Claims", {
 	refresh(frm) {
-		frm.doc.part_items.forEach(function (row) {
-			check_part_no_and_color(frm, row);
-		});
+		setTimeout(() => reapply_all_row_colors(frm), 300);
 		frm.add_custom_button(
 			__("Sales Order"),
 			() => {
@@ -430,6 +428,7 @@ frappe.ui.form.on("Vehicles Warranty Claims", {
 		}
 	},
 	after_save(frm) {
+		setTimeout(() => reapply_all_row_colors(frm), 300);
 		frappe.call({
 			method: "edp_online_vehicles.events.change_vehicles_status.warranty_status_change",
 			args: {
@@ -454,12 +453,22 @@ frappe.ui.form.on("Vehicles Warranty Claims", {
 					if (!r.message) return;
 
 					if (!r.message.is_valid) {
+
+						if (frm.doc.type !== "Goodwill") {
+							console.log("type");
+
+							frm.set_value("type", "Goodwill");
+						}
+
 						frappe.msgprint(
-							"Please note the selected vehicle falls outside the allocated warranty period parameters. Please contact Head Office for more information");
+							"Please note the selected vehicle falls outside the allocated warranty period parameters. Please contact Head Office for more information"
+						);
 					}
+
 				},
 			});
-		}
+		};
+
 	},
 });
 frappe.ui.form.on('Warranty Part Item', {
@@ -468,10 +477,12 @@ frappe.ui.form.on('Warranty Part Item', {
 		let row = locals[cdt][cdn];
 		if (!row.part_no) return;
 
+		// ----------------------------------------
 		// 1) Get Standard Selling Price
+		// ----------------------------------------
 		frappe.db.get_list('Item Price', {
 			filters: {
-				item_code: row.part_no,       // FIXED
+				item_code: row.part_no,
 				price_list: 'Standard Selling'
 			},
 			limit: 1,
@@ -480,23 +491,22 @@ frappe.ui.form.on('Warranty Part Item', {
 
 			let standard_rate = prices.length ? prices[0].price_list_rate : 0;
 
+			// ----------------------------------------
 			// 2) Get Item Doc for custom GP
+			// ----------------------------------------
 			frappe.db.get_doc('Item', row.part_no).then(item_doc => {
 
 				let custom_gp = item_doc.custom_warranty_gp || 0;
 				let gp_percentage = custom_gp / 100;
-				// If custom_gp is percentage:
+
 				let price = standard_rate + (standard_rate * gp_percentage);
 
 				// Set price in child table
 				frappe.model.set_value(cdt, cdn, 'price', price);
-
 				frm.refresh_field('part_items');
 			});
 		});
-
-		check_part_no_and_color(frm, row);
-
+		validate_part_item(frm, row);
 
 	},
 	price(frm, cdt, cdn) {
@@ -505,11 +515,18 @@ frappe.ui.form.on('Warranty Part Item', {
 	qty(frm, cdt, cdn) {
 		calculate_part_sub_total(frm, "total_excl", "part_items");
 	},
-	part_items_remove(frm) {
+	part_items_remove(frm, cdt, cdn) {
 		calculate_part_sub_total(frm, "total_excl", "part_items");
-	}
+		let row = locals[cdt][cdn];
+		console.log("row has is removed");
+		setTimeout(() => reapply_colors(frm), 100);
+	},
+	part_items_add: function (frm, cdt, cdn) {
+		let row = locals[cdt][cdn];
+		set_row_color(frm, row, ""); // new row default color
+		setTimeout(() => reapply_colors(frm), 100);
+	},
 });
-
 frappe.ui.form.on("Extra Items", {
 	price_per_item_excl(frm, cdt, cdn) {
 		calculate_extra_total(frm, cdt, cdn);
@@ -565,31 +582,77 @@ const calculate_part_sub_total = (frm, field_name, table_name) => {
 function set_row_color(frm, row, color) {
 	if (frm.fields_dict['part_items'] && frm.fields_dict['part_items'].grid) {
 		let grid = frm.fields_dict['part_items'].grid;
-
-		// Find the exact row by matching doc.name
 		let grid_row = grid.grid_rows.find(r => r.doc.name === row.name);
-		if (grid_row) {
-			$(grid_row.wrapper).css('background-color', color);
-		}
+		if (grid_row) $(grid_row.wrapper).css('background-color', color);
 	} else {
 		setTimeout(() => set_row_color(frm, row, color), 50);
 	}
 }
-function check_part_no_and_color(frm, row) {
-	if (!row.part_no) return;
+// aa
+function reapply_colors(frm) {
+	if (!frm.doc.vin_serial_no) return;
 
-	frappe.db.get_list('Vehicles Warranty Plan Administration', { fields: ['name'], limit: 0 })
-		.then(plans => {
-			let promises = plans.map(p =>
-				frappe.db.get_doc('Vehicles Warranty Plan Administration', p.name)
-					.then(doc => doc.items || [])
-			);
+	frappe.call({
+		method: "edp_online_vehicles.events.odo.check_clor",
+		args: { vin: frm.doc.vin_serial_no },
+		callback: function (r) {
+			let allowed_items = r.message || [];
+			let grid = frm.fields_dict['part_items'].grid;
+			if (grid) {
+				grid.grid_rows.forEach(gr => {
+					const color = !gr.doc.part_no ? "" : allowed_items.includes(gr.doc.part_no) ? "" : "#ffdddd";
+					set_row_color(frm, gr.doc, color);
+				});
+			}
+		}
+	});
+}
+function reapply_all_row_colors(frm) {
+    if (!frm.doc.vin_serial_no) {
+        // Agar VIN nahi hai to sab rows ka color clear kar do
+        if (frm.fields_dict['part_items'] && frm.fields_dict['part_items'].grid) {
+            frm.fields_dict['part_items'].grid.grid_rows.forEach(gr => {
+                $(gr.wrapper).css('background-color', '');
+            });
+        }
+        return;
+    }
 
-			Promise.all(promises).then(all_items_arrays => {
-				let all_items = all_items_arrays.flatMap(arr => arr.map(i => i.item));
-				set_row_color(frm, row, all_items.includes(row.part_no) ? '' : '#E8A2A2');
-			});
-		});
+    // VIN hai to server se allowed items fetch karo aur color apply karo
+    frappe.call({
+        method: "edp_online_vehicles.events.odo.check_clor",
+        args: { vin: frm.doc.vin_serial_no },
+        callback: function (r) {
+            let allowed_items = r.message || [];
+            let grid = frm.fields_dict['part_items'].grid;
+            if (grid) {
+                grid.grid_rows.forEach(gr => {
+                    const part_no = gr.doc.part_no || "";
+                    const color = allowed_items.includes(part_no) ? "" : "#ffdddd";
+                    $(gr.wrapper).css('background-color', color);
+                });
+            }
+        }
+    });
+}
+	
+function validate_part_item(frm, row) {
+	if (!frm.doc.vin_serial_no || !row.part_no) return;
+
+	frappe.call({
+		method: "edp_online_vehicles.events.odo.check_clor",
+		args: { vin: frm.doc.vin_serial_no },
+		callback: function (r) {
+			let allowed_items = r.message || [];
+			console.log("Allowed items:", allowed_items);
+
+			if (!allowed_items.includes(row.part_no)) {
+				set_row_color(frm, row, "#ffdddd");
+			} else {
+				set_row_color(frm, row, "");
+			}
+		}
+	});
 }
 
 // Set row color (same as before)
@@ -602,3 +665,6 @@ function set_row_color(frm, row, color) {
 		setTimeout(() => set_row_color(frm, row, color), 50);
 	}
 }
+
+
+
