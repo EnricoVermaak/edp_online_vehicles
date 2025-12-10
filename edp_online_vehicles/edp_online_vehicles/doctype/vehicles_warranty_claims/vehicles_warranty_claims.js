@@ -331,6 +331,9 @@ frappe.ui.form.on("Vehicles Warranty Claims", {
 		previous_status_value = frm.doc.status;
 	},
 	vin_serial_no: function (frm) {
+		if(frm.doc.part_items && frm.doc.part_items.length > 0){
+		setTimeout(() => reapply_all_row_colors(frm), 300);
+		}
 
 		// if (frm.doc.odo_reading) {
 		// 	frappe.db.get_doc("Vehicle Stock", frm.doc.vin_serial_no)
@@ -468,7 +471,15 @@ frappe.ui.form.on("Vehicles Warranty Claims", {
 				},
 			});
 		};
+		frappe.db.get_doc("Vehicle Stock", frm.doc.vin_serial_no).then(vehicle => {
+			if (frm.doc.odo_reading > vehicle.warranty_km_hours_limit) {
+				frappe.msgprint(
+					"A Please note the selected vehicle falls outside the allocated warranty period parameters. Please contact Head Office for more information"
+				);
 
+
+			}
+		});
 	},
 });
 frappe.ui.form.on('Warranty Part Item', {
@@ -608,34 +619,34 @@ function reapply_colors(frm) {
 	});
 }
 function reapply_all_row_colors(frm) {
-    if (!frm.doc.vin_serial_no) {
-        // Agar VIN nahi hai to sab rows ka color clear kar do
-        if (frm.fields_dict['part_items'] && frm.fields_dict['part_items'].grid) {
-            frm.fields_dict['part_items'].grid.grid_rows.forEach(gr => {
-                $(gr.wrapper).css('background-color', '');
-            });
-        }
-        return;
-    }
+	if (!frm.doc.vin_serial_no) {
+		// Agar VIN nahi hai to sab rows ka color clear kar do
+		if (frm.fields_dict['part_items'] && frm.fields_dict['part_items'].grid) {
+			frm.fields_dict['part_items'].grid.grid_rows.forEach(gr => {
+				$(gr.wrapper).css('background-color', '');
+			});
+		}
+		return;
+	}
 
-    // VIN hai to server se allowed items fetch karo aur color apply karo
-    frappe.call({
-        method: "edp_online_vehicles.events.odo.check_clor",
-        args: { vin: frm.doc.vin_serial_no },
-        callback: function (r) {
-            let allowed_items = r.message || [];
-            let grid = frm.fields_dict['part_items'].grid;
-            if (grid) {
-                grid.grid_rows.forEach(gr => {
-                    const part_no = gr.doc.part_no || "";
-                    const color = allowed_items.includes(part_no) ? "" : "#ffdddd";
-                    $(gr.wrapper).css('background-color', color);
-                });
-            }
-        }
-    });
+	// VIN hai to server se allowed items fetch karo aur color apply karo
+	frappe.call({
+		method: "edp_online_vehicles.events.odo.check_clor",
+		args: { vin: frm.doc.vin_serial_no },
+		callback: function (r) {
+			let allowed_items = r.message || [];
+			let grid = frm.fields_dict['part_items'].grid;
+			if (grid) {
+				grid.grid_rows.forEach(gr => {
+					const part_no = gr.doc.part_no || "";
+					const color = allowed_items.includes(part_no) ? "" : "#ffdddd";
+					$(gr.wrapper).css('background-color', color);
+				});
+			}
+		}
+	});
 }
-	
+
 function validate_part_item(frm, row) {
 	if (!frm.doc.vin_serial_no || !row.part_no) return;
 
