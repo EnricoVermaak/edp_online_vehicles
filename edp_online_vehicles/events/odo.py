@@ -18,3 +18,29 @@ def check_odo_limit(vin_serial_no, odo_reading):
         frappe.msgprint("Odometer reading is outside the warranty limit!")
 
     return is_valid
+
+@frappe.whitelist()
+def check_clor(vin):
+    if not vin:
+        return []
+
+    linked = frappe.get_all(
+        "Vehicle Linked Warranty Plan",
+        filters={"vin_serial_no": vin},
+        fields=["warranty_plan"]
+    )
+
+    if not linked:
+        return []
+
+    warranty_plan = linked[0].warranty_plan
+    plan_doc = frappe.get_doc(
+        "Vehicles Warranty Plan Administration",
+        warranty_plan
+    )
+
+    items_list = []
+    for row in plan_doc.items:
+        items_list.append(row.item)
+
+    return items_list
