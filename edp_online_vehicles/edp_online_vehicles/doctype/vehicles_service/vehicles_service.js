@@ -22,13 +22,6 @@ $(document).ready(function () {
 
 frappe.ui.form.on("Vehicles Service", {
 	service_type(frm) {
-		// CRITICAL: Mark that user manually selected service_type
-		if (frm.doc.service_type) {
-			frm._user_set_service_type = true;
-			frm._preserved_service_type = frm.doc.service_type;
-			frm._service_type_selected_time = Date.now();
-		}
-		
 		console.log(frm.doc.dealer);
 
 
@@ -869,45 +862,6 @@ frappe.ui.form.on("Vehicles Service", {
 		});
 	},
 	vin_serial_no(frm, dt, dn) {
-		// STEP 1: Preserve user-entered values BEFORE any operations
-		let preserved_odo = frm.doc.odo_reading_hours || null;
-		let preserved_service_type = frm.doc.service_type || null;
-		
-		// Try to get from input field if doc doesn't have it yet
-		if (!preserved_odo && frm.fields_dict.odo_reading_hours && frm.fields_dict.odo_reading_hours.$input) {
-			let input_val = frm.fields_dict.odo_reading_hours.$input.val();
-			if (input_val && parseFloat(input_val) > 0) {
-				preserved_odo = parseFloat(input_val);
-			}
-		}
-		
-		if (!preserved_service_type && frm.fields_dict.service_type && frm.fields_dict.service_type.$input) {
-			let input_val = frm.fields_dict.service_type.$input.val();
-			if (input_val) {
-				preserved_service_type = input_val;
-			}
-		}
-		
-		// Use existing preserved value if user already set it
-		if (frm._preserved_service_type && frm._user_set_service_type) {
-			preserved_service_type = frm._preserved_service_type;
-		}
-		
-		// Store at form level for async callbacks
-		frm._preserved_odo = preserved_odo;
-		frm._preserved_service_type = preserved_service_type;
-		
-		// Mark as user-set if it exists and is NOT "-Other" (which is auto-set by system)
-		// Also check if it was recently selected (within last 3 seconds)
-		let recently_selected = frm._service_type_selected_time && 
-		                        (Date.now() - frm._service_type_selected_time) < 3000;
-		
-		if (preserved_service_type && !preserved_service_type.endsWith("-Other")) {
-			frm._user_set_service_type = true;
-		} else if (recently_selected && preserved_service_type) {
-			frm._user_set_service_type = true;
-		}
-		
 		if (frm.is_new()) {
 			frappe.db
 				.get_list("Vehicle Stock", {
@@ -948,14 +902,8 @@ frappe.ui.form.on("Vehicles Service", {
 				});
 		}
 
-		// STEP 2: Only clear odo_reading_hours if user didn't enter a value
-		if (!preserved_odo || preserved_odo === 0) {
-			frm.set_value("odo_reading_hours", null);
-		}
+		frm.set_value("odo_reading_hours", null);
 
-		// STEP 3: Run business logic checks (service date and warranty date)
-		// These will auto-set service_type to "-Other" if dates are invalid
-		// BUT they will respect user selections
 		if (frm.doc.vin_serial_no) {
 			frappe.call({
 				method: "edp_online_vehicles.events.service_type.check_service_date",
@@ -966,20 +914,9 @@ frappe.ui.form.on("Vehicles Service", {
 					if (!r.message) return;
 
 					if (!r.message.is_valid) {
-						// CRITICAL: Don't overwrite if user manually selected service_type
-						// Check multiple conditions to be absolutely sure
-						let user_selected = frm._user_set_service_type || 
-						                   (frm._service_type_selected_time && 
-						                    (Date.now() - frm._service_type_selected_time) < 3000) ||
-						                   (frm.doc.service_type && !frm.doc.service_type.endsWith("-Other")) ||
-						                   (frm._preserved_service_type && !frm._preserved_service_type.endsWith("-Other"));
-						
-						if (user_selected) {
-							return; // Respect user selection
-						}
-						
 						if (frm.doc.service_type && frm.doc.service_type.endsWith("-Other")) {
-							return; // Already set to Other
+							console.log("Already Other type from previous logic... skipping (service date).");
+							return;
 						}
 						frappe.msgprint(
 							"Please note the selected vehicle falls outside the allocated service period parameters. Please contact Head Office for more information."
@@ -1017,21 +954,11 @@ frappe.ui.form.on("Vehicles Service", {
 					if (!r.message) return;
 
 					if (!r.message.is_valid) {
-						// CRITICAL: Don't overwrite if user manually selected service_type
-						// Check multiple conditions to be absolutely sure
-						let user_selected = frm._user_set_service_type || 
-						                   (frm._service_type_selected_time && 
-						                    (Date.now() - frm._service_type_selected_time) < 3000) ||
-						                   (frm.doc.service_type && !frm.doc.service_type.endsWith("-Other")) ||
-						                   (frm._preserved_service_type && !frm._preserved_service_type.endsWith("-Other"));
-						
-						if (user_selected) {
-							return; // Respect user selection
-						}
 
 						// 👉 Ignore only if service_type ends with "-Other"
 						if (frm.doc.service_type && frm.doc.service_type.endsWith("-Other")) {
-							return; // Already set to Other
+							console.log("Already Other type... skipping update.");
+							return;
 						}
 
 						frappe.msgprint(
@@ -1060,33 +987,6 @@ frappe.ui.form.on("Vehicles Service", {
 			});
 		}
 
-		// STEP 3: Restore preserved values after form refresh completes
-		if (preserved_odo && preserved_odo > 0) {
-			setTimeout(() => {
-				if (frm.doc.vin_serial_no && (!frm.doc.odo_reading_hours || frm.doc.odo_reading_hours !== preserved_odo)) {
-					frm.set_value("odo_reading_hours", preserved_odo);
-				}
-			}, 300);
-		}
-		
-		// Restore service_type with multiple attempts to catch form refreshes
-		if (preserved_service_type && frm._user_set_service_type) {
-			let restore_attempts = [100, 300, 500, 1000];
-			restore_attempts.forEach((delay) => {
-				setTimeout(() => {
-					if (frm.doc.vin_serial_no && (!frm.doc.service_type || frm.doc.service_type !== preserved_service_type)) {
-						// Only restore if user hasn't selected a different one
-						let current_input = frm.fields_dict.service_type && frm.fields_dict.service_type.$input ? 
-						                   frm.fields_dict.service_type.$input.val() : null;
-						if (!current_input || current_input === preserved_service_type) {
-							frm.set_value("service_type", preserved_service_type);
-							frm._user_set_service_type = true;
-							frm._preserved_service_type = preserved_service_type;
-						}
-					}
-				}, delay);
-			});
-		}
 
 	},
 
