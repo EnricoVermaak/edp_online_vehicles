@@ -650,7 +650,7 @@
   },
   {
    "fieldname": "original_purchasing_dealer",
-   "fieldtype": "Link",
+   "fieldtype": "Data",
    "label": "Original Purchasing Dealer",
    "options": "Company"
   },
@@ -760,6 +760,7 @@
    "permlevel": 2
   }
  ],
+ "grid_page_length": 50,
  "image_field": "image",
  "index_web_pages_for_search": 1,
  "links": [
@@ -804,7 +805,7 @@
    "link_fieldname": "vin_serial_no"
   }
  ],
- "modified": "2025-11-27 12:08:12.073774",
+ "modified": "2025-12-11 09:58:00.483426",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicle Stock",
@@ -837,6 +838,7 @@
  ],
  "quick_entry": 1,
  "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
  "search_fields": "customer, model, colour, stock_no, alternative_stock_no",
  "show_title_field_in_link": 1,
  "sort_field": "modified",
