@@ -1141,10 +1141,10 @@ frappe.ui.form.on("Vehicles Service", {
 
 												frappe.model.set_value(dt, dn, "service_type", `SS-${model}-Other`);
 											});
-										frm.set_value(
-											"odo_reading_hours",
-											null,
-										);
+										// frm.set_value(
+										// 	"odo_reading_hours",
+										// 	null,
+										// );
 										frappe.throw(
 											"The entered odometer reading cannot be lower than the previous service reading of " +
 											biggest_reading +
