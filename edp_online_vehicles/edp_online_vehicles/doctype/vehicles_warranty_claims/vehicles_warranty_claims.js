@@ -429,6 +429,29 @@ frappe.ui.form.on("Vehicles Warranty Claims", {
 					}
 				});
 		}
+
+		// Validate warranty period when VIN changes
+		if (frm.doc.vin_serial_no && frm.doc.type !== "Goodwill") {
+			frappe.call({
+				method: "edp_online_vehicles.events.service_type.check_warranty_date",
+				args: {
+					vin: frm.doc.vin_serial_no,
+				},
+				callback(r) {
+					if (!r.message) return;
+
+					if (!r.message.is_valid) {
+						if (frm.doc.type !== "Goodwill") {
+							frm.set_value("type", "Goodwill");
+						}
+
+						frappe.msgprint(
+							"Please note the selected vehicle falls outside the allocated warranty period parameters. Please contact Head Office for more information"
+						);
+					}
+				},
+			});
+		}
 	},
 	after_save(frm) {
 		setTimeout(() => reapply_all_row_colors(frm), 300);
