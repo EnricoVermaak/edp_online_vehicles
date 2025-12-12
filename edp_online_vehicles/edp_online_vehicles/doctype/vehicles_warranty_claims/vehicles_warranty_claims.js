@@ -536,8 +536,11 @@ frappe.ui.form.on('Warranty Part Item', {
 				let price = standard_rate + (standard_rate * gp_percentage);
 
 				// Set price in child table
-				frappe.model.set_value(cdt, cdn, 'price', price);
-				frm.refresh_field('part_items');
+				frappe.model.set_value(cdt, cdn, 'price', price).then(() => {
+					frm.refresh_field('part_items');
+					// Recalculate total after price is set
+					calculate_part_sub_total(frm, "total_excl", "part_items");
+				});
 			});
 		});
 		validate_part_item(frm, row);
