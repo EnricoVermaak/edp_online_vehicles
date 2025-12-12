@@ -330,6 +330,12 @@ frappe.ui.form.on("Vehicles Warranty Claims", {
 		}
 		previous_status_value = frm.doc.status;
 	},
+	odo_reading: function (frm) {
+		// Validate Odo Reading when it changes (if VIN is set)
+		if (frm.doc.vin_serial_no) {
+			validate_odo_reading(frm);
+		}
+	},
 	vin_serial_no: function (frm) {
 		if (frm.doc.part_items && frm.doc.part_items.length > 0) {
 			setTimeout(() => reapply_all_row_colors(frm), 300);
@@ -362,32 +368,10 @@ frappe.ui.form.on("Vehicles Warranty Claims", {
 		// }
 		if (!frm.doc.vin_serial_no) return;
 
-		// Get linked Vehicle Stock record
-		frappe.db.get_doc("Vehicle Stock", frm.doc.vin_serial_no)
-			.then(stock_doc => {
-
-				let rows = stock_doc.table_pcgj || [];
-				if (rows.length === 0) {
-					return;
-				}
-				// Extract all warranty_odo_limit values from child table
-				let limits = rows.map(r => r.warranty_odo_limit);
-
-				// Find max value
-				let max_limit = Math.max(...limits);
-
-				let current_odo = frm.doc.odo_reading;
-
-				if (!current_odo) {
-					frappe.msgprint("Please enter ODO Reading first.");
-					return;
-				}
-
-				// Compare current odo with max limit
-				if (current_odo > max_limit) {
-					frappe.msgprint("Odometer reading is outside the warranty limit!");
-				}
-			});
+		// Validate Odo Reading when VIN changes (if Odo is already set)
+		if (frm.doc.odo_reading) {
+			validate_odo_reading(frm);
+		}
 
 
 		if (frm.is_new()) {
@@ -491,20 +475,40 @@ frappe.ui.form.on("Vehicles Warranty Claims", {
 
 				},
 			});
-			frappe.db.get_doc("Vehicle Stock", frm.doc.vin_serial_no).then(vehicle => {
-				if (frm.doc.odo_reading > vehicle.warranty_km_hours_limit) {
-					if (frm.doc.type !== "Goodwill") {
-						frm.set_value("type", "Goodwill");
-					}
-
-					frappe.msgprint(
-						"Please note the selected vehicle falls outside the allocated warranty period parameters. Please contact Head Office for more information"
-					);
-				}
-			});
 		};
 	},
 });
+
+// Function to validate Odo Reading against warranty KM limit
+function validate_odo_reading(frm) {
+	// Need both VIN and Odo Reading to validate
+	if (!frm.doc.vin_serial_no || !frm.doc.odo_reading) {
+		return;
+	}
+
+	frappe.db.get_doc("Vehicle Stock", frm.doc.vin_serial_no).then(vehicle => {
+		if (!vehicle.warranty_km_hours_limit) {
+			// No warranty KM limit set, skip validation
+			return;
+		}
+
+		if (frm.doc.odo_reading > vehicle.warranty_km_hours_limit) {
+			// Odo exceeds limit - change to Goodwill (only if not already Goodwill)
+			if (frm.doc.type !== "Goodwill") {
+				frm.set_value("type", "Goodwill");
+				frappe.msgprint({
+					message: "Please note the selected vehicle Odo Reading falls outside the allocated warranty plan parameters. Please contact Head Office for more information",
+					indicator: "orange"
+				});
+			}
+		} else {
+			// Odo is within limit - change back to Normal if currently Goodwill
+			if (frm.doc.type === "Goodwill") {
+				frm.set_value("type", "Normal");
+			}
+		}
+	});
+}
 frappe.ui.form.on('Warranty Part Item', {
 	part_no: function (frm, cdt, cdn) {
 
