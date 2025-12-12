@@ -531,6 +531,16 @@ frappe.ui.form.on('Warranty Part Item', {
 			frappe.db.get_doc('Item', row.part_no).then(item_doc => {
 
 				let custom_gp = item_doc.custom_warranty_gp || 0;
+				
+				// Check if GP value is 0
+				if (custom_gp === 0 || !custom_gp) {
+					frappe.msgprint({
+						title: __('Warning'),
+						message: __('Warranty GP% is not set for this item. The price will be calculated without GP markup.'),
+						indicator: 'orange'
+					});
+				}
+				
 				let gp_percentage = custom_gp / 100;
 
 				let price = standard_rate + (standard_rate * gp_percentage);
