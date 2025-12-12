@@ -43,8 +43,6 @@ frappe.ui.form.on("Vehicles Service", {
 			},
 			callback: function (r) {
 				console.log(r);
-				console.log("hello");
-
 
 				if (!r.message) return;
 
@@ -1093,7 +1091,6 @@ frappe.ui.form.on("Vehicles Service", {
 										// }
 
 									} else if (frm.doc.odo_reading_hours > max_odo_value) {
-											console.log("Ahmad");
 
 
 										// if (!odo_limit_message_shown) {
@@ -1148,10 +1145,10 @@ frappe.ui.form.on("Vehicles Service", {
 
 												frappe.model.set_value(dt, dn, "service_type", `SS-${model}-Other`);
 											});
-										frm.set_value(
-											"odo_reading_hours",
-											null,
-										);
+										// frm.set_value(
+										// 	"odo_reading_hours",
+										// 	null,
+										// );
 										frappe.throw(
 											"The entered odometer reading cannot be lower than the previous service reading of " +
 											biggest_reading +
