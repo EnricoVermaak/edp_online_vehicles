@@ -320,77 +320,77 @@ frappe.ui.form.on("Vehicles Service", {
 			}
 		}
 
-		let debounceTimeout;
-		$(document).on(
-			"blur",
-			'[data-fieldname="odo_reading_hours"]',
-			function () {
-				clearTimeout(debounceTimeout);
-				debounceTimeout = setTimeout(() => {
+		// let debounceTimeout;
+		// $(document).on(
+		// 	"blur",
+		// 	'[data-fieldname="odo_reading_hours"]',
+		// 	function () {
+		// 		clearTimeout(debounceTimeout);
+		// 		debounceTimeout = setTimeout(() => {
 
-					if (!frm.doc.service_type) {
+		// 			if (!frm.doc.service_type) {
 
-						frm.set_value("odo_reading_hours", 0);
+		// 				frm.set_value("odo_reading_hours", 0);
 
-						if (!odo_limit_message_shown) {
-							odo_limit_message_shown = true;
-							frappe.msgprint("Please select a service type before setting the Odo Reading");
-						}
+		// 				if (!odo_limit_message_shown) {
+		// 					odo_limit_message_shown = true;
+		// 					frappe.msgprint("Please select a service type before setting the Odo Reading");
+		// 				}
 
-						return;
-					}
+		// 				return;
+		// 			}
 
-					if (frm.doc.odo_reading_hours > 0) {
+		// 			if (frm.doc.odo_reading_hours > 0) {
 
-						frappe.db
-							.get_value("Service Schedules", frm.doc.service_type, "interval")
-							.then((r) => {
-								let interval = r.message.interval;
+		// 				frappe.db
+		// 					.get_value("Service Schedules", frm.doc.service_type, "interval")
+		// 					.then((r) => {
+		// 						let interval = r.message.interval;
 
-								frappe.db
-									.get_value("Model Administration", frm.doc.model, [
-										"service_type_max_allowance",
-										"service_type_minimum_allowance",
-									])
-									.then((r) => {
-										let max_allowance = r.message.service_type_max_allowance;
-										let min_allowance = r.message.service_type_minimum_allowance;
+		// 						frappe.db
+		// 							.get_value("Model Administration", frm.doc.model, [
+		// 								"service_type_max_allowance",
+		// 								"service_type_minimum_allowance",
+		// 							])
+		// 							.then((r) => {
+		// 								let max_allowance = r.message.service_type_max_allowance;
+		// 								let min_allowance = r.message.service_type_minimum_allowance;
 
-										let min_odo_value = parseInt(interval) - parseInt(min_allowance);
-										let max_odo_value = parseInt(interval) + parseInt(max_allowance);
+		// 								let min_odo_value = parseInt(interval) - parseInt(min_allowance);
+		// 								let max_odo_value = parseInt(interval) + parseInt(max_allowance);
 
-										// 🚨 Show message ONLY ONE TIME
-										if (frm.doc.odo_reading_hours < min_odo_value) {
+		// 								// 🚨 Show message ONLY ONE TIME
+		// 								if (frm.doc.odo_reading_hours < min_odo_value) {
 
-											if (!odo_limit_message_shown) {
-												odo_limit_message_shown = true;
+		// 									if (!odo_limit_message_shown) {
+		// 										odo_limit_message_shown = true;
 
-												frappe.db.get_value("Vehicle Stock", frm.doc.vin_serial_no, "model")
-													.then((r) => {
-														let model = r.message.model
-														frappe.model.set_value(dt, dn, "service_type", `SS-${model}-Other`);
-													})
-												frappe.msgprint(
-													"Your vehicle hasn't reached its service threshold yet. Please check back when it meets the minimum mileage requirement."
-												);
-											}
+		// 										frappe.db.get_value("Vehicle Stock", frm.doc.vin_serial_no, "model")
+		// 											.then((r) => {
+		// 												let model = r.message.model
+		// 												frappe.model.set_value(dt, dn, "service_type", `SS-${model}-Other`);
+		// 											})
+		// 										frappe.msgprint(
+		// 											"Your vehicle hasn't reached its service threshold yet. Please check back when it meets the minimum mileage requirement."
+		// 										);
+		// 									}
 
-										} else if (frm.doc.odo_reading_hours > max_odo_value) {
+		// 								} else if (frm.doc.odo_reading_hours > max_odo_value) {
 
-											if (!odo_limit_message_shown) {
-												odo_limit_message_shown = true;
-												frappe.msgprint(
-													"Your vehicle's mileage has exceeded the current service range. Please select the upcoming service schedule."
-												);
-											}
-										}
-									});
-							});
-					}
+		// 									if (!odo_limit_message_shown) {
+		// 										odo_limit_message_shown = true;
+		// 										frappe.msgprint(
+		// 											"Your vehicle's mileage has exceeded the current service range. Please select the upcoming service schedule."
+		// 										);
+		// 									}
+		// 								}
+		// 							});
+		// 					});
+		// 			}
 
-				}, 20);
-			}
-		);
+		// 		}, 20);
+		// 	}
+		// );
 
 
 		frm.add_custom_button(
@@ -1034,76 +1034,81 @@ frappe.ui.form.on("Vehicles Service", {
 			frm.refresh_field("standard_checklist");
 		}
 	},
-	
-	odo_reading_hours(frm, dt, dn) {
-		// let debounceTimeout;
-		// clearTimeout(debounceTimeout);
 
-		// debounceTimeout = setTimeout(() => {
+	odo_reading_hours:function(frm, dt, dn) {
+		let debounceTimeout;
 
-		// 	if (!frm.doc.service_type) {
+		// function () {
+			clearTimeout(debounceTimeout);
+			debounceTimeout = setTimeout(() => {
 
-		// 		frm.set_value("odo_reading_hours", 0);
+				if (!frm.doc.service_type) {
 
-		// 		if (!odo_limit_message_shown) {
-		// 			odo_limit_message_shown = true;
-		// 			frappe.msgprint("Please select a service type before setting the Odo Reading");
-		// 		}
+					frm.set_value("odo_reading_hours", 0);
 
-		// 		return;
-		// 	}
+					if (!odo_limit_message_shown) {
+						odo_limit_message_shown = true;
+						frappe.msgprint("Please select a service type before setting the Odo Reading");
+					}
 
-		// 	if (frm.doc.odo_reading_hours > 0) {
+					return;
+				}
 
-		// 		frappe.db
-		// 			.get_value("Service Schedules", frm.doc.service_type, "interval")
-		// 			.then((r) => {
-		// 				let interval = r.message.interval;
+				if (frm.doc.odo_reading_hours > 0) {
+					
 
-		// 				frappe.db
-		// 					.get_value("Model Administration", frm.doc.model, [
-		// 						"service_type_max_allowance",
-		// 						"service_type_minimum_allowance",
-		// 					])
-		// 					.then((r) => {
-		// 						let max_allowance = r.message.service_type_max_allowance;
-		// 						let min_allowance = r.message.service_type_minimum_allowance;
+					frappe.db
+						.get_value("Service Schedules", frm.doc.service_type, "interval")
+						.then((r) => {
+							let interval = r.message.interval;
 
-		// 						let min_odo_value = parseInt(interval) - parseInt(min_allowance);
-		// 						let max_odo_value = parseInt(interval) + parseInt(max_allowance);
+							frappe.db
+								.get_value("Model Administration", frm.doc.model, [
+									"service_type_max_allowance",
+									"service_type_minimum_allowance",
+								])
+								.then((r) => {
+									let max_allowance = r.message.service_type_max_allowance;
+									let min_allowance = r.message.service_type_minimum_allowance;
 
-		// 						// 🚨 Show message ONLY ONE TIME
-		// 						if (frm.doc.odo_reading_hours < min_odo_value) {
-		// 							console.log("Ahmed saeed - below min");
+									let min_odo_value = parseInt(interval) - parseInt(min_allowance);
+									let max_odo_value = parseInt(interval) + parseInt(max_allowance);
 									
 
-		// 							if (!odo_limit_message_shown) {
-		// 								odo_limit_message_shown = true;
+									// 🚨 Show message ONLY ONE TIME
+									if (frm.doc.odo_reading_hours < min_odo_value) {
 
-		// 								frappe.db.get_value("Vehicle Stock", frm.doc.vin_serial_no, "model")
-		// 									.then((r) => {
-		// 										let model = r.message.model
-		// 										frappe.model.set_value(dt, dn, "service_type", `SS-${model}-Other`);
-		// 									})
-		// 								frappe.msgprint(
-		// 									"Your vehicle hasn't reached its service threshold yet. Please check back when it meets the minimum mileage requirement."
-		// 								);
-		// 							}
+										// if (!odo_limit_message_shown) {
+											odo_limit_message_shown = true;
+											
 
-		// 						} else if (frm.doc.odo_reading_hours > max_odo_value) {
+											frappe.db.get_value("Vehicle Stock", frm.doc.vin_serial_no, "model")
+												.then((r) => {
+													let model = r.message.model
+													frappe.model.set_value(dt, dn, "service_type", `SS-${model}-Other`);
+												})
+											frappe.msgprint(
+												"Your vehicle hasn't reached its service threshold yet. Please check back when it meets the minimum mileage requirement."
+											);
+										// }
 
-		// 							if (!odo_limit_message_shown) {
-		// 								odo_limit_message_shown = true;
-		// 								frappe.msgprint(
-		// 									"Your vehicle's mileage has exceeded the current service range. Please select the upcoming service schedule."
-		// 								);
-		// 							}
-		// 						}
-		// 					});
-		// 			});
-		// 	}
+									} else if (frm.doc.odo_reading_hours > max_odo_value) {
+											console.log("Ahmad");
 
-		// }, 20);
+
+										// if (!odo_limit_message_shown) {
+											odo_limit_message_shown = true;
+											frappe.msgprint(
+												"Your vehicle's mileage has exceeded the current service range. Please select the upcoming service schedule."
+											);
+										// }
+									}
+								});
+						});
+				}
+
+			}, 20);
+		// }
 		if (frm.doc.odo_reading_hours) {
 			frappe.db
 				.get_single_value(
