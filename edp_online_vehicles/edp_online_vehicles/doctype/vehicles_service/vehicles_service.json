@@ -62,7 +62,7 @@
   "start_date",
   "column_break_fabh",
   "end_date",
-  "inspection_tab",
+  "section_break_lfbu",
   "inspection_template",
   "inspection_items",
   "parts_tab",
@@ -464,11 +464,6 @@
    "read_only": 1
   },
   {
-   "fieldname": "inspection_tab",
-   "fieldtype": "Tab Break",
-   "label": "Inspection"
-  },
-  {
    "fieldname": "inspection_template",
    "fieldtype": "Link",
    "label": "Inspection Template",
@@ -783,6 +778,10 @@
    "label": "System Status",
    "options": "Conditionally Approved\nConditionally Declined",
    "read_only": 1
+  },
+  {
+   "fieldname": "section_break_lfbu",
+   "fieldtype": "Section Break"
   }
  ],
  "index_web_pages_for_search": 1,
@@ -802,7 +801,7 @@
    "link_fieldname": "services"
   }
  ],
- "modified": "2025-11-20 08:23:00.569205",
+ "modified": "2025-12-17 14:26:05.735928",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicles Service",
