@@ -5,6 +5,7 @@ import frappe
 from frappe.model.document import Document
 from frappe.utils import get_link_to_form
 
+
 class VehicleServiceBooking(Document):
 	pass
 
@@ -12,13 +13,32 @@ class VehicleServiceBooking(Document):
 @frappe.whitelist()
 def create_service_from_booking(booking_name):
 	"""
-	Create a Vehicle Service document using data from Vehicle Service Booking.
+	Create Vehicle Service from Booking
+	Add tag if Odo Reading is missing
 	"""
+
 	try:
-		# Get booking document
 		booking = frappe.get_doc("Vehicle Service Booking", booking_name)
 
-		# Create a new Vehicle Service document
+		# 🔍 Check if service already exists for this booking
+		existing_service = frappe.db.get_value(
+			"Vehicles Service",
+			{"booking_name": booking.name},
+			"name"
+		)
+		
+
+		# 🟢 IF SERVICE ALREADY EXISTS
+		if existing_service:
+			service = frappe.get_doc("Vehicles Service", existing_service)
+			if booking.odo_reading_hours:
+				service.odo_reading_hours = booking.odo_reading_hours
+				service.remove_tag("Odo Reading Missing")
+				service.save(ignore_permissions=True)
+
+			return service.name
+
+		# 🔵 CREATE NEW SERVICE
 		service = frappe.get_doc({
 			"doctype": "Vehicles Service",
 			"requested_booking_date_time": booking.requested_booking_date_time,
@@ -33,24 +53,25 @@ def create_service_from_booking(booking_name):
 			"customer_name": booking.customer_full_name,
 			"mobile": booking.mobile,
 			"terms_and_conditions": booking.service_notes,
+			"job_card_no": "a122", 
+			 "booking_name":booking.name # Placeholder, to be updated later
 		})
 
-		# Save new document
-		service.insert(ignore_permissions=True, ignore_mandatory=True, ignore_links=True)
-		frappe.db.commit()
+		service.insert(ignore_permissions=True)
 
-		# Create clickable link using frappe.utils.get_link_to_form
-		link = get_link_to_form("Vehicles Service", service.name, service.name)
+		# 🔴 ADD TAG IF ODO IS MISSING
+		if not booking.odo_reading_hours:
+			service.add_tag("Odo Reading Missing")
 
-		# Show popup message with clickable link
+		link = get_link_to_form("Vehicles Service", service.name)
+
 		frappe.msgprint(
-			msg=f"✅ Vehicle Service {link} created from Booking ",
-			title="Service Created"
+			f"✅ Vehicle Service created: {link}",
+			title="Success"
 		)
 
 		return service.name
 
-	except Exception as e:
-		frappe.log_error(frappe.get_traceback(), "create_service_from_booking Error")
-		frappe.throw(f"Error while creating service: {str(e)}")
-
+	except Exception:
+		frappe.log_error(frappe.get_traceback(), "Create Service From Booking Error")
+		frappe.throw("Error while creating Vehicle Service")
