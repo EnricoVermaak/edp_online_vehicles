@@ -1751,22 +1751,19 @@ frappe.ui.form.on("Vehicles Order Item", {
 	model: function (frm, cdt, cdn) {
 
 		var row = locals[cdt][cdn];
+
 		if (row.model) {
-			frappe.db.get_value(
-				'Model Colour',
-				{ model: row.model, default: 1 },
-				'colour'
-			).then(r => {
-				let colour = r.message.colour
-				console.log("color gh", colour);
-				if (r.message && r.message.colour) {
+			frappe.db.get_value('Model Colour', { model: row.model, default: 1 }, 'name').then(r => {
+				let colour = r.message.name
+				
+				if (r.message && r.message.name) {
 					frappe.model.set_value(cdt, cdn, "colour", colour);
-					frm.refresh_field("vehicles_basket");
 				} else {
 					frappe.model.set_value(cdt, cdn, "colour", '');
 				}
 			});
-		} 
+		}
+
 		if (row.place_back_order) {
 			frappe.model.set_value(cdt, cdn, "place_back_order", 0);
 		}
