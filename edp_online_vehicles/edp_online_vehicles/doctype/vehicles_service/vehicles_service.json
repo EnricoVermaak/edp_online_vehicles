@@ -117,7 +117,8 @@
   "total_extras_excl",
   "show_prices_for_vehicles_service",
   "attach_document_tab",
-  "attach_documents"
+  "attach_documents",
+  "booking_name"
  ],
  "fields": [
   {
@@ -782,6 +783,12 @@
   {
    "fieldname": "section_break_lfbu",
    "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "booking_name",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "Booking Name"
   }
  ],
  "index_web_pages_for_search": 1,
@@ -801,7 +808,7 @@
    "link_fieldname": "services"
   }
  ],
- "modified": "2025-12-17 14:26:05.735928",
+ "modified": "2025-12-17 22:57:07.464611",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicles Service",
