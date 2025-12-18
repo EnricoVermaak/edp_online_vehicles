@@ -21,27 +21,31 @@ $(document).ready(function () {
 });
 
 frappe.ui.form.on("Vehicles Service", {
-	service_status: function (frm) {
-		if (!frm.doc.service_status) return;
+    service_status: function(frm) {
 
-		// Clear existing child table first
-		// frm.clear_table('attach_documents');
+        if (!frm.doc.service_status) {
+            frm.refresh_field('attach_documents');
+            return;
+        }
 
-		// Fetch the selected Service Status document
-		frappe.db.get_doc('Service Status', frm.doc.service_status)
-			.then(status_doc => {
-				if (status_doc.documents && status_doc.documents.length) {
-					status_doc.documents.forEach(doc => {
-						if (doc.mandatory === 'Yes') {
-							let child = frm.add_child('attach_documents');
-							child.document_name = doc.document_name;
-							child.mandatory = doc.mandatory;
-						}
-					});
-					frm.refresh_field('attach_documents');
-				}
-			});
-	},
+        frappe.db.get_doc('Service Status', frm.doc.service_status)
+            .then(status_doc => {
+                let mandatory_names = [];
+
+                if (status_doc.documents) {
+                    status_doc.documents.forEach(doc => {
+                        if (doc.mandatory === 'Yes') {
+                            let row = frm.add_child('attach_documents');
+                            row.document_name = doc.document_name;
+                            mandatory_names.push(doc.document_name);
+                        }
+                    });
+                }
+
+                frm.refresh_field('attach_documents');
+                frm.doc.__mandatory_names = mandatory_names;
+            });
+    },
 	service_type(frm) {
 		console.log(frm.doc.dealer);
 
@@ -1197,6 +1201,47 @@ frappe.ui.form.on("Vehicles Service", {
 	},
 
 	before_save: async function (frm) {
+		let mandatory = frm.doc.__mandatory_names;
+		let current_names = (frm.doc.attach_documents || [])
+			.map(row => row.document_name?.trim())
+			.filter(Boolean);
+
+		mandatory.forEach(name => {
+			if (!current_names.includes(name)) {
+				frappe.throw(
+					`Mandatory document name cannot be changed or replaced: "${name}"`
+				);
+			}
+		});
+
+		//    if (!frm.doc.service_status || !frm.doc.__mandatory_names) {
+        //     return;
+        // }
+
+        // let expected = frm.doc.__mandatory_names; 
+        // let current = (frm.doc.attach_documents || []).map(row => row.document_name.trim());
+
+        // if (expected.length !== current.length) {
+        //     frappe.throw('You cannot add or remove mandatory document rows.');
+        //     frappe.validated = false;
+        //     return;
+        // }
+
+        // for (let name of expected) {
+        //     if (!current.includes(name)) {
+        //         frappe.throw(`You cannot change mandatory document name: "${name}"`);
+        //         frappe.validated = false;
+        //         return;
+        //     }
+        // }
+
+        // for (let name of current) {
+        //     if (!expected.includes(name)) {
+        //         frappe.throw(`Invalid document name: "${name}". Keep original names only.`);
+        //         frappe.validated = false;
+        //         return;
+        //     }
+        // }
 		const dt = frm.doctype;
 		const dn = frm.doc.name;
 		if (!frm.doc.job_card_no) {
@@ -1226,7 +1271,7 @@ frappe.ui.form.on("Vehicles Service", {
 
 			if (!odo_message_shown) {
 				odo_message_shown = true;
-				frappe.msgprint("Please select a service type before setting the Odo Reading Ahmad saeed");
+				// frappe.msgprint("Please select a service type before setting the Odo Reading Ahmad saeed");
 			}
 
 			frappe.validated = false;
