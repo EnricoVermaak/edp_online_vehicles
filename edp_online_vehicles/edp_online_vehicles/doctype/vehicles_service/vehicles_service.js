@@ -319,7 +319,8 @@ frappe.ui.form.on("Vehicles Service", {
 
 	refresh(frm, dt, dn) {
 		frm.add_custom_button(__('Inspection'), function () {
-			frappe.new_doc('Vehicles Service Inspection');
+			// frappe.new_doc('Vehicles Service Inspection');
+			frappe.set_route("Form",'Vehicles Service Inspection','new-vehicles-service-inspection')
 		}, __('Create'));
 
 
