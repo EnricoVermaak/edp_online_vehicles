@@ -658,8 +658,25 @@ frappe.ui.form.on("Vehicle Order", {
 			});
 		}
 	},
-
 	refresh(frm) {
+		(frm.doc.vehicles_basket || []).forEach(row => {
+			if (row.model && !row.colour) {
+				frappe.db.get_value(
+					"Model Colour",
+					{ model: row.model, default: 1 },
+					"name"
+				).then(r => {
+					if (r.message && r.message.name) {
+						frappe.model.set_value(
+							row.doctype,
+							row.name,
+							"colour",
+							r.message.name
+						);
+					}
+				});
+			}
+		});
 		frm.set_query("colour", "vehicles_basket", function (doc, cdt, cdn) {
 			let d = locals[cdt][cdn];
 			return {
@@ -1755,7 +1772,7 @@ frappe.ui.form.on("Vehicles Order Item", {
 		if (row.model) {
 			frappe.db.get_value('Model Colour', { model: row.model, default: 1 }, 'name').then(r => {
 				let colour = r.message.name
-				
+
 				if (r.message && r.message.name) {
 					frappe.model.set_value(cdt, cdn, "colour", colour);
 				} else {
