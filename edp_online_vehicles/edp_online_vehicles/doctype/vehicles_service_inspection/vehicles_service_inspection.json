@@ -38,14 +38,14 @@
    "fieldname": "customer",
    "fieldtype": "Link",
    "label": "Customer",
-   "options": "Customer",
+   "options": "Dealer Customer",
    "reqd": 1
   },
   {
    "allow_on_submit": 1,
-   "fetch_from": "customer.customer_primary_address",
+   "fetch_from": "customer.address",
    "fieldname": "customer_address",
-   "fieldtype": "Data",
+   "fieldtype": "Small Text",
    "label": "Customer Address"
   },
   {
@@ -169,7 +169,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-01-03 14:42:37.734206",
+ "modified": "2025-12-18 15:27:23.776535",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicles Service Inspection",
@@ -200,6 +200,7 @@
    "write": 1
   }
  ],
+ "row_format": "Dynamic",
  "show_title_field_in_link": 1,
  "sort_field": "modified",
  "sort_order": "DESC",

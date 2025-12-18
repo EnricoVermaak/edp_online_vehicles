@@ -21,31 +21,37 @@ $(document).ready(function () {
 });
 
 frappe.ui.form.on("Vehicles Service", {
-    service_status: function(frm) {
+	service_status: function (frm) {
 
-        if (!frm.doc.service_status) {
-            frm.refresh_field('attach_documents');
-            return;
-        }
+		if (!frm.doc.service_status) {
+			frm.refresh_field('attach_documents');
+			return;
+		}
 
-        frappe.db.get_doc('Service Status', frm.doc.service_status)
-            .then(status_doc => {
-                let mandatory_names = [];
+		frappe.db.get_doc('Service Status', frm.doc.service_status).then(status_doc => {
+			let mandatory_names = [];
 
-                if (status_doc.documents) {
-                    status_doc.documents.forEach(doc => {
-                        if (doc.mandatory === 'Yes') {
-                            let row = frm.add_child('attach_documents');
-                            row.document_name = doc.document_name;
-                            mandatory_names.push(doc.document_name);
-                        }
-                    });
-                }
+			if (status_doc.documents) {
+				status_doc.documents.forEach(doc => {
+					if (doc.mandatory === 'Yes') {
 
-                frm.refresh_field('attach_documents');
-                frm.doc.__mandatory_names = mandatory_names;
-            });
-    },
+						let exists = frm.doc.attach_documents.some(
+							row => row.document_name === doc.document_name
+						);
+
+						if (!exists) {
+							let row = frm.add_child('attach_documents');
+							row.document_name = doc.document_name;
+							mandatory_names.push(doc.document_name);
+						}
+					}
+				});
+			}
+
+			frm.refresh_field('attach_documents');
+			frm.doc.__mandatory_names = mandatory_names;
+		});
+	},
 	service_type(frm) {
 		console.log(frm.doc.dealer);
 
@@ -323,8 +329,19 @@ frappe.ui.form.on("Vehicles Service", {
 
 	refresh(frm, dt, dn) {
 		frm.add_custom_button(__('Inspection'), function () {
-			// frappe.new_doc('Vehicles Service Inspection');
-			frappe.set_route("Form",'Vehicles Service Inspection','new-vehicles-service-inspection')
+			frappe.route_options = {
+				vin_serial_no: frm.doc.vin_serial_no,
+				odo_reading: frm.doc.odo_reading_hours,
+				customer: frm.doc.customer,
+				customer_address: frm.doc.customer_address,
+				technician: frm.doc.technician
+			};
+
+			frappe.set_route(
+				"Form",
+				"Vehicles Service Inspection",
+				"new-vehicles-service-inspection"
+			);
 		}, __('Create'));
 
 
@@ -1215,33 +1232,33 @@ frappe.ui.form.on("Vehicles Service", {
 		});
 
 		//    if (!frm.doc.service_status || !frm.doc.__mandatory_names) {
-        //     return;
-        // }
+		//     return;
+		// }
 
-        // let expected = frm.doc.__mandatory_names; 
-        // let current = (frm.doc.attach_documents || []).map(row => row.document_name.trim());
+		// let expected = frm.doc.__mandatory_names; 
+		// let current = (frm.doc.attach_documents || []).map(row => row.document_name.trim());
 
-        // if (expected.length !== current.length) {
-        //     frappe.throw('You cannot add or remove mandatory document rows.');
-        //     frappe.validated = false;
-        //     return;
-        // }
+		// if (expected.length !== current.length) {
+		//     frappe.throw('You cannot add or remove mandatory document rows.');
+		//     frappe.validated = false;
+		//     return;
+		// }
 
-        // for (let name of expected) {
-        //     if (!current.includes(name)) {
-        //         frappe.throw(`You cannot change mandatory document name: "${name}"`);
-        //         frappe.validated = false;
-        //         return;
-        //     }
-        // }
+		// for (let name of expected) {
+		//     if (!current.includes(name)) {
+		//         frappe.throw(`You cannot change mandatory document name: "${name}"`);
+		//         frappe.validated = false;
+		//         return;
+		//     }
+		// }
 
-        // for (let name of current) {
-        //     if (!expected.includes(name)) {
-        //         frappe.throw(`Invalid document name: "${name}". Keep original names only.`);
-        //         frappe.validated = false;
-        //         return;
-        //     }
-        // }
+		// for (let name of current) {
+		//     if (!expected.includes(name)) {
+		//         frappe.throw(`Invalid document name: "${name}". Keep original names only.`);
+		//         frappe.validated = false;
+		//         return;
+		//     }
+		// }
 		const dt = frm.doctype;
 		const dn = frm.doc.name;
 		if (!frm.doc.job_card_no) {
