@@ -674,13 +674,15 @@
    "fetch_from": "customer.phone",
    "fieldname": "phone",
    "fieldtype": "Data",
-   "label": "Phone"
+   "label": "Phone",
+   "read_only": 1
   },
   {
    "fetch_from": "customer.mobile",
    "fieldname": "mobile",
-   "fieldtype": "Phone",
-   "label": "Mobile"
+   "fieldtype": "Data",
+   "label": "Mobile",
+   "read_only": 1
   },
   {
    "fetch_from": "customer.address",
