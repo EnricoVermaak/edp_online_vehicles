@@ -65,13 +65,13 @@
   {
    "fieldname": "documents",
    "fieldtype": "Table",
-   "label": "Documents",
+   "label": "Mandatory Documents",
    "options": "Mandatory Documents"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-12-17 23:47:23.987405",
+ "modified": "2025-12-18 09:52:12.343342",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Service Status",
