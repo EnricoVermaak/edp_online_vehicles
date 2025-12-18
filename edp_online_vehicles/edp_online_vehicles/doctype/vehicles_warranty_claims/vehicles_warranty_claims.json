@@ -43,6 +43,7 @@
   "customer_name",
   "column_break_2xx0",
   "phone",
+  "mobile",
   "email",
   "adress",
   "warranty_plan_tab",
@@ -429,8 +430,16 @@
   {
    "fetch_from": "customer.phone",
    "fieldname": "phone",
-   "fieldtype": "Float",
-   "label": "Phone"
+   "fieldtype": "Data",
+   "label": "Phone",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "customer.mobile",
+   "fieldname": "mobile",
+   "fieldtype": "Data",
+   "label": "Mobile",
+   "read_only": 1
   },
   {
    "fetch_from": "customer.email",
