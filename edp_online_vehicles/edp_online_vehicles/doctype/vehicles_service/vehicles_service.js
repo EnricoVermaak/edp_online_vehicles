@@ -41,7 +41,7 @@ frappe.ui.form.on("Vehicles Service", {
 					frm.refresh_field('attach_documents');
 				}
 			});
-	}, 
+	},
 	service_type(frm) {
 		console.log(frm.doc.dealer);
 
@@ -318,6 +318,11 @@ frappe.ui.form.on("Vehicles Service", {
 	},
 
 	refresh(frm, dt, dn) {
+		frm.add_custom_button(__('Inspection'), function () {
+			frappe.new_doc('Vehicles Service Inspection');
+		}, __('Create'));
+
+
 		if (!frm.doc.job_card_no) {
 			if (!frm.doc.job_card_no) {
 				frappe.db
