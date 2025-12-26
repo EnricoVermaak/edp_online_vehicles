@@ -8,7 +8,8 @@
  "field_order": [
   "warranty_plan_description",
   "period_months",
-  "warranty_odo_limit"
+  "warranty_odo_limit",
+  "status"
  ],
  "fields": [
   {
@@ -34,13 +35,20 @@
    "in_list_view": 1,
    "label": "Odo Limit",
    "read_only": 1
+  },
+  {
+   "fetch_from": "warranty_plan_description.status",
+   "fieldname": "status",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Status"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-10-31 12:13:52.936330",
+ "modified": "2025-12-26 08:49:53.872684",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Warranty Plan View",

@@ -8,13 +8,8 @@ from frappe.model.mapper import get_mapped_doc
 
 class VehiclesService(Document):
 
-    # def after_insert(self):
-    #     self.sync_to_history()
-
     def on_update(self):
         self.sync_to_history()
-
-        # Update last_job_card_no in settings
         setting_doc = frappe.get_doc("Vehicle Service Settings")
         setting_doc.last_job_card_no = self.job_card_no
         setting_doc.save(ignore_permissions=True)

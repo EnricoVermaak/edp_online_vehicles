@@ -1218,18 +1218,18 @@ frappe.ui.form.on("Vehicles Service", {
 	},
 
 	before_save: async function (frm) {
-		let mandatory = frm.doc.__mandatory_names;
-		let current_names = (frm.doc.attach_documents || [])
-			.map(row => row.document_name?.trim())
-			.filter(Boolean);
+		// let mandatory = frm.doc.__mandatory_names;
+		// let current_names = (frm.doc.attach_documents || [])
+		// 	.map(row => row.document_name?.trim())
+		// 	.filter(Boolean);
 
-		mandatory.forEach(name => {
-			if (!current_names.includes(name)) {
-				frappe.throw(
-					`Mandatory document name cannot be changed or replaced: "${name}"`
-				);
-			}
-		});
+		// mandatory.forEach(name => {
+		// 	if (!current_names.includes(name)) {
+		// 		frappe.throw(
+		// 			`Mandatory document name cannot be changed or replaced: "${name}"`
+		// 		);
+		// 	}
+		// });
 
 		//    if (!frm.doc.service_status || !frm.doc.__mandatory_names) {
 		//     return;

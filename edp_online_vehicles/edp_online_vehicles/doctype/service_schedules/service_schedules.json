@@ -13,6 +13,8 @@
   "interval",
   "period_months",
   "allow_duplicate_services",
+  "allow_users_to_add_edit_remove_parts",
+  "allow_users_to_add_edit_remove_labour",
   "parts_tab",
   "service_parts_items",
   "labour_tab",
@@ -77,11 +79,25 @@
    "fieldname": "allow_duplicate_services",
    "fieldtype": "Check",
    "label": "Allow Duplicate Services"
+  },
+  {
+   "default": "0",
+   "description": "If enabled the user would be able to add, edit or remove parts to the service schedule.",
+   "fieldname": "allow_users_to_add_edit_remove_parts",
+   "fieldtype": "Check",
+   "label": "Allow Users to Add/ Edit/ Remove Parts"
+  },
+  {
+   "default": "0",
+   "description": "If enabled the user would be able to add, edit or remove labour to the service schedule.",
+   "fieldname": "allow_users_to_add_edit_remove_labour",
+   "fieldtype": "Check",
+   "label": "Allow Users to Add/ Edit/ Remove Labour"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-12-03 09:43:16.440503",
+ "modified": "2025-12-26 09:09:25.234755",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Service Schedules",

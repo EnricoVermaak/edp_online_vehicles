@@ -5,5 +5,5 @@
 from frappe.model.document import Document
 
 
-class VehiclesWarrantySubmissions(Document):
+class VehiclesWarrantyFactorySubmissions(Document):
 	pass

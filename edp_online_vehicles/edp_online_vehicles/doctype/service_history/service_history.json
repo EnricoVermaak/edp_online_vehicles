@@ -3,14 +3,14 @@
  "allow_rename": 1,
  "creation": "2025-04-14 12:37:37.680554",
  "doctype": "DocType",
- "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
   "document_no",
+  "service_date",
   "service_type",
   "odo_readinghours",
-  "status",
-  "service_date"
+  "dealer",
+  "status"
  ],
  "fields": [
   {
@@ -18,10 +18,11 @@
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "Document No",
-   "options": "Vehicles Service",
+   "options": "Vehicle Service History",
    "read_only": 1
   },
   {
+   "fetch_from": "document_no.service_type",
    "fieldname": "service_type",
    "fieldtype": "Data",
    "in_list_view": 1,
@@ -29,6 +30,7 @@
    "read_only": 1
   },
   {
+   "fetch_from": "document_no.odo_reading_hours",
    "fieldname": "odo_readinghours",
    "fieldtype": "Int",
    "in_list_view": 1,
@@ -36,6 +38,7 @@
    "read_only": 1
   },
   {
+   "fetch_from": "document_no.service_status",
    "fieldname": "status",
    "fieldtype": "Data",
    "in_list_view": 1,
@@ -43,22 +46,31 @@
    "read_only": 1
   },
   {
+   "fetch_from": "document_no.service_date",
    "fieldname": "service_date",
    "fieldtype": "Datetime",
    "in_list_view": 1,
    "label": "Service Date",
    "read_only": 1
+  },
+  {
+   "fetch_from": "document_no.dealer",
+   "fieldname": "dealer",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Dealer"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-04-14 12:46:43.919039",
+ "modified": "2025-12-26 08:46:14.459157",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Service History",
  "owner": "Administrator",
  "permissions": [],
+ "row_format": "Dynamic",
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": []

@@ -5,7 +5,7 @@
    "label": "Vehicle Services"
   }
  ],
- "content": "[{\"id\":\"wOBlJiE209\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Service</span>\",\"col\":12}},{\"id\":\"6JRmdWrSgP\",\"type\":\"chart\",\"data\":{\"chart_name\":\"Vehicle Services\",\"col\":12}},{\"id\":\"JXqDXcWO23\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"cR26910rtF\",\"type\":\"card\",\"data\":{\"card_name\":\"Services\",\"col\":4}},{\"id\":\"Hx1nXZOPCe\",\"type\":\"card\",\"data\":{\"card_name\":\"Administration\",\"col\":4}},{\"id\":\"2T4pSI-0B_\",\"type\":\"card\",\"data\":{\"card_name\":\"Reports\",\"col\":4}}]",
+ "content": "[{\"id\":\"wOBlJiE209\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Service</span>\",\"col\":12}},{\"id\":\"6JRmdWrSgP\",\"type\":\"chart\",\"data\":{\"chart_name\":\"Vehicle Services\",\"col\":12}},{\"id\":\"JXqDXcWO23\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"cR26910rtF\",\"type\":\"card\",\"data\":{\"card_name\":\"Services\",\"col\":4}},{\"id\":\"yNYs1vOR7d\",\"type\":\"card\",\"data\":{\"card_name\":\"Vehicle\",\"col\":4}},{\"id\":\"2T4pSI-0B_\",\"type\":\"card\",\"data\":{\"card_name\":\"Reports\",\"col\":4}}]",
  "creation": "2024-11-27 11:21:47.279910",
  "custom_blocks": [],
  "docstatus": 0,
@@ -18,25 +18,6 @@
  "is_hidden": 0,
  "label": "Service",
  "links": [
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Administration",
-   "link_count": 1,
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Card Break"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Service Schedule",
-   "link_count": 0,
-   "link_to": "Service Schedules",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
   {
    "hidden": 0,
    "is_query_report": 0,
@@ -164,9 +145,28 @@
    "link_type": "DocType",
    "onboard": 0,
    "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Vehicle",
+   "link_count": 1,
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Vehicle Lookup",
+   "link_count": 0,
+   "link_to": "Vehicle Lookup",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
   }
  ],
- "modified": "2025-12-03 10:56:41.490514",
+ "modified": "2025-12-26 08:44:32.045314",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Service",
