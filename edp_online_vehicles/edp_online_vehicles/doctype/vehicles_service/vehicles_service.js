@@ -15,7 +15,6 @@ $(document).ready(function () {
 		"https://cdn.jsdelivr.net/npm/@zxing/library@0.18.6/umd/index.min.js",
 		function () {
 			codeReader = new ZXing.BrowserMultiFormatReader();
-			console.log("ZXing library loaded");
 		},
 	);
 });
@@ -53,7 +52,32 @@ frappe.ui.form.on("Vehicles Service", {
 		});
 	},
 	service_type(frm) {
-		console.log(frm.doc.dealer);
+
+
+		// Fetch the selected Service Schedule document
+		   frappe.db.get_doc('Service Schedules', frm.doc.service_type)
+            .then(schedule => {
+
+                let labour = schedule.allow_users_to_add_edit_remove_labour; // check field
+                let part   = schedule.allow_users_to_add_edit_remove_parts;  // check field
+
+                // ===== LABOUR =====
+                if (labour == 1) {
+                    frm.set_df_property("service_labour_items", "read_only", 0);
+                } else {
+                    frm.set_df_property("service_labour_items", "read_only", 1);
+                }
+
+                // ===== PARTS =====
+                if (part == 1) {
+                    frm.set_df_property("service_parts_items", "read_only", 0);
+                } else {
+                    frm.set_df_property("service_parts_items", "read_only", 1);
+                }
+
+                frm.refresh_field("service_labour_items");
+                frm.refresh_field("service_parts_items");
+            });
 
 
 		if (!frm.doc.service_type) {
@@ -73,8 +97,8 @@ frappe.ui.form.on("Vehicles Service", {
 				name: frm.doc.service_type
 			},
 			callback: function (r) {
-				console.log(r);
-				console.log("hello");
+				// console.log(r);
+				// console.log("hello");
 
 
 				if (!r.message) return;
