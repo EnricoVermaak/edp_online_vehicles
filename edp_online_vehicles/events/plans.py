@@ -1,0 +1,32 @@
+import frappe
+
+@frappe.whitelist(allow_guest=True)
+def service_plans(vehicle_id):
+	v=frappe.db.get_all("Vehicle Linked Service Plan",filters={"vin__serial_no":vehicle_id},fields=["name","service_km_hours_limit","service_period_limit_months","service_plan"])
+	return [{"name": i.name, "service_km_hours_limit": i.service_km_hours_limit, "service_period_limit_months": i.service_period_limit_months, "service_plan": i.service_plan}  for i in v]
+      
+      
+    
+
+
+@frappe.whitelist(allow_guest=True)
+def warranty_plan(vehicle_id):
+    r = frappe.get_all(
+        "Vehicle Linked Warranty Plan",
+        filters={"vin_serial_no": vehicle_id},
+        fields=["warranty_plan","warranty_period_months","warranty_limit_km_hours","status"]
+    )
+    return [
+        {"warranty_plan_description": i.warranty_plan, "warranty_period_months": i.warranty_period_months, "warranty_limit_km_hours": i.warranty_limit_km_hours, "status": i.status}
+        for i in r
+    ]
+
+
+@frappe.whitelist()
+def get_history(vehicle_id):
+    v = frappe.db.get_all(
+        "Vehicles Warranty Claims",
+        filters={"vin_serial_no": vehicle_id},
+        fields=["name","odo_reading","status","date_of_failure"],
+    )
+    return [{"document_no": i.name, "odo_reading": i.odo_reading, "status": i.status, "date_of_failure": i.date_of_failure}  for i in v]
