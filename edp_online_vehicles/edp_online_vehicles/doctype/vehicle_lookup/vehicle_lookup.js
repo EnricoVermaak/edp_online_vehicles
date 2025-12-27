@@ -1,7 +1,7 @@
 frappe.ui.form.on("Vehicle Lookup", {
     vin_serial_no_link(frm) {
         frappe.call({
-            method: "edp_online_vehicles.edp_online_vehicles.doctype.vehicle_lookup.vehicle_lookup.get_vehicle_details",
+            method: "edp_online_vehicles.events.plans.get_vehicle_details",
             args: { vehicle_id: frm.doc.vin_serial_no_link },
             callback: function (r) {
                 frm.clear_table("table_gmug");
@@ -28,7 +28,6 @@ frappe.ui.form.on("Vehicle Lookup", {
                 }
             }
         });
-        frm.clear_table("table_shau");
 
         frappe.call({
             method: "edp_online_vehicles.events.plans.warranty_plan",
@@ -36,9 +35,8 @@ frappe.ui.form.on("Vehicle Lookup", {
                 vehicle_id: frm.doc.vin_serial_no_link
             },
             callback: function (r) {
-                if (r.message && r.message.length > 0) {
-
-
+                if (r.message) {
+                    frm.clear_table("table_shau");
                     r.message.forEach(function (row) {
                         frm.add_child("table_shau", {
                             warranty_plan_description: row.warranty_plan_description,
@@ -61,7 +59,7 @@ frappe.ui.form.on("Vehicle Lookup", {
             callback: function (r) {
                 frm.clear_table("table_exum");
                 r.message.forEach(function (row) {
-                    frm.add_child("table_exum", { document_no: row.document_no, odo_reading: row.odo_reading, status: row.status, date_of_failure: row.date_of_failure });
+                    frm.add_child("table_exum", { document_no: row.document_no, odo_readinghours: row.odo_reading, status: row.status, date_of_failure: row.date_of_failure });
                 });
                 frm.refresh_field("table_exum");
             }
