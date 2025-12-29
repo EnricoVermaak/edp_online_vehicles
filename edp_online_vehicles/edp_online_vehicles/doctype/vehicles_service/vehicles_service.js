@@ -64,15 +64,19 @@ frappe.ui.form.on("Vehicles Service", {
                 // ===== LABOUR =====
                 if (labour == 1) {
                     frm.set_df_property("service_labour_items", "read_only", 0);
+                    frm.set_value("edit_labour", 1);
                 } else {
                     frm.set_df_property("service_labour_items", "read_only", 1);
+                    frm.set_value("edit_labour", 0);
                 }
 
                 // ===== PARTS =====
                 if (part == 1) {
                     frm.set_df_property("service_parts_items", "read_only", 0);
+                    frm.set_value("edit_parts", 1);
                 } else {
                     frm.set_df_property("service_parts_items", "read_only", 1);
+                    frm.set_value("edit_parts", 0);
                 }
 
                 frm.refresh_field("service_labour_items");
@@ -201,25 +205,14 @@ frappe.ui.form.on("Vehicles Service", {
 							frm.set_value("edit_labour", labour);
 						};
 
-						let service_type = frm.doc.service_type.slice(-5);
-						const isOtherService = service_type === "Other";
+						// Use Service Schedule dynamic settings (same as first block)
+						let schedule_allow_parts = doc.allow_users_to_add_edit_remove_parts || 0;
+						let schedule_allow_labour = doc.allow_users_to_add_edit_remove_labour || 0;
 
-						if (isOtherService) {
-							setEditValues(1, 1);
-						} else {
-							frappe.db
-								.get_single_value(
-									"Vehicle Service Settings",
-									"allow_additional_parts_any_service",
-								)
-								.then((allowAdditionalParts) => {
-									setEditValues(
-										allowAdditionalParts,
-										allowAdditionalParts,
-									);
-								})
-								.catch(console.error);
-						}
+						setEditValues(
+							schedule_allow_parts ? 1 : 0,
+							schedule_allow_labour ? 1 : 0
+						);
 					});
 			}
 		}
