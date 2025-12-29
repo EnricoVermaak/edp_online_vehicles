@@ -20,7 +20,7 @@ frappe.ui.form.on("Vehicle Lookup", {
                     frm.clear_table("table_wzas");
 
                     r.message.forEach(function (row) {
-                        frm.add_child("table_wzas", { service_plan_no: row.name, odo_limit: row.service_km_hours_limit, period_months: row.service_period_limit_months, service_plan_description: row.service_plan });
+                        frm.add_child("table_wzas", { service_plan_no: row.name, odo_limit: row.service_km_hours_limit, period_months: row.service_period_limit_months, service_plan_description: row.service_plan, status: row.status });
 
                     });
 
@@ -70,6 +70,11 @@ frappe.ui.form.on("Vehicle Lookup", {
 
     },
     refresh(frm) {
+        // Refresh tables when form is refreshed to show updated status
+        if (frm.doc.vin_serial_no_link) {
+            frm.trigger("vin_serial_no_link");
+        }
+        
         frm.add_custom_button(__('Service Booking'), function () {
             frappe.route_options = {
                 vin_serial_no: frm.doc.vin_serial_no_link
