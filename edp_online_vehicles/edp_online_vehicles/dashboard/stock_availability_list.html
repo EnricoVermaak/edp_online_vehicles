@@ -268,8 +268,15 @@
                 {% for model in d.models %}
 
                     <tr>
-                        <td>
-                         <button style="border: none;color:white;background-color: black;border-radius: 3px;">View Model </button>
+                        <!-- <td> -->
+                         <!-- <button style="border: none;color:white;background-color: black;border-radius: 3px;">View Model </button> -->
+                        <!-- </td> -->
+                         <td class="button-wrapper">
+                            <button style="background-color: #056fa6;" class="btn btn-xs btn-primary view-model-btn"
+                                data-model_code="{{ model.model_code }}"
+                                data-model="{{ model.model }}">
+                                {{ __("View Model") }}
+                            </button>
                         </td>
                         <td>
                             <a data-type="model_code" data-name="{{ model.model_code }}">

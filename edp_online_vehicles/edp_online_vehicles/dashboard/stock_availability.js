@@ -3,16 +3,16 @@ frappe.provide("edp_online_vehicles.edp_online_vehicles");
 /* global edp_online_vehicles */
 
 function ensureStyleTag(id, css) {
-  if (document.getElementById(id)) return;
-  const el = document.createElement('style');
-  el.id = id;
-  el.appendChild(document.createTextNode(css));
-  document.head.appendChild(el);
+	if (document.getElementById(id)) return;
+	const el = document.createElement('style');
+	el.id = id;
+	el.appendChild(document.createTextNode(css));
+	document.head.appendChild(el);
 }
 
 function getPageBody() {
-  // current visible page body in Frappe Desk
-  return $('.page-body:visible').last();
+	// current visible page body in Frappe Desk
+	return $('.page-body:visible').last();
 }
 
 edp_online_vehicles.edp_online_vehicles.StockAvailability = class StockAvailability {
@@ -376,12 +376,29 @@ edp_online_vehicles.edp_online_vehicles.StockAvailability = class StockAvailabil
 				});
 			}
 		}
+		// my code
+		this.content.on("click", ".view-model-btn", function () {
+			let model_code = unescape($(this).attr("data-model_code"));
+			let model_description = unescape($(this).attr("data-model"));
+			frappe.call({
+				method: "edp_online_vehicles.edp_online_vehicles.dashboard.get_popup_data.get_hq_data",
+				args: {
+					model: model_code,
+				},
+				callback: function (r) {
+					if (r.message) {
+						open_vehicle_popup(r.message);
+					}
+				},
+			});
+		});
+		// end code
 
 		function open_vehicle_popup(vehicle_data) {
 			// Don't show popup at all for Dealer Vehicle Administrator
 			const is_dealer = frappe.user.has_role("Dealer Vehicle Administrator");
 			if (is_dealer) {
-				return;
+				// return;
 			}
 
 			let count = vehicle_data.length;
@@ -426,7 +443,7 @@ edp_online_vehicles.edp_online_vehicles.StockAvailability = class StockAvailabil
 
 			let $popup = $page.find('#vehicle-popup');
 			if (!$popup.length) {
-			$popup = $(`
+				$popup = $(`
 				<div id="vehicle-popup">
 				<div class="popup-header">
 					<span class="popup-title">${__("Vehicle Details")}</span>
@@ -447,7 +464,7 @@ edp_online_vehicles.edp_online_vehicles.StockAvailability = class StockAvailabil
 				<div class="popup-content"></div>
 				</div>
 			`);
-			$page.append($popup);
+				$page.append($popup);
 
 				$(document).off('click.vehiclePopup', '#vehicle-popup .popup-close');
 				$(document).on('click.vehiclePopup', '#vehicle-popup .popup-close', function () {
@@ -981,11 +998,11 @@ edp_online_vehicles.edp_online_vehicles.StockAvailability = class StockAvailabil
 							$galleryImage.attr("src", imgObj.url);
 							$galleryLabel.text(
 								imgObj.label +
-									" Image (" +
-									(currentIndex + 1) +
-									" of " +
-									images.length +
-									")",
+								" Image (" +
+								(currentIndex + 1) +
+								" of " +
+								images.length +
+								")",
 							);
 							$dotsContainer
 								.find(".dot")
@@ -1463,9 +1480,9 @@ edp_online_vehicles.edp_online_vehicles.StockAvailability = class StockAvailabil
 					// In "Yes mode": if any count field is "Yes", then the model's total is "Yes"
 					var total =
 						model.hq_company === "Yes" ||
-						model.dealers === "Yes" ||
-						model.pipeline === "Yes" ||
-						model.unconfirmed_shipments === "Yes"
+							model.dealers === "Yes" ||
+							model.pipeline === "Yes" ||
+							model.unconfirmed_shipments === "Yes"
 							? "Yes"
 							: "";
 					model.total = total;
