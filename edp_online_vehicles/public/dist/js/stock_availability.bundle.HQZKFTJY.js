@@ -98,10 +98,9 @@
             {% for d in data %}
                 <tr class="category">
                     <td>
-                        <a data-type="model_range" data-name="{{ d.model_range }}">{{ d.model_range }}</a>
+                        <a data-type="model_range" data-name="{{ d.model_range }}"> {{ d.model_range }}</a>
                     </td>
                     <td>
-
                     </td>
                     <td>
 
@@ -281,8 +280,15 @@
                 {% for model in d.models %}
 
                     <tr>
-                        <td>
-
+                        <!-- <td> -->
+                         <!-- <button style="border: none;color:white;background-color: black;border-radius: 3px;">View Model </button> -->
+                        <!-- </td> -->
+                         <td class="button-wrapper">
+                            <button style="background-color: #056fa6;" class="btn btn-xs btn-primary view-model-btn"
+                                data-model_code="{{ model.model_code }}"
+                                data-model="{{ model.model }}">
+                                {{ __("View Model") }}
+                            </button>
                         </td>
                         <td>
                             <a data-type="model_code" data-name="{{ model.model_code }}">
@@ -871,10 +877,24 @@
           });
         }
       }
+      this.content.on("click", ".view-model-btn", function() {
+        let model_code = unescape($(this).attr("data-model_code"));
+        let model_description = unescape($(this).attr("data-model"));
+        frappe.call({
+          method: "edp_online_vehicles.edp_online_vehicles.dashboard.get_popup_data.get_hq_data",
+          args: {
+            model: model_code
+          },
+          callback: function(r) {
+            if (r.message) {
+              open_vehicle_popup(r.message);
+            }
+          }
+        });
+      });
       function open_vehicle_popup(vehicle_data) {
         const is_dealer = frappe.user.has_role("Dealer Vehicle Administrator");
         if (is_dealer) {
-          return;
         }
         let count = vehicle_data.length;
         ensureStyleTag("vehicle-popup-css", `
@@ -1764,4 +1784,4 @@
     }
   };
 })();
-//# sourceMappingURL=stock_availability.bundle.KCY5TUN5.js.map
+//# sourceMappingURL=stock_availability.bundle.HQZKFTJY.js.map
