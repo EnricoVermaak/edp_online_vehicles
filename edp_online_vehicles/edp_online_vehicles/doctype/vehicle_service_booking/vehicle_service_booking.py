@@ -32,11 +32,13 @@ def create_service_from_booking(booking_name):
 		# 🟢 IF SERVICE ALREADY EXISTS
 		if existing_service:
 			service = frappe.get_doc("Vehicles Service", existing_service)
+
 			if getattr(booking, "odo_reading_hours", None):
-				service.odo_reading_hours = booking.odo_reading_hours
+				service.db_set("odo_reading_hours", booking.odo_reading_hours)
 				service.remove_tag("Odo Reading Missing")
-				service.save(ignore_permissions=True)
+
 			return service.name
+
 
 		# 🔵 CREATE NEW SERVICE
 		service = frappe.get_doc({
@@ -79,7 +81,22 @@ def create_service_from_booking(booking_name):
 				settings.save(ignore_permissions=True)
 		else:
 			service.job_card_no = booking_job_card_no
-
+		for row in booking.table_jwkk:
+			service.append("service_parts_items", {
+				"item": row.item,
+				"description": row.description,
+				"qty": row.qty,
+				"price_excl": row.price_excl,
+				"total_excl": row.total_excl
+			})	
+		for row in booking.table_ottr:
+			service.append("service_labour_items", {
+				"item": row.item,
+				"description": row.description,
+				"duration_hours": row.duration_hours,
+				"rate_hour": row.rate_hour,
+				"total_excl": row.total_excl
+			})	
 		# 🔵 Insert new service
 		service.insert(ignore_permissions=True)
 
