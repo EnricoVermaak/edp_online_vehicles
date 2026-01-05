@@ -879,18 +879,7 @@
       }
       this.content.on("click", ".view-model-btn", function() {
         let model_code = unescape($(this).attr("data-model_code"));
-        let model_description = unescape($(this).attr("data-model"));
-        frappe.call({
-          method: "edp_online_vehicles.edp_online_vehicles.dashboard.get_popup_data.get_hq_data",
-          args: {
-            model: model_code
-          },
-          callback: function(r) {
-            if (r.message) {
-              open_vehicle_popup(r.message);
-            }
-          }
-        });
+        open_model_popup(model_code);
       });
       function open_vehicle_popup(vehicle_data) {
         const is_dealer = frappe.user.has_role("Dealer Vehicle Administrator");
@@ -1784,4 +1773,4 @@
     }
   };
 })();
-//# sourceMappingURL=stock_availability.bundle.HQZKFTJY.js.map
+//# sourceMappingURL=stock_availability.bundle.TOLLNVUF.js.map
