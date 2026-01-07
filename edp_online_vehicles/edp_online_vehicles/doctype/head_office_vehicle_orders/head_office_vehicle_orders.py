@@ -5,8 +5,9 @@ from datetime import datetime, timedelta
 
 import frappe
 from edp_online_vehicles.events.auto_move_stock import auto_move_stock_hq, auto_move_stock_hq_transit
-from edp_online_vehicles.events.tac_integration import tac_delivery_outgoing
 from frappe.desk.doctype.tag.tag import remove_tag
+from edp_api.api.TAC.tac_integration import tac_delivery_outgoing
+
 from frappe.model.document import Document
 from frappe.utils import now_datetime
 
@@ -141,22 +142,41 @@ class HeadOfficeVehicleOrders(Document):
 
 							self.allocate_vinno()
 
+
+
 							user_company = frappe.defaults.get_user_default("Company")
 							head_office = frappe.get_value("Company", {"custom_head_office": 1}, "name")
 
-							# if user_company == head_office:
-							# 	create_integration_doc = frappe.db.get_value(
-							# 		"Vehicles Order Status", {"name": self.status}, "create_integration_file"
-							# 	)
-							# 	if create_integration_doc:
-							# 		if self.vinserial_no:
-							# 			tac_delivery_outgoing(
-							# 				self.vinserial_no,
-							# 				self.model_delivered,
-							# 				self.model_description,
-							# 				self.colour_delivered,
-							# 				self.order_placed_by,
-							# 			)
+
+							if user_company == head_office:
+								create_integration_doc = frappe.db.get_value(
+									"Vehicles Order Status", {"name": self.status}, "create_integration_file"
+								)
+								if create_integration_doc and tac_delivery_outgoing:
+									if self.vinserial_no:
+										try:
+											tac_delivery_outgoing(
+												self.vinserial_no,
+												self.model_delivered,
+												self.model_description,
+												self.colour_delivered,
+												self.order_placed_by,
+											)
+										except Exception as e:
+											frappe.log_error(
+												f"Failed to create TAC delivery file for order {self.name}, VIN {self.vinserial_no}: {str(e)}",
+												"TAC Delivery File Error"
+											)
+								elif not create_integration_doc:
+									frappe.log_error(
+										f"TAC integration skipped for order {self.name}: create_integration_file is not enabled for status '{self.status}'",
+										"TAC Integration Debug"
+									)
+								elif not tac_delivery_outgoing:
+									frappe.log_error(
+										f"TAC integration skipped for order {self.name}: tac_delivery_outgoing function not available (import failed)",
+										"TAC Integration Debug"
+									)
 
 							order_doc = frappe.get_doc("Vehicle Order", self.order_no)
 
@@ -270,22 +290,37 @@ class HeadOfficeVehicleOrders(Document):
 									head_office = frappe.get_value(
 										"Company", {"custom_head_office": 1}, "name"
 									)
-
-									# if user_company == head_office:
-									# 	create_integration_doc = frappe.db.get_value(
-									# 		"Vehicles Order Status",
-									# 		{"name": self.status},
-									# 		"create_integration_file",
-									# 	)
-									# 	if create_integration_doc:
-									# 		if self.vinserial_no:
-									# 			tac_delivery_outgoing(
-									# 				self.vinserial_no,
-									# 				self.model_delivered,
-									# 				self.model_description,
-									# 				self.colour_delivered,
-									# 				self.order_placed_by,
-									# 			)
+									if user_company == head_office:
+										create_integration_doc = frappe.db.get_value(
+											"Vehicles Order Status",
+											{"name": self.status},
+											"create_integration_file",
+										)
+										if create_integration_doc and tac_delivery_outgoing:
+											if self.vinserial_no:
+												try:
+													tac_delivery_outgoing(
+														self.vinserial_no,
+														self.model_delivered,
+														self.model_description,
+														self.colour_delivered,
+														self.order_placed_by,
+													)
+												except Exception as e:
+													frappe.log_error(
+														f"Failed to create TAC delivery file for order {self.name}, VIN {self.vinserial_no}: {str(e)}",
+														"TAC Delivery File Error"
+													)
+										elif not create_integration_doc:
+											frappe.log_error(
+												f"TAC integration skipped for order {self.name}: create_integration_file is not enabled for status '{self.status}'",
+												"TAC Integration Debug"
+											)
+										elif not tac_delivery_outgoing:
+											frappe.log_error(
+												f"TAC integration skipped for order {self.name}: tac_delivery_outgoing function not available (import failed)",
+												"TAC Integration Debug"
+											)
 
 									order_doc = frappe.get_doc("Vehicle Order", self.order_no)
 

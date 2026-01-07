@@ -2,8 +2,8 @@ from datetime import datetime, timedelta
 
 import frappe
 from frappe.utils import now_datetime
+from edp_api.api.TAC.tac_integration import tac_delivery_outgoing
 
-from edp_online_vehicles.events.tac_integration import tac_delivery_outgoing
 
 
 @frappe.whitelist()

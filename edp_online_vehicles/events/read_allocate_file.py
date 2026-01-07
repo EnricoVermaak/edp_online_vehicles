@@ -8,7 +8,8 @@ from datetime import datetime, timedelta
 
 import frappe
 
-from edp_online_vehicles.events.tac_integration import tac_delivery_outgoing
+from edp_api.api.TAC.tac_integration import tac_delivery_outgoing
+
 
 # File paths under sites/<sitename>/public/files for write access
 ERROR_DIR = frappe.get_site_path("public", "files", "HQ Order Bulk Allocation Errors")

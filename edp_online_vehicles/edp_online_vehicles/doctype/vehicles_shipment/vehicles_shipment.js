@@ -173,15 +173,15 @@ frappe.ui.form.on("Vehicles Shipment", {
 										"localhost",
 									].includes(host);
 
-									if (isMahindra) {
-										frappe.call({
-											method:
-												"edp_online_vehicles.events.tac_integration.tac_landing_outgoing",
-											args: {
-												selected_items: JSON.stringify(selected_items),
-											},
-										});
-									}
+								if (isMahindra) {
+									frappe.call({
+										method:
+											"edp_api.api.TAC.tac_integration.tac_landing_outgoing",
+										args: {
+											selected_items: JSON.stringify(selected_items),
+										},
+									});
+								}
 								}
 							}
 						});
