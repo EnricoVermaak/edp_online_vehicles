@@ -6,7 +6,11 @@ from datetime import datetime, timedelta
 import frappe
 from edp_online_vehicles.events.auto_move_stock import auto_move_stock_hq, auto_move_stock_hq_transit
 from frappe.desk.doctype.tag.tag import remove_tag
-from edp_api.api.TAC.tac_integration import tac_delivery_outgoing
+
+try:
+	from edp_api.api.TAC.tac_integration import tac_delivery_outgoing
+except (ImportError, ModuleNotFoundError):
+	tac_delivery_outgoing = None
 
 from frappe.model.document import Document
 from frappe.utils import now_datetime
