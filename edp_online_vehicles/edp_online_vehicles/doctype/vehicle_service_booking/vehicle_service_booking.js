@@ -10,7 +10,7 @@ frappe.ui.form.on("Vehicle Service Booking", {
                     callback: function (r) {
                         console.log(r);
                         if (!r.exc && r.message) {
-                            frappe.msgprint("Vehicle Service created successfully.");
+                            // frappe.msgprint("Vehicle Service created successfully.");
                         }
                     }
                 });

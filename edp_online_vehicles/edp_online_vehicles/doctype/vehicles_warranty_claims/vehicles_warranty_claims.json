@@ -20,6 +20,7 @@
   "date_of_failure",
   "odo_reading",
   "status",
+  "type",
   "vehicle_information_section",
   "engine_no",
   "brand",
@@ -42,6 +43,7 @@
   "customer_name",
   "column_break_2xx0",
   "phone",
+  "mobile",
   "email",
   "adress",
   "warranty_plan_tab",
@@ -428,8 +430,16 @@
   {
    "fetch_from": "customer.phone",
    "fieldname": "phone",
-   "fieldtype": "Float",
-   "label": "Phone"
+   "fieldtype": "Data",
+   "label": "Phone",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "customer.mobile",
+   "fieldname": "mobile",
+   "fieldtype": "Data",
+   "label": "Mobile",
+   "read_only": 1
   },
   {
    "fetch_from": "customer.email",
@@ -592,6 +602,13 @@
    "fieldname": "submitted_to_dms",
    "fieldtype": "Datetime",
    "label": "Submitted To DMS"
+  },
+  {
+   "default": "Normal",
+   "fieldname": "type",
+   "fieldtype": "Select",
+   "label": "Type",
+   "options": "Normal\nGoodwill"
   }
  ],
  "index_web_pages_for_search": 1,
@@ -605,7 +622,7 @@
    "link_fieldname": "warranty"
   }
  ],
- "modified": "2025-10-16 14:03:35.896622",
+ "modified": "2025-12-11 14:13:36.816776",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicles Warranty Claims",
@@ -623,8 +640,43 @@
    "role": "System Manager",
    "share": 1,
    "write": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Aftersales Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Dealer Vehicle Administrator",
+   "select": 1,
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Vehicles Administrator",
+   "share": 1,
+   "write": 1
   }
- ],
+],
  "row_format": "Dynamic",
  "show_title_field_in_link": 1,
  "sort_field": "modified",

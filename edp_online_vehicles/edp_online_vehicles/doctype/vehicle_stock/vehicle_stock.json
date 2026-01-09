@@ -29,6 +29,7 @@
   "register_no",
   "natis_release_date",
   "fleet_no",
+  "request_release",
   "column_break_1tyr",
   "dealer",
   "type",
@@ -132,8 +133,7 @@
    "fieldname": "stock_no",
    "fieldtype": "Data",
    "label": "Stock No",
-   "read_only": 1,
-   "unique": 1
+   "read_only": 1
   },
   {
    "fieldname": "alternative_stock_no",
@@ -545,7 +545,8 @@
   {
    "fieldname": "natis_release_date",
    "fieldtype": "Date",
-   "label": "Natis Release Date"
+   "label": "Natis Release Date",
+   "read_only": 1
   },
   {
    "fieldname": "section_break_eern",
@@ -650,8 +651,8 @@
   {
    "fieldname": "original_purchasing_dealer",
    "fieldtype": "Data",
-   "hidden": 1,
-   "label": "Original Purchasing Dealer"
+   "label": "Original Purchasing Dealer",
+   "options": "Company"
   },
   {
    "fetch_from": "model.range",
@@ -718,7 +719,8 @@
   {
    "fieldname": "table_pcgj",
    "fieldtype": "Table",
-   "options": "Warranty Plan View"
+   "options": "Warranty Plan View",
+   "read_only": 1
   },
   {
    "fieldname": "service_plan_summary_section",
@@ -733,7 +735,8 @@
   {
    "fieldname": "table_gtny",
    "fieldtype": "Table",
-   "options": "Service Plan View"
+   "options": "Service Plan View",
+   "read_only": 1
   },
   {
    "fieldname": "section_break_llyx",
@@ -748,8 +751,16 @@
    "fieldtype": "Link",
    "label": "Interior Colour",
    "options": "Interior Model Colour"
+  },
+  {
+   "default": "0",
+   "fieldname": "request_release",
+   "fieldtype": "Check",
+   "label": "Request Natis Release",
+   "permlevel": 2
   }
  ],
+ "grid_page_length": 50,
  "image_field": "image",
  "index_web_pages_for_search": 1,
  "links": [
@@ -794,7 +805,7 @@
    "link_fieldname": "vin_serial_no"
   }
  ],
- "modified": "2025-10-27 13:17:04.594949",
+ "modified": "2025-12-11 09:58:00.483426",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicle Stock",
@@ -827,6 +838,7 @@
  ],
  "quick_entry": 1,
  "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
  "search_fields": "customer, model, colour, stock_no, alternative_stock_no",
  "show_title_field_in_link": 1,
  "sort_field": "modified",

@@ -2,7 +2,7 @@
  "actions": [],
  "allow_import": 1,
  "allow_rename": 1,
- "autoname": "format:DC-{MM}{YY}-{#######}",
+ "autoname": "DC3.######",
  "creation": "2024-09-19 12:54:42.533446",
  "doctype": "DocType",
  "engine": "InnoDB",
@@ -17,6 +17,10 @@
   "column_break_fkvk",
   "dealer",
   "final_status_date",
+  "claim_pending_info_date",
+  "pending_info_age",
+  "claim_updated_date",
+  "updated_claim_age",
   "fleet_section",
   "company_registration_no",
   "search",
@@ -86,9 +90,9 @@
   {
    "default": "Now",
    "fieldname": "claim_datetime",
-   "fieldtype": "Datetime",
+   "fieldtype": "Date",
    "in_list_view": 1,
-   "label": "Claim Date/Time",
+   "label": "Claim Date",
    "read_only": 1,
    "reqd": 1
   },
@@ -356,15 +360,39 @@
    "fieldtype": "Date",
    "label": "Invoice Date",
    "reqd": 1
+  },
+  {
+   "fieldname": "claim_pending_info_date",
+   "fieldtype": "Datetime",
+   "label": "Claim Pending Info Date",
+   "read_only": 1
+  },
+  {
+   "fieldname": "pending_info_age",
+   "fieldtype": "Int",
+   "label": "Pending Info Age",
+   "read_only": 1
+  },
+  {
+   "fieldname": "claim_updated_date",
+   "fieldtype": "Datetime",
+   "label": "Claim Updated Date",
+   "read_only": 1
+  },
+  {
+   "fieldname": "updated_claim_age",
+   "fieldtype": "Int",
+   "label": "Updated Claim Age",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-10-23 16:19:39.311176",
+ "modified": "2025-11-07 14:51:52.163147",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Dealer Claims",
- "naming_rule": "Expression",
+ "naming_rule": "By \"Naming Series\" field",
  "owner": "Administrator",
  "permissions": [
   {

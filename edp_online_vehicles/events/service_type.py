@@ -1,40 +1,130 @@
 import frappe
+import json
+from frappe.utils import nowdate, getdate
+@frappe.whitelist()
+def service_type_query(doctype, txt, searchfield, start, page_len, filters):
+    # Initialize filters for Service Schedules
+    service_schedule_filters = {}
+
+    # Apply filters based on passed arguments
+    if filters.get("model_code"):
+        service_schedule_filters["model_code"] = filters.get("model_code")
+
+    # Get the Vehicles VIN number/serial number from Vehicles Service if provided
+    vin_serial_no = filters.get("vin_serial_no")
+    if vin_serial_no:
+        vehicles_service_filters = {"vin_serial_no": vin_serial_no}
+        # Fetch the service types associated with the given Vehicles VIN number/serial number
+        used_service_types_data = frappe.get_all(
+            "Vehicles Service", filters=vehicles_service_filters, fields=["service_type"]
+        )
+        used_service_type_names = (
+            [d["service_type"] for d in used_service_types_data] if used_service_types_data else []
+        )
+    else:
+        used_service_type_names = []
+
+    # Get all service types from Service Schedules based on filters
+    all_service_types = frappe.get_all(
+        "Service Schedules", fields=["name"], filters=service_schedule_filters
+    )
+    all_service_type_names = [d["name"] for d in all_service_types] if all_service_types else []
+
+    # Filter out the used service types from all service types
+    available_service_types = []
+    mm_services = []
+    if filters.get("model_code"):
+        mm_services = [[f"SS-{filters.get('model_code')}-Major"], [f"SS-{filters.get('model_code')}-Minor"]]
+
+    for service_type in all_service_type_names:
+        if service_type not in used_service_type_names:
+            available_service_types.append([service_type])
+
+    available_service_types.extend(mm_services)
+
+    return available_service_types
+
+
+
+
+
+
+
+# @frappe.whitelist()
+# def check_service_date(vin):
+#     if not vin:
+#         return {"is_valid": True}
+
+#     vehicle = frappe.get_doc("Vehicle Stock", vin)
+
+#     start = vehicle.service_start_date
+#     end = vehicle.service_end_date
+#     today = nowdate()
+
+#     # If dates missing then allow
+#     if not start or not end:
+#         return {"is_valid": True}
+
+#     # Convert to date objects
+#     start_day = getdate(start).day
+#     end_day = getdate(end).day
+#     today_day = getdate(today).day
+
+#     # Check only DAY range (ignore month + year)
+#     if start_day <= today_day <= end_day:
+#         return {"is_valid": True}
+
+#     return {"is_valid": False}
 
 
 @frappe.whitelist()
-def service_type_query(doctype, txt, searchfield, start, page_len, filters):
-	# Initialize filters for Service Schedules
-	service_schedule_filters = {}
+def check_service_date(vin):
+    if not vin:
+        return {"is_valid": True}
 
-	# Apply filters based on passed arguments
-	if filters.get("model_code"):
-		service_schedule_filters["model_code"] = filters.get("model_code")
+    vehicle = frappe.get_doc("Vehicle Stock", vin)
 
-	# Get the Vehicles VIN number/serial number from Vehicles Service if provided
-	vinserial_no = filters.get("vinserial_no")
-	if vinserial_no:
-		vehicles_service_filters = {"vinserial_no": vinserial_no}
-		# Fetch the service types associated with the given Vehicles VIN number/serial number
-		used_service_types_data = frappe.get_all(
-			"Vehicles Service", filters=vehicles_service_filters, fields=["service_type"]
-		)
-		used_service_type_names = (
-			[d["service_type"] for d in used_service_types_data] if used_service_types_data else []
-		)
-	else:
-		used_service_type_names = []
+    start = vehicle.service_start_date
+    end = vehicle.service_end_date
+    today = nowdate()
 
-	# Get all service types from Service Schedules based on filters
-	all_service_types = frappe.get_all("Service Schedules", fields=["name"], filters=service_schedule_filters)
-	all_service_type_names = [d["name"] for d in all_service_types] if all_service_types else []
+    # If dates missing then allow
+    if not start or not end:
+        return {"is_valid": True}
 
-	# Filter out the used service types from all service types
-	available_service_types = []
-	mm_services = []
-	if filters.get("model_code"):
-		mm_services = [[f"SS-{filters.get('model_code')}-Major"], [f"SS-{filters.get('model_code')}-Minor"]]
-	for service_type in all_service_type_names:
-		if service_type not in used_service_type_names:
-			available_service_types.append([service_type])
-	available_service_types.extend(mm_services)
-	return available_service_types
+    # Convert to date objects (full date comparison)
+    start_date = getdate(start)
+    end_date = getdate(end)
+    today_date = getdate(today)
+
+    # Full comparison: day + month + year
+    if start_date <= today_date <= end_date:
+        return {"is_valid": True}
+
+    return {"is_valid": False}
+
+
+
+
+@frappe.whitelist()
+def check_warranty_date(vin):
+    if not vin:
+        return {"is_valid": True}
+
+    vehicle = frappe.get_doc("Vehicle Stock", vin)
+
+    start = vehicle.warranty_start_date
+    end = vehicle.warranty_end_date
+    today = nowdate()
+
+    if not start or not end:
+        return {"is_valid": True}
+
+    start_date = getdate(start)
+    end_date = getdate(end)
+    today_date = getdate(today)
+
+    if start_date <= today_date <= end_date:
+        return {"is_valid": True}
+
+    return {"is_valid": False}

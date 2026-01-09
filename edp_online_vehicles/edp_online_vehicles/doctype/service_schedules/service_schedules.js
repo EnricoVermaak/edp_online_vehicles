@@ -19,3 +19,106 @@ frappe.ui.form.on("Service Schedules", {
 		});
 	},
 });
+
+frappe.ui.form.on('Service Schedules Parts Items', {
+
+    item: function (frm, cdt, cdn) {
+        calculate_price(frm, cdt, cdn);
+    },
+
+    qty: function (frm, cdt, cdn) {
+        calculate_price(frm, cdt, cdn);
+    }
+
+});
+
+function calculate_price(frm, cdt, cdn) {
+
+    let row = locals[cdt][cdn];
+    if (!row.item) return;
+
+    // --- 1) Get Standard Selling Price ---
+    frappe.db.get_list('Item Price', {
+        filters: { 
+            item_code: row.item,
+            price_list: 'Standard Selling'
+        },
+        limit: 1,
+        fields: ['price_list_rate']
+    }).then(prices => {
+
+        let standard_rate = prices.length ? prices[0].price_list_rate : 0;
+
+        // --- 2) Get Item Doc to read custom GP ---
+        frappe.db.get_doc('Item', row.item).then(item_doc => {
+
+            let custom_gp = item_doc.custom_service_gp || 0;
+			let gp_percentage = custom_gp / 100;
+            // --- 3) Price & Total Calculation ---
+            let price = standard_rate + (standard_rate * gp_percentage);
+            let total = price * (row.qty || 0);
+
+            // --- 4) Set Values in Child Row ---
+            frappe.model.set_value(cdt, cdn, 'price_excl', price);
+            frappe.model.set_value(cdt, cdn, 'total_excl', total);
+
+            frm.refresh_field('service_parts_items');
+
+        });
+    });
+}
+frappe.ui.form.on('Service Schedules Labour Items', {
+
+    // Trigger when rate_hour or duration_hours changes
+    rate_hour(frm, cdt, cdn) {
+        calculate_total(frm, cdt, cdn);
+    },
+
+    duration_hours(frm, cdt, cdn) {
+        calculate_total(frm, cdt, cdn);
+    }
+
+});
+
+// Function to calculate total
+function calculate_total(frm, cdt, cdn) {
+    let row = locals[cdt][cdn];
+
+    let total = (row.rate_hour || 0) * (row.duration_hours || 0);
+    frappe.model.set_value(cdt, cdn, "total_excl", total);
+
+    frm.refresh_field("service_labour_items");
+}
+
+
+
+
+
+
+
+// frappe.ui.form.on('Service Schedules Labour Items', {
+// 	item: function (frm, cdt, cdn) {
+// 		let row = locals[cdt][cdn];
+// 		if (!row.item) return;
+		
+
+// 		frappe.db.get_list('Item Price', {
+// 			filters: { item_code: row.item, price_list: 'Standard Selling' },
+// 			limit: 1,
+// 			fields: ['price_list_rate']
+// 		}).then(prices => {
+// 			let standard_rate = prices.length ? prices[0].price_list_rate : 0;
+
+// 			frappe.db.get_doc('Item', row.item).then(item_doc => {
+// 				let custom_gp = item_doc.custom_warranty_gp || 0;
+// 				let price = standard_rate * custom_gp;
+
+// 				frappe.model.set_value(cdt, cdn, 'rate_hour', price);
+// 				frm.refresh_field('service_labour_items'); 
+// 			});
+// 		});
+// 	}
+// });
+
+
+

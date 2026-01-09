@@ -93,8 +93,8 @@ frappe.ui.form.on("Vehicle Order", {
 						resultDate.setDate(resultDate.getDate() + days);
 
 						// Convert Date object to YYYY-MM-DD format for Date field
-						let dateString = resultDate.getFullYear() + '-' + 
-							String(resultDate.getMonth() + 1).padStart(2, '0') + '-' + 
+						let dateString = resultDate.getFullYear() + '-' +
+							String(resultDate.getMonth() + 1).padStart(2, '0') + '-' +
 							String(resultDate.getDate()).padStart(2, '0');
 
 						frm.set_value("requested_delivery_date", dateString);
@@ -105,8 +105,8 @@ frappe.ui.form.on("Vehicle Order", {
 						resultDate.setDate(resultDate.getDate() + 30);
 
 						// Convert Date object to YYYY-MM-DD format for Date field
-						let dateString = resultDate.getFullYear() + '-' + 
-							String(resultDate.getMonth() + 1).padStart(2, '0') + '-' + 
+						let dateString = resultDate.getFullYear() + '-' +
+							String(resultDate.getMonth() + 1).padStart(2, '0') + '-' +
 							String(resultDate.getDate()).padStart(2, '0');
 
 						frm.set_value("requested_delivery_date", dateString);
@@ -658,8 +658,25 @@ frappe.ui.form.on("Vehicle Order", {
 			});
 		}
 	},
-
 	refresh(frm) {
+		(frm.doc.vehicles_basket || []).forEach(row => {
+			if (row.model && !row.colour) {
+				frappe.db.get_value(
+					"Model Colour",
+					{ model: row.model, default: 1 },
+					"name"
+				).then(r => {
+					if (r.message && r.message.name) {
+						frappe.model.set_value(
+							row.doctype,
+							row.name,
+							"colour",
+							r.message.name
+						);
+					}
+				});
+			}
+		});
 		frm.set_query("colour", "vehicles_basket", function (doc, cdt, cdn) {
 			let d = locals[cdt][cdn];
 			return {
@@ -1749,7 +1766,20 @@ frappe.ui.form.on("Vehicles Order Item", {
 	},
 
 	model: function (frm, cdt, cdn) {
+
 		var row = locals[cdt][cdn];
+
+		if (row.model) {
+			frappe.db.get_value('Model Colour', { model: row.model, default: 1 }, 'name').then(r => {
+				let colour = r.message.name
+
+				if (r.message && r.message.name) {
+					frappe.model.set_value(cdt, cdn, "colour", colour);
+				} else {
+					frappe.model.set_value(cdt, cdn, "colour", '');
+				}
+			});
+		}
 
 		if (row.place_back_order) {
 			frappe.model.set_value(cdt, cdn, "place_back_order", 0);
@@ -3248,7 +3278,7 @@ frappe.ui.form.on("Vehicles Order Item", {
 									}
 								},
 							});
-						} 
+						}
 						// else {
 						// 	frappe.call({
 						// 		method: "edp_online_vehicles.events.check_orders.check_if_stock_available",

@@ -62,7 +62,7 @@
   "start_date",
   "column_break_fabh",
   "end_date",
-  "inspection_tab",
+  "section_break_lfbu",
   "inspection_template",
   "inspection_items",
   "parts_tab",
@@ -117,7 +117,8 @@
   "total_extras_excl",
   "show_prices_for_vehicles_service",
   "attach_document_tab",
-  "attach_documents"
+  "attach_documents",
+  "booking_name"
  ],
  "fields": [
   {
@@ -464,11 +465,6 @@
    "read_only": 1
   },
   {
-   "fieldname": "inspection_tab",
-   "fieldtype": "Tab Break",
-   "label": "Inspection"
-  },
-  {
    "fieldname": "inspection_template",
    "fieldtype": "Link",
    "label": "Inspection Template",
@@ -569,6 +565,7 @@
   {
    "fieldname": "service_status",
    "fieldtype": "Link",
+   "in_list_view": 1,
    "in_standard_filter": 1,
    "label": "Status",
    "options": "Service Status",
@@ -677,13 +674,15 @@
    "fetch_from": "customer.phone",
    "fieldname": "phone",
    "fieldtype": "Data",
-   "label": "Phone"
+   "label": "Phone",
+   "read_only": 1
   },
   {
    "fetch_from": "customer.mobile",
    "fieldname": "mobile",
-   "fieldtype": "Phone",
-   "label": "Mobile"
+   "fieldtype": "Data",
+   "label": "Mobile",
+   "read_only": 1
   },
   {
    "fetch_from": "customer.address",
@@ -782,6 +781,16 @@
    "label": "System Status",
    "options": "Conditionally Approved\nConditionally Declined",
    "read_only": 1
+  },
+  {
+   "fieldname": "section_break_lfbu",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "booking_name",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "Booking Name"
   }
  ],
  "index_web_pages_for_search": 1,
@@ -801,7 +810,7 @@
    "link_fieldname": "services"
   }
  ],
- "modified": "2025-10-16 14:14:26.663859",
+ "modified": "2025-12-26 19:15:35.074805",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicles Service",

@@ -1,0 +1,61 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2024-06-07 13:40:49.934680",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_mzgr",
+  "warranty_message",
+  "flag",
+  "flag_date_time"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_mzgr",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "warranty_message",
+   "fieldtype": "Long Text",
+   "label": "Warranty Message"
+  },
+  {
+   "fieldname": "flag",
+   "fieldtype": "Data",
+   "label": "Flag"
+  },
+  {
+   "fieldname": "flag_date_time",
+   "fieldtype": "Datetime",
+   "label": "Flag date/time"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2024-07-03 17:13:45.381639",
+ "modified_by": "Administrator",
+ "module": "Edp Online Vehicles",
+ "name": "Vehicles Warranty Factory Submissions",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "search_fields": "warranty_message",
+ "show_title_field_in_link": 1,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "warranty_message"
+}

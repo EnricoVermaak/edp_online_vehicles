@@ -12,9 +12,83 @@ frappe.ui.form.on("Dealer Claims", {
 		}
 		// listview.page.add_actions_menu_item(__('Delete Dos'), function() {
 	},
+	// table_exgk_add: function(frm, cdt, cdn) {
+	// 	let row = locals[cdt][cdn];
+
+	// 	frappe.ui.form.on(cdt, {
+	// 		vin_serial_no: function(frm, cdt2, cdn2) {
+	// 			let child_row = locals[cdt2][cdn2];
+	// 			if (child_row.vin_serial_no) {
+
+	// 				// 🔹 1. Check if vehicle belongs to this dealer
+	// 				frappe.call({
+	// 					method: "frappe.client.get",
+	// 					args: {
+	// 						doctype: "Vehicle Stock",
+	// 						name: child_row.vin_serial_no
+	// 					},
+	// 					callback: function(r) {
+	// 						if (r.message) {
+	// 							if (r.message.original_purchasing_dealer && r.message.original_purchasing_dealer !== frm.doc.dealer) {
+	// 								frappe.msgprint("❌ Vehicle was not purchased by the selected dealership on this claim.");
+	// 								frappe.model.set_value(cdt2, cdn2, "vin_serial_no", ""); // clear field
+	// 								return;
+	// 							}
+
+	// 							// 🔹 2. Check if VIN already claimed under same category
+	// 							frappe.call({
+	// 								method: "frappe.db.sql",
+	// 								args: {
+	// 									query: `
+	// 										SELECT parent.name
+	// 										FROM \`tabVehicles Item\` AS child
+	// 										JOIN \`tabDealer Claims\` AS parent
+	// 										ON child.parent = parent.name
+	// 										WHERE parent.claim_category = %s
+	// 										AND child.vin_serial_no = %s
+	// 										AND parent.name != %s
+	// 									`,
+	// 									values: [frm.doc.claim_category, child_row.vin_serial_no, frm.doc.name]
+	// 								},
+	// 								callback: function(res) {
+	// 									if (res.message && res.message.length > 0) {
+	// 										frappe.msgprint(
+	// 											`❌ VIN ${child_row.vin_serial_no} has already been claimed under category '${frm.doc.claim_category}'.`
+	// 										);
+	// 										frappe.model.set_value(cdt2, cdn2, "vin_serial_no", "");
+	// 									}
+	// 								}
+	// 							});
+	// 						}
+	// 					}
+	// 				});
+	// 			}
+	// 		}
+	// 	});
+	// },
 	refresh(frm) {
+		// Child table field filter for VIN
+        frm.fields_dict["table_exgk"].grid.get_field("vin_serial_no").get_query = function(doc, cdt, cdn) {
+
+            // agar fleet_customer blank hai → saare Vehicle Stock records show karo
+            if (!frm.doc.fleet_customer) {
+                return {
+                    filters: {}
+                };
+            }
+
+            // otherwise, sirf unhi VINs ko dikhao jinka fleet_no == fleet_customer
+            return {
+                filters: {
+                    fleet_no: frm.doc.fleet_customer
+                }
+            };
+        };
+
+
+
 		let is_allowed = frappe.user_roles.includes("Vehicles Administrator");
-		frm.toggle_enable("claim_amt", is_allowed);
+		// frm.toggle_enable("claim_amt", is_allowed);
 
 		// frm.fields_dict['documents'].grid.get_field('document').reqd = true;
 		frm.fields_dict["documents"].grid.wrapper
@@ -856,59 +930,67 @@ frappe.ui.form.on("Dealer Claims", {
 });
 
 frappe.ui.form.on("Vehicles Item", {
-	vin_serial_no: function (frm, cdt, cdn) {
-		let row = locals[cdt][cdn];
+    vin_serial_no: async function (frm, cdt, cdn) {
+        let row = locals[cdt][cdn];
 
-		if (!frm.doc.claim_type_code) {
-			if (row.vin_serial_no) {
-				frappe.model.set_value(cdt, cdn, "vin_serial_no", null);
-				frappe.msgprint(
-					"Please select a Claim type before selecting a vehicle",
-				);
-			}
-		} else {
-			if (row.vin_serial_no) {
-				frappe.db
-					.get_doc("Dealer Claim Category", frm.doc.claim_category)
-					.then((res) => {
-						res.claim_types.forEach(function (r) {
-							if (r.claim_type_code == frm.doc.claim_type_code) {
-								if (!r.allow_duplicate_claim) {
-									frappe.call({
-										method: "edp_online_vehicles.events.dealer_claim_check.dealer_claim_duplicate_check",
-										args: {
-											vinno: row.vin_serial_no,
-											dealer: frm.doc.dealer,
-											claim_type_code:
-												frm.doc.claim_type_code,
-										},
-										callback: function (r) {
-											if (
-												r.message &&
-												r.message.length > 0
-											) {
-												frappe.msgprint(
-													"You cannot load the same claim for this vehicle more than once.",
-												);
+        // Step 1: Claim type check
+        if (!frm.doc.claim_type_code) {
+            if (row.vin_serial_no) {
+                frappe.model.set_value(cdt, cdn, "vin_serial_no", null);
+                frappe.msgprint("Please select a Claim type before selecting a vehicle");
+            }
+            return;
+        }
 
-												frappe.model.set_value(
-													cdt,
-													cdn,
-													"vin_serial_no",
-													null,
-												);
-											}
-										},
-									});
-								}
-							}
-						});
-					});
-			}
-		}
+        if (!row.vin_serial_no) return;
 
-		frm.refresh_field("table_exgk");
-	},
+        // Step 2: Check if Vehicle belongs to selected dealer
+        try {
+            let vehicle_res = await frappe.call({
+                method: "frappe.client.get",
+                args: {
+                    doctype: "Vehicle Stock",
+                    name: row.vin_serial_no,
+                },
+            });
+
+            if (
+                vehicle_res.message &&
+                vehicle_res.message.original_purchasing_dealer &&
+                vehicle_res.message.original_purchasing_dealer !== frm.doc.dealer
+            ) {
+                frappe.msgprint("Vehicle was not purchased by the selected dealership on this claim.");
+                frappe.model.set_value(cdt, cdn, "vin_serial_no", null);
+                return; // stop further checks
+            }
+        } catch (e) {
+            console.error("Dealer validation failed:", e);
+        }
+
+        // Step 3: Existing duplicate check (your original logic)
+        frappe.db.get_doc("Dealer Claim Category", frm.doc.claim_category).then((res) => {
+            res.claim_types.forEach(function (r) {
+                if (r.claim_type_code === frm.doc.claim_type_code && !r.allow_duplicate_claim) {
+                    frappe.call({
+                        method: "edp_online_vehicles.edp_online_vehicles.doctype.dealer_claims.dealer_claims.dealer",
+                        args: {
+							doc: frm.doc,
+							vinno: row.vin_serial_no,
+							dealer: frm.doc.dealer,
+							claim_type_code: frm.doc.claim_type_code,
+                        },
+                        callback: function (r) {
+                            if (r.message && r.message.length > 0) {
+                                frappe.msgprint("You cannot load the same claim for this vehicle more than once.");
+                                frappe.model.set_value(cdt, cdn, "vin_serial_no", null);
+                            }
+                        },
+                    });
+                }
+            });
+        });
+
+        frm.refresh_field("table_exgk");
+    },
 });
 
-// Function to check if the frm exists in the database

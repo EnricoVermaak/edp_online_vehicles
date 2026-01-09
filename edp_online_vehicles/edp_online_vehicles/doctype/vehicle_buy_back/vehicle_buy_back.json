@@ -15,7 +15,9 @@
   "customer_full_names",
   "status",
   "vehicle_section",
+  "vin_not_found",
   "vin_serial_no",
+  "vin_serial_no_manual",
   "model",
   "colour",
   "column_break_akst",
@@ -78,6 +80,8 @@
   },
   {
    "depends_on": "eval:doc.buy_from == \"Customer\"",
+   "fetch_from": "customer.customer_full_name",
+   "fetch_if_empty": 1,
    "fieldname": "customer_full_names",
    "fieldtype": "Data",
    "in_list_view": 1,
@@ -96,25 +100,42 @@
    "label": "Vehicle"
   },
   {
+   "default": "0",
+   "fieldname": "vin_not_found",
+   "fieldtype": "Check",
+   "label": "VIN Not Found"
+  },
+  {
+   "depends_on": "eval:!doc.vin_not_found",
    "fieldname": "vin_serial_no",
    "fieldtype": "Link",
    "in_list_view": 1,
    "in_standard_filter": 1,
    "label": "VIN/ Serial No",
+   "mandatory_depends_on": "eval:!doc.vin_not_found",
    "options": "Vehicle Stock"
+  },
+  {
+   "depends_on": "eval:doc.vin_not_found",
+   "fieldname": "vin_serial_no_manual",
+   "fieldtype": "Data",
+   "label": "VIN/ Serial No (Unconfirmed)",
+   "mandatory_depends_on": "eval:doc.vin_not_found"
   },
   {
    "fetch_from": "vin_serial_no.model",
    "fieldname": "model",
    "fieldtype": "Link",
    "label": "Model",
+   "mandatory_depends_on": "eval:doc.vin_not_found",
    "options": "Model Administration"
   },
   {
    "fetch_from": "vin_serial_no.colour",
    "fieldname": "colour",
-   "fieldtype": "Data",
-   "label": "Colour"
+   "fieldtype": "Link",
+   "label": "Colour",
+   "options": "Model Colour"
   },
   {
    "fieldname": "column_break_akst",
@@ -133,16 +154,20 @@
    "label": "Engine No"
   },
   {
+   "depends_on": "eval:doc.vin_not_found",
    "fetch_from": "vin_serial_no.condition",
    "fieldname": "condition",
-   "fieldtype": "Data",
-   "label": "Condition"
+   "fieldtype": "Select",
+   "label": "Condition",
+   "options": "\nExcellent\nGood\nAverage\nPoor"
   },
   {
+   "depends_on": "eval:doc.vin_not_found",
    "fetch_from": "vin_serial_no.status",
    "fieldname": "operational_status",
-   "fieldtype": "Data",
-   "label": "Operational Status"
+   "fieldtype": "Select",
+   "label": "Operational Status",
+   "options": "\nOperational\nNon- Operational"
   },
   {
    "fieldname": "pricing_section",
@@ -150,19 +175,16 @@
    "label": "Pricing"
   },
   {
-   "fetch_from": "vin_serial_no.cost_price_excl",
    "fieldname": "cost_price_excl",
    "fieldtype": "Currency",
    "label": "Cost Price (Excl)"
   },
   {
-   "fetch_from": "vin_serial_no.dealer_billing_excl",
    "fieldname": "dealer_billing_excl",
    "fieldtype": "Currency",
    "label": "Dealer Billing (Excl)"
   },
   {
-   "fetch_from": "vin_serial_no.suggested_retail_excl",
    "fieldname": "suggested_retail_excl",
    "fieldtype": "Currency",
    "label": "Suggested Retail (Excl)"
@@ -209,9 +231,10 @@
    "label": "Offer Price (Excl)"
   },
   {
+   "default": "15",
    "fieldname": "vat",
    "fieldtype": "Currency",
-   "label": "VAT",
+   "label": "VAT (%)",
    "precision": "2"
   },
   {
@@ -232,7 +255,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-03-05 07:41:00.511349",
+ "modified": "2025-12-02 07:47:22.986757",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicle Buy Back",
@@ -250,8 +273,32 @@
    "role": "System Manager",
    "share": 1,
    "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Vehicles Administrator",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Dealer Vehicle Administrator",
+   "share": 1,
+   "write": 1
   }
  ],
+ "row_format": "Dynamic",
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": [],

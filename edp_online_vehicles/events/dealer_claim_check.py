@@ -21,6 +21,7 @@ def dealer_claim_duplicate_check(vinno, dealer, claim_type_code, docname):
                     AND vi.vin_serial_no = %(vinno)s
                     AND dc.claim_type_code = %(claim_type_code)s
                     AND dc.name != %(docname)s
+                    AND dc.claim_status != 'Cancelled'
         """,
 			{"dealer": dealer, "vinno": vinno, "claim_type_code": claim_type_code, "docname": docname},
 		)

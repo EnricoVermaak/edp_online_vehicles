@@ -4,9 +4,34 @@
 import frappe
 from frappe.model.document import Document
 from frappe.model.mapper import get_mapped_doc
+from frappe.utils import nowdate, getdate
 
 
 class VehiclesWarrantyClaims(Document):
+	def validate(self):
+		# Validate warranty period - automatically change to Goodwill if outside warranty
+		if self.vin_serial_no and self.type != "Goodwill":
+			vehicle = frappe.get_doc("Vehicle Stock", self.vin_serial_no)
+			
+			start = vehicle.warranty_start_date
+			end = vehicle.warranty_end_date
+			today = nowdate()
+			
+			# Only validate if warranty dates exist
+			if start and end:
+				start_date = getdate(start)
+				end_date = getdate(end)
+				today_date = getdate(today)
+				
+				# Check if today (claim date) is outside warranty period
+				if not (start_date <= today_date <= end_date):
+					# Automatically change type to Goodwill
+					self.type = "Goodwill"
+					frappe.msgprint(
+						"Please note the selected vehicle falls outside the allocated warranty period parameters. "
+						"Please contact Head Office for more information.",
+						indicator="orange"
+					)
 	def before_save(self):
 		for row in self.attached_documents:
 			file_url = row.document

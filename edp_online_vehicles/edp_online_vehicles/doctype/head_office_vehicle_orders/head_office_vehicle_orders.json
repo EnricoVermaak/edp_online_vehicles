@@ -26,8 +26,15 @@
   "performa_invoice_no",
   "bank_integration_response",
   "sap_integration_response",
+  "integration_retry_count",
+  "failed_integration",
+  "transaction_id",
   "column_break_yfez",
   "sap_sales_order_no",
+  "sap_net_price",
+  "sap_tax",
+  "sap_total_amount",
+  "sap_bank_approval_date",
   "sales_order_type",
   "sap_invoice_no",
   "invoice_amount",
@@ -42,10 +49,6 @@
   "total_excl_vat",
   "credit_note",
   "check_credit_note",
-  "sap_integration_section",
-  "integration_retry_count",
-  "failed_integration",
-  "transaction_id",
   "epuipment_basket_section",
   "ordered_column",
   "model",
@@ -413,8 +416,10 @@
    "fieldtype": "Column Break"
   },
   {
+   "collapsible": 1,
    "fieldname": "section_break_qfuu",
-   "fieldtype": "Section Break"
+   "fieldtype": "Section Break",
+   "label": "SAP integration"
   },
   {
    "fieldname": "performa_invoice_no",
@@ -436,6 +441,30 @@
    "fieldname": "sap_sales_order_no",
    "fieldtype": "Data",
    "label": "SAP Sales Order No",
+   "read_only": 1
+  },
+  {
+   "fieldname": "sap_net_price",
+   "fieldtype": "Currency",
+   "label": "SAP Net Price",
+   "read_only": 1
+  },
+  {
+   "fieldname": "sap_tax",
+   "fieldtype": "Currency",
+   "label": "SAP Tax",
+   "read_only": 1
+  },
+  {
+   "fieldname": "sap_total_amount",
+   "fieldtype": "Currency",
+   "label": "SAP Total Amount",
+   "read_only": 1
+  },
+  {
+   "fieldname": "sap_bank_approval_date",
+   "fieldtype": "Date",
+   "label": "SAP Bank Approval Date",
    "read_only": 1
   },
   {
@@ -512,11 +541,6 @@
    "label": "Credit Note"
   },
   {
-   "fieldname": "sap_integration_section",
-   "fieldtype": "Section Break",
-   "label": "SAP Integration"
-  },
-  {
    "fieldname": "integration_retry_count",
    "fieldtype": "Int",
    "label": "Integration Retry Count",
@@ -543,8 +567,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-10-26 23:20:40.877420",
- "modified": "2025-10-24 13:33:48.468486",
+ "modified": "2025-11-20 08:13:12.677440",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Head Office Vehicle Orders",

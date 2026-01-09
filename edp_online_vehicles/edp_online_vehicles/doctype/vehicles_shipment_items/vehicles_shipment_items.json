@@ -20,6 +20,7 @@
   "colour",
   "target_warehouse",
   "status",
+  "created_status",
   "reserve_to_order",
   "submitted_to_dms",
   "model_information_section",
@@ -49,6 +50,15 @@
    "label": "Status",
    "options": "Not Received\nReceived",
    "read_only": 1
+  },
+  {
+   "columns": 1,
+   "fieldname": "created_status",
+   "fieldtype": "Select",
+   "in_list_view": 0,
+   "label": "Created Status",
+   "options": "0\n1",
+   "hidden": 1
   },
   {
    "fieldname": "container_no",

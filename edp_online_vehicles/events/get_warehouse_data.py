@@ -58,21 +58,6 @@ def check_warehouses_colours(dealers, warehouse_names, model, colour):
 		},
 	)
 	
-# 	count = frappe.get_all(
-#     "Vehicle Stock",
-#     filters={
-#         "dealer": ["in", dealers],
-#         "target_warehouse": ["in", warehouse_names],
-#         "model": model,
-#         "availability_status": "Available",
-#     },
-#     fields=["colour"]
-# )
-# 	colours = [c["colour"] for c in count if c.get("colour")]
-# 	frappe.msgprint(str(colours))
-
-
-
 	return count
 
 

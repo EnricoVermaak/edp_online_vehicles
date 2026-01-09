@@ -18,6 +18,7 @@ $(document).ready(function () {
 
 frappe.ui.form.on("Vehicles Warranty Claims", {
 	refresh(frm) {
+		setTimeout(() => reapply_all_row_colors(frm), 300);
 		frm.add_custom_button(
 			__("Sales Order"),
 			() => {
@@ -329,7 +330,50 @@ frappe.ui.form.on("Vehicles Warranty Claims", {
 		}
 		previous_status_value = frm.doc.status;
 	},
-	vin_serial_no(frm, dt, dn) {
+	odo_reading: function (frm) {
+		// Validate Odo Reading when it changes (if VIN is set)
+		if (frm.doc.vin_serial_no) {
+			validate_odo_reading(frm);
+		}
+	},
+	vin_serial_no: function (frm) {
+		if (frm.doc.part_items && frm.doc.part_items.length > 0) {
+			setTimeout(() => reapply_all_row_colors(frm), 300);
+		}
+
+		// if (frm.doc.odo_reading) {
+		// 	frappe.db.get_doc("Vehicle Stock", frm.doc.vin_serial_no)
+		// 		.then(vehicle => {
+
+		// 			let odo = frm.doc.odo_reading;
+		// 			let isValid = false;
+
+		// 			if (vehicle.table_pcgj && vehicle.table_pcgj.length > 0) {
+		// 				console.log(vehicle.table_pcgj);
+
+
+		// 				vehicle.table_pcgj.forEach(row => {
+		// 					let maxLimit = row.warranty_odo_limit || 0;
+
+		// 					if (odo >= 0 && odo <= maxLimit) {
+		// 						isValid = true;
+		// 					}
+		// 				});
+		// 			}
+
+		// 			if (!isValid) {
+		// 				frappe.msgprint("Odometer reading is outside the warranty limit!");
+		// 			}
+		// 		});
+		// }
+		if (!frm.doc.vin_serial_no) return;
+
+		// Validate Odo Reading when VIN changes (if Odo is already set)
+		if (frm.doc.odo_reading) {
+			validate_odo_reading(frm);
+		}
+
+
 		if (frm.is_new()) {
 			frappe.db
 				.get_list("Vehicle Stock", {
@@ -369,8 +413,32 @@ frappe.ui.form.on("Vehicles Warranty Claims", {
 					}
 				});
 		}
+
+		// Validate warranty period when VIN changes
+		if (frm.doc.vin_serial_no && frm.doc.type !== "Goodwill") {
+			frappe.call({
+				method: "edp_online_vehicles.events.service_type.check_warranty_date",
+				args: {
+					vin: frm.doc.vin_serial_no,
+				},
+				callback(r) {
+					if (!r.message) return;
+
+					if (!r.message.is_valid) {
+						if (frm.doc.type !== "Goodwill") {
+							frm.set_value("type", "Goodwill");
+						}
+
+						frappe.msgprint(
+							"Please note the selected vehicle falls outside the allocated warranty period parameters. Please contact Head Office for more information"
+						);
+					}
+				},
+			});
+		}
 	},
 	after_save(frm) {
+		setTimeout(() => reapply_all_row_colors(frm), 300);
 		frappe.call({
 			method: "edp_online_vehicles.events.change_vehicles_status.warranty_status_change",
 			args: {
@@ -383,9 +451,132 @@ frappe.ui.form.on("Vehicles Warranty Claims", {
 				}
 			},
 		});
+
+
+		if (frm.doc.vin_serial_no && frm.doc.type !== "Goodwill") {
+			frappe.call({
+				method: "edp_online_vehicles.events.service_type.check_warranty_date",
+				args: {
+					vin: frm.doc.vin_serial_no,
+				},
+				callback(r) {
+					if (!r.message) return;
+
+					if (!r.message.is_valid) {
+
+						if (frm.doc.type !== "Goodwill") {
+							frm.set_value("type", "Goodwill");
+						}
+
+						frappe.msgprint(
+							"Please note the selected vehicle falls outside the allocated warranty period parameters. Please contact Head Office for more information"
+						);
+					}
+
+				},
+			});
+		};
 	},
 });
 
+// Function to validate Odo Reading against warranty KM limit
+function validate_odo_reading(frm) {
+	// Need both VIN and Odo Reading to validate
+	if (!frm.doc.vin_serial_no || !frm.doc.odo_reading) {
+		return;
+	}
+
+	frappe.db.get_doc("Vehicle Stock", frm.doc.vin_serial_no).then(vehicle => {
+		if (!vehicle.warranty_km_hours_limit) {
+			// No warranty KM limit set, skip validation
+			return;
+		}
+
+		if (frm.doc.odo_reading > vehicle.warranty_km_hours_limit) {
+			// Odo exceeds limit - change to Goodwill (only if not already Goodwill)
+			if (frm.doc.type !== "Goodwill") {
+				frm.set_value("type", "Goodwill");
+				frappe.msgprint({
+					message: "Please note the selected vehicle Odo Reading falls outside the allocated warranty plan parameters. Please contact Head Office for more information",
+					indicator: "orange"
+				});
+			}
+		} else {
+			// Odo is within limit - change back to Normal if currently Goodwill
+			if (frm.doc.type === "Goodwill") {
+				frm.set_value("type", "Normal");
+			}
+		}
+	});
+}
+frappe.ui.form.on('Warranty Part Item', {
+	part_no: function (frm, cdt, cdn) {
+
+		let row = locals[cdt][cdn];
+		if (!row.part_no) return;
+
+		// ----------------------------------------
+		// 1) Get Standard Selling Price
+		// ----------------------------------------
+		frappe.db.get_list('Item Price', {
+			filters: {
+				item_code: row.part_no,
+				price_list: 'Standard Selling'
+			},
+			limit: 1,
+			fields: ['price_list_rate']
+		}).then(prices => {
+
+			let standard_rate = prices.length ? prices[0].price_list_rate : 0;
+
+			// ----------------------------------------
+			// 2) Get Item Doc for custom GP
+			// ----------------------------------------
+			frappe.db.get_doc('Item', row.part_no).then(item_doc => {
+
+				let custom_gp = item_doc.custom_warranty_gp || 0;
+				
+				// Check if GP value is 0
+				if (custom_gp === 0 || !custom_gp) {
+					frappe.msgprint({
+						title: __('Warning'),
+						message: __('Warranty GP% is not set for this item. The price will be calculated without GP markup.'),
+						indicator: 'orange'
+					});
+				}
+				
+				let gp_percentage = custom_gp / 100;
+
+				let price = standard_rate + (standard_rate * gp_percentage);
+
+				// Set price in child table
+				frappe.model.set_value(cdt, cdn, 'price', price).then(() => {
+					frm.refresh_field('part_items');
+					// Recalculate total after price is set
+					calculate_part_sub_total(frm, "total_excl", "part_items");
+				});
+			});
+		});
+		validate_part_item(frm, row);
+
+	},
+	price(frm, cdt, cdn) {
+		calculate_part_sub_total(frm, "total_excl", "part_items");
+	},
+	qty(frm, cdt, cdn) {
+		calculate_part_sub_total(frm, "total_excl", "part_items");
+	},
+	part_items_remove(frm, cdt, cdn) {
+		calculate_part_sub_total(frm, "total_excl", "part_items");
+		let row = locals[cdt][cdn];
+		setTimeout(() => reapply_colors(frm), 100);
+	},
+	part_items_add: function (frm, cdt, cdn) {
+		let row = locals[cdt][cdn];
+		set_row_color(frm, row, ""); // new row default color
+		setTimeout(() => reapply_colors(frm), 100);
+	},
+});
 frappe.ui.form.on("Extra Items", {
 	price_per_item_excl(frm, cdt, cdn) {
 		calculate_extra_total(frm, cdt, cdn);
@@ -399,18 +590,6 @@ frappe.ui.form.on("Extra Items", {
 
 	total_excl(frm) {
 		calculate_sub_total(frm, "extra_cost_total_excl", "extra_items");
-	},
-});
-
-frappe.ui.form.on("Warranty Part Item", {
-	price(frm, cdt, cdn) {
-		calculate_part_sub_total(frm, "total_excl", "part_items");
-	},
-	qty(frm, cdt, cdn) {
-		calculate_part_sub_total(frm, "total_excl", "part_items");
-	},
-	part_items_remove(frm) {
-		calculate_part_sub_total(frm, "total_excl", "part_items");
 	},
 });
 
@@ -449,3 +628,92 @@ const calculate_part_sub_total = (frm, field_name, table_name) => {
 		sub_total,
 	);
 };
+
+function set_row_color(frm, row, color) {
+	if (frm.fields_dict['part_items'] && frm.fields_dict['part_items'].grid) {
+		let grid = frm.fields_dict['part_items'].grid;
+		let grid_row = grid.grid_rows.find(r => r.doc.name === row.name);
+		if (grid_row) $(grid_row.wrapper).css('background-color', color);
+	} else {
+		setTimeout(() => set_row_color(frm, row, color), 50);
+	}
+}
+// aa
+function reapply_colors(frm) {
+	if (!frm.doc.vin_serial_no) return;
+
+	frappe.call({
+		method: "edp_online_vehicles.events.odo.check_clor",
+		args: { vin: frm.doc.vin_serial_no },
+		callback: function (r) {
+			let allowed_items = r.message || [];
+			let grid = frm.fields_dict['part_items'].grid;
+			if (grid) {
+				grid.grid_rows.forEach(gr => {
+					const color = !gr.doc.part_no ? "" : allowed_items.includes(gr.doc.part_no) ? "" : "#ffdddd";
+					set_row_color(frm, gr.doc, color);
+				});
+			}
+		}
+	});
+}
+function reapply_all_row_colors(frm) {
+	if (!frm.doc.vin_serial_no) {
+		// Agar VIN nahi hai to sab rows ka color clear kar do
+		if (frm.fields_dict['part_items'] && frm.fields_dict['part_items'].grid) {
+			frm.fields_dict['part_items'].grid.grid_rows.forEach(gr => {
+				$(gr.wrapper).css('background-color', '');
+			});
+		}
+		return;
+	}
+
+	// VIN hai to server se allowed items fetch karo aur color apply karo
+	frappe.call({
+		method: "edp_online_vehicles.events.odo.check_clor",
+		args: { vin: frm.doc.vin_serial_no },
+		callback: function (r) {
+			let allowed_items = r.message || [];
+			let grid = frm.fields_dict['part_items'].grid;
+			if (grid) {
+				grid.grid_rows.forEach(gr => {
+					const part_no = gr.doc.part_no || "";
+					const color = allowed_items.includes(part_no) ? "" : "#ffdddd";
+					$(gr.wrapper).css('background-color', color);
+				});
+			}
+		}
+	});
+}
+
+function validate_part_item(frm, row) {
+	if (!frm.doc.vin_serial_no || !row.part_no) return;
+
+	frappe.call({
+		method: "edp_online_vehicles.events.odo.check_clor",
+		args: { vin: frm.doc.vin_serial_no },
+		callback: function (r) {
+			let allowed_items = r.message || [];
+
+			if (!allowed_items.includes(row.part_no)) {
+				set_row_color(frm, row, "#ffdddd");
+			} else {
+				set_row_color(frm, row, "");
+			}
+		}
+	});
+}
+
+// Set row color (same as before)
+function set_row_color(frm, row, color) {
+	if (frm.fields_dict['part_items'] && frm.fields_dict['part_items'].grid) {
+		let grid = frm.fields_dict['part_items'].grid;
+		let grid_row = grid.grid_rows.find(r => r.doc.name === row.name);
+		if (grid_row) $(grid_row.wrapper).css('background-color', color);
+	} else {
+		setTimeout(() => set_row_color(frm, row, color), 50);
+	}
+}
+
+
+

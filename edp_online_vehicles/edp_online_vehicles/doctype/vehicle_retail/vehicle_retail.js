@@ -318,18 +318,22 @@ frappe.ui.form.on("Vehicle Retail", {
 				"customer_name",
 				"customer_surname",
 				"mobile",
+				"phone",
 			])
 			.then((response) => {
-				if (response.message) {
-					let data = response.message;
-					let full_name =
-						(data.customer_name || "") +
-						" " +
-						(data.customer_surname || "");
-					let mobile = data.mobile || "";
-					frm.set_value("customer_name", full_name.trim());
-					frm.set_value("customer_mobile", mobile);
+				if (!response.message) {
+					return;
 				}
+
+				const { customer_name, customer_surname, mobile, phone } =
+					response.message;
+				const full_name = `${customer_name || ""} ${
+					customer_surname || ""
+				}`.trim();
+
+				frm.set_value("customer_name", full_name);
+				frm.set_value("customer_mobile", mobile || "");
+				frm.set_value("customer_phone", phone || "");
 			});
 	},
 	sale_type: function (frm) {

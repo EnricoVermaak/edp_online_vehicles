@@ -1,7 +1,7 @@
 {
  "actions": [],
  "allow_rename": 1,
- "autoname": "field:part_order",
+ "autoname": "format:HQ-PO-{MM}{YY}-{######}",
  "creation": "2025-03-04 16:53:51.395409",
  "doctype": "DocType",
  "engine": "InnoDB",
@@ -410,7 +410,7 @@
    "link_fieldname": "hq_part_order"
   }
  ],
- "modified": "2025-05-23 08:15:16.466420",
+ "modified": "2025-12-10 22:14:34.711875",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "HQ Part Order",
@@ -430,6 +430,7 @@
    "write": 1
   }
  ],
+ "row_format": "Dynamic",
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": [],

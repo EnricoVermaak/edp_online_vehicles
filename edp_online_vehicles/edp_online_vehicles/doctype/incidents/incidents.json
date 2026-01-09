@@ -1,0 +1,413 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-11-03 07:54:15.100713",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "incident_details_section",
+  "reported_date_time",
+  "incident_date_time",
+  "column_break_qyyj",
+  "status",
+  "incident_type",
+  "company",
+  "customer",
+  "vehicle_driver_details",
+  "vehicle_details_column",
+  "vin_serial_no",
+  "odo_reading",
+  "brand",
+  "model_description",
+  "column_break_beio",
+  "driver_full_names",
+  "driver_id_no",
+  "driver_contact_no",
+  "driver_email",
+  "insurance_details_section",
+  "insurance_policy_administrator",
+  "column_break_fehj",
+  "policy_no",
+  "claim_no",
+  "incident_info_tab",
+  "incident_details",
+  "witness_summary",
+  "damage_assessment",
+  "injuries",
+  "investigation_tab",
+  "internal_section",
+  "internal_investigator_full_names",
+  "column_break_hfaz",
+  "internal_investigator_phone",
+  "internal_investigator_email",
+  "external_section",
+  "external_investigator_full_names",
+  "column_break_dlxt",
+  "external_investigator_phone",
+  "external_investigator_email",
+  "police_involvement_section",
+  "case_no",
+  "column_break_lqae",
+  "police_case_status",
+  "first_officer_on_site",
+  "investigating_officer",
+  "section_break_xiqa",
+  "police_report_details",
+  "police_investigation_findings",
+  "confirmation_tab",
+  "investigators_section",
+  "internal_investigator",
+  "internal_investigator_signature",
+  "column_break_mxhb",
+  "external_investigator",
+  "external_investigator_signature",
+  "management_section",
+  "management_user",
+  "management_full_names",
+  "management_signature"
+ ],
+ "fields": [
+  {
+   "fieldname": "incident_details_section",
+   "fieldtype": "Section Break",
+   "label": "Incident Details"
+  },
+  {
+   "default": "Now",
+   "fieldname": "reported_date_time",
+   "fieldtype": "Date",
+   "label": "Reported Date/ Time"
+  },
+  {
+   "fieldname": "incident_date_time",
+   "fieldtype": "Datetime",
+   "in_list_view": 1,
+   "label": "Incident Date/ Time",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_qyyj",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "Open\nPending Investigation\nInvestigation Completed\nClosed"
+  },
+  {
+   "fieldname": "vehicle_driver_details",
+   "fieldtype": "Section Break",
+   "label": "Vehicle & Driver Details"
+  },
+  {
+   "fieldname": "vin_serial_no",
+   "fieldtype": "Link",
+   "label": "VIN/ Serial No",
+   "options": "Vehicle Stock"
+  },
+  {
+   "fieldname": "odo_reading",
+   "fieldtype": "Float",
+   "label": "Odo Reading",
+   "precision": "0"
+  },
+  {
+   "fetch_from": "vin_serial_no.brand",
+   "fieldname": "brand",
+   "fieldtype": "Data",
+   "label": "Brand",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "vin_serial_no.description",
+   "fieldname": "model_description",
+   "fieldtype": "Data",
+   "label": "Model Description",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_beio",
+   "fieldtype": "Column Break",
+   "label": "Driver Details"
+  },
+  {
+   "fieldname": "vehicle_details_column",
+   "fieldtype": "Column Break",
+   "label": "Vehicle Details"
+  },
+  {
+   "fieldname": "driver_full_names",
+   "fieldtype": "Data",
+   "label": "Driver Full Names"
+  },
+  {
+   "fieldname": "driver_id_no",
+   "fieldtype": "Float",
+   "label": "Driver ID No"
+  },
+  {
+   "fieldname": "driver_contact_no",
+   "fieldtype": "Phone",
+   "label": "Driver Contact No"
+  },
+  {
+   "fieldname": "driver_email",
+   "fieldtype": "Data",
+   "label": "Driver Email"
+  },
+  {
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Company",
+   "options": "Company",
+   "reqd": 1
+  },
+  {
+   "fieldname": "customer",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Customer",
+   "options": "Customer",
+   "reqd": 1
+  },
+  {
+   "fieldname": "incident_type",
+   "fieldtype": "Link",
+   "label": "Incident Type",
+   "options": "Incident Type",
+   "reqd": 1
+  },
+  {
+   "fieldname": "insurance_details_section",
+   "fieldtype": "Section Break",
+   "label": "Insurance Details"
+  },
+  {
+   "fieldname": "insurance_policy_administrator",
+   "fieldtype": "Data",
+   "label": "Insurance Policy Administrator"
+  },
+  {
+   "fieldname": "column_break_fehj",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "policy_no",
+   "fieldtype": "Data",
+   "label": "Policy No"
+  },
+  {
+   "fieldname": "incident_info_tab",
+   "fieldtype": "Tab Break",
+   "label": "Incident Info"
+  },
+  {
+   "fieldname": "incident_details",
+   "fieldtype": "Text Editor",
+   "label": "Incident Details",
+   "reqd": 1
+  },
+  {
+   "fieldname": "witness_summary",
+   "fieldtype": "Text Editor",
+   "label": "Witness Summary"
+  },
+  {
+   "fieldname": "damage_assessment",
+   "fieldtype": "Text Editor",
+   "label": "Damage Assessment"
+  },
+  {
+   "fieldname": "injuries",
+   "fieldtype": "Text Editor",
+   "label": "Injuries"
+  },
+  {
+   "fieldname": "claim_no",
+   "fieldtype": "Data",
+   "label": "Claim No"
+  },
+  {
+   "fieldname": "investigation_tab",
+   "fieldtype": "Tab Break",
+   "label": "Investigation"
+  },
+  {
+   "fieldname": "internal_section",
+   "fieldtype": "Section Break",
+   "label": "Internal"
+  },
+  {
+   "fieldname": "internal_investigator_full_names",
+   "fieldtype": "Data",
+   "label": "Internal Investigator Full Names"
+  },
+  {
+   "fieldname": "column_break_hfaz",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "internal_investigator_phone",
+   "fieldtype": "Phone",
+   "label": "Internal Investigator Phone"
+  },
+  {
+   "fieldname": "internal_investigator_email",
+   "fieldtype": "Data",
+   "label": "Internal Investigator Email"
+  },
+  {
+   "fieldname": "external_section",
+   "fieldtype": "Section Break",
+   "label": "External"
+  },
+  {
+   "fieldname": "external_investigator_full_names",
+   "fieldtype": "Data",
+   "label": "External Investigator Full Names"
+  },
+  {
+   "fieldname": "column_break_dlxt",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "external_investigator_phone",
+   "fieldtype": "Phone",
+   "label": "External Investigator Phone"
+  },
+  {
+   "fieldname": "external_investigator_email",
+   "fieldtype": "Data",
+   "label": "External Investigator Email"
+  },
+  {
+   "fieldname": "police_involvement_section",
+   "fieldtype": "Section Break",
+   "label": "Police Involvement"
+  },
+  {
+   "fieldname": "case_no",
+   "fieldtype": "Data",
+   "label": "Case No"
+  },
+  {
+   "fieldname": "column_break_lqae",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "first_officer_on_site",
+   "fieldtype": "Data",
+   "label": "First Officer On-Site"
+  },
+  {
+   "fieldname": "investigating_officer",
+   "fieldtype": "Data",
+   "label": "Investigating Officer"
+  },
+  {
+   "fieldname": "section_break_xiqa",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "police_report_details",
+   "fieldtype": "Text Editor",
+   "label": "Police Report Details"
+  },
+  {
+   "fieldname": "police_investigation_findings",
+   "fieldtype": "Text Editor",
+   "label": "Police Investigation Findings"
+  },
+  {
+   "fieldname": "police_case_status",
+   "fieldtype": "Select",
+   "label": "Police Case Status",
+   "options": "Pending\nOpened\nCompleted\nSuspended"
+  },
+  {
+   "fieldname": "confirmation_tab",
+   "fieldtype": "Tab Break",
+   "label": "Confirmation"
+  },
+  {
+   "fieldname": "investigators_section",
+   "fieldtype": "Section Break",
+   "label": "Investigators"
+  },
+  {
+   "fieldname": "internal_investigator",
+   "fieldtype": "Data",
+   "label": "Internal Investigator",
+   "read_only": 1
+  },
+  {
+   "fieldname": "internal_investigator_signature",
+   "fieldtype": "Signature",
+   "label": "Internal Investigator Signature"
+  },
+  {
+   "fieldname": "column_break_mxhb",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "external_investigator",
+   "fieldtype": "Data",
+   "label": "External Investigator"
+  },
+  {
+   "fieldname": "external_investigator_signature",
+   "fieldtype": "Signature",
+   "label": "External Investigator Signature"
+  },
+  {
+   "fieldname": "management_section",
+   "fieldtype": "Section Break",
+   "label": "Management"
+  },
+  {
+   "fieldname": "management_user",
+   "fieldtype": "Link",
+   "label": "Management User",
+   "options": "User"
+  },
+  {
+   "fieldname": "management_full_names",
+   "fieldtype": "Data",
+   "label": "Management Full Names"
+  },
+  {
+   "fieldname": "management_signature",
+   "fieldtype": "Signature",
+   "label": "Management Signature"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2025-11-03 08:46:18.043447",
+ "modified_by": "Administrator",
+ "module": "Edp Online Vehicles",
+ "name": "Incidents",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

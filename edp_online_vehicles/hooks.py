@@ -146,11 +146,13 @@ permission_query_conditions = {
 	"Vehicles Warranty Claims": "edp_online_vehicles.permissions.vehicles_warranty_query",
 	"Request for Service": "edp_online_vehicles.permissions.request_for_service_query",
 	"Vehicles Load Test": "edp_online_vehicles.permissions.vehicles_load_test_query",
+	"Vehicles PDI Inspection": "edp_online_vehicles.permissions.vehicles_pdi_inspection_query",
+	"Vehicle Buy Back": "edp_online_vehicles.permissions.vehicle_buy_back_query",
 }
-#
-# has_permission = {
-# 	"Event": "frappe.desk.doctype.event.event.has_permission",
-# }
+
+has_permission = {
+	"Vehicles PDI Inspection": "edp_online_vehicles.edp_online_vehicles.doctype.vehicles_pdi_inspection.vehicles_pdi_inspection.has_permission",
+}
 
 # DocType Class
 # ---------------
@@ -214,13 +216,24 @@ doc_events = {
 		"on_submit": "edp_online_vehicles.events.check_sales_invoice.check_sales_invoice_on_payment"
 	},
 	"Item": {"after_insert": "edp_online_vehicles.events.check_item_settings.check_item_settings"},
+    "Dealer Claims": {
+        "validate": "edp_online_vehicles.edp_online_vehicles.doctype.dealer_claims.dealer_claims.dealer",
+		"after_save": "edp_online_vehicles.edp_online_vehicles.doctype.dealer_claims.dealer_claims.after_save"
+    },
+
+
 }
+
 
 # Scheduled Tasks
 # ---------------
 
 scheduler_events = {
-	"daily": ["edp_online_vehicles.events.reserved_vehicles.update_reserved_vehicles_status"],
+	"daily": [
+        	"edp_online_vehicles.events.reserved_vehicles.update_reserved_vehicles_status",
+            "edp_online_vehicles.edp_online_vehicles.doctype.dealer_claims.dealer_claims.update_claim_age",
+        ],
+        
 	"cron": {
 		"* * * * *": [
 			"edp_online_vehicles.events.check_orders.check_orders_schedule",
@@ -229,7 +242,6 @@ scheduler_events = {
 		]
 	},
 }
-
 # Testing
 # -------
 

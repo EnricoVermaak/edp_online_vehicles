@@ -8,3 +8,5 @@ def contract_expired():
 	equip_doc.status = "Expired"
 	equip_doc.save()
 	frappe.db.commit()
+
+

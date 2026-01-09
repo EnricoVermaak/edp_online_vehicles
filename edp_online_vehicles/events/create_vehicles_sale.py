@@ -4,43 +4,6 @@ import frappe
 from frappe.utils import nowdate, add_months
 from datetime import datetime
 
-
-def update_vehicle_linked_warranty_plans_on_retail(vin_serial_no, retail_date):
-	# Update Vehicle Linked Warranty Plans when vehicle is retailed
-	try:
-		linked_warranties = frappe.get_all(
-			"Vehicle Linked Warranty Plan",
-			filters={
-				"vin_serial_no": vin_serial_no,
-				"status": "Pending Activation"
-			},
-			fields=["name", "warranty_plan_description"]
-		)
-		
-		for warranty in linked_warranties:
-			warranty_doc = frappe.get_doc("Vehicle Linked Warranty Plan", warranty.name, ignore_permissions=True)
-			
-			warranty_doc.status = "Active"
-			
-			warranty_doc.warranty_start_date = retail_date
-			
-			period_months = frappe.get_value(
-				"Vehicles Warranty Plan Administration",
-				warranty.warranty_plan_description,
-				"warranty_period_months"
-			)
-			
-			if period_months:
-				warranty_start_datetime = datetime.strptime(retail_date, "%Y-%m-%d")
-				warranty_end_datetime = add_months(warranty_start_datetime, int(period_months))
-				warranty_doc.warranty_end_date = warranty_end_datetime.strftime("%Y-%m-%d")
-			
-			warranty_doc.save(ignore_permissions=True)
-			frappe.db.commit()
-			
-	except Exception as e:
-		frappe.log_error(f"Error updating Vehicle Linked Warranty Plans on retail: {str(e)}")
-
 @frappe.whitelist()
 def create_vehicles_sale(
 	vehicles_data, dealer, status, sale_type, finance_method, sales_person, customer, finance_by
@@ -106,6 +69,9 @@ def get_vehicles_stock_availability_status(status, vinno, docname):
 	for vin in vinno:
 		change_vehicles_stock_availability_status(availability_status, vin, docname)
 
+	if availability_status == "Sold":
+		remove_from_stock_on_sale(docname)
+
 	if automatically_submit_document == 1:
 		return True
 	else:
@@ -124,9 +90,6 @@ def change_vehicles_stock_availability_status(availability_status, vinno, docnam
 
 	stock_doc.save(ignore_permissions=True)
 	frappe.db.commit()
-
-	if availability_status == "Sold":
-		remove_from_stock_on_sale(docname)
 
 
 @frappe.whitelist()
@@ -181,84 +144,100 @@ def remove_from_stock_on_sale(docname):
 			current_date = nowdate()
 			stock_doc = frappe.get_doc("Vehicle Stock", equip_doc, ignore_permissions=True)
 
-			# Fetch periods (in months) from Model Administration
-			warranty_period = frappe.get_value("Model Administration", stock_doc.model, "warranty_period")
-			service_period = frappe.get_value("Model Administration", stock_doc.model, "service_period")
+		# Fetch periods (in months) from Model Administration
+		warranty_period = frappe.get_value("Model Administration", stock_doc.model, "warranty_period")
+		service_period = frappe.get_value("Model Administration", stock_doc.model, "service_period")
 
-			# Calculate warranty_end_date
-			if warranty_period:
-				warranty_start_datetime = datetime.strptime(current_date, "%Y-%m-%d")
-				warranty_end_datetime = add_months(warranty_start_datetime, int(warranty_period))
-				warranty_end_date = warranty_end_datetime.strftime("%Y-%m-%d")
-			else:
-				warranty_end_date = None
+		# Calculate warranty_end_date based on retail date as start
+		retail_date = doc.retail_date or current_date
+		if warranty_period:
+			warranty_start_datetime = datetime.strptime(str(retail_date), "%Y-%m-%d")
+			warranty_end_datetime = add_months(warranty_start_datetime, int(warranty_period))
+			warranty_end_date = warranty_end_datetime.strftime("%Y-%m-%d")
+		else:
+			warranty_end_date = None
 
-			# Calculate service_end_date
-			if service_period:
-				service_start_datetime = datetime.strptime(current_date, "%Y-%m-%d")
-				service_end_datetime = add_months(service_start_datetime, int(service_period))
-				service_end_date = service_end_datetime.strftime("%Y-%m-%d")
-			else:
-				service_end_date = None
+		# Calculate service_end_date
+		if service_period:
+			service_start_datetime = datetime.strptime(current_date, "%Y-%m-%d")
+			service_end_datetime = add_months(service_start_datetime, int(service_period))
+			service_end_date = service_end_datetime.strftime("%Y-%m-%d")
+		else:
+			service_end_date = None
 
+		# Update the Vehicle Stock document
+		if doc.customer:
+			stock_doc.customer = doc.customer
+			stock_doc.dealer = doc.dealer
 
-			# Update the Vehicle Stock document
-			if doc.customer:
-				stock_doc.customer = doc.customer
-				stock_doc.dealer = doc.dealer
+		elif doc.fleet_customer:
+			stock_doc.fleet_customer = doc.fleet_customer
 
-			elif doc.fleet_customer:
-				stock_doc.fleet_customer = doc.fleet_customer
+		stock_doc.retail_date = doc.retail_date
+		stock_doc.warranty_start_date = doc.retail_date  # Set warranty start date to retail date when sold
+		stock_doc.warranty_end_date = warranty_end_date
+		
+		# Set the warranty period field (this field is named years but contains months)
+		if warranty_period:
+			stock_doc.warranty_period_years = int(warranty_period)
 
-			stock_doc.retail_date = doc.retail_date
-			stock_doc.warranty_start_date = current_date
-			stock_doc.warranty_end_date = warranty_end_date
-			
-			# Set the warranty period field (this field is named years but contains months)
-			if warranty_period:
-				stock_doc.warranty_period_years = int(warranty_period)
+		stock_doc.service_start_date = current_date
+		stock_doc.service_end_date = service_end_date
+		
+		# Set the service period field (this field is named years but contains months)
+		if service_period:
+			stock_doc.service_period_years = int(service_period)
 
-			stock_doc.service_start_date = current_date
-			stock_doc.service_end_date = service_end_date
-			
-			# Set the service period field (this field is named years but contains months)
-			if service_period:
-				stock_doc.service_period_years = int(service_period)
+		# # Update the Serial No document with warranty period and expiry date
+		# serial_doc.warranty_expiry_date = warranty_end_date
+		# serial_doc.warranty_period = warranty_period_days
+		# serial_doc.save(ignore_permissions=True)
 
-	
-			# # Update the Serial No document with warranty period and expiry date
-			# serial_doc.warranty_expiry_date = warranty_end_date
-			# serial_doc.warranty_period = warranty_period_days
-			# serial_doc.save(ignore_permissions=True)
+		comment = f"Vehicle {stock_doc.name} has been sold by Dealer: {doc.dealer} to Customer: {doc.customer_name}"
 
-			comment = f"Vehicle {stock_doc.name} has been sold by Dealer: {doc.dealer} to Customer: {doc.customer_name}"
+		stock_doc.add_comment("Comment", comment)
 
-			stock_doc.add_comment("Comment", comment)
+		stock_doc.save(ignore_permissions=True)
 
-			stock_doc.save(ignore_permissions=True)
-			
-			# Update Vehicle Linked Warranty Plans to Active status
-			update_vehicle_linked_warranty_plans_on_retail(stock.vin_serial_no, current_date)
-			
+		# Sync Fleet Customer linked vehicles if this is a fleet sale
+		if doc.fleet_customer:
+			try:
+				from edp_online_vehicles_mahindrasa.events.fleet_linking import sync_fleet_customer_vehicles
+				sync_fleet_customer_vehicles(doc.fleet_customer)
+			except ImportError:
+				# If mahindrasa app not available, skip
+				pass
 
-			now = datetime.now()
-			user = frappe.session.user
+		# Update all linked warranty plans to Active on retail
+		linked_warranties = frappe.get_all(
+			"Vehicle Linked Warranty Plan",
+			filters={"vin_serial_no": stock.vin_serial_no},
+			pluck="name",
+		)
+		for lw_name in linked_warranties:
+			lw_doc = frappe.get_doc("Vehicle Linked Warranty Plan", lw_name)
+			lw_doc.status = "Active"
+			lw_doc.save(ignore_permissions=True)
+		frappe.db.commit()
 
-			new_tracking_doc = frappe.new_doc("Vehicle Tracking")
+		now = datetime.now()
+		user = frappe.session.user
+		
+		new_tracking_doc = frappe.new_doc("Vehicle Tracking")
 
-			tracking_date_time = now.strftime("%Y-%m-%d %H:%M:%S")
+		tracking_date_time = now.strftime("%Y-%m-%d %H:%M:%S")
 
-			new_tracking_doc.vin_serial_no = stock_doc.name
-			new_tracking_doc.action_summary = "Vehicle Received into Stock"
-			new_tracking_doc.request_datetime = tracking_date_time
+		new_tracking_doc.vin_serial_no = stock_doc.name
+		new_tracking_doc.action_summary = "Vehicle Received into Stock"
+		new_tracking_doc.request_datetime = tracking_date_time
 
-			new_tracking_doc.request = (
-				f"VIN/Serial No {stock_doc.name} has been sold to customer {doc.customer_name} by user {user}"
-			)
+		new_tracking_doc.request = (
+			f"VIN/Serial No {stock_doc.name} has been sold to customer {doc.customer_name} by user {user}"
+		)
 
-			new_tracking_doc.insert(ignore_permissions=True)
+		new_tracking_doc.insert(ignore_permissions=True)
 
-			vinno = stock_doc.vin_serial_no
+		vinno = stock_doc.vin_serial_no
 
 		frappe.db.commit()
 
@@ -268,7 +247,10 @@ def remove_from_stock_on_sale(docname):
 		message += "<br>".join(f"- {vin}" for vin in failed_vins)
 		frappe.msgprint(message)
 	else:
-		frappe.msgprint(f"Vehicles with VIN: {vinno} sold successfully.")
+		all_vins = ", ".join(
+			stock.vin_serial_no for stock in doc.vehicles_sale_items if stock.vin_serial_no
+		)
+		frappe.msgprint(f"Vehicles with VIN(s): {all_vins} sold successfully.")
 		return "Success"
 
 
@@ -300,7 +282,11 @@ def return_to_stock_on_sale(docname):
 		new_issue.insert(ignore_permissions=True)
 		new_issue.submit()
 
+		# Store fleet_customer before clearing for sync
+		fleet_customer_to_sync = stock_doc.fleet_customer if hasattr(stock_doc, 'fleet_customer') and stock_doc.fleet_customer else None
+
 		stock_doc.customer = ""
+		stock_doc.fleet_customer = ""
 		stock_doc.dealer = doc.dealer
 		stock_doc.warranty_start_date = ""
 		stock_doc.warranty_end_date = ""
@@ -311,6 +297,15 @@ def return_to_stock_on_sale(docname):
 		stock_doc.add_comment("Comment", comment)
 
 		stock_doc.save(ignore_permissions=True)
+
+		# Sync Fleet Customer linked vehicles to remove this vehicle
+		if fleet_customer_to_sync:
+			try:
+				from edp_online_vehicles_mahindrasa.events.fleet_linking import sync_fleet_customer_vehicles
+				sync_fleet_customer_vehicles(fleet_customer_to_sync)
+			except ImportError:
+				# If mahindrasa app not available, skip
+				pass
 
 		stock_doc.vin_serial_no
 

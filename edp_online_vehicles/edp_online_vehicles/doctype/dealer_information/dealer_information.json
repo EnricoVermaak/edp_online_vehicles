@@ -1,0 +1,202 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-10-30 15:20:28.538592",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "dealer",
+  "column_break_smvs",
+  "status",
+  "section_break_wpty",
+  "address_column",
+  "street_address",
+  "area",
+  "province",
+  "postal_code",
+  "general_column",
+  "dealer_principal",
+  "vehicle_department_manager",
+  "service_department_manager",
+  "warranty_department_manager",
+  "parts_department_manager",
+  "contact_details_tab",
+  "email",
+  "phone",
+  "banking_details_tab",
+  "bank_name",
+  "account_name",
+  "account_no",
+  "branch_code"
+ ],
+ "fields": [
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Status",
+   "options": "Submitted\nApproved\nMore Info Required",
+   "reqd": 1
+  },
+  {
+   "fieldname": "dealer",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Dealer",
+   "options": "Company",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "column_break_smvs",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "banking_details_tab",
+   "fieldtype": "Tab Break",
+   "label": "Banking Details"
+  },
+  {
+   "fieldname": "bank_name",
+   "fieldtype": "Data",
+   "label": "Bank Name"
+  },
+  {
+   "fieldname": "account_name",
+   "fieldtype": "Data",
+   "label": "Account Name"
+  },
+  {
+   "fieldname": "account_no",
+   "fieldtype": "Float",
+   "label": "Account No",
+   "precision": "0"
+  },
+  {
+   "fieldname": "branch_code",
+   "fieldtype": "Int",
+   "label": "Branch Code"
+  },
+  {
+   "fieldname": "section_break_wpty",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "address_column",
+   "fieldtype": "Column Break",
+   "label": "Address"
+  },
+  {
+   "fieldname": "street_address",
+   "fieldtype": "Small Text",
+   "label": "Street Address",
+   "reqd": 1
+  },
+  {
+   "fieldname": "area",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Area",
+   "reqd": 1
+  },
+  {
+   "fieldname": "province",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Province",
+   "options": "Province or State",
+   "reqd": 1
+  },
+  {
+   "fieldname": "postal_code",
+   "fieldtype": "Int",
+   "label": "Postal Code",
+   "reqd": 1
+  },
+  {
+   "fieldname": "general_column",
+   "fieldtype": "Column Break",
+   "label": "General"
+  },
+  {
+   "fieldname": "dealer_principal",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Dealer Principal",
+   "options": "User",
+   "reqd": 1
+  },
+  {
+   "fieldname": "vehicle_department_manager",
+   "fieldtype": "Link",
+   "label": "Vehicle Department Manager",
+   "options": "User"
+  },
+  {
+   "fieldname": "service_department_manager",
+   "fieldtype": "Link",
+   "label": "Service Department Manager",
+   "options": "User"
+  },
+  {
+   "fieldname": "warranty_department_manager",
+   "fieldtype": "Link",
+   "label": "Warranty Department Manager",
+   "options": "User"
+  },
+  {
+   "fieldname": "parts_department_manager",
+   "fieldtype": "Link",
+   "label": "Parts Department Manager",
+   "options": "User"
+  },
+  {
+   "fieldname": "contact_details_tab",
+   "fieldtype": "Tab Break",
+   "label": "Contact Details"
+  },
+  {
+   "fieldname": "email",
+   "fieldtype": "Data",
+   "label": "Email"
+  },
+  {
+   "fieldname": "phone",
+   "fieldtype": "Phone",
+   "in_list_view": 1,
+   "label": "Phone"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2025-10-30 19:46:19.223147",
+ "modified_by": "Administrator",
+ "module": "Edp Online Vehicles",
+ "name": "Dealer Information",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}

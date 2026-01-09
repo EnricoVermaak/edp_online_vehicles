@@ -1,0 +1,258 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-12-26 07:40:55.904377",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "vehicle_information_section",
+  "vin_serial_no_link",
+  "column_break_ncve",
+  "model_description",
+  "column_break_dlca",
+  "registration_no",
+  "service_parameters_section",
+  "service_interval",
+  "service_period_limit_months",
+  "service_km_hours_limit",
+  "column_break_rmxk",
+  "service_start_date",
+  "service_end_date",
+  "warranty_parameters_section",
+  "warranty_period_months",
+  "warranty_km_hours_limit",
+  "column_break_nfjf",
+  "warranty_start_date",
+  "warranty_end_date",
+  "service_plan_and_history_tab",
+  "last_service_km_hours",
+  "column_break_ruxc",
+  "last_service_date",
+  "next_service_due_date",
+  "service_plans_section",
+  "table_wzas",
+  "service_history_section",
+  "table_gmug",
+  "warranty_plan_and_history_tab",
+  "warranty_plan_section",
+  "table_shau",
+  "warranty_history_section",
+  "table_exum"
+ ],
+ "fields": [
+  {
+   "fieldname": "vehicle_information_section",
+   "fieldtype": "Section Break",
+   "label": "Vehicle Information"
+  },
+  {
+   "description": "Search and Select Vehicle",
+   "fieldname": "vin_serial_no_link",
+   "fieldtype": "Link",
+   "label": "VIN/ Serial No",
+   "options": "Vehicle Stock"
+  },
+  {
+   "fieldname": "column_break_ncve",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "vin_serial_no_link.description",
+   "fieldname": "model_description",
+   "fieldtype": "Data",
+   "label": "Model Description",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_dlca",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "service_parameters_section",
+   "fieldtype": "Section Break",
+   "label": "Service Parameters"
+  },
+  {
+   "fetch_from": "vin_serial_no_link.service_interval",
+   "fieldname": "service_interval",
+   "fieldtype": "Int",
+   "label": "Service Interval",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "vin_serial_no_link.service_period_years",
+   "fieldname": "service_period_limit_months",
+   "fieldtype": "Int",
+   "label": "Service Period Limit (Months)",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "vin_serial_no_link.service_km_hours_limit",
+   "fieldname": "service_km_hours_limit",
+   "fieldtype": "Int",
+   "label": "Service KM/ Hours Limit",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_rmxk",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "vin_serial_no_link.service_start_date",
+   "fieldname": "service_start_date",
+   "fieldtype": "Date",
+   "label": "Service Start Date",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "vin_serial_no_link.service_end_date",
+   "fieldname": "service_end_date",
+   "fieldtype": "Date",
+   "label": "Service End Date",
+   "read_only": 1
+  },
+  {
+   "fieldname": "warranty_parameters_section",
+   "fieldtype": "Section Break",
+   "label": "Warranty Parameters"
+  },
+  {
+   "fetch_from": "vin_serial_no_link.warranty_period_years",
+   "fieldname": "warranty_period_months",
+   "fieldtype": "Int",
+   "label": "Warranty Period (Months)",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "vin_serial_no_link.warranty_km_hours_limit",
+   "fieldname": "warranty_km_hours_limit",
+   "fieldtype": "Int",
+   "label": "Warranty KM/ Hours Limit",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_nfjf",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "vin_serial_no_link.warranty_start_date",
+   "fieldname": "warranty_start_date",
+   "fieldtype": "Date",
+   "label": "Warranty Start Date",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "vin_serial_no_link.warranty_end_date",
+   "fieldname": "warranty_end_date",
+   "fieldtype": "Date",
+   "label": "Warranty End Date",
+   "read_only": 1
+  },
+  {
+   "fieldname": "registration_no",
+   "fieldtype": "Data",
+   "label": "Registration No",
+   "read_only": 1
+  },
+  {
+   "fieldname": "service_plan_and_history_tab",
+   "fieldtype": "Tab Break",
+   "label": "Service Plan and History"
+  },
+  {
+   "fieldname": "warranty_plan_and_history_tab",
+   "fieldtype": "Tab Break",
+   "label": "Warranty Plan and History"
+  },
+  {
+   "fieldname": "last_service_km_hours",
+   "fieldtype": "Int",
+   "label": "Last Service KM/ Hours",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_ruxc",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "last_service_date",
+   "fieldtype": "Date",
+   "label": "Last Service Date",
+   "read_only": 1
+  },
+  {
+   "fieldname": "next_service_due_date",
+   "fieldtype": "Date",
+   "label": "Next Service Due Date",
+   "read_only": 1
+  },
+  {
+   "fieldname": "service_plans_section",
+   "fieldtype": "Section Break",
+   "label": "Service Plans"
+  },
+  {
+   "fieldname": "table_wzas",
+   "fieldtype": "Table",
+   "options": "Service Plan View",
+   "read_only": 1
+  },
+  {
+   "fieldname": "service_history_section",
+   "fieldtype": "Section Break",
+   "label": "Service History"
+  },
+  {
+   "fieldname": "table_gmug",
+   "fieldtype": "Table",
+   "options": "Service History"
+  },
+  {
+   "fieldname": "warranty_plan_section",
+   "fieldtype": "Section Break",
+   "label": "Warranty Plan"
+  },
+  {
+   "fieldname": "table_shau",
+   "fieldtype": "Table",
+   "options": "Warranty Plan View"
+  },
+  {
+   "fieldname": "warranty_history_section",
+   "fieldtype": "Section Break",
+   "label": "Warranty History"
+  },
+  {
+   "fieldname": "table_exum",
+   "fieldtype": "Table",
+   "options": "Warranty History"
+  }
+ ],
+ "grid_page_length": 50,
+ "hide_toolbar": 1,
+ "index_web_pages_for_search": 1,
+ "issingle": 1,
+ "links": [],
+ "modified": "2025-12-26 08:52:10.240005",
+ "modified_by": "Administrator",
+ "module": "Edp Online Vehicles",
+ "name": "Vehicle Lookup",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

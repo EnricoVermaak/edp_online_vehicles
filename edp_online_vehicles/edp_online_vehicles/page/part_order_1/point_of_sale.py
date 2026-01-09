@@ -49,7 +49,7 @@ def search_by_term(search_term, warehouse, price_list):
 				}
 			)
 
-	item_stock_qty, is_stock_item = get_stock_availability(item_code, warehouse)
+	item_stock_qty, is_stock_item, _ = get_stock_availability(item_code, warehouse)
 	item_stock_qty = item_stock_qty // item.get("conversion_factor", 1)
 	item.update({"actual_qty": item_stock_qty})
 
@@ -186,7 +186,7 @@ def get_items(start, page_length, price_list, item_group, search_term=""):
 
 	for item in items_data:
 		frappe.get_doc("Item", item.item_code).get("uoms", [])
-		item.actual_qty, _ = get_stock_availability(item.item_code, warehouse)
+		item.actual_qty, _ , _= get_stock_availability(item.item_code, warehouse)
 		item.uom = item.stock_uom
 
 		# Query dealer_qty: sum all actual_qty for this item from bins

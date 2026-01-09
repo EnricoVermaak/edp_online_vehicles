@@ -12,10 +12,11 @@
   "mandatory_stock_check_on_day_of_every_month",
   "mandatory_stock_check_due_in_days",
   "default_model_image",
-  "shipment_tab",
-  "shipment_section",
-  "automatically_allocate_received_shipments",
-  "set_default_warehouse",
+ "shipment_tab",
+ "shipment_section",
+ "automatically_allocate_received_shipments",
+ "automatically_reserve_stock",
+ "set_default_warehouse",
   "sla_days",
   "automatically_create_stock_number",
   "stock_no_prefix",
@@ -63,6 +64,9 @@
   "bank_integration_section",
   "max_retries",
   "php_timeout",
+  "sap_integration_section",
+  "sap_token",
+  "sap_token_expires_at",
   "servers_section",
   "integration_servers"
  ],
@@ -316,6 +320,13 @@
    "label": "Automatically allocate received shipment vehicles to open back orders"
   },
   {
+   "default": "0",
+   "description": "When checked will always reserve stock that gets received.",
+   "fieldname": "automatically_reserve_stock",
+   "fieldtype": "Check",
+   "label": "Automatically Reserve Stock"
+  },
+  {
    "fieldname": "vehicle_order_no_prefix",
    "fieldtype": "Data",
    "label": "Vehicle Order No Prefix",
@@ -420,6 +431,23 @@
    "fieldname": "php_timeout",
    "fieldtype": "Int",
    "label": "PHP Timeout (Seconds)"
+  },
+  {
+   "fieldname": "sap_integration_section",
+   "fieldtype": "Section Break",
+   "label": "SAP Integration"
+  },
+  {
+   "fieldname": "sap_token",
+   "fieldtype": "Password",
+   "label": "SAP Token",
+   "read_only": 1
+  },
+  {
+   "fieldname": "sap_token_expires_at",
+   "fieldtype": "Datetime",
+   "label": "SAP Token Expires At",
+   "read_only": 1
   },
   {
    "fieldname": "integration_servers",

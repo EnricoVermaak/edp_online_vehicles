@@ -10,7 +10,8 @@
   "oem_colour_code",
   "naamsa_colour_code",
   "natis_colour_code",
-  "discontinued"
+  "discontinued",
+  "default"
  ],
  "fields": [
   {
@@ -48,11 +49,17 @@
    "label": "Model",
    "options": "Model Administration",
    "reqd": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "default",
+   "fieldtype": "Check",
+   "label": "Default Colour"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-10-24 16:28:07.808286",
+ "modified": "2025-12-17 14:24:51.400471",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Model Colour",

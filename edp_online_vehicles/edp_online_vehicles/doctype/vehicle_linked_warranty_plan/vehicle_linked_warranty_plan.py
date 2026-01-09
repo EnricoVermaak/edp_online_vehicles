@@ -3,89 +3,130 @@
 
 import frappe
 from frappe.model.document import Document
-from frappe.utils import add_months
+from frappe.utils import now_datetime, add_months
 
 
 class VehicleLinkedWarrantyPlan(Document):
-	def validate(self):
-		if not self.status:
-			self.status = "Pending Activation"
-	
-	def after_insert(self):
-		self.sync_to_vehicle_stock()
-	
-	def on_update(self):
-		if self.has_value_changed('status') and self.status == "Active":
-			self.update_warranty_dates()
-	
-	def on_trash(self):
-		self.remove_from_vehicle_stock()
-	
-	def sync_to_vehicle_stock(self):
-		if not self.vin_serial_no or not self.warranty_plan_description:
-			return
-		
-		try:
-			vehicle_stock = frappe.get_doc("Vehicle Stock", self.vin_serial_no)
-			
-			existing_plan = None
-			for plan in vehicle_stock.table_pcgj:
-				if plan.warranty_plan_description == self.warranty_plan_description:
-					existing_plan = plan
-					break
-			
-			if not existing_plan:
-				period_months = frappe.db.get_value(
-					"Vehicles Warranty Plan Administration",
-					self.warranty_plan_description,
-					"warranty_period_months"
-				)
-				warranty_odo_limit = frappe.db.get_value(
-					"Vehicles Warranty Plan Administration",
-					self.warranty_plan_description,
-					"warranty_odo_limit"
-				)
-				
-				vehicle_stock.append("table_pcgj", {
-					"warranty_plan_description": self.warranty_plan_description,
-					"period_months": period_months,
-					"warranty_odo_limit": warranty_odo_limit
-				})
-				
-				vehicle_stock.save(ignore_permissions=True)
-				frappe.db.commit()
-		except Exception as e:
-			frappe.log_error(f"Error syncing warranty plan to Vehicle Stock: {str(e)}")
-	
-	def remove_from_vehicle_stock(self):
-		if not self.vin_serial_no:
-			return
-		
-		try:
-			vehicle_stock = frappe.get_doc("Vehicle Stock", self.vin_serial_no)
-			
-			plans_to_remove = []
-			for plan in vehicle_stock.table_pcgj:
-				if plan.warranty_plan_description == self.warranty_plan_description:
-					plans_to_remove.append(plan)
-			
-			for plan in plans_to_remove:
-				vehicle_stock.remove(plan)
-			
-			vehicle_stock.save(ignore_permissions=True)
-			frappe.db.commit()
-		except Exception as e:
-			frappe.log_error(f"Error removing warranty plan from Vehicle Stock: {str(e)}")
-	
-	def update_warranty_dates(self):
-		if self.warranty_start_date and self.status == "Active":
-			# Get the warranty period from Vehicles Warranty Plan Administration
-			period_months = frappe.db.get_value(
-				"Vehicles Warranty Plan Administration",
-				self.warranty_plan_description,
-				"warranty_period_months"
-			)
-			
-			if period_months:
-				self.warranty_end_date = add_months(self.warranty_start_date, int(period_months))
-				self.save(ignore_permissions=True)
+
+    def validate(self):
+        # ---- Date Set Logic ----
+        activation_date = now_datetime()
+        months = self.warranty_period_months or 0
+        expiration_date = add_months(activation_date, months)
+
+        # Set values in fields
+        self.activation_date_time = activation_date
+        self.expiration_date_time = expiration_date
+    # Constants
+    STATUS_ACTIVE = "Active"
+    
+    def before_save(self):
+        self._update_title()
+    
+    def _update_title(self):
+        # Title field uses fetch_from, but we ensure it's set as a fallback
+        if self.warranty_plan:
+            self.title = self.warranty_plan
+        else:
+            self.title = self.name or ""
+    
+    def get_title(self):
+        # This ensures the title is always the warranty plan name for Link field display
+        if self.warranty_plan:
+            return self.warranty_plan
+        return self.name or ""
+    
+    def after_insert(self):
+        self._update_title()
+        # Only add to vehicle stock table if status is Active
+        if self.status == self.STATUS_ACTIVE:
+            self.add_to_vehicle_stock_warranty_table()
+    
+    def on_update(self):
+        if self.has_value_changed("warranty_plan"):
+            self._update_title()  # Update title when warranty plan changes
+            if self.status == self.STATUS_ACTIVE:
+                self.add_to_vehicle_stock_warranty_table()
+        
+        if self.has_value_changed("status"):
+            self._handle_status_change()
+    
+    def on_trash(self):
+        self.remove_from_vehicle_stock_warranty_table()
+    
+    def _handle_status_change(self):
+        if not self._is_valid_for_vehicle_stock_update():
+            return
+        
+        prev_status = self._get_previous_status()
+        
+        # When status changes to Active, add to vehicle stock warranty table
+        if self._is_becoming_active(prev_status):
+            self.add_to_vehicle_stock_warranty_table()
+        # When status changes from Active to something else, remove from table
+        elif self._is_leaving_active(prev_status):
+            self.remove_from_vehicle_stock_warranty_table()
+    
+    def _get_previous_status(self):
+        doc_before_save = self.get_doc_before_save()
+        return doc_before_save.status if doc_before_save else None
+    
+    def _is_becoming_active(self, prev_status):
+        return self.status == self.STATUS_ACTIVE and prev_status != self.STATUS_ACTIVE
+    
+    def _is_leaving_active(self, prev_status):
+        return prev_status == self.STATUS_ACTIVE and self.status != self.STATUS_ACTIVE
+    
+    def _is_valid_for_vehicle_stock_update(self):
+        return bool(self.vin_serial_no and self.warranty_plan)
+    
+    def _get_vehicle_stock(self):
+        if not self.vin_serial_no:
+            return None
+        return frappe.get_doc("Vehicle Stock", self.vin_serial_no)
+    
+    def _warranty_exists_in_vehicle_stock(self, vehicle_stock):
+        return any(
+            row.warranty_plan_description == self.name
+            for row in vehicle_stock.table_pcgj
+            if row.warranty_plan_description
+        )
+    
+    def _save_vehicle_stock(self, vehicle_stock):
+        vehicle_stock.save(ignore_permissions=True)
+        frappe.db.commit()
+    
+    def add_to_vehicle_stock_warranty_table(self):
+        # Only add if status is Active
+        if self.status != self.STATUS_ACTIVE:
+            return
+        
+        if not self._is_valid_for_vehicle_stock_update():
+            return
+        
+        vehicle_stock = self._get_vehicle_stock()
+        if not vehicle_stock:
+            return
+        
+        if not self._warranty_exists_in_vehicle_stock(vehicle_stock):
+            vehicle_stock.append("table_pcgj", {
+                "warranty_plan_description": self.name,  # Store the Vehicle Linked Warranty Plan name
+                "period_months": self.warranty_period_months,
+                "warranty_odo_limit": self.warranty_limit_km_hours
+            })
+            self._save_vehicle_stock(vehicle_stock)
+    
+    def remove_from_vehicle_stock_warranty_table(self):
+        if not self._is_valid_for_vehicle_stock_update():
+            return
+        
+        vehicle_stock = self._get_vehicle_stock()
+        if not vehicle_stock:
+            return
+        
+        vehicle_stock.table_pcgj = [
+            row for row in vehicle_stock.table_pcgj
+            if row.warranty_plan_description != self.name
+        ]
+        
+        self._save_vehicle_stock(vehicle_stock)
