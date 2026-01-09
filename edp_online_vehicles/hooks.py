@@ -125,6 +125,11 @@ home_page = "/me"
 # before_app_uninstall = "edp_online_vehicles.utils.before_app_uninstall"
 # after_app_uninstall = "edp_online_vehicles.utils.after_app_uninstall"
 
+# Migration
+# ------------
+# after_migrate = "edp_online_vehicles.edp_online_vehicles.settings.run_every_migrate"
+
+
 # Desk Notifications
 # ------------------
 # See frappe.core.notifications.get_notification_config

@@ -25,77 +25,68 @@ frappe.listview_settings["Vehicle Stock"] = {
 	onload: function (listview) {
 		// Hide the default "New" button
 		$('[data-label="Add Vehicle Stock"]').hide();
+		listview.page.add_actions_menu_item(__('Transfer to New Warehouse'), function () {
+			const selected_docs = listview.get_checked_items();
 
-		listview.page.add_actions_menu_item(__("UON sftp"), function () {
-				frappe.call({
-							///home/frappe/frappe-bench/apps/edp_online_vehicles/edp_online_vehicles/events/uon_integration.py
-							method: "edp_online_vehicles.events.uon_integration.uon_sftp",
-							args: {
-								// docnames: selected_docs.map((doc) => doc.name),
-								// company: company,
-								// user: frappe.session.user,
-							},
-							callback: function () {
-								// Final result will be shown via real-time updates from the backend
-							},
-						});
+			let vin = selected_docs.map(doc => doc.name);
+
+			const dialog = new frappe.ui.Dialog({
+				title: __('Transfer to New Warehouse'),
+				fields: [
+					{
+						label: __('To Warehouse'),
+						fieldname: 'to_warehouse',
+						fieldtype: 'Link',
+						options: "Warehouse",
+					},
+					{
+						label: __('Vehicles'),
+						fieldname: 'selected_Vehicles',
+						fieldtype: 'Table',
+						read_only: 1,
+						cannot_add_rows: true,
+						in_place_edit: false,
+						fields: [
+							{
+								fieldname: 'vin_serial_no',
+								fieldtype: 'Link',
+								in_list_view: 1,
+								label: 'VIN/ Serial No',
+								options: 'Vehicle Stock',
+								read_only: 1
+							}
+						],
+						data: vin.map(v => ({ vin_serial_no: v }))
+					}
+				],
+				primary_action_label: __('Move'),
+				primary_action(values) {
+					dialog.hide();
+
+					frappe.dom.freeze();
+
+					frappe.call({
+						method: "edp_online_vehicles.events.move_vin_to_new_warehouse.move_vin_to_new_warehouse",
+						args: {
+							docnames: selected_docs.map(doc => doc.name),
+							to_warehouse: values.to_warehouse,
+						},
+						callback: function (r) {
+							if (r.message == "Success") {
+								frappe.dom.unfreeze();
+
+								frappe.show_alert({
+									message: __('Vehicle/s successfully transferred to warehouse ' + values.to_warehouse),
+									indicator: 'green'
+								}, 10);
+							}
+						}
+					})
+				}
 			});
-		listview.page.add_actions_menu_item(__("outgoing_vehicles_stock"), function () {
-				frappe.call({
-							///home/frappe/frappe-bench/apps/edp_online_vehicles/edp_online_vehicles/events/uon_integration.py
-							method: "edp_online_vehicles.events.uon_integration.outgoing_vehicles_stock",
-							args: {
-								// docnames: selected_docs.map((doc) => doc.name),
-								// company: company,
-								// user: frappe.session.user,
-							},
-							callback: function () {
-								// Final result will be shown via real-time updates from the backend
-							},
-						});
-			});	
-		listview.page.add_actions_menu_item(__("outgoing_vehicles_in_transit"), function () {
-				frappe.call({
-							///home/frappe/frappe-bench/apps/edp_online_vehicles/edp_online_vehicles/events/uon_integration.py
-							method: "edp_online_vehicles.events.uon_integration.outgoing_vehicles_in_transit",
-							args: {
-								// docnames: selected_docs.map((doc) => doc.name),
-								// company: company,
-								// user: frappe.session.user,
-							},
-							callback: function () {
-								// Final result will be shown via real-time updates from the backend
-							},
-						});
-			});		
-		listview.page.add_actions_menu_item(__("outgoing_dealer_stock"), function () {
-				frappe.call({
-							///home/frappe/frappe-bench/apps/edp_online_vehicles/edp_online_vehicles/events/uon_integration.py
-							method: "edp_online_vehicles.events.uon_integration.outgoing_dealer_stock",
-							args: {
-								// docnames: selected_docs.map((doc) => doc.name),
-								// company: company,
-								// user: frappe.session.user,
-							},
-							callback: function () {
-								// Final result will be shown via real-time updates from the backend
-							},
-						});
-			});	
-		listview.page.add_actions_menu_item(__("outgoing_retail"), function () {
-				frappe.call({
-							///home/frappe/frappe-bench/apps/edp_online_vehicles/edp_online_vehicles/events/uon_integration.py
-							method: "edp_online_vehicles.events.uon_integration.outgoing_retail",
-							args: {
-								// docnames: selected_docs.map((doc) => doc.name),
-								// company: company,
-								// user: frappe.session.user,
-							},
-							callback: function () {
-								// Final result will be shown via real-time updates from the backend
-							},
-						});
-			});		
+
+			dialog.show();
+		});
 		const default_dealer = frappe.defaults.get_default("company");
 		let dealers = "";
 
@@ -167,8 +158,8 @@ frappe.listview_settings["Vehicle Stock"] = {
 								frappe.msgprint(
 									__(
 										"Vehicle (VIN " +
-											vinno +
-											") is not available.",
+										vinno +
+										") is not available.",
 									),
 								);
 								resolve(false);
@@ -272,7 +263,7 @@ frappe.listview_settings["Vehicle Stock"] = {
 									reserve_from_date: values.reserve_from_date,
 									reserve_to_date: values.reserve_to_date,
 								},
-								callback: function (r) {},
+								callback: function (r) { },
 							});
 							dialog.hide();
 						},
@@ -316,8 +307,8 @@ frappe.listview_settings["Vehicle Stock"] = {
 								frappe.msgprint(
 									__(
 										"Vehicles (VIN " +
-											vinno +
-											") is not available for sale.",
+										vinno +
+										") is not available for sale.",
 									),
 								);
 								resolve(false);
@@ -671,7 +662,7 @@ frappe.listview_settings["Vehicle Stock"] = {
 								date_applied: date_applied,
 								old_microdot: old_microdot,
 							},
-							callback: function (r) {},
+							callback: function (r) { },
 						});
 
 						dialog.hide();
@@ -690,8 +681,8 @@ frappe.listview_settings["Vehicle Stock"] = {
 					if (doc.availability_status != "Reserved") {
 						frappe.msgprint(
 							"Vehicle " +
-								doc.vin_serial_no +
-								" is not reserved. Please ensure all selected vehicles are reserved.",
+							doc.vin_serial_no +
+							" is not reserved. Please ensure all selected vehicles are reserved.",
 						);
 						return;
 					}
