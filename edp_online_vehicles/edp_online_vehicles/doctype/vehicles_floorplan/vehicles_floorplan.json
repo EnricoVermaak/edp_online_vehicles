@@ -9,7 +9,7 @@
   "bank",
   "plan",
   "code",
-  "evolve_account_no",
+  "dms_account_no",
   "balance",
   "updated_on",
   "dealer_reference"
@@ -33,6 +33,7 @@
   {
    "fieldname": "code",
    "fieldtype": "Data",
+   "in_list_view": 1,
    "label": "Code"
   },
   {
@@ -52,20 +53,24 @@
    "label": "Dealer Reference"
   },
   {
-   "fieldname": "evolve_account_no",
+   "fieldname": "dms_account_no",
    "fieldtype": "Data",
-   "label": "Evolve Account No"
+   "in_list_view": 1,
+   "label": "DMS Account No"
   }
  ],
+ "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-09-15 08:56:02.992056",
+ "modified": "2026-01-13 18:19:52.939758",
  "modified_by": "Administrator",
- "module": "EDP Online Vehicles",
+ "module": "Edp Online Vehicles",
  "name": "Vehicles Floorplan",
  "owner": "Administrator",
  "permissions": [],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": []
