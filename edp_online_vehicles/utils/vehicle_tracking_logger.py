@@ -4,20 +4,7 @@ from typing import Optional, Any, Dict
 
 
 class VehicleTrackingLogger:
-    """
-    Utility class for logging to Vehicle Tracking doctype.
-    
-    Methods:
-        log() - Main method to create a Vehicle Tracking entry with all fields
-        log_api_call() - Convenience method for logging API calls (type=Integration)
-        log_success() - Convenience method for logging successful operations (status=Successful)
-        log_error() - Convenience method for logging errors (status=Error, includes error_message)
-        log_failed() - Convenience method for logging failed operations (status=Failed)
-        update() - Update an existing Vehicle Tracking document with response data
-        _format_as_json() - Helper: Format value as JSON or return string as-is
-        _truncate_summary() - Helper: Truncate action summary to 140 chars max
-        _ensure_integration_endpoint() - Helper: Auto-create integration endpoint if missing
-    """
+    """Utility class for logging to Vehicle Tracking doctype."""
     STATUS_PENDING = "Pending"
     STATUS_PROCESSED = "Processed"
     STATUS_SUCCESSFUL = "Successful"
@@ -48,41 +35,18 @@ class VehicleTrackingLogger:
         response_datetime: Optional[Any] = None,
         submit: bool = False,
     ) -> Optional[str]:
-        """
-        Main logging method that creates a Vehicle Tracking entry.
+        """Create a Vehicle Tracking entry.
         
-        Args:
-            action_summary: Brief description of the action (required, max 140 chars)
-            vin_serial_no: VIN/Serial number (Link to Vehicle Stock)
-            request_payload: Request data (will be JSON formatted or kept as string)
-            response: Response data (will be JSON formatted or kept as string)
-            status: Status of the operation (Pending, Processed, Successful, Failed, Error)
-            type: Type of tracking entry (Integration, EDP Online)
-            integration_end_point: Integration endpoint name (will be auto-created if needed)
-            hq_order_no: HQ Order number (Link to Head Office Vehicle Orders)
-            soap_method: SOAP method name
-            floorplan: Floorplan name
-            response_status: Additional response status text
-            request_datetime: Custom request datetime (defaults to now)
-            response_datetime: Custom response datetime (defaults to now if response provided)
-            submit: Whether to submit the document after creation (defaults to False)
-        
-        Returns:
-            The name of the created Vehicle Tracking document, or None if creation failed
+        Returns the document name, or None if creation failed.
         """
         try:
-            # Ensure integration endpoint exists if provided
             integration_end_point = self._ensure_integration_endpoint(integration_end_point)
             
-            # Set timestamps
             request_ts = request_datetime or frappe.utils.now_datetime()
             response_ts = response_datetime or (request_ts if response else None)
             
-            # Format request and response as JSON
             formatted_request = self._format_as_json(request_payload)
             formatted_response = self._format_as_json(response)
-            
-            # Build document dictionary
             doc_dict = {
                 "doctype": "Vehicle Tracking",
                 "action_summary": self._truncate_summary(action_summary),
@@ -96,19 +60,16 @@ class VehicleTrackingLogger:
                 "response_status": response_status or status,
             }
             
-            # Handle VIN/Serial number
             vin_value = None
             if vin_serial_no:
                 vin_value = str(vin_serial_no).strip()
                 if vin_value and frappe.db.exists("Vehicle Stock", vin_value):
                     doc_dict["vin_serial_no"] = vin_value
                 elif vin_value:
-                    # If VIN doesn't exist in Vehicle Stock, append it to action_summary
                     doc_dict["action_summary"] = self._truncate_summary(
                         f"[VIN:{vin_value}] {doc_dict['action_summary']}"
                     )
             
-            # Add optional fields
             if hq_order_no:
                 doc_dict["hq_order_no"] = hq_order_no
             if soap_method:
@@ -116,16 +77,13 @@ class VehicleTrackingLogger:
             if floorplan:
                 doc_dict["floorplan"] = floorplan
             
-            # Create document
             doc = frappe.get_doc(doc_dict)
             
-            # If VIN is not in doc_dict (not found in Vehicle Stock), ignore mandatory
             if "vin_serial_no" not in doc_dict:
                 doc.flags.ignore_mandatory = True
             
             doc.insert(ignore_permissions=True)
             
-            # Submit document if requested
             if submit:
                 try:
                     doc.submit()
@@ -155,21 +113,7 @@ class VehicleTrackingLogger:
         integration_end_point: Optional[str] = None,
         **kwargs
     ) -> Optional[str]:
-        """
-        Convenience method for logging API calls (type=Integration).
-        
-        Args:
-            action_summary: Brief description of the API call
-            vin_serial_no: VIN/Serial number
-            request_payload: Request payload
-            response: Response data
-            status: Status of the API call
-            integration_end_point: Integration endpoint name
-            **kwargs: Additional fields (hq_order_no, soap_method, floorplan, etc.)
-        
-        Returns:
-            The name of the created Vehicle Tracking document, or None if creation failed
-        """
+        """Log API call with type=Integration."""
         return self.log(
             action_summary=action_summary,
             vin_serial_no=vin_serial_no,
@@ -190,20 +134,7 @@ class VehicleTrackingLogger:
         integration_end_point: Optional[str] = None,
         **kwargs
     ) -> Optional[str]:
-        """
-        Convenience method for logging successful operations (status=Successful).
-        
-        Args:
-            action_summary: Brief description of the successful operation
-            vin_serial_no: VIN/Serial number
-            request_payload: Request payload
-            response: Response data
-            integration_end_point: Integration endpoint name
-            **kwargs: Additional fields (hq_order_no, soap_method, floorplan, etc.)
-        
-        Returns:
-            The name of the created Vehicle Tracking document, or None if creation failed
-        """
+        """Log successful operation with status=Successful."""
         return self.log(
             action_summary=action_summary,
             vin_serial_no=vin_serial_no,
@@ -224,22 +155,7 @@ class VehicleTrackingLogger:
         integration_end_point: Optional[str] = None,
         **kwargs
     ) -> Optional[str]:
-        """
-        Convenience method for logging errors (status=Error).
-        
-        Args:
-            action_summary: Brief description of the error
-            vin_serial_no: VIN/Serial number
-            request_payload: Request payload (if any)
-            response: Response data or error details
-            error_message: Error message (will be added to response if provided)
-            integration_end_point: Integration endpoint name
-            **kwargs: Additional fields (hq_order_no, soap_method, floorplan, etc.)
-        
-        Returns:
-            The name of the created Vehicle Tracking document, or None if creation failed
-        """
-        # Combine response with error message if provided
+        """Log error with status=Error. Error message is merged into response if provided."""
         final_response = response
         if error_message:
             if final_response:
@@ -271,20 +187,7 @@ class VehicleTrackingLogger:
         integration_end_point: Optional[str] = None,
         **kwargs
     ) -> Optional[str]:
-        """
-        Convenience method for logging failed operations (status=Failed).
-        
-        Args:
-            action_summary: Brief description of the failed operation
-            vin_serial_no: VIN/Serial number
-            request_payload: Request payload
-            response: Response data
-            integration_end_point: Integration endpoint name
-            **kwargs: Additional fields (hq_order_no, soap_method, floorplan, etc.)
-        
-        Returns:
-            The name of the created Vehicle Tracking document, or None if creation failed
-        """
+        """Log failed operation with status=Failed."""
         return self.log(
             action_summary=action_summary,
             vin_serial_no=vin_serial_no,
@@ -303,18 +206,9 @@ class VehicleTrackingLogger:
         response_status: Optional[str] = None,
         response_datetime: Optional[Any] = None,
     ) -> Optional[str]:
-        """
-        Update an existing Vehicle Tracking document with response data.
+        """Update an existing Vehicle Tracking document.
         
-        Args:
-            tracking_doc_name: Name of the existing Vehicle Tracking document
-            status: New status to set
-            response: Response data to add/update (will be JSON formatted or kept as string for XML)
-            response_status: Response status text to set
-            response_datetime: Response datetime (defaults to now if response provided)
-        
-        Returns:
-            The name of the updated Vehicle Tracking document, or None if update failed
+        Returns the document name, or None if update failed.
         """
         try:
             if not frappe.db.exists("Vehicle Tracking", tracking_doc_name):
@@ -326,20 +220,16 @@ class VehicleTrackingLogger:
             
             doc = frappe.get_doc("Vehicle Tracking", tracking_doc_name)
             
-            # Update status if provided
             if status:
                 doc.status = status
             
-            # Update response if provided
             if response is not None:
                 doc.response = self._format_as_json(response)
                 if response_datetime:
                     doc.response_datetime = response_datetime
                 elif not doc.response_datetime:
-                    # Only set if not already set
                     doc.response_datetime = frappe.utils.now_datetime()
             
-            # Update response_status if provided
             if response_status:
                 doc.response_status = response_status
             
@@ -355,23 +245,13 @@ class VehicleTrackingLogger:
             return None
     
     def _format_as_json(self, value: Any) -> Optional[str]:
-        """
-        Format value as JSON string, or return as-is if already a string (for XML/plain text).
-        
-        Args:
-            value: Value to format (dict, list, string, XML, etc.)
-        
-        Returns:
-            JSON formatted string (or original string for XML/plain text), or None if value is empty/None
-        """
+        """Format value as JSON string, or return as-is if already a string."""
         if value in (None, ""):
             return None
         
-        # If it's already a string, return as-is (could be XML or plain text)
         if isinstance(value, str):
             return value
         
-        # Try to format as JSON
         try:
             return json.dumps(value, indent=2)
         except TypeError:
@@ -381,15 +261,7 @@ class VehicleTrackingLogger:
                 return str(value)
     
     def _truncate_summary(self, summary: str) -> str:
-        """
-        Truncate action summary to maximum allowed length (140 chars).
-        
-        Args:
-            summary: Action summary string to truncate
-        
-        Returns:
-            Truncated summary if needed
-        """
+        """Truncate action summary to 140 chars."""
         if not summary:
             return ""
         if len(summary) <= self.MAX_ACTION_SUMMARY_LENGTH:
@@ -397,15 +269,7 @@ class VehicleTrackingLogger:
         return summary[:self.MAX_ACTION_SUMMARY_LENGTH]
     
     def _ensure_integration_endpoint(self, name: Optional[str]) -> Optional[str]:
-        """
-        Ensure integration endpoint exists, auto-create if needed.
-        
-        Args:
-            name: Integration endpoint name
-        
-        Returns:
-            Integration endpoint name if created/found, None otherwise
-        """
+        """Ensure integration endpoint exists, auto-create if missing."""
         if not name:
             return None
         
