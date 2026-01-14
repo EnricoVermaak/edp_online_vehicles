@@ -360,6 +360,35 @@ class VehiclesShipment(Document):
 
 						hq_order_doc.save(ignore_permissions=True)
 
+						# TAC integration for Mahindra SA
+						try:
+							from edp_api.api.TAC.tac_integration import tac_delivery_outgoing
+							
+							user_company = frappe.defaults.get_user_default("Company")
+							head_office = frappe.get_value("Company", {"custom_head_office": 1}, "name")
+							
+							if user_company == head_office and tac_delivery_outgoing:
+								create_integration_doc = frappe.db.get_value(
+									"Vehicles Order Status", {"name": hq_order_doc.status}, "create_integration_file"
+								)
+								
+								if create_integration_doc and hq_order_doc.vinserial_no:
+									tac_delivery_outgoing(
+										hq_order_doc.vinserial_no,
+										hq_order_doc.model_delivered,
+										hq_order_doc.model_description,
+										hq_order_doc.colour_delivered,
+										hq_order_doc.order_placed_by,
+									)
+						except (ImportError, ModuleNotFoundError):
+							# TAC integration not available, skip silently
+							pass
+						except Exception as e:
+							frappe.log_error(
+								f"Failed to create TAC delivery file for auto-allocated order {hq_order_doc.name}, VIN {vin_serial_no}: {str(e)}",
+								"TAC Delivery File Error - Auto Allocation"
+							)
+
 			return "Received"
 		else:
 			for item in selected_items:

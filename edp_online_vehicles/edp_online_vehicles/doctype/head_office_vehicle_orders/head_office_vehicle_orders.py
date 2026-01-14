@@ -50,6 +50,59 @@ class HeadOfficeVehicleOrders(Document):
 		if submit_doc:
 			self.submit()
 
+		# TAC integration trigger on status change
+		if not self.is_new() and self.has_value_changed("status") and tac_delivery_outgoing:
+			# Check if new status requires integration and VIN is allocated
+			if self.vinserial_no:
+				user_company = frappe.defaults.get_user_default("Company")
+				head_office = frappe.get_value("Company", {"custom_head_office": 1}, "name")
+				
+				if user_company == head_office:
+					create_integration_doc = frappe.db.get_value(
+						"Vehicles Order Status", {"name": self.status}, "create_integration_file"
+					)
+					
+					if create_integration_doc:
+						# Check if TAC delivery file was already created for this VIN to avoid duplicates
+						existing_tracking = frappe.db.exists(
+							"Vehicle Tracking",
+							{
+								"vin_serial_no": self.vinserial_no,
+								"action_summary": "Delivery Instruction Sent",
+								"integration_end_point": "TAC"
+							}
+						)
+						
+						if not existing_tracking:
+							# Ensure required fields are populated from Vehicle Stock if missing
+							if self.vinserial_no:
+								stock_doc = frappe.get_doc("Vehicle Stock", self.vinserial_no)
+								if stock_doc:
+									if not self.model_delivered:
+										self.model_delivered = stock_doc.model
+									if not self.model_description:
+										self.model_description = stock_doc.description
+									if not self.colour_delivered and stock_doc.colour:
+										self.colour_delivered = stock_doc.colour.split(" - ")[0]
+									if not self.engine_no:
+										self.engine_no = stock_doc.engine_no
+							
+							# Create TAC delivery file
+							if self.model_delivered:
+								try:
+									tac_delivery_outgoing(
+										self.vinserial_no,
+										self.model_delivered,
+										self.model_description or "",
+										self.colour_delivered or "",
+										self.order_placed_by,
+									)
+								except Exception as e:
+									frappe.log_error(
+										f"Failed to create TAC delivery file on status change for order {self.name}, VIN {self.vinserial_no}: {str(e)}",
+										"TAC Delivery File Error - Status Change"
+									)
+
 	def before_submit(self):
 		if self.status != "Delivered" or self.status != "Canceled":
 			frappe.throw(
@@ -393,6 +446,41 @@ class HeadOfficeVehicleOrders(Document):
 			new_tracking_doc.request = f"VIN/Serial No {self.vinserial_no} allocated on Order {self.name} to Dealer {self.order_placed_by}"
 
 			new_tracking_doc.insert(ignore_permissions=True)
+
+			# TAC integration for Mahindra SA
+			user_company = frappe.defaults.get_user_default("Company")
+			head_office = frappe.get_value("Company", {"custom_head_office": 1}, "name")
+			
+			if user_company == head_office and tac_delivery_outgoing:
+				# Ensure order has required fields for TAC integration
+				if not self.model_delivered and stock_doc.model:
+					self.model_delivered = stock_doc.model
+				if not self.model_description and stock_doc.description:
+					self.model_description = stock_doc.description
+				if not self.colour_delivered and stock_doc.colour:
+					self.colour_delivered = stock_doc.colour.split(" - ")[0]
+				if not self.engine_no and stock_doc.engine_no:
+					self.engine_no = stock_doc.engine_no
+				
+				# Check if integration should be triggered
+				create_integration_doc = frappe.db.get_value(
+					"Vehicles Order Status", {"name": self.status}, "create_integration_file"
+				)
+				
+				if create_integration_doc and self.vinserial_no and self.model_delivered:
+					try:
+						tac_delivery_outgoing(
+							self.vinserial_no,
+							self.model_delivered,
+							self.model_description or "",
+							self.colour_delivered or "",
+							self.order_placed_by,
+						)
+					except Exception as e:
+						frappe.log_error(
+							f"Failed to create TAC delivery file for order {self.name}, VIN {self.vinserial_no}: {str(e)}",
+							"TAC Delivery File Error"
+						)
 
 			if not front_end_call:
 				self.save()
