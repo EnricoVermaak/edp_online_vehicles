@@ -143,7 +143,8 @@ class DealerCustomer(Document):
 			cust_doc.customer_name = self.company_name
 		else:
 			cust_doc.custom_customer_code = self.id_no
-			cust_doc.customer_name = self.customer_full_name
+			# Ensure Customer name is always set for Individuals/Foreigners
+			cust_doc.customer_name = self.customer_full_name or self.customer_name or "Customer"
 
 		if self.customer_type == "Business":
 			customer_type = "Company"

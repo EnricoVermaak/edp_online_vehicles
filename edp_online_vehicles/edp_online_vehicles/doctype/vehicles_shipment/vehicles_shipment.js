@@ -170,7 +170,7 @@ frappe.ui.form.on("Vehicles Shipment", {
 									const isMahindra = [
 										"msademo.edponline.co.za",
 										"msa.edponline.co.za",
-										"localhost",
+										"mahindra.localhost",
 									].includes(host);
 
 								if (isMahindra) {
