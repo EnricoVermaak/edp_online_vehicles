@@ -430,13 +430,16 @@ frappe.ui.form.on("Vehicles Warranty Claims", {
 									frm.set_value("type", "Goodwill");
 								}
 
-						frappe.msgprint(
-							"Please note the selected vehicle falls outside the allocated warranty period parameters. Please contact Head Office for more information."
-						);
-					}
-				},
-			});
-		}
+								frappe.msgprint(
+									"Please note the selected vehicle falls outside the allocated warranty period parameters. Please contact Head Office for more information"
+								);
+							}
+						},
+					});
+				}
+
+			}
+		})
 	},
 	after_save(frm) {
 		setTimeout(() => reapply_all_row_colors(frm), 300);
@@ -470,10 +473,10 @@ frappe.ui.form.on("Vehicles Warranty Claims", {
 									frm.set_value("type", "Goodwill");
 								}
 
-						frappe.msgprint(
-							"Please note the selected vehicle falls outside the allocated warranty period parameters. Please contact Head Office for more information."
-						);
-					}
+								frappe.msgprint(
+									"Please note the selected vehicle falls outside the allocated warranty period parameters. Please contact Head Office for more information"
+								);
+							}
 
 						},
 					});
