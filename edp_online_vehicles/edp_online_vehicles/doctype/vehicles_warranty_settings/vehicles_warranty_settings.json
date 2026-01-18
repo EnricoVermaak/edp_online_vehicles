@@ -7,7 +7,8 @@
  "field_order": [
   "general_settings_section",
   "allow_user_to_create_material_request_from_vehicles_service",
-  "allow_user_to_create_sales_order_from_vehicles_service"
+  "allow_user_to_create_sales_order_from_vehicles_service",
+  "convert_out_of_warranty_to_goodwill"
  ],
  "fields": [
   {
@@ -26,12 +27,19 @@
    "fieldname": "allow_user_to_create_sales_order_from_vehicles_service",
    "fieldtype": "Check",
    "label": "Allow user to create Sales Order from Vehicles Service"
+  },
+  {
+   "default": "0",
+   "fieldname": "convert_out_of_warranty_to_goodwill",
+   "fieldtype": "Check",
+   "label": "Convert Out-of-Warranty to Goodwill",
+   "options": "When enabled, vehicles that fall outside the applicable warranty plan period will automatically be converted to a Goodwill warranty."
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2024-09-26 12:15:07.473914",
+ "modified": "2026-01-18 08:30:47.866680",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicles Warranty Settings",
@@ -48,6 +56,7 @@
    "write": 1
   }
  ],
+ "row_format": "Dynamic",
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": []
