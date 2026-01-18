@@ -18,7 +18,6 @@
   "stock_no",
   "alternative_stock_no",
   "control_no",
-  "certificate_number",
   "column_break_uikn",
   "model",
   "description",
@@ -31,6 +30,7 @@
   "natis_code",
   "natis_release_date",
   "fleet_no",
+  "certificate_number",
   "request_release",
   "column_break_1tyr",
   "dealer",
@@ -403,7 +403,7 @@
    "label": "Customer Card"
   },
   {
-   "fetch_from": "customer.customer_name",
+   "fetch_from": "customer.customer_full_name",
    "fieldname": "customer_full_name",
    "fieldtype": "Data",
    "label": "Full Name",
@@ -818,7 +818,7 @@
    "link_fieldname": "vin_serial_no"
   }
  ],
- "modified": "2026-01-16 07:23:46.702557",
+ "modified": "2026-01-18 18:18:58.356213",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicle Stock",
