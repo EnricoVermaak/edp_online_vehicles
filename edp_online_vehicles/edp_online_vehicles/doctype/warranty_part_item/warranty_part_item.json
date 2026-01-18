@@ -18,6 +18,7 @@
   "returned",
   "section_break_kore",
   "reason",
+  "system_note",
   "section_break_devc",
   "faulty_part1",
   "column_break_ydhn",
@@ -112,17 +113,25 @@
    "fieldname": "faulty_part2",
    "fieldtype": "Attach Image",
    "label": "Faulty Part Image"
+  },
+  {
+   "fieldname": "system_note",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "System Note",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-04-15 06:43:41.911592",
+ "modified": "2026-01-18 16:31:26.685118",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Warranty Part Item",
  "owner": "Administrator",
  "permissions": [],
+ "row_format": "Dynamic",
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": []
