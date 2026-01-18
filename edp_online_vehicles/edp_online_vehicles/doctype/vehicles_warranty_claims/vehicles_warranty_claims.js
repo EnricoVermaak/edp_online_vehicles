@@ -430,7 +430,7 @@ frappe.ui.form.on("Vehicles Warranty Claims", {
 						}
 
 						frappe.msgprint(
-							"Please note the selected vehicle falls outside the allocated warranty period parameters. Please contact Head Office for more information"
+							"Please note the selected vehicle falls outside the allocated warranty period parameters. Please contact Head Office for more information."
 						);
 					}
 				},
@@ -469,7 +469,7 @@ frappe.ui.form.on("Vehicles Warranty Claims", {
 						}
 
 						frappe.msgprint(
-							"Please note the selected vehicle falls outside the allocated warranty period parameters. Please contact Head Office for more information"
+							"Please note the selected vehicle falls outside the allocated warranty period parameters. Please contact Head Office for more information."
 						);
 					}
 

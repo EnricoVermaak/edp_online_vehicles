@@ -28,6 +28,7 @@
   "interior_colour",
   "model_year",
   "register_no",
+  "natis_code",
   "natis_release_date",
   "fleet_no",
   "request_release",
@@ -764,6 +765,12 @@
    "fieldname": "certificate_number",
    "fieldtype": "Data",
    "label": "Certificate Number"
+  },
+  {
+   "fieldname": "natis_code",
+   "fieldtype": "Date",
+   "label": "Natis Code",
+   "read_only": 1
   }
  ],
  "grid_page_length": 50,
@@ -811,7 +818,7 @@
    "link_fieldname": "vin_serial_no"
   }
  ],
- "modified": "2026-01-13 21:57:53.758349",
+ "modified": "2026-01-16 07:23:46.702557",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicle Stock",
