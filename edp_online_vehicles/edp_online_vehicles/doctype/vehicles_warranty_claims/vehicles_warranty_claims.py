@@ -9,6 +9,72 @@ from frappe.utils import nowdate, getdate
 
 class VehiclesWarrantyClaims(Document):
 	def validate(self):
+		# =========================================================
+		# START: Warranty Validation (Normal vs Goodwill vs Block)
+		# =========================================================
+
+		if not self.vin_serial_no:
+			return
+
+		# Get system setting
+		allow_goodwill = frappe.db.get_single_value(
+			"Vehicles Warranty Settings",
+			"allow_goodwill_for_out_of_warranty_claims"
+		)
+
+		# Get vehicle warranty data
+		vehicle = frappe.get_doc("Vehicle Stock", self.vin_serial_no)
+
+		start = vehicle.warranty_start_date
+		end = vehicle.warranty_end_date
+		limit = vehicle.warranty_km_hours_limit
+
+		out_of_warranty = False
+		message = None
+
+		# ---- Date of Failure check ----
+		if self.date_of_failure and start and end:
+			failure_date = getdate(self.date_of_failure)
+			start_date = getdate(start)
+			end_date = getdate(end)
+
+			if failure_date < start_date or failure_date > end_date:
+				out_of_warranty = True
+				message = "Date of Failure is outside warranty period."
+
+		# ---- Odo Reading check ----
+		if self.odo_reading and limit:
+			if self.odo_reading > limit:
+				out_of_warranty = True
+				message = "Odo Reading is outside warranty limit."
+
+		# ---- Final decision ----
+		if out_of_warranty:
+			if allow_goodwill:
+				# Show warning but still allow save
+				frappe.msgprint(
+					"Please note the selected vehicle falls outside the allocated warranty plan parameters. "
+					"Please contact Head Office for more information.",
+					indicator="orange"
+				)
+				self.type = "Goodwill"
+			else:
+				# Block claim: prevent save
+				frappe.throw(
+					"This vehicle is outside the warranty coverage and cannot proceed. "
+					"Please contact Head Office."
+				)
+		else:
+			# Within warranty → Normal
+			self.type = "Normal"
+
+    # =========================================================
+    # END: Warranty Validation
+    # =========================================================
+
+
+	
+
 		# Validate warranty period - automatically change to Goodwill if outside warranty
 		if self.vin_serial_no and self.type != "Goodwill":
 			vehicle = frappe.get_doc("Vehicle Stock", self.vin_serial_no)
