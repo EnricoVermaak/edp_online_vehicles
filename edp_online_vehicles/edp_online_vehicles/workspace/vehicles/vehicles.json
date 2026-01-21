@@ -349,7 +349,7 @@
    "type": "Link"
   }
  ],
- "modified": "2025-12-10 13:37:41.227818",
+ "modified": "2026-01-20 09:12:21.768599",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicles",
@@ -370,11 +370,19 @@
  "sequence_id": 6.0,
  "shortcuts": [
   {
+   "color": "Orange",
+   "doc_view": "List",
+   "label": "HQ Reserved Stock",
+   "link_to": "Vehicle Stock",
+   "stats_filter": "[[\"Vehicle Stock\",\"availability_status\",\"=\",\"Reserved\",false],[\"Vehicle Stock\",\"dealer\",\"=\",\"Mahindra SA - MMSA001\",false]]",
+   "type": "DocType"
+  },
+  {
    "color": "Green",
    "doc_view": "List",
    "label": "Available HQ Stock",
    "link_to": "Vehicle Stock",
-   "stats_filter": "[[\"Vehicle Stock\",\"availability_status\",\"=\",\"Available\",false],[\"Vehicle Stock\",\"dealer\",\"=\",\"Mahindra SA\",false]]",
+   "stats_filter": "[[\"Vehicle Stock\",\"availability_status\",\"=\",\"Available\",false],[\"Vehicle Stock\",\"dealer\",\"=\",\"Mahindra SA - MMSA001\",false]]",
    "type": "DocType"
   },
   {
@@ -399,14 +407,6 @@
    "label": "Vehicle Overview Dashboard",
    "link_to": "Vehicle Overview",
    "type": "Dashboard"
-  },
-  {
-   "color": "Orange",
-   "doc_view": "List",
-   "label": "HQ Reserved Stock",
-   "link_to": "Vehicle Stock",
-   "stats_filter": "[[\"Vehicle Stock\",\"availability_status\",\"=\",\"Reserved\",false],[\"Vehicle Stock\",\"dealer\",\"=\",\"Mahindra SA\",false]]",
-   "type": "DocType"
   },
   {
    "color": "Grey",
