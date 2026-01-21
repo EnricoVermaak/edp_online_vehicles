@@ -299,7 +299,8 @@
    "in_standard_filter": 1,
    "label": "Vin/Serial No",
    "options": "Vehicle Stock",
-   "read_only": 1
+   "read_only": 1,
+   "unique": 1
   },
   {
    "depends_on": "eval: doc.vinserial_no",
@@ -419,7 +420,7 @@
    "collapsible": 1,
    "fieldname": "section_break_qfuu",
    "fieldtype": "Section Break",
-   "label": "SAP integration"
+   "label": "DMS integration"
   },
   {
    "fieldname": "performa_invoice_no",
@@ -440,48 +441,47 @@
   {
    "fieldname": "sap_sales_order_no",
    "fieldtype": "Data",
-   "label": "SAP Sales Order No",
+   "label": "DMS Sales Order No",
    "read_only": 1
   },
   {
    "fieldname": "sap_net_price",
    "fieldtype": "Currency",
-   "label": "SAP Net Price",
+   "label": "DMS Net Price",
    "read_only": 1
   },
   {
    "fieldname": "sap_tax",
    "fieldtype": "Currency",
-   "label": "SAP Tax",
+   "label": "DMS Tax",
    "read_only": 1
   },
   {
    "fieldname": "sap_total_amount",
    "fieldtype": "Currency",
-   "label": "SAP Total Amount",
+   "label": "DMS Total Amount",
    "read_only": 1
   },
   {
    "fieldname": "sap_bank_approval_date",
    "fieldtype": "Date",
-   "label": "SAP Bank Approval Date",
+   "label": "DMS Bank Approval Date",
    "read_only": 1
   },
   {
    "fieldname": "sap_invoice_no",
    "fieldtype": "Data",
-   "label": "SAP Invoice No"
+   "label": "DMS Invoice No"
   },
   {
    "fieldname": "sap_invoice",
    "fieldtype": "Attach",
-   "label": "SAP Invoice",
-   "read_only": 1
+   "label": "DMS Invoice"
   },
   {
    "fieldname": "sap_integration_response",
    "fieldtype": "Small Text",
-   "label": "SAP Integration Response"
+   "label": "DMS Integration Response"
   },
   {
    "fieldname": "sales_order_type",
@@ -567,7 +567,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-11-20 08:13:12.677440",
+ "modified": "2026-01-20 23:28:57.496386",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Head Office Vehicle Orders",
