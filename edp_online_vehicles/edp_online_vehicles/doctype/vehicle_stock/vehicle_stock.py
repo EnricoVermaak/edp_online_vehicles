@@ -4,8 +4,10 @@
 import frappe
 from frappe import _
 from frappe.model.document import Document
-from frappe.utils import add_years, add_months, today
+from frappe.utils import add_years, add_months, today, getdate
 from frappe.utils import get_datetime, now_datetime
+from datetime import datetime, timedelta
+from edp_online_vehicles.events.vehicle_aging import calculate_vehicle_ages
 
 
 class VehicleStock(Document):
@@ -45,6 +47,47 @@ class VehicleStock(Document):
 
         if self.service_period_years and self.service_start_date:
             self.service_end_date = add_months(self.service_start_date, int(self.service_period_years))
+
+        self.calculate_vehicle_aging()
+
+        self.check_and_set_model_conversion_date()
+
+    def calculate_vehicle_aging(self):
+        if self.availability_status == "Sold":
+            return
+
+        ages = calculate_vehicle_ages({
+            "name": self.name,
+            "ho_date_received": self.ho_date_received,
+            "model_conversion_date": self.model_conversion_date,
+            "in_transit_date": self.in_transit_date,
+            "delivery_date": self.delivery_date
+        })
+
+        # Update instance attributes
+        self.head_office_age = ages["head_office_age"]
+        self.model_conversion_age = ages["model_conversion_age"]
+        self.in_transit_age = ages["in_transit_age"]
+        self.dealer_age = ages["dealer_age"]
+        self.total_age = ages["total_age"]
+
+    def check_and_set_model_conversion_date(self):
+        if self.model_conversion_date:
+            return
+
+        # Check if this vehicle exists in any Model Conversion records
+        conversion_records = frappe.db.sql("""
+            SELECT mc.conversion_date
+            FROM `tabModel Conversion` mc
+            INNER JOIN `tabVehicles Item` vi ON vi.parent = mc.name
+            WHERE vi.vin_serial_no = %s
+            ORDER BY mc.conversion_date ASC
+            LIMIT 1
+        """, (self.name,), as_dict=True)
+
+        if conversion_records:
+            self.model_conversion_date = conversion_records[0].conversion_date
+            frappe.db.set_value("Vehicle Stock", self.name, "model_conversion_date", self.model_conversion_date, update_modified=False)
 
     def on_update(self):
         self._handle_deleted_warranty_plans()
@@ -222,3 +265,17 @@ class VehicleStock(Document):
         number = "".join(filter(str.isdigit, stock_number))
         incremented_number = str(int(number) + 1).zfill(6)
         return prefix + incremented_number
+
+
+
+
+@frappe.whitelist()
+def set_vehicle_received_date(doc, method=None):
+    if doc.stock_entry_type == "Material Receipt":
+        for item in doc.items:
+            if item.serial_no:
+                if frappe.db.exists("Vehicle Stock", item.serial_no):
+                    existing_date = frappe.db.get_value("Vehicle Stock", item.serial_no, "ho_date_received")
+                    if not existing_date:
+                        frappe.db.set_value("Vehicle Stock", item.serial_no, "ho_date_received", doc.posting_date, update_modified=False)
+                        frappe.logger().info(f"Set HO received date for VIN {item.serial_no}: {doc.posting_date}")

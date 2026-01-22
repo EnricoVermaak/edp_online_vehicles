@@ -63,6 +63,11 @@ def auto_move_stock_hq(vinno, hq, dealer, model, rate):
 		stock_doc.availability_status = "Available"
 		stock_doc.hq_order_no = None
 
+		# Set delivery date when vehicle is delivered to dealer
+		if not stock_doc.delivery_date:
+			stock_doc.delivery_date = frappe.utils.today()
+			frappe.db.set_value("Vehicle Stock", stock_doc.name, "delivery_date", stock_doc.delivery_date, update_modified=False)
+
 		if not stock_doc.original_purchasing_dealer:
 			stock_doc.original_purchasing_dealer = dealer
 

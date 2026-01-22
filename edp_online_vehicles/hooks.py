@@ -200,6 +200,9 @@ doc_events = {
 			"edp_online_vehicles.events.auto_move_stock.auto_move_stock_delivery_note",
 		],
 	},
+	"Stock Entry": {
+		"on_submit": "edp_online_vehicles.edp_online_vehicles.doctype.vehicle_stock.vehicle_stock.set_vehicle_received_date",
+	},
 	"Employee Onboarding": {
 		"on_submit": "edp_online_vehicles.events.create_final_seperation_doc.create_final_onboarding_doc"
 	},
@@ -229,18 +232,24 @@ doc_events = {
 # ---------------
 
 scheduler_events = {
-	"daily": [
-        	"edp_online_vehicles.events.reserved_vehicles.update_reserved_vehicles_status",
-            "edp_online_vehicles.edp_online_vehicles.doctype.dealer_claims.dealer_claims.update_claim_age",
-        ],
-        
-	"cron": {
-		"* * * * *": [
-			"edp_online_vehicles.events.check_orders.check_orders_schedule",
-			"edp_online_vehicles.events.update_part_order.update_part_order_time",
-			"edp_online_vehicles.events.reserved_vehicles.check_reserved_ordered_vehicles",
-		]
-	},
+    "daily": [
+        "edp_online_vehicles.events.reserved_vehicles.update_reserved_vehicles_status",
+        "edp_online_vehicles.edp_online_vehicles.doctype.dealer_claims.dealer_claims.update_claim_age",
+    ],
+
+    "cron": {
+        "0 */6 * * *": [
+            "edp_online_vehicles.events.vehicle_aging.update_vehicle_aging",
+        ]
+    },
+
+    "cron": {
+        "* * * * *": [
+            "edp_online_vehicles.events.check_orders.check_orders_schedule",
+            "edp_online_vehicles.events.update_part_order.update_part_order_time",
+            "edp_online_vehicles.events.reserved_vehicles.check_reserved_ordered_vehicles",
+        ]
+    },
 }
 # Testing
 # -------

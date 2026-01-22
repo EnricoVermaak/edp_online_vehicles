@@ -49,7 +49,6 @@
   "column_break_epiv",
   "eta_harbour",
   "eta_warehouse",
-  "ho_date_received",
   "order_details_section",
   "hq_order_no",
   "dealer_to_dealer_order_no",
@@ -58,6 +57,17 @@
   "ho_invoice_no",
   "ho_invoice_amt",
   "ho_invoice_date",
+  "ageing_section",
+  "ho_date_received",
+  "model_conversion_date",
+  "in_transit_date",
+  "delivery_date",
+  "column_break_xxme",
+  "head_office_age",
+  "model_conversion_age",
+  "in_transit_age",
+  "dealer_age",
+  "total_age",
   "contract_details_section",
   "contract_no",
   "contract_status",
@@ -307,7 +317,7 @@
   {
    "fieldname": "ho_date_received",
    "fieldtype": "Date",
-   "label": "HO Date Received"
+   "label": "HO Received Date"
   },
   {
    "fieldname": "warranty_tab",
@@ -771,6 +781,55 @@
    "fieldtype": "Date",
    "label": "Natis Code",
    "read_only": 1
+  },
+  {
+   "fieldname": "ageing_section",
+   "fieldtype": "Section Break",
+   "label": "Ageing"
+  },
+  {
+   "fieldname": "model_conversion_date",
+   "fieldtype": "Date",
+   "label": "Model Conversion Date"
+  },
+  {
+   "fieldname": "in_transit_date",
+   "fieldtype": "Date",
+   "label": "In Transit Date"
+  },
+  {
+   "fieldname": "delivery_date",
+   "fieldtype": "Date",
+   "label": "Delivery Date"
+  },
+  {
+   "fieldname": "column_break_xxme",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "head_office_age",
+   "fieldtype": "Int",
+   "label": "Head Office Age"
+  },
+  {
+   "fieldname": "model_conversion_age",
+   "fieldtype": "Int",
+   "label": "Model Conversion Age"
+  },
+  {
+   "fieldname": "in_transit_age",
+   "fieldtype": "Int",
+   "label": "In Transit Age"
+  },
+  {
+   "fieldname": "dealer_age",
+   "fieldtype": "Int",
+   "label": "Dealer Age"
+  },
+  {
+   "fieldname": "total_age",
+   "fieldtype": "Int",
+   "label": "Total Age"
   }
  ],
  "grid_page_length": 50,
@@ -818,7 +877,7 @@
    "link_fieldname": "vin_serial_no"
   }
  ],
- "modified": "2026-01-20 12:05:32.375987",
+ "modified": "2026-01-21 11:39:58.561464",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicle Stock",

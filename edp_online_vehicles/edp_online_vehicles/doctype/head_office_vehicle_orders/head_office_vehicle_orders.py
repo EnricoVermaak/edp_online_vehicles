@@ -50,6 +50,21 @@ class HeadOfficeVehicleOrders(Document):
 		if submit_doc:
 			self.submit()
 
+		# Set in-transit date when status changes to "Process Move Instruction"
+		if not self.is_new() and self.has_value_changed("status") and self.status == "Process Move Instruction":
+			if self.vinserial_no:
+				today = frappe.utils.today()
+				# Silent update - no activity logging
+				frappe.db.set_value("Vehicle Stock", self.vinserial_no, "in_transit_date", today, update_modified=False)
+				frappe.logger().info(f"Set in-transit date for VIN {self.vinserial_no}: {today}")
+
+		# Set delivery date when vehicle is moved to dealer (auto_move_stock_hq called)
+		if not self.is_new() and self.has_value_changed("status") and self.status == "Delivered":
+			if self.vinserial_no:
+				today = frappe.utils.today()
+				frappe.db.set_value("Vehicle Stock", self.vinserial_no, "delivery_date", today, update_modified=False)
+				frappe.logger().info(f"Set delivery date for VIN {self.vinserial_no}: {today}")
+
 		# TAC integration trigger on status change
 		if not self.is_new() and self.has_value_changed("status") and tac_delivery_outgoing:
 			# Check if new status requires integration and VIN is allocated
