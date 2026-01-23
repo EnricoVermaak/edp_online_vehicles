@@ -234,65 +234,6 @@
   {
    "hidden": 0,
    "is_query_report": 0,
-   "label": "Vehicles",
-   "link_count": 5,
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Card Break"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Vehicle Stock Availability",
-   "link_count": 0,
-   "link_to": "vehicle_stock_availa",
-   "link_type": "Page",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Master Stock",
-   "link_count": 0,
-   "link_to": "Vehicle Stock",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Reserved Vehicles",
-   "link_count": 0,
-   "link_to": "Reserved Vehicles",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Retail",
-   "link_count": 0,
-   "link_to": "Vehicle Retail",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Dealer Claims",
-   "link_count": 0,
-   "link_to": "Dealer Claims",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
    "label": "Orders",
    "link_count": 1,
    "link_type": "DocType",
@@ -347,9 +288,88 @@
    "link_type": "Report",
    "onboard": 0,
    "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Vehicles",
+   "link_count": 7,
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Vehicle Stock Availability",
+   "link_count": 0,
+   "link_to": "vehicle_stock_availa",
+   "link_type": "Page",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Master Stock",
+   "link_count": 0,
+   "link_to": "Vehicle Stock",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Reserved Vehicles",
+   "link_count": 0,
+   "link_to": "Reserved Vehicles",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Retail",
+   "link_count": 0,
+   "link_to": "Vehicle Retail",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "PDI Inspection",
+   "link_count": 0,
+   "link_to": "Vehicles PDI Inspection",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Dealer Claims",
+   "link_count": 0,
+   "link_to": "Dealer Claims",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Buy Back/ Trade In",
+   "link_count": 0,
+   "link_to": "Vehicle Buy Back",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
   }
  ],
- "modified": "2026-01-20 09:12:21.768599",
+ "modified": "2026-01-22 16:31:53.584851",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicles",

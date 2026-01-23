@@ -38,7 +38,8 @@
   "vehicles_rental_return",
   "vehicles_rental_enquiry",
   "dealer_to_dealer_order",
-  "head_office_vehicles_order"
+  "head_office_vehicles_order",
+  "amended_from"
  ],
  "fields": [
   {
@@ -49,9 +50,11 @@
    "fieldname": "vin_serial_no",
    "fieldtype": "Link",
    "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "VIN/ Serial No",
    "options": "Vehicle Stock",
-   "reqd": 1
+   "reqd": 1,
+   "search_index": 1
   },
   {
    "fetch_from": "vin_serial_no.stock_no",
@@ -136,6 +139,8 @@
   {
    "fieldname": "inspected_by",
    "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "Inspected By",
    "options": "User"
   },
@@ -172,8 +177,10 @@
   {
    "fieldname": "status",
    "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "Status",
-   "options": "Pending\nInspection Complete\nFailed Inspection"
+   "options": "Pending\nInspection Complete\nInspection Failed"
   },
   {
    "fieldname": "section_break_v1g8",
@@ -182,6 +189,8 @@
   {
    "fieldname": "dealer",
    "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "Dealer",
    "options": "Company",
    "reqd": 1
@@ -228,7 +237,18 @@
    "fieldtype": "Link",
    "label": "Vehicles Rental Enquiry",
    "options": "Vehicles Rental Enquiry",
-   "read_only": 1
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Vehicles PDI Inspection",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
   }
  ],
  "index_web_pages_for_search": 1,
@@ -238,7 +258,7 @@
    "link_fieldname": "pdi_inspection"
   }
  ],
- "modified": "2025-06-11 11:59:57.451556",
+ "modified": "2026-01-22 16:29:48.264319",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicles PDI Inspection",
@@ -258,6 +278,7 @@
    "write": 1
   }
  ],
+ "row_format": "Dynamic",
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": [],

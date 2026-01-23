@@ -7,6 +7,7 @@
  "engine": "InnoDB",
  "field_order": [
   "information_section",
+  "purchasing_dealer",
   "buy_back_date_time",
   "column_break_lztx",
   "buy_from",
@@ -15,6 +16,7 @@
   "customer_full_names",
   "status",
   "vehicle_section",
+  "vehicle_buy_back_column",
   "vin_not_found",
   "vin_serial_no",
   "vin_serial_no_manual",
@@ -46,6 +48,7 @@
    "fieldname": "buy_back_date_time",
    "fieldtype": "Datetime",
    "label": "Buy Back Date/ Time",
+   "read_only": 1,
    "reqd": 1
   },
   {
@@ -66,7 +69,7 @@
    "fieldtype": "Link",
    "in_list_view": 1,
    "in_standard_filter": 1,
-   "label": "Dealer",
+   "label": "Buy From Dealer",
    "mandatory_depends_on": "eval:doc.buy_from == \"Dealer\"",
    "options": "Company"
   },
@@ -97,7 +100,7 @@
   {
    "fieldname": "vehicle_section",
    "fieldtype": "Section Break",
-   "label": "Vehicle"
+   "label": "Vehicle Buy Back"
   },
   {
    "default": "0",
@@ -177,12 +180,12 @@
   {
    "fieldname": "cost_price_excl",
    "fieldtype": "Currency",
-   "label": "Cost Price (Excl)"
+   "label": "Total Cost Price (Excl)"
   },
   {
    "fieldname": "dealer_billing_excl",
    "fieldtype": "Currency",
-   "label": "Dealer Billing (Excl)"
+   "label": "Total Dealer Billing (Excl)"
   },
   {
    "fieldname": "suggested_retail_excl",
@@ -228,7 +231,8 @@
   {
    "fieldname": "offer_price_excl",
    "fieldtype": "Currency",
-   "label": "Offer Price (Excl)"
+   "label": "Offer Price (Excl)",
+   "read_only": 1
   },
   {
    "default": "15",
@@ -251,11 +255,23 @@
    "label": "Buy From",
    "options": "\nDealer\nCustomer",
    "reqd": 1
+  },
+  {
+   "fieldname": "vehicle_buy_back_column",
+   "fieldtype": "Column Break",
+   "label": "Vehicle Buy Back"
+  },
+  {
+   "fieldname": "purchasing_dealer",
+   "fieldtype": "Link",
+   "label": "Purchasing Dealer",
+   "options": "Company",
+   "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-12-02 07:47:22.986757",
+ "modified": "2026-01-22 16:45:41.486442",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicle Buy Back",
