@@ -4,11 +4,6 @@ import re
 
 @frappe.whitelist()
 def create_service_from_booking(booking_name):
-    """
-    Create Vehicle Service from Booking
-    Add tag if Odo Reading is missing
-    """
-
     try:
         booking = frappe.get_doc("Vehicle Service Booking", booking_name)
 
@@ -34,6 +29,11 @@ def create_service_from_booking(booking_name):
                 service.db_set("odo_reading_hours", booking.odo_reading_hours)
                 service.remove_tag("Odo Reading Missing")
 
+            link = get_link_to_form("Vehicles Service", service.name)
+            frappe.msgprint(
+                f"Vehicles Service already exists: {link}",
+                title="Service Already Exists"
+            )
             return service.name
 
         service = frappe.get_doc({
@@ -104,7 +104,7 @@ def create_service_from_booking(booking_name):
 
         link = get_link_to_form("Vehicles Service", service.name)
         frappe.msgprint(
-            f"✅ Vehicle Service created: {link}",
+            f"Vehicle Service created: {link}",
             title="Success"
         )
 
