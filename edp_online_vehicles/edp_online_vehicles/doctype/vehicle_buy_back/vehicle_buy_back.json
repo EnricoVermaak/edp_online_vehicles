@@ -15,26 +15,13 @@
   "customer",
   "customer_full_names",
   "status",
-  "vehicle_section",
-  "vehicle_buy_back_column",
-  "vin_not_found",
-  "vin_serial_no",
-  "vin_serial_no_manual",
-  "model",
-  "colour",
-  "column_break_akst",
-  "description",
-  "engine_no",
-  "condition",
-  "operational_status",
+  "section_break_ioww",
+  "table_vsmr",
   "pricing_section",
   "cost_price_excl",
   "dealer_billing_excl",
   "suggested_retail_excl",
   "column_break_ygpp",
-  "ho_invoice_no",
-  "ho_invoice_amt",
-  "ho_invoice_date_time",
   "offer_section",
   "column_break_gfjr",
   "column_break_ccnc",
@@ -44,7 +31,6 @@
  ],
  "fields": [
   {
-   "default": "Now",
    "fieldname": "buy_back_date_time",
    "fieldtype": "Datetime",
    "label": "Buy Back Date/ Time",
@@ -90,87 +76,13 @@
    "in_list_view": 1,
    "in_standard_filter": 1,
    "label": "Customer Full Names",
-   "mandatory_depends_on": "eval:doc.buy_from == \"Customer\""
+   "mandatory_depends_on": "eval:doc.buy_from == \"Customer\"",
+   "read_only": 1
   },
   {
    "fieldname": "information_section",
    "fieldtype": "Section Break",
    "label": "Information"
-  },
-  {
-   "fieldname": "vehicle_section",
-   "fieldtype": "Section Break",
-   "label": "Vehicle Buy Back"
-  },
-  {
-   "default": "0",
-   "fieldname": "vin_not_found",
-   "fieldtype": "Check",
-   "label": "VIN Not Found"
-  },
-  {
-   "depends_on": "eval:!doc.vin_not_found",
-   "fieldname": "vin_serial_no",
-   "fieldtype": "Link",
-   "in_list_view": 1,
-   "in_standard_filter": 1,
-   "label": "VIN/ Serial No",
-   "mandatory_depends_on": "eval:!doc.vin_not_found",
-   "options": "Vehicle Stock"
-  },
-  {
-   "depends_on": "eval:doc.vin_not_found",
-   "fieldname": "vin_serial_no_manual",
-   "fieldtype": "Data",
-   "label": "VIN/ Serial No (Unconfirmed)",
-   "mandatory_depends_on": "eval:doc.vin_not_found"
-  },
-  {
-   "fetch_from": "vin_serial_no.model",
-   "fieldname": "model",
-   "fieldtype": "Link",
-   "label": "Model",
-   "mandatory_depends_on": "eval:doc.vin_not_found",
-   "options": "Model Administration"
-  },
-  {
-   "fetch_from": "vin_serial_no.colour",
-   "fieldname": "colour",
-   "fieldtype": "Link",
-   "label": "Colour",
-   "options": "Model Colour"
-  },
-  {
-   "fieldname": "column_break_akst",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fetch_from": "vin_serial_no.description",
-   "fieldname": "description",
-   "fieldtype": "Data",
-   "label": "Description"
-  },
-  {
-   "fetch_from": "vin_serial_no.engine_no",
-   "fieldname": "engine_no",
-   "fieldtype": "Data",
-   "label": "Engine No"
-  },
-  {
-   "depends_on": "eval:doc.vin_not_found",
-   "fetch_from": "vin_serial_no.condition",
-   "fieldname": "condition",
-   "fieldtype": "Select",
-   "label": "Condition",
-   "options": "\nExcellent\nGood\nAverage\nPoor"
-  },
-  {
-   "depends_on": "eval:doc.vin_not_found",
-   "fetch_from": "vin_serial_no.status",
-   "fieldname": "operational_status",
-   "fieldtype": "Select",
-   "label": "Operational Status",
-   "options": "\nOperational\nNon- Operational"
   },
   {
    "fieldname": "pricing_section",
@@ -180,40 +92,24 @@
   {
    "fieldname": "cost_price_excl",
    "fieldtype": "Currency",
-   "label": "Total Cost Price (Excl)"
+   "label": "Total Cost Price (Excl)",
+   "read_only": 1
   },
   {
    "fieldname": "dealer_billing_excl",
    "fieldtype": "Currency",
-   "label": "Total Dealer Billing (Excl)"
+   "label": "Total Dealer Billing (Excl)",
+   "read_only": 1
   },
   {
    "fieldname": "suggested_retail_excl",
    "fieldtype": "Currency",
-   "label": "Suggested Retail (Excl)"
+   "label": "Suggested Retail (Excl)",
+   "read_only": 1
   },
   {
    "fieldname": "column_break_ygpp",
    "fieldtype": "Column Break"
-  },
-  {
-   "fetch_from": "vin_serial_no.ho_invoice_no",
-   "fieldname": "ho_invoice_no",
-   "fieldtype": "Data",
-   "label": "HO Invoice No"
-  },
-  {
-   "fetch_from": "vin_serial_no.ho_invoice_amt",
-   "fieldname": "ho_invoice_amt",
-   "fieldtype": "Currency",
-   "in_list_view": 1,
-   "label": "HO Invoice Amt"
-  },
-  {
-   "fetch_from": "vin_serial_no.ho_invoice_date",
-   "fieldname": "ho_invoice_date_time",
-   "fieldtype": "Datetime",
-   "label": "HO Invoice Date/ Time"
   },
   {
    "fieldname": "offer_section",
@@ -235,17 +131,18 @@
    "read_only": 1
   },
   {
-   "default": "15",
    "fieldname": "vat",
    "fieldtype": "Currency",
    "label": "VAT (%)",
-   "precision": "2"
+   "precision": "2",
+   "read_only": 1
   },
   {
    "fieldname": "offer_price_incl",
    "fieldtype": "Currency",
    "in_list_view": 1,
-   "label": "Offer Price (Incl)"
+   "label": "Offer Price (Incl)",
+   "reqd": 1
   },
   {
    "fieldname": "buy_from",
@@ -257,21 +154,26 @@
    "reqd": 1
   },
   {
-   "fieldname": "vehicle_buy_back_column",
-   "fieldtype": "Column Break",
-   "label": "Vehicle Buy Back"
-  },
-  {
    "fieldname": "purchasing_dealer",
    "fieldtype": "Link",
    "label": "Purchasing Dealer",
    "options": "Company",
    "reqd": 1
+  },
+  {
+   "fieldname": "section_break_ioww",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "table_vsmr",
+   "fieldtype": "Table",
+   "options": "Vehicle Buy Back List",
+   "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-01-22 16:45:41.486442",
+ "modified": "2026-01-26 07:55:17.862772",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicle Buy Back",
