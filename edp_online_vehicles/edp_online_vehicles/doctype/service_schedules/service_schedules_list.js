@@ -1,7 +1,7 @@
 frappe.listview_settings['Service Schedules'] = {
     onload: function(listview) {
         // ---------------- COPY (BULK SYNC/CREATE) BUTTON ----------------
-        listview.page.add_action_item(__("Copy"), function() {
+        listview.page.add_action_item(__("Copy to"), function() {
             const selected_items = listview.get_checked_items();
 
             if (selected_items.length === 0) {
