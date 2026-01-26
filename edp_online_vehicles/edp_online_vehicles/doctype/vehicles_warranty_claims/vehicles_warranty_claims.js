@@ -1,7 +1,7 @@
 // Copyright (c) 2024, NexTash and contributors
 // For license information, please see license.txt
 
-/* global ZXing */
+
 
 let previous_status_value = null;
 let codeReader;
@@ -589,15 +589,21 @@ frappe.ui.form.on('Warranty Part Item', {
 			},
 			callback(r) {
 				if (r.message && r.message.is_duplicate) {
+					let claim_numbers = r.message.claims || [];
+					let system_note = "Duplicate Parts Found";
+					
+					if (claim_numbers.length > 0) {
+						system_note += ": " + claim_numbers.join(", ");
+					}
 
 					frappe.model.set_value(
 						row.doctype,
 						row.name,
 						"system_note",
-						"Duplicate Parts Found"
+						system_note
 					);
 
-					set_row_color(frm, row, "#ffe0b3");
+					set_row_color(frm, row, "#ffe6cc");
 				}
 			}
 		});
@@ -698,11 +704,10 @@ function reapply_colors(frm) {
 			grid.grid_rows.forEach(gr => {
 				let color = "";
 
-				// 🟧 1st PRIORITY → DUPLICATE
-				if (gr.doc.system_note === "Duplicate Parts Found") {
-					color = "#ffe0b3";
-				}
-				// 🔴 2nd PRIORITY → NOT COVERED
+			if (gr.doc.system_note && gr.doc.system_note.startsWith("Duplicate Parts Found")) {
+				color = "#ffe6cc";
+			}
+
 				else if (gr.doc.part_no && !allowed_items.includes(gr.doc.part_no)) {
 					color = "#ffdddd";
 				}
@@ -722,13 +727,11 @@ function validate_part_item(frm, row) {
 		callback(r) {
 			let allowed_items = r.message || [];
 
-			// 🟧 DUPLICATE → STOP HERE
-			if (row.system_note === "Duplicate Parts Found") {
-				set_row_color(frm, row, "#ffe0b3");
+			if (row.system_note && row.system_note.startsWith("Duplicate Parts Found")) {
+				set_row_color(frm, row, "#ffe6cc");
 				return;
 			}
 
-			// 🔴 NOT COVERED
 			if (!allowed_items.includes(row.part_no)) {
 				set_row_color(frm, row, "#ffdddd");
 				frappe.model.set_value(
@@ -738,7 +741,6 @@ function validate_part_item(frm, row) {
 					"Part Not Covered"
 				);
 			} 
-			// ✅ COVERED
 			else {
 				set_row_color(frm, row, "");
 				frappe.model.set_value(row.doctype, row.name, "system_note", "");
