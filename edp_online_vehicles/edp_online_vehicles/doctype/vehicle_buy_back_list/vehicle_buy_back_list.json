@@ -1,0 +1,148 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2026-01-23 14:17:28.762366",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "column_break_xtxc",
+  "vin_serial_no",
+  "model",
+  "description",
+  "engine_no",
+  "exterior_colour",
+  "condition",
+  "operational_status",
+  "cost_price_excl",
+  "dealer_billing_excl",
+  "suggested_retail_excl",
+  "ho_invoice_no",
+  "ho_invoice_amt",
+  "ho_invoice_date"
+ ],
+ "fields": [
+  {
+   "fieldname": "vin_serial_no",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "VIN/ Serial No",
+   "options": "Vehicle Stock"
+  },
+  {
+   "fetch_from": "vin_serial_no.model",
+   "fieldname": "model",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Model",
+   "options": "Model Administration",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "vin_serial_no.description",
+   "fieldname": "description",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Description",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "vin_serial_no.engine_no",
+   "fieldname": "engine_no",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Engine No",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "vin_serial_no.colour",
+   "fieldname": "exterior_colour",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Exterior Colour",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "vin_serial_no.condition",
+   "fieldname": "condition",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Condition",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "vin_serial_no.status",
+   "fieldname": "operational_status",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Operational Status",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "model.dealer_billing_excl",
+   "fieldname": "dealer_billing_excl",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Dealer Billing (Excl)",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "model.suggested_retail_excl",
+   "fieldname": "suggested_retail_excl",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Suggested Retail (Excl)",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "vin_serial_no.ho_invoice_no",
+   "fieldname": "ho_invoice_no",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "HO Invoice No",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "vin_serial_no.ho_invoice_amt",
+   "fieldname": "ho_invoice_amt",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "HO Invoice Amt",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "vin_serial_no.ho_invoice_date",
+   "fieldname": "ho_invoice_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "HO Invoice Date",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "model.cost_price_excl",
+   "fieldname": "cost_price_excl",
+   "fieldtype": "Currency",
+   "label": "Cost Price (Excl)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_xtxc",
+   "fieldtype": "Column Break"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2026-01-26 07:53:44.497350",
+ "modified_by": "Administrator",
+ "module": "Edp Online Vehicles",
+ "name": "Vehicle Buy Back List",
+ "owner": "Administrator",
+ "permissions": [],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

@@ -44,3 +44,72 @@ def check_clor(vin):
         items_list.append(row.item)
 
     return items_list
+
+@frappe.whitelist()
+def check_duplicate_part(vin, part_no, current_claim=None):
+    """
+    Check if same part is already claimed for the same VIN
+    in other warranty claims
+    """
+    if not vin or not part_no:
+        return []
+
+    filters = {
+        "parenttype": "Vehicles Warranty Claims",
+        "part_no": part_no
+    }
+
+    if current_claim:
+        filters["parent"] = ["!=", current_claim]
+
+    claims = frappe.db.sql("""
+        SELECT wpi.parent
+        FROM `tabWarranty Part Item` wpi
+        INNER JOIN `tabVehicles Warranty Claims` wc
+            ON wc.name = wpi.parent
+        WHERE wc.vin_serial_no = %s
+          AND wpi.part_no = %s
+          {exclude_condition}
+    """.format(
+        exclude_condition="AND wpi.parent != %s" if current_claim else ""
+    ),
+    tuple(filter(None, [vin, part_no, current_claim])),
+    as_dict=True)
+
+    return [c.parent for c in claims]
+
+@frappe.whitelist()
+def check_duplicate_part(vin, part_no, current_claim=None):
+    if not vin or not part_no:
+        return {"is_duplicate": False}
+
+    # Get other warranty claims for same VIN (exclude current one)
+    claims = frappe.get_all(
+        "Vehicles Warranty Claims",
+        filters={
+            "vin_serial_no": vin,
+            "name": ["!=", current_claim]
+        },
+        pluck="name"
+    )
+
+    if not claims:
+        return {"is_duplicate": False}
+
+    # Check if part exists in any of those claims
+    duplicate = frappe.get_all(
+        "Warranty Part Item",
+        filters={
+            "parent": ["in", claims],
+            "part_no": part_no
+        },
+        fields=["parent"]
+    )
+
+    if duplicate:
+        return {
+            "is_duplicate": True,
+            "claims": list(set(d.parent for d in duplicate))
+        }
+
+    return {"is_duplicate": False}

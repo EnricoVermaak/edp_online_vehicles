@@ -107,6 +107,7 @@
    "fieldtype": "Section Break"
   },
   {
+   "fetch_from": "vin_serial_no.original_purchasing_dealer",
    "fieldname": "invoice_to",
    "fieldtype": "Data",
    "label": "Invoice To"
@@ -116,6 +117,7 @@
    "fieldtype": "Column Break"
   },
   {
+   "fetch_from": "vin_serial_no.ho_invoice_no",
    "fieldname": "invoice_no",
    "fieldtype": "Data",
    "label": "Invoice No"
@@ -142,17 +144,20 @@
    "in_list_view": 1,
    "in_standard_filter": 1,
    "label": "Inspected By",
+   "mandatory_depends_on": "eval:(doc.status === \"Inspection Complete\") || (doc.status === \"Inspection Failed\")",
    "options": "User"
   },
   {
    "fieldname": "date_inspected",
    "fieldtype": "Datetime",
-   "label": "Date Inspected"
+   "label": "Date Inspected",
+   "mandatory_depends_on": "eval:(doc.status === \"Inspection Complete\") || (doc.status === \"Inspection Failed\")"
   },
   {
    "fieldname": "inspector_signature",
    "fieldtype": "Signature",
-   "label": "Inspector Signature"
+   "label": "Inspector Signature",
+   "mandatory_depends_on": "eval:(doc.status === \"Inspection Complete\") || (doc.status === \"Inspection Failed\")"
   },
   {
    "fieldname": "column_break_fcez",
@@ -162,17 +167,20 @@
    "fieldname": "confirmed_by",
    "fieldtype": "Link",
    "label": "Confirmed By",
+   "mandatory_depends_on": "eval:(doc.status === \"Inspection Complete\") || (doc.status === \"Inspection Failed\")",
    "options": "User"
   },
   {
    "fieldname": "date_confirmed",
    "fieldtype": "Datetime",
-   "label": "Date Confirmed"
+   "label": "Date Confirmed",
+   "mandatory_depends_on": "eval:(doc.status === \"Inspection Complete\") || (doc.status === \"Inspection Failed\")"
   },
   {
    "fieldname": "confirmation_signature",
    "fieldtype": "Signature",
-   "label": "Confirmation Signature"
+   "label": "Confirmation Signature",
+   "mandatory_depends_on": "eval:(doc.status === \"Inspection Complete\") || (doc.status === \"Inspection Failed\")"
   },
   {
    "fieldname": "status",
@@ -258,7 +266,7 @@
    "link_fieldname": "pdi_inspection"
   }
  ],
- "modified": "2026-01-22 16:29:48.264319",
+ "modified": "2026-01-23 13:14:22.020373",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicles PDI Inspection",

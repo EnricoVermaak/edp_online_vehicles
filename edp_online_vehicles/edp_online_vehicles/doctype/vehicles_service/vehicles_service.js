@@ -94,7 +94,7 @@ frappe.ui.form.on("Vehicles Service", {
 		frm.set_value("service_labour_items", []);
 
 		// Pehle service schedule ka doc fetch karo
-		frappe.call({
+	frappe.call({
 			method: "frappe.client.get",
 			args: {
 				doctype: "Service Schedules",
@@ -144,7 +144,7 @@ frappe.ui.form.on("Vehicles Service", {
 				});
 
 			}
-		});
+		});	
 		if (
 			frm.doc.service_type &&
 			(frm.doc.service_type.includes("Major") ||
