@@ -1,6 +1,5 @@
 frappe.listview_settings['Service Schedules'] = {
     onload: function(listview) {
-        // ---------------- COPY (BULK SYNC/CREATE) BUTTON ----------------
         listview.page.add_action_item(__("Copy to"), function() {
             const selected_items = listview.get_checked_items();
 
@@ -11,15 +10,38 @@ frappe.listview_settings['Service Schedules'] = {
 
             const names = selected_items.map(item => item.name);
 
-            frappe.confirm(
-                __("Are you sure you want to process {0} selected documents? This will update matching intervals or create new ones.", [selected_items.length]),
-                function() {
-                    frappe.dom.freeze(__("Processing Bulk Sync..."));
-                    
+            // Show dialog to select target model
+            let dialog = new frappe.ui.Dialog({
+                title: __("Copy Service Schedules"),
+                fields: [
+                    {
+                        label: __("Target Model"),
+                        fieldname: "target_model",
+                        fieldtype: "Link",
+                        options: "Model Administration",
+                        reqd: 1,
+                        get_query: function() {
+                            return {
+                                filters: {}
+                            };
+                        }
+                    }
+                ],
+                primary_action_label: __("Confirm"),
+                primary_action: function(values) {
+                    if (!values.target_model) {
+                        frappe.msgprint(__("Please select a target model."));
+                        return;
+                    }
+
+                    dialog.hide();
+                    frappe.dom.freeze(__("Copying Service Schedules..."));
+
                     frappe.call({
-                        method: "edp_online_vehicles.events.shedule.bulk_sync_by_interval", // UPDATE THIS PATH
+                        method: "edp_online_vehicles.events.service_schedules.copy_to_target_model",
                         args: {
-                            source_names: names
+                            source_names: names,
+                            target_model: values.target_model
                         },
                         callback: function(r) {
                             frappe.dom.unfreeze();
@@ -37,7 +59,9 @@ frappe.listview_settings['Service Schedules'] = {
                         }
                     });
                 }
-            );
+            });
+
+            dialog.show();
         });       
     }
 };

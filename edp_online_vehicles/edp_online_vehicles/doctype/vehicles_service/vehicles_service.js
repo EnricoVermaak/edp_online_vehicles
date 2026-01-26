@@ -940,7 +940,7 @@ frappe.ui.form.on("Vehicles Service", {
 	vin_serial_no(frm) {
 		if (frm.doc.vin_serial_no && frm.doc.model) {
 			frappe.call({
-				method: "edp_online_vehicles.events.shedule.get_all_model",
+				method: "edp_online_vehicles.events.service_schedules.get_all_model",
 				args: {
 					model: frm.doc.model
 				},
