@@ -98,3 +98,15 @@ def bulk_sync_by_interval(source_names):
 
     frappe.db.commit()
     return results
+
+@frappe.whitelist()
+def get_all_model(model):
+    # Last created record ka name le lo
+    models = frappe.get_all(
+        "Vehicle Service Booking",
+        filters={"model": model},
+        pluck="name",
+        order_by="creation desc",
+        limit_page_length=1  # sirf last record chahiye
+    )
+    return models  # ye list return karega

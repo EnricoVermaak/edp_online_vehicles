@@ -55,33 +55,33 @@ frappe.ui.form.on("Vehicles Service", {
 
 
 		// Fetch the selected Service Schedule document
-		   frappe.db.get_doc('Service Schedules', frm.doc.service_type)
-            .then(schedule => {
+		frappe.db.get_doc('Service Schedules', frm.doc.service_type)
+			.then(schedule => {
 
-                let labour = schedule.allow_users_to_add_edit_remove_labour; // check field
-                let part   = schedule.allow_users_to_add_edit_remove_parts;  // check field
+				let labour = schedule.allow_users_to_add_edit_remove_labour; // check field
+				let part = schedule.allow_users_to_add_edit_remove_parts;  // check field
 
-                // ===== LABOUR =====
-                if (labour == 1) {
-                    frm.set_df_property("service_labour_items", "read_only", 0);
-                    frm.set_value("edit_labour", 1);
-                } else {
-                    frm.set_df_property("service_labour_items", "read_only", 1);
-                    frm.set_value("edit_labour", 0);
-                }
+				// ===== LABOUR =====
+				if (labour == 1) {
+					frm.set_df_property("service_labour_items", "read_only", 0);
+					frm.set_value("edit_labour", 1);
+				} else {
+					frm.set_df_property("service_labour_items", "read_only", 1);
+					frm.set_value("edit_labour", 0);
+				}
 
-                // ===== PARTS =====
-                if (part == 1) {
-                    frm.set_df_property("service_parts_items", "read_only", 0);
-                    frm.set_value("edit_parts", 1);
-                } else {
-                    frm.set_df_property("service_parts_items", "read_only", 1);
-                    frm.set_value("edit_parts", 0);
-                }
+				// ===== PARTS =====
+				if (part == 1) {
+					frm.set_df_property("service_parts_items", "read_only", 0);
+					frm.set_value("edit_parts", 1);
+				} else {
+					frm.set_df_property("service_parts_items", "read_only", 1);
+					frm.set_value("edit_parts", 0);
+				}
 
-                frm.refresh_field("service_labour_items");
-                frm.refresh_field("service_parts_items");
-            });
+				frm.refresh_field("service_labour_items");
+				frm.refresh_field("service_parts_items");
+			});
 
 
 		if (!frm.doc.service_type) {
@@ -94,7 +94,7 @@ frappe.ui.form.on("Vehicles Service", {
 		frm.set_value("service_labour_items", []);
 
 		// Pehle service schedule ka doc fetch karo
-	frappe.call({
+		frappe.call({
 			method: "frappe.client.get",
 			args: {
 				doctype: "Service Schedules",
@@ -144,7 +144,7 @@ frappe.ui.form.on("Vehicles Service", {
 				});
 
 			}
-		});	
+		});
 		if (
 			frm.doc.service_type &&
 			(frm.doc.service_type.includes("Major") ||
@@ -937,9 +937,25 @@ frappe.ui.form.on("Vehicles Service", {
 			},
 		});
 	},
-	vin_serial_no(frm) {  // ← FIXED: Removed dt, dn from parameters (Frappe only passes frm)
+	vin_serial_no(frm) {
+		if (frm.doc.vin_serial_no && frm.doc.model) {
+			frappe.call({
+				method: "edp_online_vehicles.events.shedule.get_all_model",
+				args: {
+					model: frm.doc.model
+				},
+				callback: function (r) {
+					if (r.message && r.message.length > 0) {
+						let lastBooking = r.message[0]; // pehla (aur sirf) element
+						console.log("Last Vehicle Service Booking:", lastBooking);
+						frm.set_value("service_booking", lastBooking);
+					} else {
+						console.log("No booking found for this model");
+					}
+				}
+			});
+		}
 
-		// ← ADDED: Define dt and dn locally at the start – needed for set_value
 		const dt = frm.doctype;
 		const dn = frm.doc.name;
 
