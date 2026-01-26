@@ -1386,8 +1386,8 @@
 												<tr><th>Category</th><td>${modelData.category || ""}</td></tr>
 												<tr><th>Class</th><td>${modelData.class_ || ""}</td></tr>
 												<tr><th>M&M Code</th><td>${modelData.mm_code || ""}</td></tr>
-												<tr><th>Dealer Billing</th><td>R${modelData.dealer_billing_excl || ""}</td></tr>
-												<tr><th>Suggested Retail</th><td>R${modelData.suggested_retail_excl || ""}</td></tr>
+												<tr><th>Dealer Billing</th><td>R ${new Intl.NumberFormat("en-US", { maximumFractionDigits: 0 }).format(modelData.dealer_billing_excl)}</td></tr>
+												<tr><th>Suggested Retail</th><td>R ${new Intl.NumberFormat("en-US", { maximumFractionDigits: 0 }).format(modelData.suggested_retail_excl)}</td></tr>
 												<tr><th>Engine Displacement</th><td>${modelData.engine_displacement || ""}</td></tr>
 											</tbody>
 										</table>
@@ -1773,4 +1773,4 @@
     }
   };
 })();
-//# sourceMappingURL=stock_availability.bundle.TOLLNVUF.js.map
+//# sourceMappingURL=stock_availability.bundle.AZX2PD2G.js.map

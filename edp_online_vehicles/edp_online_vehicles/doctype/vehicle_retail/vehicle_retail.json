@@ -160,7 +160,7 @@
    "fetch_from": "customer.phone",
    "fetch_if_empty": 1,
    "fieldname": "customer_phone",
-   "fieldtype": "Data",
+   "fieldtype": "Phone",
    "label": "Customer Phone"
   },
   {
@@ -283,7 +283,7 @@
    "fetch_from": "customer.mobile",
    "fetch_if_empty": 1,
    "fieldname": "customer_mobile",
-   "fieldtype": "Data",
+   "fieldtype": "Phone",
    "label": "Customer Mobile"
   },
   {
@@ -344,7 +344,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-01-20 10:29:06.541605",
+ "modified": "2026-01-26 10:30:36.517768",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicle Retail",

@@ -8,6 +8,8 @@
  "field_order": [
   "colour",
   "oem_colour_code",
+  "naamsa_colour_code",
+  "natis_colour_code",
   "discontinued"
  ],
  "fields": [
@@ -28,13 +30,23 @@
    "fieldname": "discontinued",
    "fieldtype": "Check",
    "label": "Discontinued"
+  },
+  {
+   "fieldname": "naamsa_colour_code",
+   "fieldtype": "Data",
+   "label": "Naamsa Colour Code"
+  },
+  {
+   "fieldname": "natis_colour_code",
+   "fieldtype": "Data",
+   "label": "Natis Colour Code"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-10-21 22:02:04.959497",
+ "modified": "2026-01-26 11:18:28.829136",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Interior Model Colours",

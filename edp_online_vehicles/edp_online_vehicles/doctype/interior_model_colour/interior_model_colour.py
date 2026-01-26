@@ -28,7 +28,7 @@ class InteriorModelColour(Document):
 		valid_colours = frappe.get_all(
 			"Interior Model Colour",
 			filters={"model": self.model},
-			fields=["colour", "oem_colour_code", "discontinued"]
+			fields=["colour", "oem_colour_code", "naamsa_colour_code", "natis_colour_code", "discontinued"]
 		)
 		valid_colour_list = {c["colour"] for c in valid_colours}
 
@@ -46,6 +46,8 @@ class InteriorModelColour(Document):
 				"model": self.model,
 				"colour": self.colour,
 				"oem_colour_code": self.oem_colour_code,
+				"naamsa_colour_code": self.naamsa_colour_code,
+				"natis_colour_code": self.natis_colour_code,
 				"discontinued": self.discontinued,
 			},
 		)
@@ -59,6 +61,8 @@ class InteriorModelColour(Document):
 						"model": self.model,
 						"colour": c["colour"],
 						"oem_colour_code": c.get("oem_colour_code"),
+						"naamsa_colour_code": c.get("naamsa_colour_code"),
+						"natis_colour_code": c.get("natis_colour_code"),
 						"discontinued": c.get("discontinued"),
 					},
 				)

@@ -669,12 +669,12 @@
   {
    "fieldname": "service_type_max_allowance",
    "fieldtype": "Int",
-   "label": "Service Type Max Allowance (Km/Hours)"
+   "label": "Service Type Max Allowance (KM/Hours)"
   },
   {
    "fieldname": "service_type_minimum_allowance",
    "fieldtype": "Int",
-   "label": "Service Type Minimum Allowance (Km/Hours)"
+   "label": "Service Type Minimum Allowance (KM/Hours)"
   },
   {
    "fieldname": "section_break_jrap",
@@ -792,7 +792,7 @@
    "link_fieldname": "model"
   }
  ],
- "modified": "2025-11-21 11:41:29.177527",
+ "modified": "2026-01-26 10:04:55.258793",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Model Administration",
