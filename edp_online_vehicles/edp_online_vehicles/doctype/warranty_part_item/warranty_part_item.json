@@ -16,6 +16,7 @@
   "approved",
   "declined",
   "returned",
+  "is_duplicate",
   "section_break_kore",
   "reason",
   "system_note",
@@ -120,12 +121,20 @@
    "in_list_view": 1,
    "label": "System Note",
    "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "is_duplicate",
+   "fieldtype": "Check",
+   "hidden": 1,
+   "label": "Is Dublicate",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2026-01-18 16:31:26.685118",
+ "modified": "2026-01-27 13:10:58.527801",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Warranty Part Item",
