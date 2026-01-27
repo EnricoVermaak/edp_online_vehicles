@@ -1,6 +1,8 @@
 frappe.ui.form.on("Vehicle Service Booking", {
     refresh(frm) {
         if (!frm.is_new()) {
+            frm.set_df_property("status", "hidden", 0);
+            
             frm.add_custom_button("Open Job", function () {
                 
                 frappe.call({
@@ -14,6 +16,8 @@ frappe.ui.form.on("Vehicle Service Booking", {
                     }
                 });
             });
+        } else {
+            frm.set_df_property("status", "hidden", 1);
         }
     }
     , onload(frm) {
@@ -26,6 +30,10 @@ frappe.ui.form.on("Vehicle Service Booking", {
                 }
             , };
         });
+        
+        if (frm.is_new()) {
+            frm.set_df_property("status", "hidden", 1);
+        }
     }
     , service_type(frm) {
         frm.trigger("odo_reading_hours"); // Run validation when service type changes
