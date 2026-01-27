@@ -6,6 +6,8 @@ frappe.ui.form.on("Vehicle Buy Back", {
 		if (!frm.doc.vat || frm.doc.vat == 0) {
 			frm.set_value("vat", 15);
 		}
+		
+		set_vin_filter(frm);
 	},
 
 	onload(frm) {
@@ -15,6 +17,8 @@ frappe.ui.form.on("Vehicle Buy Back", {
 		if (!frm.doc.vat || frm.doc.vat == 0) {
 			frm.set_value("vat", 15);
 		}
+		
+		set_vin_filter(frm);
 	},
 
 	status(frm) {
@@ -69,6 +73,18 @@ frappe.ui.form.on("Vehicle Buy Back", {
 		if (frm.doc.offer_price_incl) {
 			calculate_offer_price_from_incl(frm);
 		}
+	},
+
+	buy_from(frm) {
+		set_vin_filter(frm);
+		frm.refresh_field("table_vsmr");
+	},
+
+	dealer(frm) {
+		if (frm.doc.buy_from === "Dealer") {
+			set_vin_filter(frm);
+			frm.refresh_field("table_vsmr");
+		}
 	}
 });
 
@@ -113,6 +129,19 @@ frappe.ui.form.on("Vehicle Buy Back List", {
 		}
 	}
 });
+
+function set_vin_filter(frm) {
+	frm.set_query("vin_serial_no", "table_vsmr", function(doc) {
+		if (doc.buy_from === "Dealer" && doc.dealer) {
+			return {
+				filters: {
+					dealer: doc.dealer
+				}
+			};
+		}
+		return {};
+	});
+}
 
 function calculate_totals(frm) {
 	let total_cost_price = 0;
@@ -180,7 +209,7 @@ function transfer_vehicles_to_dealer(frm) {
 				if (r.message.transferred && r.message.transferred.length > 0) {
 					message_lines.push(`<div style="margin-bottom: 10px;"><b>Successfully transferred ${r.message.transferred.length} vehicle(s) to ${frm.doc.purchasing_dealer}:</b></div>`);
 					r.message.transferred.forEach(function(vin) {
-						message_lines.push(`<div>✓ ${vin}</div>`);
+						message_lines.push(`<div>${vin}</div>`);
 					});
 				}
 				
