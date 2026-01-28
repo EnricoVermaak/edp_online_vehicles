@@ -24,8 +24,8 @@ class VehiclesLocationMovement(Document):
 					new_issue.stock_entry_type = "Material Issue"
 					new_issue.company = doc.dealer
 					new_issue.append('items', {
-						's_warehouse': self.prev_warehouse,
-                    	'item_code': doc.model,
+						's_warehouse': doc.target_warehouse,
+						'item_code': doc.model,
 						'qty': 1,
 						'uom': "Unit",
 						'stock_uom': "Unit",
