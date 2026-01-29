@@ -8,12 +8,39 @@ from frappe.model.mapper import get_mapped_doc
 
 class VehiclesService(Document):
 
+    def validate(self):
+        self._set_system_status_from_odo_range()
+        self._enforce_odo_range_block()
+
     def on_update(self):
+        if not self.odo_reading_hours or self.odo_reading_hours == 0:
+            self.add_tag("Odo Reading Missing")
+        else:
+            self.remove_tag("Odo Reading Missing")
+
         self.sync_to_history()
+        self._sync_booking_status_from_mapping()
         setting_doc = frappe.get_doc("Vehicle Service Settings")
         setting_doc.last_job_card_no = self.job_card_no
         setting_doc.save(ignore_permissions=True)
         frappe.db.commit()
+
+    def _sync_booking_status_from_mapping(self):
+        if not self.booking_name or not self.service_status:
+            return
+        settings = frappe.get_single("Vehicle Service Settings")
+        if not getattr(settings, "status_sync_mappings", None):
+            return
+        for row in settings.status_sync_mappings:
+            if row.service_status == self.service_status and row.booking_status:
+                frappe.db.set_value(
+                    "Vehicle Service Booking",
+                    self.booking_name,
+                    "status",
+                    row.booking_status,
+                    update_modified=False,
+                )
+                break
         
     def sync_to_history(self):
         history_name = frappe.db.get_value(
@@ -39,6 +66,63 @@ class VehiclesService(Document):
             history_doc.update(data)
             history_doc.vehicles_service = self.name
             history_doc.insert(ignore_permissions=True)
+
+    def _set_system_status_from_odo_range(self):
+        if not (self.odo_reading_hours and self.service_type and self.model):
+            self.system_status = None
+            return
+
+        interval = frappe.db.get_value("Service Schedules", self.service_type, "interval") or 0
+        model_data = frappe.db.get_value(
+            "Model Administration",
+            self.model,
+            ["service_type_max_allowance", "service_type_minimum_allowance"],
+            as_dict=True,
+        ) or {}
+
+        max_allowance = int(model_data.get("service_type_max_allowance") or 0)
+        min_allowance = int(model_data.get("service_type_minimum_allowance") or 0)
+
+        min_odo = int(interval) - min_allowance
+        max_odo = int(interval) + max_allowance
+        odo = int(self.odo_reading_hours or 0)
+
+        if min_odo <= odo <= max_odo:
+            self.system_status = "Conditionally Approved"
+        else:
+            self.system_status = "Conditionally Declined"
+
+    def _enforce_odo_range_block(self):
+        # If we don't have the data to calculate, don't block here.
+        if not (self.odo_reading_hours and self.service_type and self.model):
+            return
+
+        interval = frappe.db.get_value("Service Schedules", self.service_type, "interval") or 0
+        model_data = frappe.db.get_value(
+            "Model Administration",
+            self.model,
+            ["service_type_max_allowance", "service_type_minimum_allowance"],
+            as_dict=True,
+        ) or {}
+
+        max_allowance = int(model_data.get("service_type_max_allowance") or 0)
+        min_allowance = int(model_data.get("service_type_minimum_allowance") or 0)
+
+        min_odo = int(interval) - min_allowance
+        max_odo = int(interval) + max_allowance
+        odo = int(self.odo_reading_hours or 0)
+
+        if odo < min_odo:
+            frappe.throw(
+                "Your vehicle hasn't reached its service threshold yet. "
+                "Please check back when it meets the minimum mileage requirement."
+            )
+
+        if odo > max_odo:
+            frappe.throw(
+                "Your vehicle's mileage has exceeded the current service range. "
+                "Please select the upcoming service schedule to maintain optimal performance."
+            )
 
     def before_save(self):
         for row in self.attach_documents:

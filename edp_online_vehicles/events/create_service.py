@@ -1,5 +1,6 @@
 import frappe
 from frappe.utils.data import get_link_to_form
+import re
 
 
 @frappe.whitelist()
@@ -14,7 +15,16 @@ def rfs_create_service(docname):
 
 	model_code = doc.model_no
 
-	newdoc.service_type = f"SS-{model_code}-Minor"
+	if model_code:
+		service_schedules = frappe.get_all(
+			"Service Schedules",
+			filters={"model_code": model_code},
+			fields=["name"],
+			limit=1
+		)
+		if service_schedules:
+			newdoc.service_type = service_schedules[0].name
+	
 	newdoc.current_location = doc.current_location
 
 	if len(doc.parts) > 0:
@@ -90,7 +100,15 @@ def load_test_create_service(docname):
 
 	model_code = doc.model
 
-	newdoc.service_type = f"SS-{model_code}-Minor"
+	if model_code:
+		service_schedules = frappe.get_all(
+			"Service Schedules",
+			filters={"model_code": model_code},
+			fields=["name"],
+			limit=1
+		)
+		if service_schedules:
+			newdoc.service_type = service_schedules[0].name
 
 	newdoc.insert()
 	newdoc_link = get_link_to_form("Vehicles Service", newdoc.name)
