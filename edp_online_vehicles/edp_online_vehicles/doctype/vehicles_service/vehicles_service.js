@@ -670,9 +670,10 @@ frappe.ui.form.on("Vehicles Service", {
 
 
 	vin_serial_no(frm) {
+		// Reverse flow: Find and link open booking when VIN is entered (only for new documents)
 		if (frm.doc.vin_serial_no && frm.is_new()) {
 			frappe.call({
-				method: "edp_online_vehicles.events.create_service.find_and_link_open_booking",
+				method: "edp_online_vehicles.events.create_vehicle_service.find_and_link_open_booking",
 				args: {
 					vin_serial_no: frm.doc.vin_serial_no,
 					current_service_name: frm.doc.name
@@ -690,7 +691,8 @@ frappe.ui.form.on("Vehicles Service", {
 							indicator: "green"
 						}, 5);
 					} else {
-						
+						// No booking found - try to link Service Schedule based on model
+						// Get model from VIN if not already set
 						if (!frm.doc.model) {
 							frappe.db.get_value("Vehicle Stock", frm.doc.vin_serial_no, "model")
 								.then((res) => {
@@ -750,7 +752,7 @@ frappe.ui.form.on("Vehicles Service", {
 
 
 		
-	
+
 		if (!frm.doc.odo_reading_hours) {
 			frm.doc.odo_reading_hours = null;
 			frm.refresh_field("odo_reading_hours");
@@ -877,8 +879,10 @@ frappe.ui.form.on("Vehicles Service", {
 		const dt = frm.doctype;
 		const dn = frm.doc.name;
 
+		// Range check: require service_type first
 		if (!frm.doc.service_type) {
 			frm.set_value("odo_reading_hours", 0);
+			// Reset system_status if we cannot evaluate the range
 			frappe.model.set_value(dt, dn, "system_status", null);
 			if (!odo_limit_message_shown) {
 				odo_limit_message_shown = true;
@@ -887,6 +891,7 @@ frappe.ui.form.on("Vehicles Service", {
 			return;
 		}
 
+		// Range check: ODO vs schedule interval ± allowances
 		if (frm.doc.odo_reading_hours > 0 && frm.doc.model) {
 			frappe.db.get_value("Service Schedules", frm.doc.service_type, "interval").then((r) => {
 				if (!r || !r.message || r.message.interval == null) return;
@@ -902,6 +907,7 @@ frappe.ui.form.on("Vehicles Service", {
 					let max_odo_value = parseInt(interval, 10) + max_allowance;
 					let odo = parseInt(frm.doc.odo_reading_hours, 10);
 
+					// Set system_status based on whether ODO is inside the allowed range
 					if (!Number.isNaN(odo)) {
 						const in_range = odo >= min_odo_value && odo <= max_odo_value;
 						frappe.model.set_value(
@@ -938,6 +944,7 @@ frappe.ui.form.on("Vehicles Service", {
 			});
 		}
 
+		// Rollback check: ODO cannot be lower than previous service (unless allowed in settings)
 		if (frm.doc.odo_reading_hours) {
 			frappe.db
 				.get_single_value(

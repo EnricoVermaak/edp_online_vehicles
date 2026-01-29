@@ -530,199 +530,236 @@ function validate_odo_reading(frm) {
 
 }
 frappe.ui.form.on('Warranty Part Item', {
-    part_no: function (frm, cdt, cdn) {
-        let row = locals[cdt][cdn];
-        if (!row.part_no) return;
+	part_no: function (frm, cdt, cdn) {
+		let row = locals[cdt][cdn];
+		if (!row.part_no) return;
 
-        // 1) Get Item Doc
-        frappe.db.get_doc('Item', row.part_no).then(item_doc => {
+		// 1) Get Item Doc
+		frappe.db.get_doc('Item', row.part_no).then(item_doc => {
 
-            // Block non-parts items
-            if (item_doc.item_group !== "Parts") {
-                frappe.msgprint({
-                    title: __('Error'),
-                    message: __('Selected item is not a Part. Only Parts are allowed.'),
-                    indicator: 'red'
-                });
-                frappe.model.set_value(cdt, cdn, 'part_no', null);
-                return;
-            }
+			// Block non-parts items
+			if (item_doc.item_group !== "Parts") {
+				frappe.msgprint({
+					title: __('Error'),
+					message: __('Selected item is not a Part. Only Parts are allowed.'),
+					indicator: 'red'
+				});
+				frappe.model.set_value(cdt, cdn, 'part_no', null);
+				return;
+			}
 
-            // 2) Get Standard Selling Rate
-            frappe.db.get_value('Item Price',
-                { item_code: row.part_no, price_list: 'Standard Selling' },
-                'price_list_rate'
-            ).then(prices => {
-                let standard_rate = prices.message.price_list_rate;
+			// 2) Get Standard Selling Rate
+			frappe.db.get_value('Item Price',
+				{ item_code: row.part_no, price_list: 'Standard Selling' },
+				'price_list_rate'
+			).then(prices => {
+				let standard_rate = prices.message.price_list_rate;
 
-                // 3) Get Warranty GP%
-                let custom_gp = item_doc.custom_warranty_gp || 0;
+				// 3) Get Warranty GP%
+				let custom_gp = item_doc.custom_warranty_gp || 0;
+				console.log(custom_gp);
 
-                // 4) Calculate price
-                let price = standard_rate + (standard_rate * custom_gp / 100);
-                frappe.model.set_value(cdt, cdn, 'price', price).then(() => {
-                    let qty = row.qty || 1;
-                    frappe.model.set_value(cdt, cdn, 'amount', price * qty);
-                    frm.refresh_field('part_items');
-                    calculate_part_sub_total(frm, "total_excl", "part_items");
-                });
-            });
-        });
 
-        // Check for duplicate part via backend
-        frappe.call({
-            method: "edp_online_vehicles.events.odo.check_duplicate_part",
-            args: {
-                vin: frm.doc.vin_serial_no,
-                part_no: row.part_no,
-                current_claim: frm.doc.name
-            },
-            callback(r) {
-                if (r.message && r.message.is_duplicate) {
-					console.log("Response",r.message);
+				// if (custom_gp === 0) {
+				//     frappe.msgprint({
+				//         title: __('Warning'),
+				//         message: __('Warranty GP% is not set for this item. Price will be calculated without GP markup.'),
+				//         indicator: 'orange'
+				//     });
+				// }
+
+				// 4) Calculate price
+				let price = standard_rate * (custom_gp / 100);
+
+				frappe.model.set_value(cdt, cdn, 'price', price).then(() => {
+					// Calculate line amount
+					let qty = row.qty || 1;
+					frappe.model.set_value(cdt, cdn, 'amount', price * qty);
+					frm.refresh_field('part_items');
+					calculate_part_sub_total(frm, "total_excl", "part_items");
+				});
+			});
+		});
+		frappe.call({
+			method: "edp_online_vehicles.events.odo.check_duplicate_part",
+			args: {
+				vin: frm.doc.vin_serial_no,
+				part_no: row.part_no,
+				current_claim: frm.doc.name
+			},
+			callback(r) {
+				if (r.message && r.message.is_duplicate) {
+					let claim_numbers = r.message.claims || [];
+					let system_note = "Duplicate Parts Found";
 					
-                    frappe.model.set_value(
-                        row.doctype,
-                        row.name,
-                        "is_duplicate",
-                        1
-                    );
+					if (claim_numbers.length > 0) {
+						system_note += ": " + claim_numbers.join(", ");
+					}
 
-                    // duplicate row color
-                    set_row_color(frm, row, "#ffe6cc");
-                }
-            }
-        });
+					frappe.model.set_value(
+						row.doctype,
+						row.name,
+						"system_note",
+						system_note
+					);
 
-        // Removed apply_row_color error line
-        // reapply_colors will update all rows if needed
-        reapply_colors(frm);
+					set_row_color(frm, row, "#ffe6cc");
+				}
+			}
+		});
 
-        // Validate row coloring
-        validate_part_item(frm, row);
-    },
+		apply_row_color(frm, row);
 
-    price(frm, cdt, cdn) {
-        let row = locals[cdt][cdn];
-        frappe.model.set_value(cdt, cdn, 'amount', (row.price || 0) * (row.qty || 1));
-        calculate_part_sub_total(frm, "total_excl", "part_items");
-    },
+		// Validate row coloring & system note
+		validate_part_item(frm, row);
+	},
 
-    qty(frm, cdt, cdn) {
-        let row = locals[cdt][cdn];
-        frappe.model.set_value(cdt, cdn, 'amount', (row.price || 0) * (row.qty || 1));
-        calculate_part_sub_total(frm, "total_excl", "part_items");
-    },
+	price(frm, cdt, cdn) {
+		let row = locals[cdt][cdn];
+		frappe.model.set_value(cdt, cdn, 'amount', (row.price || 0) * (row.qty || 1));
+		calculate_part_sub_total(frm, "total_excl", "part_items");
+	},
 
-    part_items_add(frm, cdt, cdn) {
-        let row = locals[cdt][cdn];
-        set_row_color(frm, row, ""); // default color
-        setTimeout(() => reapply_colors(frm), 100);
-    },
+	qty(frm, cdt, cdn) {
+		let row = locals[cdt][cdn];
+		frappe.model.set_value(cdt, cdn, 'amount', (row.price || 0) * (row.qty || 1));
+		calculate_part_sub_total(frm, "total_excl", "part_items");
+	},
 
-    part_items_remove(frm, cdt, cdn) {
-        calculate_part_sub_total(frm, "total_excl", "part_items");
-        setTimeout(() => reapply_colors(frm), 100);
-    },
+	part_items_add(frm, cdt, cdn) {
+		let row = locals[cdt][cdn];
+		set_row_color(frm, row, ""); // default color
+		setTimeout(() => reapply_colors(frm), 100);
+	},
+
+	part_items_remove(frm, cdt, cdn) {
+		calculate_part_sub_total(frm, "total_excl", "part_items");
+		setTimeout(() => reapply_colors(frm), 100);
+	},
 });
 
 // -------------------------------------------------
 // Extra Items
 // -------------------------------------------------
 frappe.ui.form.on("Extra Items", {
-    price_per_item_excl(frm, cdt, cdn) { calculate_extra_total(frm, cdt, cdn); },
-    qty(frm, cdt, cdn) { calculate_extra_total(frm, cdt, cdn); },
-    extra_items_remove(frm) { calculate_sub_total(frm, "extra_cost_total_excl", "extra_items"); },
-    total_excl(frm) { calculate_sub_total(frm, "extra_cost_total_excl", "extra_items"); },
+	price_per_item_excl(frm, cdt, cdn) { calculate_extra_total(frm, cdt, cdn); },
+	qty(frm, cdt, cdn) { calculate_extra_total(frm, cdt, cdn); },
+	extra_items_remove(frm) { calculate_sub_total(frm, "extra_cost_total_excl", "extra_items"); },
+	total_excl(frm) { calculate_sub_total(frm, "extra_cost_total_excl", "extra_items"); },
 });
 
 // -------------------------------------------------
 // Calculate total for parts
 // -------------------------------------------------
 const calculate_part_sub_total = (frm, field_name, table_name) => {
-    let total = 0;
-    frm.doc[table_name].forEach(row => total += (row.price || 0) * (row.qty || 0));
-    frm.set_value(field_name, total);
-    frm.refresh_field(field_name);
+	let total = 0;
+	frm.doc[table_name].forEach(row => total += (row.price || 0) * (row.qty || 0));
+	frm.set_value(field_name, total);
+	frm.refresh_field(field_name);
 };
 
 // -------------------------------------------------
 // Calculate total for extra items
 // -------------------------------------------------
 const calculate_extra_total = (frm, cdt, cdn) => {
-    let row = locals[cdt][cdn];
-    let total = (row.price_per_item_excl || 0) * (row.qty || 0);
-    frappe.model.set_value(cdt, cdn, "total_excl", total);
-    calculate_sub_total(frm, "extra_cost_total_excl", "extra_items");
+	let row = locals[cdt][cdn];
+	let total = (row.price_per_item_excl || 0) * (row.qty || 0);
+	frappe.model.set_value(cdt, cdn, "total_excl", total);
+	calculate_sub_total(frm, "extra_cost_total_excl", "extra_items");
 };
 
 const calculate_sub_total = (frm, field_name, table_name) => {
-    let total = 0;
-    frm.doc[table_name].forEach(row => total += row.total_excl || 0);
-    frm.set_value(field_name, total);
-    frm.refresh_field(field_name);
+	let total = 0;
+	frm.doc[table_name].forEach(row => total += row.total_excl || 0);
+	frm.set_value(field_name, total);
+	frm.refresh_field(field_name);
 };
 
 // -------------------------------------------------
 // Row color helpers
 // -------------------------------------------------
 function set_row_color(frm, row, color) {
-    if (frm.fields_dict['part_items'] && frm.fields_dict['part_items'].grid) {
-        let grid = frm.fields_dict['part_items'].grid;
-        let grid_row = grid.grid_rows.find(r => r.doc.name === row.name);
-        if (grid_row) $(grid_row.wrapper).css('background-color', color);
-    } else {
-        setTimeout(() => set_row_color(frm, row, color), 50);
-    }
+	console.log("Color");
+
+	if (frm.fields_dict['part_items'] && frm.fields_dict['part_items'].grid) {
+		let grid = frm.fields_dict['part_items'].grid;
+		let grid_row = grid.grid_rows.find(r => r.doc.name === row.name);
+		if (grid_row) $(grid_row.wrapper).css('background-color', color);
+	} else {
+		setTimeout(() => set_row_color(frm, row, color), 50);
+	}
 }
 
 function reapply_colors(frm) {
-    if (!frm.doc.vin_serial_no) return;
+	if (!frm.doc.vin_serial_no) return;
 
-    frappe.call({
-        method: "edp_online_vehicles.events.odo.check_clor",
-        args: { vin: frm.doc.vin_serial_no },
-        callback(r) {
-            let allowed_items = r.message || [];
-            let grid = frm.fields_dict['part_items'].grid;
-            if (!grid) return;
+	frappe.call({
+		method: "edp_online_vehicles.events.odo.check_clor",
+		args: { vin: frm.doc.vin_serial_no },
+		callback(r) {
+			let allowed_items = r.message || [];
+			let grid = frm.fields_dict['part_items'].grid;
+			if (!grid) return;
 
-            grid.grid_rows.forEach(gr => {
-                let color = "";
+			grid.grid_rows.forEach(gr => {
+				let color = "";
 
-                if (gr.doc.is_duplicate) {
-                    color = "#ffe6cc"; // duplicate orange
-                } else if (gr.doc.part_no && !allowed_items.includes(gr.doc.part_no)) {
-                    color = "#ffdddd"; // not covered red
-                }
+			if (gr.doc.system_note && gr.doc.system_note.startsWith("Duplicate Parts Found")) {
+				color = "#ffe6cc";
+			}
 
-                set_row_color(frm, gr.doc, color);
-            });
-        }
-    });
+				else if (gr.doc.part_no && !allowed_items.includes(gr.doc.part_no)) {
+					color = "#ffdddd";
+				}
+
+				set_row_color(frm, gr.doc, color);
+			});
+		}
+	});
 }
 
 function validate_part_item(frm, row) {
-    if (!frm.doc.vin_serial_no || !row.part_no) return;
+	if (!frm.doc.vin_serial_no || !row.part_no) return;
 
-    frappe.call({
-        method: "edp_online_vehicles.events.odo.check_clor",
-        args: { vin: frm.doc.vin_serial_no },
-        callback(r) {
-            let allowed_items = r.message || [];
+	frappe.call({
+		method: "edp_online_vehicles.events.odo.check_clor",
+		args: { vin: frm.doc.vin_serial_no },
+		callback(r) {
+			let allowed_items = r.message || [];
 
-            if (row.is_duplicate) {
-                set_row_color(frm, row, "#ffe6cc");
-                return;
-            }
+			if (row.system_note && row.system_note.startsWith("Duplicate Parts Found")) {
+				set_row_color(frm, row, "#ffe6cc");
+				return;
+			}
 
-            if (!allowed_items.includes(row.part_no)) {
-                set_row_color(frm, row, "#ffdddd");
-                frappe.model.set_value(row.doctype, row.name, "is_duplicate", 0);
-            } else {
-                set_row_color(frm, row, "");
-				frappe.model.set_value(row.doctype, row.name, "is_duplicate", 0);	
+			if (!allowed_items.includes(row.part_no)) {
+				set_row_color(frm, row, "#ffdddd");
+				frappe.model.set_value(
+					row.doctype,
+					row.name,
+					"system_note",
+					"Part Not Covered"
+				);
+			} 
+			else {
+				set_row_color(frm, row, "");
+				frappe.model.set_value(row.doctype, row.name, "system_note", "");
 			}
 		}
 	});
 }
+
+
+
+function set_row_color(frm, row, color) {
+	if (frm.fields_dict['part_items'] && frm.fields_dict['part_items'].grid) {
+		let grid = frm.fields_dict['part_items'].grid;
+		let grid_row = grid.grid_rows.find(r => r.doc.name === row.name);
+		if (grid_row) $(grid_row.wrapper).css('background-color', color);
+	} else {
+		setTimeout(() => set_row_color(frm, row, color), 50);
+	}
+}
+
+
+

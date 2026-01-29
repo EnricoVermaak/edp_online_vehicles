@@ -1,6 +1,5 @@
 import frappe
 from frappe.utils.data import get_link_to_form
-import re
 
 
 @frappe.whitelist()
