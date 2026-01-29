@@ -13,26 +13,59 @@ class VehicleBuyBack(Document):
 			self.buy_back_date_time = now_datetime()
 		
 		self.vat = 15
+		self._populate_child_from_vehicle_and_model()
 		self.calculate_totals()
 		self.calculate_offer_price()
+	
+	def _populate_child_from_vehicle_and_model(self):
+		if not self.table_vsmr:
+			return
+		for row in self.table_vsmr:
+			if not row.get("vin_serial_no"):
+				continue
+			vin = row.vin_serial_no
+			vehicle = frappe.db.get_value(
+				"Vehicle Stock", vin,
+				["model", "description", "engine_no", "colour", "condition", "status",
+				 "ho_invoice_no", "ho_invoice_amt", "ho_invoice_date"],
+				as_dict=True
+			)
+			if vehicle:
+				if vehicle.get("model") and not row.get("model"):
+					row.model = vehicle.model
+				for f in ("description", "engine_no", "ho_invoice_no", "ho_invoice_amt", "ho_invoice_date"):
+					if vehicle.get(f) is not None and row.get(f) is None:
+						setattr(row, f, vehicle[f])
+				if vehicle.get("colour") is not None and row.get("exterior_colour") is None:
+					row.exterior_colour = vehicle.colour
+				if vehicle.get("condition") is not None and row.get("condition") is None:
+					row.condition = vehicle.condition
+				if vehicle.get("status") is not None and row.get("operational_status") is None:
+					row.operational_status = vehicle.status
+			model = row.get("model") or (vehicle.get("model") if vehicle else None)
+			if model:
+				model_data = frappe.db.get_value(
+					"Model Administration", model,
+					["cost_price_excl", "dealer_billing_excl", "suggested_retail_excl"],
+					as_dict=True
+				)
+				if model_data:
+					for f in ("cost_price_excl", "dealer_billing_excl", "suggested_retail_excl"):
+						if model_data.get(f) is not None:
+							setattr(row, f, model_data[f])
 	
 	def calculate_totals(self):
 		total_cost_price = 0
 		total_dealer_billing = 0
 		total_suggested_retail = 0
-		total_offer_price = 0
-		
 		if self.table_vsmr:
 			for row in self.table_vsmr:
 				total_cost_price += float(row.get("cost_price_excl") or 0)
 				total_dealer_billing += float(row.get("dealer_billing_excl") or 0)
 				total_suggested_retail += float(row.get("suggested_retail_excl") or 0)
-				total_offer_price += float(row.get("offer_price_excl") or 0)
-		
 		self.cost_price_excl = total_cost_price
 		self.dealer_billing_excl = total_dealer_billing
 		self.suggested_retail_excl = total_suggested_retail
-		self.offer_price_excl = total_offer_price
 	
 	def calculate_offer_price(self):
 		offer_excl = float(self.offer_price_excl or 0)

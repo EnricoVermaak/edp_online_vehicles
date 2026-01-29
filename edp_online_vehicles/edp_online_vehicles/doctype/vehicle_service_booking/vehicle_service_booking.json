@@ -10,6 +10,7 @@
   "column_break_amoi",
   "dealer",
   "status",
+  "system_status",
   "section_break_afxl",
   "vehicle_column",
   "vin_serial_no",
@@ -74,8 +75,15 @@
    "in_list_view": 1,
    "in_standard_filter": 1,
    "label": "Status",
-   "options": "Pending\nConditionally Approved\nConditionally Declined\nArrived\nCancelled",
+   "options": "Pending\nArrived\nCancelled",
    "reqd": 1
+  },
+  {
+   "fieldname": "system_status",
+   "fieldtype": "Select",
+   "label": "System Status",
+   "options": "Conditionally Approved\nConditionally Declined",
+   "read_only": 1
   },
   {
    "fieldname": "section_break_afxl",
@@ -268,7 +276,7 @@
  "index_web_pages_for_search": 1,
  "is_calendar_and_gantt": 1,
  "links": [],
- "modified": "2025-12-18 11:59:45.994832",
+ "modified": "2026-01-28 08:03:18.890185",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicle Service Booking",

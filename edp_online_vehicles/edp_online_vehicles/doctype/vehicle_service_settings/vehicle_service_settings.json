@@ -16,7 +16,9 @@
   "default_service_type_minimum_allowance",
   "allow_auto_job_card_no",
   "auto_job_card_no_prefix",
-  "last_auto_job_card_no"
+  "last_auto_job_card_no",
+  "section_break_status_sync",
+  "status_sync_mappings"
  ],
  "fields": [
   {
@@ -87,12 +89,24 @@
    "fieldname": "allow_auto_job_card_no",
    "fieldtype": "Check",
    "label": "Allow Auto Job Card No"
+  },
+  {
+   "fieldname": "section_break_status_sync",
+   "fieldtype": "Section Break",
+   "label": "Status Sync (Service to Booking)"
+  },
+  {
+   "description": "When a Vehicles Service is linked to a booking (booking_name), changing the service status will update the linked Vehicle Service Booking status according to these mappings.",
+   "fieldname": "status_sync_mappings",
+   "fieldtype": "Table",
+   "label": "Status Sync Mappings",
+   "options": "Status Sync Mapping"
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2025-09-11 07:55:31.587279",
+ "modified": "2026-01-28 07:44:21.396408",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicle Service Settings",
@@ -109,6 +123,7 @@
    "write": 1
   }
  ],
+ "row_format": "Dynamic",
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": [],

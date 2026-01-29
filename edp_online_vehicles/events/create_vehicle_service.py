@@ -3,6 +3,52 @@ from frappe.utils import get_link_to_form
 import re
 
 @frappe.whitelist()
+def find_and_link_open_booking(vin_serial_no, current_service_name=None):
+
+    if not vin_serial_no:
+        return {"found": False}
+    
+    # Only Pending = open for linking
+    open_statuses = ["Pending"]
+    
+    # Find open bookings for this VIN (most recent first)
+    bookings = frappe.get_all(
+        "Vehicle Service Booking",
+        filters={
+            "vin_serial_no": vin_serial_no,
+            "status": ["in", open_statuses]
+        },
+        fields=["name", "status", "requested_booking_date_time", "dealer", "service_type",
+                "vin_serial_no", "model", "engine_no", "odo_reading_hours", "customer",
+                "customer_full_name", "mobile", "service_notes"],
+        order_by="creation desc",
+        limit_page_length=1
+    )
+    
+    if not bookings:
+        return {"found": False}
+    
+    booking = bookings[0]
+    
+    # Must have no linked service (exclude cancelled services)
+    cur = (current_service_name or "").strip()
+    existing = frappe.db.sql("""
+        SELECT name FROM `tabVehicles Service`
+        WHERE booking_name = %s AND docstatus != 2
+        AND (name != %s OR %s = '')
+        LIMIT 1
+    """, (booking.name, cur, cur))
+    if existing:
+        return {"found": False, "reason": "Booking already linked to another service"}
+    
+    # Only return link and service_type; no other fields or parts/labour
+    return {
+        "found": True,
+        "booking_name": booking.name,
+        "service_type": booking.service_type,
+    }
+
+@frappe.whitelist()
 def create_service_from_booking(booking_name):
     try:
         booking = frappe.get_doc("Vehicle Service Booking", booking_name)
@@ -16,25 +62,28 @@ def create_service_from_booking(booking_name):
         if not booking.service_type:
             frappe.throw("Please specify a service type before creating a new job.")
 
-
-        existing_service = frappe.db.get_value(
-            "Vehicles Service",
-            {"booking_name": booking.name},
-            "name"
-        )
-        if existing_service:
-            service = frappe.get_doc("Vehicles Service", existing_service)
+        # Check for existing service using SQL directly to bypass any cache
+        existing_service = frappe.db.sql("""
+            SELECT name FROM `tabVehicles Service` 
+            WHERE booking_name = %s AND docstatus IN (0, 1)
+            LIMIT 1
+        """, (booking.name,), as_dict=True)
+        
+        if existing_service and len(existing_service) > 0:
+            service_name = existing_service[0].name
+            service = frappe.get_doc("Vehicles Service", service_name)
 
             if getattr(booking, "odo_reading_hours", None):
                 service.db_set("odo_reading_hours", booking.odo_reading_hours)
                 service.remove_tag("Odo Reading Missing")
 
-            link = get_link_to_form("Vehicles Service", service.name)
             frappe.msgprint(
-                f"Vehicles Service already exists: {link}",
+                f"Vehicles Service already exists: {service.name}",
                 title="Service Already Exists"
             )
             return service.name
+        
+        # No existing service - create new one
 
         service = frappe.get_doc({
             "doctype": "Vehicles Service",
@@ -42,6 +91,7 @@ def create_service_from_booking(booking_name):
             "dealer": booking.dealer,
             "service_type": booking.service_type,
             "service_status": booking.status,
+            "system_status": getattr(booking, "system_status", None),
             "vin_serial_no": booking.vin_serial_no,
             "model": booking.model,
             "engine_no": booking.engine_no,
@@ -97,16 +147,12 @@ def create_service_from_booking(booking_name):
 
 
         service.insert(ignore_permissions=True)
+        # Note: Tag handling is done automatically in VehiclesService.on_update
 
-        if not getattr(booking, "odo_reading_hours", None):
-            service.add_tag("Odo Reading Missing")
-
-
-        link = get_link_to_form("Vehicles Service", service.name)
-        frappe.msgprint(
-            f"Vehicle Service created: {link}",
-            title="Success"
-        )
+        # Update booking status to Arrived when service is created
+        booking.db_set("status", "Arrived", update_modified=False)
+        
+        frappe.db.commit()
 
         return service.name
 

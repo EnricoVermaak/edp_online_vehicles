@@ -29,6 +29,7 @@ required_apps = ["erpnext", "hrms","insights"]
 app_include_css = "edp_online_vehicles.bundle.css"
 app_include_js = [
 	"edp_online_vehicles1.bundle.js",
+	"/assets/edp_online_vehicles/js/vehicles_service_scan.js",
 	"/assets/edp_online_vehicles/js/recon_restrictions.js",
 	"/assets/edp_online_vehicles/js/breadcrumb.js",
 	"/assets/edp_online_vehicles/js/custom_nav_icon.js",

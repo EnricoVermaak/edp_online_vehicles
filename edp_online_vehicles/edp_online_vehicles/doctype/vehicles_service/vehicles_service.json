@@ -178,7 +178,8 @@
    "in_list_view": 1,
    "label": "Service Type",
    "options": "Service Schedules",
-   "reqd": 1
+   "reqd": 1,
+   "depends_on": "eval:doc.vin_serial_no"
   },
   {
    "collapsible": 1,
