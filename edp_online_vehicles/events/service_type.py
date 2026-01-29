@@ -32,15 +32,10 @@ def service_type_query(doctype, txt, searchfield, start, page_len, filters):
 
     # Filter out the used service types from all service types
     available_service_types = []
-    mm_services = []
-    if filters.get("model_code"):
-        mm_services = [[f"SS-{filters.get('model_code')}-Major"], [f"SS-{filters.get('model_code')}-Minor"]]
 
     for service_type in all_service_type_names:
         if service_type not in used_service_type_names:
             available_service_types.append([service_type])
-
-    available_service_types.extend(mm_services)
 
     return available_service_types
 

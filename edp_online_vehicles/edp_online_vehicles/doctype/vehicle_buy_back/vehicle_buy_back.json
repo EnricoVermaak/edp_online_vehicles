@@ -132,8 +132,8 @@
   },
   {
    "fieldname": "vat",
-   "fieldtype": "Currency",
-   "label": "VAT (%)",
+   "fieldtype": "Percent",
+   "label": "VAT",
    "precision": "2",
    "read_only": 1
   },

@@ -91,42 +91,37 @@ frappe.ui.form.on("Vehicle Buy Back", {
 frappe.ui.form.on("Vehicle Buy Back List", {
 	vin_serial_no(frm, cdt, cdn) {
 		let row = locals[cdt][cdn];
-		
-		if (row.vin_serial_no) {
-			frappe.db.get_value("Vehicle Stock", row.vin_serial_no, ["model", "ho_invoice_no", "ho_invoice_amt", "ho_invoice_date"])
-				.then((vehicle_data) => {
-					if (vehicle_data.message && vehicle_data.message.model) {
-						let model = vehicle_data.message.model;
-						
-						frappe.db.get_value("Model Administration", model, [
-							"cost_price_excl",
-							"dealer_billing_excl",
-							"suggested_retail_excl"
-						])
-						.then((model_data) => {
-							if (model_data.message) {
-								frappe.model.set_value(cdt, cdn, "cost_price_excl", model_data.message.cost_price_excl || 0);
-								frappe.model.set_value(cdt, cdn, "dealer_billing_excl", model_data.message.dealer_billing_excl || 0);
-								frappe.model.set_value(cdt, cdn, "suggested_retail_excl", model_data.message.suggested_retail_excl || 0);
-							}
-							
-							if (vehicle_data.message.ho_invoice_no) {
-								frappe.model.set_value(cdt, cdn, "ho_invoice_no", vehicle_data.message.ho_invoice_no);
-							}
-							if (vehicle_data.message.ho_invoice_amt) {
-								frappe.model.set_value(cdt, cdn, "ho_invoice_amt", vehicle_data.message.ho_invoice_amt);
-							}
-							if (vehicle_data.message.ho_invoice_date) {
-								frappe.model.set_value(cdt, cdn, "ho_invoice_date", vehicle_data.message.ho_invoice_date);
-							}
-							
-							if (cur_frm && cur_frm.doctype === "Vehicle Buy Back") {
-								cur_frm.trigger("table_vsmr");
-							}
-						});
-					}
-				});
-		}
+		if (!row.vin_serial_no) return;
+		const unpack = (v) => (v && v.message !== undefined ? v.message : v) || {};
+		frappe.call({
+			method: "frappe.client.get_value",
+			type: "GET",
+			args: {
+				doctype: "Vehicle Stock",
+				fieldname: ["model", "description", "engine_no", "colour", "condition", "status", "ho_invoice_no", "ho_invoice_amt", "ho_invoice_date"],
+				filters: { name: row.vin_serial_no }
+			}
+		}).then((r) => {
+			let v = unpack(r);
+			if (!v.model) return;
+			return frappe.call({
+				method: "frappe.client.get_value",
+				type: "GET",
+				args: {
+					doctype: "Model Administration",
+					fieldname: ["cost_price_excl", "dealer_billing_excl", "suggested_retail_excl"],
+					filters: { name: v.model }
+				}
+			});
+		}).then((r) => {
+			let m = unpack(r);
+			if (m) {
+				if (m.cost_price_excl != null) frappe.model.set_value(cdt, cdn, "cost_price_excl", m.cost_price_excl);
+				if (m.dealer_billing_excl != null) frappe.model.set_value(cdt, cdn, "dealer_billing_excl", m.dealer_billing_excl);
+				if (m.suggested_retail_excl != null) frappe.model.set_value(cdt, cdn, "suggested_retail_excl", m.suggested_retail_excl);
+			}
+			if (cur_frm && cur_frm.doctype === "Vehicle Buy Back") cur_frm.trigger("table_vsmr");
+		});
 	}
 });
 
