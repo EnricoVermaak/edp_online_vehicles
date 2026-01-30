@@ -68,6 +68,7 @@
   "sap_integration_section",
   "sap_token",
   "sap_token_expires_at",
+  "sap_token_fetched_at",
   "servers_section",
   "integration_servers"
  ],
@@ -448,6 +449,12 @@
    "fieldname": "sap_token_expires_at",
    "fieldtype": "Datetime",
    "label": "SAP Token Expires At",
+   "read_only": 1
+  },
+  {
+   "fieldname": "sap_token_fetched_at",
+   "fieldtype": "Datetime",
+   "label": "SAP Token Fetched At",
    "read_only": 1
   },
   {
