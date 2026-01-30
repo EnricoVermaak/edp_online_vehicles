@@ -603,7 +603,7 @@ frappe.ui.form.on('Warranty Part Item', {
 						system_note
 					);
 
-					set_row_color(frm, row, "#ffe6cc");
+					set_row_color(frm, row, "#ffcc99");
 				}
 			}
 		});
@@ -705,7 +705,7 @@ function reapply_colors(frm) {
 				let color = "";
 
 			if (gr.doc.system_note && gr.doc.system_note.startsWith("Duplicate Parts Found")) {
-				color = "#ffe6cc";
+				color = "#ffcc99";
 			}
 
 				else if (gr.doc.part_no && !allowed_items.includes(gr.doc.part_no)) {
@@ -728,7 +728,7 @@ function validate_part_item(frm, row) {
 			let allowed_items = r.message || [];
 
 			if (row.system_note && row.system_note.startsWith("Duplicate Parts Found")) {
-				set_row_color(frm, row, "#ffe6cc");
+				set_row_color(frm, row, "#ffcc99");
 				return;
 			}
 
