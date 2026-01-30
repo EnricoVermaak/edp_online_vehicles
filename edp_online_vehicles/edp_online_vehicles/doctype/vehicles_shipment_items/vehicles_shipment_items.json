@@ -55,10 +55,9 @@
    "columns": 1,
    "fieldname": "created_status",
    "fieldtype": "Select",
-   "in_list_view": 0,
+   "hidden": 1,
    "label": "Created Status",
-   "options": "0\n1",
-   "hidden": 1
+   "options": "0\n1"
   },
   {
    "fieldname": "container_no",
@@ -99,6 +98,7 @@
   {
    "fieldname": "engine_no",
    "fieldtype": "Data",
+   "in_list_view": 1,
    "label": "Engine No"
   },
   {
@@ -125,7 +125,6 @@
    "fetch_if_empty": 1,
    "fieldname": "cost_price_excl",
    "fieldtype": "Currency",
-   "in_list_view": 1,
    "label": "Cost Price (Excl)",
    "reqd": 1
   },
@@ -227,16 +226,18 @@
    "options": "Model Colour"
   }
  ],
+ "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-10-22 10:35:24.216309",
+ "modified": "2026-01-30 09:39:56.059734",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicles Shipment Items",
  "owner": "Administrator",
  "permissions": [],
  "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": []
