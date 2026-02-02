@@ -42,11 +42,11 @@
    "reqd": 1
   },
   {
-   "fetch_from": "labour_code.standard_rate",
    "fieldname": "price",
    "fieldtype": "Currency",
    "in_list_view": 1,
    "label": "Price Per Item (Excl)",
+   "read_only": 1,
    "reqd": 1
   },
   {

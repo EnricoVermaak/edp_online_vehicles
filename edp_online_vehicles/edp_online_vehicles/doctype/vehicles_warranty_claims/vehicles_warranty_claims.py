@@ -68,12 +68,7 @@ class VehiclesWarrantyClaims(Document):
 			# Within warranty → Normal
 			self.type = "Normal"
 
-    # =========================================================
-    # END: Warranty Validation
-    # =========================================================
-
-
-	
+	# END: Warranty Validation
 
 		# Validate warranty period - automatically change to Goodwill if outside warranty
 		if self.vin_serial_no and self.type != "Goodwill":
@@ -174,7 +169,7 @@ class VehiclesWarrantyClaims(Document):
 		)
 		for doc in warranty_docs:
 			self.append(
-				"service_history",
+				"warranty_history",
 				{
 					"document_no": doc.name,
 					"odo_readinghours": doc.odo_reading,
@@ -192,7 +187,7 @@ class VehiclesWarrantyClaims(Document):
 		)
 		for doc in breakdown_docs:
 			self.append(
-				"service_history",
+				"breakdown_history",
 				{
 					"document_no": doc.name,
 					"odo_readinghours": doc.odo_reading,
@@ -218,7 +213,7 @@ class VehiclesWarrantyClaims(Document):
 		)
 		for doc in incidents_docs:
 			self.append(
-				"service_history",
+				"incident_history",
 				{
 					"document_no": doc.name,
 					"location": doc.location,

@@ -16,9 +16,31 @@ $(document).ready(function () {
 	);
 });
 
+function refresh_summary_totals(frm) {
+	if (!frm.doc.doctype) return;
+	let parts = flt(frm.doc.total_excl) || 0;
+	let labour = flt(frm.doc.labours_total_excl) || 0;
+	let extras = flt(frm.doc.extra_cost_total_excl) || 0;
+	frm.set_value("summary_parts_total", parts);
+	frm.set_value("summary_labour_total", labour);
+	frm.set_value("summary_extras_total", extras);
+	frm.set_value("summary_total_excl", parts + labour + extras);
+	frm.refresh_field("summary_parts_total");
+	frm.refresh_field("summary_labour_total");
+	frm.refresh_field("summary_extras_total");
+	frm.refresh_field("summary_total_excl");
+}
+
 frappe.ui.form.on("Vehicles Warranty Claims", {
 	refresh(frm) {
 		setTimeout(() => reapply_colors(frm), 300);
+		if (frm.doc.labour_items && frm.doc.labour_items.length) {
+			update_labour_totals(frm);
+		}
+		refresh_summary_totals(frm);
+		frm.set_query("labour_code", "labour_items", () => ({
+			filters: { item_group: "Warranty Labour" }
+		}));
 		frm.add_custom_button(
 			__("Sales Order"),
 			() => {
@@ -553,31 +575,18 @@ frappe.ui.form.on('Warranty Part Item', {
 				{ item_code: row.part_no, price_list: 'Standard Selling' },
 				'price_list_rate'
 			).then(prices => {
-				let standard_rate = prices.message.price_list_rate;
+				let msg = prices && prices.message;
+				let standard_rate = (msg != null && typeof msg === "object") ? (msg.price_list_rate || 0) : (msg != null ? msg : 0);
 
-				// 3) Get Warranty GP%
+				// 3) Warranty GP% from Item – same formula as service: base + (base × gp/100)
 				let custom_gp = item_doc.custom_warranty_gp || 0;
-				console.log(custom_gp);
+				let price = standard_rate + (standard_rate * (custom_gp / 100));
+				let total_excl = price * (row.qty || 0);
 
-
-				// if (custom_gp === 0) {
-				//     frappe.msgprint({
-				//         title: __('Warning'),
-				//         message: __('Warranty GP% is not set for this item. Price will be calculated without GP markup.'),
-				//         indicator: 'orange'
-				//     });
-				// }
-
-				// 4) Calculate price
-				let price = standard_rate * (custom_gp / 100);
-
-				frappe.model.set_value(cdt, cdn, 'price', price).then(() => {
-					// Calculate line amount
-					let qty = row.qty || 1;
-					frappe.model.set_value(cdt, cdn, 'amount', price * qty);
-					frm.refresh_field('part_items');
-					calculate_part_sub_total(frm, "total_excl", "part_items");
-				});
+				frappe.model.set_value(cdt, cdn, 'price', price);
+				frappe.model.set_value(cdt, cdn, 'total_excl', total_excl);
+				frm.refresh_field('part_items');
+				calculate_part_sub_total(frm, "total_excl", "part_items");
 			});
 		});
 		frappe.call({
@@ -616,13 +625,17 @@ frappe.ui.form.on('Warranty Part Item', {
 
 	price(frm, cdt, cdn) {
 		let row = locals[cdt][cdn];
-		frappe.model.set_value(cdt, cdn, 'amount', (row.price || 0) * (row.qty || 1));
+		let total_excl = (row.price || 0) * (row.qty || 0);
+		frappe.model.set_value(cdt, cdn, "total_excl", total_excl);
+		frm.refresh_field("part_items");
 		calculate_part_sub_total(frm, "total_excl", "part_items");
 	},
 
 	qty(frm, cdt, cdn) {
 		let row = locals[cdt][cdn];
-		frappe.model.set_value(cdt, cdn, 'amount', (row.price || 0) * (row.qty || 1));
+		let total_excl = (row.price || 0) * (row.qty || 0);
+		frappe.model.set_value(cdt, cdn, "total_excl", total_excl);
+		frm.refresh_field("part_items");
 		calculate_part_sub_total(frm, "total_excl", "part_items");
 	},
 
@@ -639,9 +652,91 @@ frappe.ui.form.on('Warranty Part Item', {
 });
 
 // -------------------------------------------------
-// Extra Items
+// Warranty Labour Item – dealer Warranty Labour Rate + Item custom_warranty_gp%; same formula whether manual or any way added
+// -------------------------------------------------
+const update_labour_totals = (frm) => {
+	let duration_total = 0;
+	let labours_total_excl = 0;
+	(frm.doc.labour_items || []).forEach(row => {
+		duration_total += row.duration || 0;
+		labours_total_excl += row.total_excl || 0;
+	});
+	frm.set_value("duration_total", duration_total);
+	frm.set_value("labours_total_excl", labours_total_excl);
+	frm.refresh_field("duration_total");
+	frm.refresh_field("labours_total_excl");
+	refresh_summary_totals(frm);
+};
+
+// Dealer Company Warranty Labour Rate + (that × Item custom_warranty_gp / 100)
+function warranty_claim_labour_rate(frm, cdt, cdn) {
+	let row = locals[cdt][cdn];
+	if (!row.labour_code || !frm.doc.dealer) return Promise.resolve();
+
+	return frappe.db.get_value("Company", frm.doc.dealer, "custom_warranty_labour_rate")
+		.then(company_res => {
+			let msg = company_res && company_res.message;
+			let base_rate = (msg != null && typeof msg === "object") ? (msg.custom_warranty_labour_rate || 0) : (msg != null ? msg : 0);
+			return frappe.db.get_doc("Item", row.labour_code).then(item_doc => {
+				let gp_pct = item_doc.custom_warranty_gp || 0;
+				let price = base_rate + (base_rate * (gp_pct / 100));
+				let total_excl = price * (row.duration || 0);
+				frappe.model.set_value(cdt, cdn, "price", price);
+				frappe.model.set_value(cdt, cdn, "total_excl", total_excl);
+			});
+		});
+}
+
+frappe.ui.form.on("Warranty Labour Item", {
+	labour_code(frm, cdt, cdn) {
+		warranty_claim_labour_rate(frm, cdt, cdn).then(() => {
+			update_labour_totals(frm);
+			frm.refresh_field("labour_items");
+		});
+	},
+	duration(frm, cdt, cdn) {
+		let row = locals[cdt][cdn];
+		let total = (row.duration || 0) * (row.price || 0);
+		frappe.model.set_value(cdt, cdn, "total_excl", total);
+		frm.refresh_field("labour_items");
+		update_labour_totals(frm);
+	},
+	price(frm, cdt, cdn) {
+		let row = locals[cdt][cdn];
+		let total = (row.duration || 0) * (row.price || 0);
+		frappe.model.set_value(cdt, cdn, "total_excl", total);
+		frm.refresh_field("labour_items");
+		update_labour_totals(frm);
+	},
+	total_excl(frm) {
+		update_labour_totals(frm);
+	},
+	labour_items_remove(frm) {
+		update_labour_totals(frm);
+	},
+	labour_items_add(frm) {
+		// totals updated when duration/price are set
+	},
+});
+
+// -------------------------------------------------
+// Extra Items – price from Standard Selling (no GP)
 // -------------------------------------------------
 frappe.ui.form.on("Extra Items", {
+	item_no(frm, cdt, cdn) {
+		let row = locals[cdt][cdn];
+		if (!row.item_no) return;
+		frappe.db.get_value("Item Price", { item_code: row.item_no, price_list: "Standard Selling" }, "price_list_rate")
+			.then(r => {
+				let msg = r && r.message;
+				let rate = (msg != null && typeof msg === "object") ? (msg.price_list_rate || 0) : (msg != null ? msg : 0);
+				frappe.model.set_value(cdt, cdn, "price_per_item_excl", rate);
+				let total = rate * (row.qty || 0);
+				frappe.model.set_value(cdt, cdn, "total_excl", total);
+				frm.refresh_field("extra_items");
+				calculate_sub_total(frm, "extra_cost_total_excl", "extra_items");
+			});
+	},
 	price_per_item_excl(frm, cdt, cdn) { calculate_extra_total(frm, cdt, cdn); },
 	qty(frm, cdt, cdn) { calculate_extra_total(frm, cdt, cdn); },
 	extra_items_remove(frm) { calculate_sub_total(frm, "extra_cost_total_excl", "extra_items"); },
@@ -656,6 +751,7 @@ const calculate_part_sub_total = (frm, field_name, table_name) => {
 	frm.doc[table_name].forEach(row => total += (row.price || 0) * (row.qty || 0));
 	frm.set_value(field_name, total);
 	frm.refresh_field(field_name);
+	refresh_summary_totals(frm);
 };
 
 // -------------------------------------------------
@@ -673,6 +769,7 @@ const calculate_sub_total = (frm, field_name, table_name) => {
 	frm.doc[table_name].forEach(row => total += row.total_excl || 0);
 	frm.set_value(field_name, total);
 	frm.refresh_field(field_name);
+	refresh_summary_totals(frm);
 };
 
 // -------------------------------------------------

@@ -24,16 +24,19 @@ frappe.ui.form.on("Service Schedules", {
 // -------------------- Parts Items --------------------
 frappe.ui.form.on('Service Schedules Parts Items', {
     item: function (frm, cdt, cdn) {
+        // Fetch Standard Selling + Service GP%, set price_excl and total_excl
         calculate_price(frm, cdt, cdn)
             .then(() => {
                 calculate_child_totals(frm);
             });
-    }
-    , qty: function (frm, cdt, cdn) {
-        calculate_price(frm, cdt, cdn)
-            .then(() => {
-                calculate_child_totals(frm);
-            });
+    },
+    qty: function (frm, cdt, cdn) {
+        // Set total_excl = price_excl * qty immediately (no async), so save keeps correct value
+        let row = locals[cdt][cdn];
+        let total = (row.price_excl || 0) * (row.qty || 0);
+        frappe.model.set_value(cdt, cdn, 'total_excl', total);
+        frm.refresh_field('service_parts_items');
+        calculate_child_totals(frm);
     }
 });
 
@@ -71,24 +74,58 @@ function calculate_price(frm, cdt, cdn) {
 }
 
 // -------------------- Labour Items --------------------
+// Rate from user's default Company (Service Labour Rate) + GP% from Item (custom_service_gp)
 frappe.ui.form.on('Service Schedules Labour Items', {
+    item: function (frm, cdt, cdn) {
+        calculate_labour_rate(frm, cdt, cdn)
+            .then(() => {
+                calculate_child_totals(frm);
+            });
+    },
     rate_hour: function (frm, cdt, cdn) {
         calculate_total(frm, cdt, cdn);
         calculate_child_totals(frm);
-    }
-    , duration_hours: function (frm, cdt, cdn) {
-        calculate_total(frm, cdt, cdn);
+    },
+    duration_hours: function (frm, cdt, cdn) {
+        // Set total synchronously so save keeps correct value
+        let row = locals[cdt][cdn];
+        let total = (row.rate_hour || 0) * (row.duration_hours || 0);
+        frappe.model.set_value(cdt, cdn, "total_excl", total);
+        frm.refresh_field("service_labour_items");
         calculate_child_totals(frm);
     }
 });
 
-// Function to calculate total for labour
+// Get Service Labour Rate from user's default Company, GP% from Item; set rate_hour and total_excl
+function calculate_labour_rate(frm, cdt, cdn) {
+    let row = locals[cdt][cdn];
+    if (!row.item) return Promise.resolve();
+
+    let company = frappe.defaults.get_user_default("Company");
+    if (!company) return Promise.resolve();
+
+    return frappe.db.get_value("Company", company, "custom_service_labour_rate")
+        .then(company_res => {
+            let msg = company_res && company_res.message;
+            let base_rate = (msg != null && typeof msg === "object") ? (msg.custom_service_labour_rate || 0) : (msg != null ? msg : 0);
+            return frappe.db.get_doc("Item", row.item)
+                .then(item_doc => {
+                    let gp_pct = item_doc.custom_service_gp || 0;
+                    let rate_hour = base_rate + (base_rate * (gp_pct / 100));
+                    let total = rate_hour * (row.duration_hours || 0);
+
+                    frappe.model.set_value(cdt, cdn, "rate_hour", rate_hour);
+                    frappe.model.set_value(cdt, cdn, "total_excl", total);
+                    frm.refresh_field("service_labour_items");
+                });
+        });
+}
+
+// Function to calculate total for labour (rate_hour * duration_hours)
 function calculate_total(frm, cdt, cdn) {
     let row = locals[cdt][cdn];
-    
     let total = (row.rate_hour || 0) * (row.duration_hours || 0);
     frappe.model.set_value(cdt, cdn, "total_excl", total);
-    
     frm.refresh_field("service_labour_items");
 }
 

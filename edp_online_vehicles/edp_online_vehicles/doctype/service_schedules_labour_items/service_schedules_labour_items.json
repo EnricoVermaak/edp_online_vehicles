@@ -22,11 +22,11 @@
    "read_only": 1
   },
   {
-   "fetch_from": "labour_code.standard_rate",
    "fieldname": "rate_hour",
    "fieldtype": "Currency",
    "in_list_view": 1,
-   "label": "Rate/ Hour"
+   "label": "Rate/ Hour",
+   "read_only": 1
   },
   {
    "fieldname": "total_excl",

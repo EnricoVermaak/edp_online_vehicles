@@ -59,14 +59,19 @@
   "cause",
   "remedy",
   "parts_tab",
-  "part_schedule_date",
   "part_items",
+  "part_schedule_date",
   "section_break_yezc",
   "column_break_fiij",
   "column_break_pfgu",
   "total_excl",
   "labour_tab",
   "labour_items",
+  "section_break_lab_sec",
+  "column_break_lab_1",
+  "column_break_lab_2",
+  "duration_total",
+  "labours_total_excl",
   "extras_tab",
   "extra_items",
   "section_break_ixhf",
@@ -76,7 +81,9 @@
   "history_tab",
   "service_history",
   "warranty_history",
+  "section_break_breakdown_hist",
   "breakdown_history",
+  "section_break_incident_hist",
   "incident_history",
   "documents_and_images_tab",
   "odo_meter",
@@ -95,7 +102,14 @@
   "authorised_by_signature",
   "authorised_by_full_names",
   "attached_document_tab",
-  "attached_documents"
+  "attached_documents",
+  "summary_tab",
+  "section_break_summary",
+  "summary_parts_total",
+  "summary_labour_total",
+  "summary_extras_total",
+  "column_break_summary",
+  "summary_total_excl"
  ],
  "fields": [
   {
@@ -312,6 +326,32 @@
    "options": "Warranty Labour Item"
   },
   {
+   "fieldname": "section_break_lab_sec",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_lab_1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_lab_2",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "duration_total",
+   "fieldtype": "Int",
+   "label": "Duration Total",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "labours_total_excl",
+   "fieldtype": "Currency",
+   "label": "Labours Total (Excl)",
+   "read_only": 1
+  },
+  {
    "fieldname": "extras_tab",
    "fieldtype": "Tab Break",
    "label": "Extras"
@@ -489,6 +529,48 @@
    "label": "Attached Documents"
   },
   {
+   "fieldname": "summary_tab",
+   "fieldtype": "Tab Break",
+   "label": "Summary"
+  },
+  {
+   "fieldname": "section_break_summary",
+   "fieldtype": "Section Break",
+   "label": "Totals"
+  },
+  {
+   "default": "0",
+   "fieldname": "summary_parts_total",
+   "fieldtype": "Currency",
+   "label": "Parts Total (Excl)",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "summary_labour_total",
+   "fieldtype": "Currency",
+   "label": "Labour Total (Excl)",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "summary_extras_total",
+   "fieldtype": "Currency",
+   "label": "Extras Total (Excl)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_summary",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "summary_total_excl",
+   "fieldtype": "Currency",
+   "label": "Total (Excl)",
+   "read_only": 1
+  },
+  {
    "fieldname": "dealer",
    "fieldtype": "Link",
    "in_list_view": 1,
@@ -525,7 +607,8 @@
   {
    "fieldname": "total_excl",
    "fieldtype": "Currency",
-   "label": "Total (Excl)"
+   "label": "Total (Excl)",
+   "read_only": 1
   },
   {
    "collapsible": 1,
@@ -580,10 +663,22 @@
    "options": "Warranty History"
   },
   {
+   "collapsible": 1,
+   "fieldname": "section_break_breakdown_hist",
+   "fieldtype": "Section Break",
+   "label": "Breakdown History"
+  },
+  {
    "fieldname": "breakdown_history",
    "fieldtype": "Table",
    "label": "Breakdown History",
    "options": "Breakdown History"
+  },
+  {
+   "collapsible": 1,
+   "fieldname": "section_break_incident_hist",
+   "fieldtype": "Section Break",
+   "label": "Incident History"
   },
   {
    "fieldname": "incident_history",
@@ -624,7 +719,7 @@
    "link_fieldname": "warranty"
   }
  ],
- "modified": "2026-02-02 16:36:18.785220",
+ "modified": "2026-02-02 13:41:16.656102",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicles Warranty Claims",

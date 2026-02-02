@@ -92,7 +92,9 @@
   "history_tab",
   "service_history",
   "warranty_history",
+  "section_break_breakdown_hist",
   "breakdown_history",
+  "section_break_incident_hist",
   "incident_history",
   "documents_tab",
   "sticker",
@@ -118,6 +120,13 @@
   "show_prices_for_vehicles_service",
   "attach_document_tab",
   "attach_documents",
+  "summary_tab",
+  "section_break_summary",
+  "summary_parts_total",
+  "summary_labour_total",
+  "summary_extras_total",
+  "column_break_summary",
+  "summary_total_excl",
   "booking_name"
  ],
  "fields": [
@@ -584,6 +593,48 @@
    "options": "Attached Documents"
   },
   {
+   "fieldname": "summary_tab",
+   "fieldtype": "Tab Break",
+   "label": "Summary"
+  },
+  {
+   "fieldname": "section_break_summary",
+   "fieldtype": "Section Break",
+   "label": "Totals"
+  },
+  {
+   "default": "0",
+   "fieldname": "summary_parts_total",
+   "fieldtype": "Currency",
+   "label": "Parts Total (Excl)",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "summary_labour_total",
+   "fieldtype": "Currency",
+   "label": "Labour Total (Excl)",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "summary_extras_total",
+   "fieldtype": "Currency",
+   "label": "Extras Total (Excl)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_summary",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "summary_total_excl",
+   "fieldtype": "Currency",
+   "label": "Total (Excl)",
+   "read_only": 1
+  },
+  {
    "fieldname": "breakdown_link",
    "fieldtype": "Link",
    "hidden": 1,
@@ -711,11 +762,23 @@
    "read_only": 1
   },
   {
+   "collapsible": 1,
+   "fieldname": "section_break_breakdown_hist",
+   "fieldtype": "Section Break",
+   "label": "Breakdown History"
+  },
+  {
    "fieldname": "breakdown_history",
    "fieldtype": "Table",
    "label": "Breakdown History",
    "options": "Breakdown History",
    "read_only": 1
+  },
+  {
+   "collapsible": 1,
+   "fieldname": "section_break_incident_hist",
+   "fieldtype": "Section Break",
+   "label": "Incident History"
   },
   {
    "fieldname": "incident_history",

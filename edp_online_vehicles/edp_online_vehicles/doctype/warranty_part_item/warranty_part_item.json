@@ -11,10 +11,11 @@
   "description",
   "qty",
   "price",
-  "uom",
-  "column_break_gzmq",
+  "total_excl",
   "approved",
   "declined",
+  "uom",
+  "column_break_gzmq",
   "returned",
   "is_duplicate",
   "section_break_kore",
@@ -55,7 +56,15 @@
    "fieldname": "price",
    "fieldtype": "Currency",
    "in_list_view": 1,
-   "label": "Price"
+   "label": "Price",
+   "read_only": 1
+  },
+  {
+   "fieldname": "total_excl",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Total (Excl)",
+   "read_only": 1
   },
   {
    "default": "0",
