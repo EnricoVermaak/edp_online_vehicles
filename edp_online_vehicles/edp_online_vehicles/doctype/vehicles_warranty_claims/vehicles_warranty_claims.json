@@ -600,10 +600,10 @@
    "search_index": 1
   },
   {
+   "depends_on": "eval: frappe.user.has_role('Warranty Administrator');",
    "fieldname": "submitted_to_dms",
    "fieldtype": "Datetime",
-   "label": "Submitted To DMS",
-   "permlevel": 1
+   "label": "Submitted To DMS"
   },
   {
    "default": "Normal",
@@ -624,7 +624,7 @@
    "link_fieldname": "warranty"
   }
  ],
- "modified": "2026-02-02 16:29:33.084896",
+ "modified": "2026-02-02 16:36:18.785220",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicles Warranty Claims",
