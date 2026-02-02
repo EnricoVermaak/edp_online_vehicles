@@ -271,7 +271,6 @@
    "fieldtype": "Int",
    "in_list_view": 1,
    "label": "Odo Reading/ Hours",
-   "mandatory_depends_on": "eval:doc.status == \"Executed\";",
    "non_negative": 1,
    "reqd": 1
   },
@@ -874,7 +873,7 @@
    "link_fieldname": "services"
   }
  ],
- "modified": "2026-02-02 19:11:23.456446",
+ "modified": "2026-02-02 19:33:56.542281",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicles Service",
