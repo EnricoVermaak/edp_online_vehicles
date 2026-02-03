@@ -56,14 +56,12 @@
   "description",
   "model_year",
   "colour",
-  "dealer_billing",
   "purpose",
   "delivered_break",
   "model_delivered",
   "model_description",
   "modelyear_delivered",
   "colour_delivered",
-  "price_excl",
   "shipment_stock",
   "shipment_no",
   "shipment_target_warehouse",
@@ -71,6 +69,13 @@
   "allocate",
   "un_allocate",
   "engine_no",
+  "pricing_section",
+  "ordered_price_column",
+  "dealer_billing",
+  "delivered_column",
+  "price_excl",
+  "discount_amount_excl",
+  "total_excl",
   "section_break_ktrz",
   "submitted_to_dms",
   "deal_no",
@@ -408,6 +413,18 @@
    "read_only": 1
   },
   {
+   "default": "0",
+   "fieldname": "discount_amount_excl",
+   "fieldtype": "Currency",
+   "label": "Discount Amount (Excl)"
+  },
+  {
+   "fieldname": "total_excl",
+   "fieldtype": "Currency",
+   "label": "Total (Excl)",
+   "read_only": 1
+  },
+  {
    "fieldname": "section_break_ktrz",
    "fieldtype": "Section Break",
    "label": "DMS"
@@ -562,12 +579,27 @@
    "fieldname": "check_credit_note",
    "fieldtype": "Button",
    "label": "Check Credit Note"
+  },
+  {
+   "fieldname": "pricing_section",
+   "fieldtype": "Section Break",
+   "label": "Pricing"
+  },
+  {
+   "fieldname": "ordered_price_column",
+   "fieldtype": "Column Break",
+   "label": "Ordered"
+  },
+  {
+   "fieldname": "delivered_column",
+   "fieldtype": "Column Break",
+   "label": "Delivered"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-01-20 23:28:57.496386",
+ "modified": "2026-02-02 21:18:12.605849",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Head Office Vehicle Orders",

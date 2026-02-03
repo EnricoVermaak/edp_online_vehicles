@@ -2,6 +2,17 @@
 // For license information, please see license.txt
 
 frappe.ui.form.on("Part Order", {
+	onload(frm) {
+		// New Part Order: set delivery_date from Parts Settings (current date + Order Turn Around Time)
+		if (frm.doc.__islocal) {
+			frappe.db.get_single_value("Parts Settings", "order_turn_around_time_hours").then((hours) => {
+				if (hours != null && hours > 0) {
+					let delivery = frappe.datetime.add_days(frappe.datetime.get_today(), hours / 24);
+					frm.set_value("delivery_date", delivery);
+				}
+			});
+		}
+	},
 	search(frm) {
 		if (frm.doc.company_reg_no) {
 			frappe.call({

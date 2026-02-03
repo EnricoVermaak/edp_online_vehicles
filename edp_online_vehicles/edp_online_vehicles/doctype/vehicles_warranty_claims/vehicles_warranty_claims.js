@@ -44,7 +44,7 @@ frappe.ui.form.on("Vehicles Warranty Claims", {
 		}
 		refresh_summary_totals(frm);
 		frm.set_query("labour_code", "labour_items", () => ({
-			filters: { item_group: "Warranty Labour" }
+			filters: { item_group: "Warranty Claim Labour" }
 		}));
 		frm.add_custom_button(
 			__("Sales Order"),

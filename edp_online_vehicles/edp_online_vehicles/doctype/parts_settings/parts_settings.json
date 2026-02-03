@@ -8,6 +8,7 @@
   "general_tab",
   "part_order_tab",
   "part_order_no_prefix",
+  "order_turn_around_time_hours",
   "air_freight_cost_"
  ],
  "fields": [
@@ -25,6 +26,11 @@
    "fieldname": "part_order_no_prefix",
    "fieldtype": "Data",
    "label": "Part Order No Prefix"
+  },
+  {
+   "fieldname": "order_turn_around_time_hours",
+   "fieldtype": "Float",
+   "label": "Order Turn Around Time (Hours)"
   },
   {
    "description": "Automatically calculated based on the percentage entered in this field of the Dealer Billing Price (Excl).",

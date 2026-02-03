@@ -6,6 +6,12 @@ let previous_vinno_value = null;
 let previous_price = null;
 let hq_comment = null;
 
+function update_pricing_total_excl(frm) {
+	let price = flt(frm.doc.price_excl) || 0;
+	let discount = flt(frm.doc.discount_amount_excl) || 0;
+	frm.set_value("total_excl", price - discount);
+}
+
 frappe.ui.form.on("Head Office Vehicle Orders", {
 	refresh(frm) {
 		let status_order = [];
@@ -87,6 +93,13 @@ frappe.ui.form.on("Head Office Vehicle Orders", {
 		previous_status_value = frm.doc.status;
 		previous_vinno_value = frm.doc.vinserial_no;
 		previous_price = frm.doc.price_excl;
+		update_pricing_total_excl(frm);
+	},
+	price_excl(frm) {
+		update_pricing_total_excl(frm);
+	},
+	discount_amount_excl(frm) {
+		update_pricing_total_excl(frm);
 	},
 	before_submit: function (frm) {
 		// if (frm.doc.price_excl === 0) {
