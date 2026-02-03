@@ -138,6 +138,7 @@
    "in_standard_filter": 1,
    "label": "VIN/Serial No",
    "options": "Vehicle Stock",
+   "read_only": 1,
    "reqd": 1,
    "search_index": 1
   },
@@ -145,7 +146,8 @@
    "fetch_from": "vin_serial_no.description",
    "fieldname": "model_description",
    "fieldtype": "Data",
-   "label": "Model Description"
+   "label": "Model Description",
+   "read_only": 1
   },
   {
    "default": "0",
@@ -155,6 +157,7 @@
    "label": "Odo Reading/ Hours",
    "mandatory_depends_on": "eval:doc.status == \"Executed\";",
    "non_negative": 1,
+   "read_only": 1,
    "reqd": 1
   },
   {
@@ -163,6 +166,7 @@
    "in_list_view": 1,
    "label": "Service Type",
    "options": "Service Schedules",
+   "read_only": 1,
    "reqd": 1
   },
   {
@@ -176,6 +180,7 @@
    "in_standard_filter": 1,
    "label": "Status",
    "options": "Service Status",
+   "read_only": 1,
    "reqd": 1
   },
   {
@@ -198,12 +203,14 @@
    "in_list_view": 1,
    "in_standard_filter": 1,
    "label": "Dealer",
+   "read_only": 1,
    "reqd": 1
   },
   {
    "fieldname": "dms_approval_no",
    "fieldtype": "Data",
-   "label": "DMS Approval No"
+   "label": "DMS Approval No",
+   "read_only": 1
   },
   {
    "collapsible": 1,
@@ -216,7 +223,8 @@
    "fetch_if_empty": 1,
    "fieldname": "engine_no",
    "fieldtype": "Data",
-   "label": "Engine No"
+   "label": "Engine No",
+   "read_only": 1
   },
   {
    "fetch_from": "vin_serial_no.model",
@@ -231,22 +239,26 @@
    "fetch_from": "vin_serial_no.brand",
    "fieldname": "brand",
    "fieldtype": "Data",
-   "label": "Brand"
+   "label": "Brand",
+   "read_only": 1
   },
   {
    "fieldname": "licence_no",
    "fieldtype": "Data",
-   "label": "Licence No"
+   "label": "Licence No",
+   "read_only": 1
   },
   {
    "fieldname": "licence_expiry_date",
    "fieldtype": "Date",
-   "label": "Licence Expiry Date"
+   "label": "Licence Expiry Date",
+   "read_only": 1
   },
   {
    "fieldname": "vehicle_registration_number",
    "fieldtype": "Data",
-   "label": "Vehicle Registration Number"
+   "label": "Vehicle Registration Number",
+   "read_only": 1
   },
   {
    "fieldname": "column_break_jy4l",
@@ -256,19 +268,22 @@
    "fetch_from": "vin_serial_no.colour",
    "fieldname": "colour",
    "fieldtype": "Data",
-   "label": "Colour"
+   "label": "Colour",
+   "read_only": 1
   },
   {
    "fetch_from": "vin_serial_no.model_year",
    "fieldname": "model_year",
    "fieldtype": "Data",
-   "label": "Model Year"
+   "label": "Model Year",
+   "read_only": 1
   },
   {
    "fetch_from": "vin_serial_no.original_purchasing_dealer",
    "fieldname": "bought_from_dealer",
    "fieldtype": "Data",
-   "label": "Bought From Dealer"
+   "label": "Bought From Dealer",
+   "read_only": 1
   },
   {
    "fieldname": "column_break_izfh",
@@ -278,19 +293,22 @@
    "fetch_from": "vin_serial_no.warranty_start_date",
    "fieldname": "warranty_start_date",
    "fieldtype": "Date",
-   "label": "Warranty Start Date"
+   "label": "Warranty Start Date",
+   "read_only": 1
   },
   {
    "fetch_from": "vin_serial_no.warranty_end_date",
    "fieldname": "warranty_end_date",
    "fieldtype": "Date",
-   "label": "Warranty End Date"
+   "label": "Warranty End Date",
+   "read_only": 1
   },
   {
    "fetch_from": "vin_serial_no.warranty_period_years",
    "fieldname": "warranty_period_months",
    "fieldtype": "Int",
-   "label": "Warranty Period (months)"
+   "label": "Warranty Period (months)",
+   "read_only": 1
   },
   {
    "fieldname": "additional_service_information_section",
@@ -300,12 +318,14 @@
   {
    "fieldname": "requested_booking_date_time",
    "fieldtype": "Datetime",
-   "label": "Requested Booking Date/ Time"
+   "label": "Requested Booking Date/ Time",
+   "read_only": 1
   },
   {
    "fieldname": "submitted_to_dms",
    "fieldtype": "Datetime",
-   "label": "Submitted To DMS"
+   "label": "Submitted To DMS",
+   "read_only": 1
   },
   {
    "fieldname": "column_break_lunc",
@@ -315,13 +335,15 @@
    "depends_on": "eval: doc.vor == 1",
    "fieldname": "eta_date",
    "fieldtype": "Date",
-   "label": "ETA Date"
+   "label": "ETA Date",
+   "read_only": 1
   },
   {
    "fieldname": "service_completed",
    "fieldtype": "Datetime",
    "label": "Service Completed Date",
-   "mandatory_depends_on": "eval:doc.status == \"Executed\""
+   "mandatory_depends_on": "eval:doc.status == \"Executed\"",
+   "read_only": 1
   },
   {
    "fieldname": "section_break_gdbj",
@@ -330,7 +352,8 @@
   {
    "fieldname": "service_reason",
    "fieldtype": "Small Text",
-   "label": "Service Comment"
+   "label": "Service Comment",
+   "read_only": 1
   },
   {
    "fieldname": "breakdown_link",
@@ -340,6 +363,7 @@
    "options": "Vehicles Breakdown",
    "print_hide": 1,
    "report_hide": 1,
+   "read_only": 1,
    "search_index": 1
   },
   {
@@ -350,6 +374,7 @@
    "options": "Vehicles Incidents",
    "print_hide": 1,
    "report_hide": 1,
+   "read_only": 1,
    "search_index": 1
   },
   {
@@ -360,6 +385,7 @@
    "options": "Vehicle Service Booking",
    "print_hide": 1,
    "report_hide": 1,
+   "read_only": 1,
    "search_index": 1
   },
   {
@@ -375,6 +401,7 @@
    "in_standard_filter": 1,
    "label": "Customer",
    "options": "Dealer Customer",
+   "read_only": 1,
    "reqd": 1,
    "search_index": 1
   },
@@ -391,7 +418,8 @@
    "fieldname": "price_list",
    "fieldtype": "Link",
    "label": "Price List",
-   "options": "Price List"
+   "options": "Price List",
+   "read_only": 1
   },
   {
    "fieldname": "column_break_ojgd",
@@ -401,19 +429,22 @@
    "fetch_from": "customer.phone",
    "fieldname": "phone",
    "fieldtype": "Data",
-   "label": "Phone"
+   "label": "Phone",
+   "read_only": 1
   },
   {
    "fetch_from": "customer.mobile",
    "fieldname": "mobile",
    "fieldtype": "Phone",
-   "label": "Mobile"
+   "label": "Mobile",
+   "read_only": 1
   },
   {
    "fetch_from": "customer.address",
    "fieldname": "customer_address",
    "fieldtype": "Small Text",
-   "label": "Customer Address"
+   "label": "Customer Address",
+   "read_only": 1
   },
   {
    "fieldname": "job_card_information_section",
@@ -425,13 +456,15 @@
    "fieldtype": "Data",
    "in_standard_filter": 1,
    "label": "Job Card No",
+   "read_only": 1,
    "reqd": 1
   },
   {
    "fieldname": "technician",
    "fieldtype": "Link",
    "label": "Technician",
-   "options": "User"
+   "options": "User",
+   "read_only": 1
   },
   {
    "fieldname": "column_break_7fue",
@@ -441,19 +474,22 @@
    "fetch_from": "vinserial_no.service_start_date",
    "fieldname": "service_start_date",
    "fieldtype": "Date",
-   "label": "Service Plan Start Date"
+   "label": "Service Plan Start Date",
+   "read_only": 1
   },
   {
    "fetch_from": "vinserial_no.service_end_date",
    "fieldname": "service_end_date",
    "fieldtype": "Date",
-   "label": "Service Plan End Date"
+   "label": "Service Plan End Date",
+   "read_only": 1
   },
   {
    "fetch_from": "model.service_period",
    "fieldname": "service_period",
    "fieldtype": "Int",
-   "label": "Service Plan Period"
+   "label": "Service Plan Period",
+   "read_only": 1
   },
   {
    "fieldname": "technician_summary_section",
@@ -481,13 +517,15 @@
    "fieldtype": "Link",
    "label": "Inspection Template",
    "mandatory_depends_on": "eval:doc.status == \"Executed\";",
-   "options": "Vehicles Inspection Template"
+   "options": "Vehicles Inspection Template",
+   "read_only": 1
   },
   {
    "fieldname": "inspection_items",
    "fieldtype": "Table",
    "label": "Inspection Items",
-   "options": "Vehicles Service Inspection Items"
+   "options": "Vehicles Service Inspection Items",
+   "read_only": 1
   },
   {
    "fieldname": "parts_tab",
@@ -499,19 +537,22 @@
    "fieldtype": "Data",
    "hidden": 1,
    "label": "Scan Disk",
-   "options": "Barcode"
+   "options": "Barcode",
+   "read_only": 1
   },
   {
    "fieldname": "service_parts_items",
    "fieldtype": "Table",
    "label": "Service Parts Items",
    "options": "Service Parts Items",
+   "read_only": 1,
    "read_only_depends_on": "eval: doc.edit_parts == 0"
   },
   {
    "fieldname": "part_schedule_date",
    "fieldtype": "Date",
-   "label": "Schedule Part Delivery Date"
+   "label": "Schedule Part Delivery Date",
+   "read_only": 1
   },
   {
    "fieldname": "section_break_aeza",
@@ -526,7 +567,8 @@
    "fieldname": "edit_parts",
    "fieldtype": "Check",
    "hidden": 1,
-   "label": "Edit Parts"
+   "label": "Edit Parts",
+   "read_only": 1
   },
   {
    "fieldname": "column_break_tcqf",
@@ -549,6 +591,7 @@
    "fieldtype": "Table",
    "label": "Service Labour Items",
    "options": "Service Labour Items",
+   "read_only": 1,
    "read_only_depends_on": "eval: doc.edit_labour == 0"
   },
   {
@@ -564,7 +607,8 @@
    "fieldname": "edit_labour",
    "fieldtype": "Check",
    "hidden": 1,
-   "label": "Edit Labour"
+   "label": "Edit Labour",
+   "read_only": 1
   },
   {
    "fieldname": "column_break_jliu",
@@ -573,7 +617,8 @@
   {
    "fieldname": "duration_total",
    "fieldtype": "Int",
-   "label": "Duration Total"
+   "label": "Duration Total",
+   "read_only": 1
   },
   {
    "default": "0",
@@ -591,7 +636,8 @@
    "fieldname": "transaction_list",
    "fieldtype": "Table",
    "label": "Extra List",
-   "options": "Extra Items"
+   "options": "Extra Items",
+   "read_only": 1
   },
   {
    "fieldname": "amended_from",
@@ -656,30 +702,6 @@
    "read_only": 1
   },
   {
-   "fieldname": "documents_tab",
-   "fieldtype": "Tab Break",
-   "label": "Documents"
-  },
-  {
-   "fieldname": "sticker",
-   "fieldtype": "Attach Image",
-   "label": "Sticker"
-  },
-  {
-   "fieldname": "odo_reading",
-   "fieldtype": "Attach Image",
-   "label": "Odo Reading"
-  },
-  {
-   "fieldname": "column_break_cr3g",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "dealer_invoice",
-   "fieldtype": "Attach",
-   "label": "Dealer Invoice"
-  },
-  {
    "fieldname": "confirmation_tab",
    "fieldtype": "Tab Break",
    "label": "Confirmation"
@@ -687,7 +709,8 @@
   {
    "fieldname": "terms_and_conditions",
    "fieldtype": "Text Editor",
-   "label": "Service Terms and Conditions"
+   "label": "Service Terms and Conditions",
+   "read_only": 1
   },
   {
    "fieldname": "technician_and_customer_section",
@@ -697,13 +720,15 @@
   {
    "fieldname": "tecnician_signature",
    "fieldtype": "Signature",
-   "label": "Tecnician Signature"
+   "label": "Tecnician Signature",
+   "read_only": 1
   },
   {
    "fetch_from": "technician.full_name",
    "fieldname": "technician_full_names",
    "fieldtype": "Data",
-   "label": "Technician Full Names"
+   "label": "Technician Full Names",
+   "read_only": 1
   },
   {
    "fieldname": "column_break_ddxj",
@@ -712,12 +737,14 @@
   {
    "fieldname": "customer_signature",
    "fieldtype": "Signature",
-   "label": "Customer Signature"
+   "label": "Customer Signature",
+   "read_only": 1
   },
   {
    "fieldname": "customer_full_names",
    "fieldtype": "Data",
-   "label": "Customer Full Names"
+   "label": "Customer Full Names",
+   "read_only": 1
   },
   {
    "fieldname": "authorised_section",
@@ -727,19 +754,22 @@
   {
    "fieldname": "authorised_by_signature",
    "fieldtype": "Signature",
-   "label": "Authorised By Signature"
+   "label": "Authorised By Signature",
+   "read_only": 1
   },
   {
    "fieldname": "authorised_by",
    "fieldtype": "Link",
    "label": "Authorised By",
-   "options": "User"
+   "options": "User",
+   "read_only": 1
   },
   {
    "fetch_from": "authorised_by.full_name",
    "fieldname": "authorised_by_full_names",
    "fieldtype": "Data",
-   "label": "Authorised By Full Names"
+   "label": "Authorised By Full Names",
+   "read_only": 1
   },
   {
    "fieldname": "column_break_yqr6",
@@ -749,24 +779,36 @@
   {
    "fieldname": "total_parts_excl",
    "fieldtype": "Data",
-   "label": "Total Parts (Excl)"
+   "label": "Total Parts (Excl)",
+   "read_only": 1
   },
   {
    "fieldname": "total_labour_excl",
    "fieldtype": "Data",
-   "label": "Total Labour (Excl)"
+   "label": "Total Labour (Excl)",
+   "read_only": 1
   },
   {
    "fieldname": "total_extras_excl",
    "fieldtype": "Data",
-   "label": "Total Extras (Excl)"
+   "label": "Total Extras (Excl)",
+   "read_only": 1
   },
   {
    "default": "0",
    "fieldname": "show_prices_for_vehicles_service",
    "fieldtype": "Check",
    "hidden": 1,
-   "label": " Show prices for Vehicles Service"
+   "label": " Show prices for Vehicles Service",
+   "read_only": 1
+  },
+  {
+   "fieldname": "vehicles_service",
+   "fieldtype": "Link",
+   "hidden": 1,
+   "label": "Vehicles Service",
+   "options": "Vehicles Service",
+   "read_only": 1
   },
   {
    "fieldname": "attach_document_tab",
@@ -778,7 +820,8 @@
    "fieldtype": "Table",
    "hidden": 1,
    "label": "Attach Documents",
-   "options": "Attached Documents"
+   "options": "Attached Documents",
+   "read_only": 1
   },
   {
    "fieldname": "amended_from",
@@ -845,7 +888,7 @@
    "export": 1,
    "print": 1,
    "read": 1,
-   "report": 1,
+   "report": 1, 
    "role": "Aftersales Manager",
    "share": 1,
    "write": 1

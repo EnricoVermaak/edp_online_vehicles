@@ -32,6 +32,11 @@ function refresh_summary_totals(frm) {
 }
 
 frappe.ui.form.on("Vehicles Warranty Claims", {
+	onload_post_render: function (frm) {
+		frm.fields_dict['date_of_failure'].datepicker.update({
+			maxDate: new Date(frappe.datetime.get_today())
+		});
+	},
 	refresh(frm) {
 		setTimeout(() => reapply_colors(frm), 300);
 		if (frm.doc.labour_items && frm.doc.labour_items.length) {
@@ -39,7 +44,7 @@ frappe.ui.form.on("Vehicles Warranty Claims", {
 		}
 		refresh_summary_totals(frm);
 		frm.set_query("labour_code", "labour_items", () => ({
-			filters: { item_group: "Warranty Labour" }
+			filters: { item_group: "Warranty Claim Labour" }
 		}));
 		frm.add_custom_button(
 			__("Sales Order"),
@@ -600,7 +605,7 @@ frappe.ui.form.on('Warranty Part Item', {
 				if (r.message && r.message.is_duplicate) {
 					let claim_numbers = r.message.claims || [];
 					let system_note = "Duplicate Parts Found";
-					
+
 					if (claim_numbers.length > 0) {
 						system_note += ": " + claim_numbers.join(", ");
 					}
@@ -617,7 +622,7 @@ frappe.ui.form.on('Warranty Part Item', {
 			}
 		});
 
-		apply_row_color(frm, row);
+		// apply_row_color(frm, row);
 
 		// Validate row coloring & system note
 		validate_part_item(frm, row);
@@ -797,17 +802,17 @@ function reapply_colors(frm) {
 			let allowed_items = r.message || [];
 			let grid = frm.fields_dict['part_items'].grid;
 			if (!grid) return;
-
 			grid.grid_rows.forEach(gr => {
 				let color = "";
 
-			if (gr.doc.system_note && gr.doc.system_note.startsWith("Duplicate Parts Found")) {
-				color = "#ffcc99";
-			}
+				if (gr.doc.system_note && gr.doc.system_note.startsWith("Duplicate Parts Found")) {
+					color = "#ffcc99";
+				}
 
 				else if (gr.doc.part_no && !allowed_items.includes(gr.doc.part_no)) {
 					color = "#ffdddd";
 				}
+
 
 				set_row_color(frm, gr.doc, color);
 			});
@@ -824,23 +829,27 @@ function validate_part_item(frm, row) {
 		callback(r) {
 			let allowed_items = r.message || [];
 
+			// Agar duplicate note pehle se mojood hai to red mat lagao, sirf duplicate color
 			if (row.system_note && row.system_note.startsWith("Duplicate Parts Found")) {
 				set_row_color(frm, row, "#ffcc99");
-				return;
+				return;  // ← yahan ruk jao, "Part Not Covered" mat daalo
 			}
 
+			// Ab asli check: part allowed nahi to red + sirf "Part Not Covered"
 			if (!allowed_items.includes(row.part_no)) {
+				console.log("Row colours");
+				
 				set_row_color(frm, row, "#ffdddd");
 				frappe.model.set_value(
 					row.doctype,
 					row.name,
 					"system_note",
-					"Part Not Covered"
+					"Part Not Covered"          
 				);
-			} 
+			}
 			else {
 				set_row_color(frm, row, "");
-				frappe.model.set_value(row.doctype, row.name, "system_note", "");
+				
 			}
 		}
 	});

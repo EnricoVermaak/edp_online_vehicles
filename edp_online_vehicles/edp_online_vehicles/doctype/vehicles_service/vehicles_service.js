@@ -68,23 +68,28 @@ frappe.ui.form.on("Vehicles Service", {
 				// ===== LABOUR =====
 				if (labour == 1) {
 					frm.set_df_property("service_labour_items", "read_only", 0);
+					frm.set_df_property("non_oem_labour_items", "read_only", 0);
 					frm.set_value("edit_labour", 1);
 				} else {
 					frm.set_df_property("service_labour_items", "read_only", 1);
+					frm.set_df_property("non_oem_labour_items", "read_only", 1);
 					frm.set_value("edit_labour", 0);
 				}
 
 				// ===== PARTS =====
 				if (part == 1) {
 					frm.set_df_property("service_parts_items", "read_only", 0);
+					frm.set_df_property("non_oem_parts_items", "read_only", 0);
 					frm.set_value("edit_parts", 1);
 				} else {
 					frm.set_df_property("service_parts_items", "read_only", 1);
+					frm.set_df_property("non_oem_parts_items", "read_only", 1);
 					frm.set_value("edit_parts", 0);
 				}
 
 				frm.refresh_field("service_labour_items");
 				frm.refresh_field("service_parts_items");
+				frm.refresh_field("non_oem_parts_items");
 			});
 
 
@@ -1030,18 +1035,18 @@ frappe.ui.form.on("Vehicles Service", {
 frappe.ui.form.on("Service Parts Items", {
 	item(frm, cdt, cdn) {
 		vehicle_service_part_price(frm, cdt, cdn).then(() => {
-			calculate_sub_total(frm, "parts_total_excl", "service_parts_items");
+			calculate_parts_total_combined(frm);
 			frm.refresh_field("service_parts_items");
 		});
 	},
 
 	service_parts_items_remove(frm) {
-		calculate_sub_total(frm, "parts_total_excl", "service_parts_items");
+		calculate_parts_total_combined(frm);
 	},
 
 	price_excl(frm, cdt, cdn) {
 		calculate_total(frm, cdt, cdn);
-		calculate_sub_total(frm, "parts_total_excl", "service_parts_items");
+		calculate_parts_total_combined(frm);
 	},
 
 	qty(frm, cdt, cdn) {
@@ -1050,11 +1055,38 @@ frappe.ui.form.on("Service Parts Items", {
 		let total = (row.price_excl || 0) * (row.qty || 0);
 		frappe.model.set_value(cdt, cdn, "total_excl", total);
 		frm.refresh_field("service_parts_items");
-		calculate_sub_total(frm, "parts_total_excl", "service_parts_items");
+		calculate_parts_total_combined(frm);
 	},
 
 	total_excl(frm, cdt, cdn) {
-		calculate_sub_total(frm, "parts_total_excl", "service_parts_items");
+		calculate_parts_total_combined(frm);
+	},
+});
+
+// -----------------------------------------------------
+// NON OEM PARTS (no GP, manual price; total_excl = qty × price_excl; feeds into same parts_total_excl)
+// -----------------------------------------------------
+
+frappe.ui.form.on("Non OEM Parts Items", {
+	qty(frm, cdt, cdn) {
+		let row = locals[cdt][cdn];
+		let total = (row.price_excl || 0) * (row.qty || 0);
+		frappe.model.set_value(cdt, cdn, "total_excl", total);
+		frm.refresh_field("non_oem_parts_items");
+		calculate_parts_total_combined(frm);
+	},
+	price_excl(frm, cdt, cdn) {
+		let row = locals[cdt][cdn];
+		let total = (row.price_excl || 0) * (row.qty || 0);
+		frappe.model.set_value(cdt, cdn, "total_excl", total);
+		frm.refresh_field("non_oem_parts_items");
+		calculate_parts_total_combined(frm);
+	},
+	total_excl(frm, cdt, cdn) {
+		calculate_parts_total_combined(frm);
+	},
+	non_oem_parts_items_remove(frm) {
+		calculate_parts_total_combined(frm);
 	},
 });
 
@@ -1065,21 +1097,21 @@ frappe.ui.form.on("Service Parts Items", {
 frappe.ui.form.on("Service Labour Items", {
 	item(frm, cdt, cdn) {
 		vehicle_service_labour_rate(frm, cdt, cdn).then(() => {
-			calculate_sub_total(frm, "labours_total_excl", "service_labour_items");
-			calculate_labour_hours(frm, "duration_total", "service_labour_items");
+			calculate_labours_total_combined(frm);
+			calculate_duration_total_combined(frm);
 			frm.refresh_field("service_labour_items");
 		});
 	},
 
 	service_labour_items_remove(frm) {
-		calculate_sub_total(frm, "labours_total_excl", "service_labour_items");
-		calculate_labour_hours(frm, "duration_total", "service_labour_items");
+		calculate_labours_total_combined(frm);
+		calculate_duration_total_combined(frm);
 	},
 
 	rate_hour(frm, cdt, cdn) {
 		calculate_labour_total(frm, cdt, cdn);
-		calculate_sub_total(frm, "labours_total_excl", "service_labour_items");
-		calculate_labour_hours(frm, "duration_total", "service_labour_items");
+		calculate_labours_total_combined(frm);
+		calculate_duration_total_combined(frm);
 		frm.refresh_field("service_labour_items");
 	},
 
@@ -1089,12 +1121,48 @@ frappe.ui.form.on("Service Labour Items", {
 		let total = (row.rate_hour || 0) * (row.duration_hours || 0);
 		frappe.model.set_value(cdt, cdn, "total_excl", total);
 		frm.refresh_field("service_labour_items");
-		calculate_sub_total(frm, "labours_total_excl", "service_labour_items");
-		calculate_labour_hours(frm, "duration_total", "service_labour_items");
+		calculate_labours_total_combined(frm);
+		calculate_duration_total_combined(frm);
 	},
 
 	total_excl(frm, cdt, cdn) {
-		calculate_sub_total(frm, "labours_total_excl", "service_labour_items");
+		calculate_labours_total_combined(frm);
+	},
+});
+
+// -----------------------------------------------------
+// NON OEM LABOUR (same formula: Company labour rate + Item custom_service_gp; feeds into labours_total_excl + duration_total)
+// -----------------------------------------------------
+
+frappe.ui.form.on("Non OEM Labour Items", {
+	labour_code(frm, cdt, cdn) {
+		vehicle_service_labour_rate_company_only(frm, cdt, cdn).then(() => {
+			frm.refresh_field("non_oem_labour_items");
+			calculate_labours_total_combined(frm);
+			calculate_duration_total_combined(frm);
+		});
+	},
+	duration_hours(frm, cdt, cdn) {
+		let row = locals[cdt][cdn];
+		let total = (row.rate_hour || 0) * (row.duration_hours || 0);
+		frappe.model.set_value(cdt, cdn, "total_excl", total);
+		frm.refresh_field("non_oem_labour_items");
+		calculate_labours_total_combined(frm);
+		calculate_duration_total_combined(frm);
+	},
+	rate_hour(frm, cdt, cdn) {
+		let row = locals[cdt][cdn];
+		let total = (row.rate_hour || 0) * (row.duration_hours || 0);
+		frappe.model.set_value(cdt, cdn, "total_excl", total);
+		frm.refresh_field("non_oem_labour_items");
+		calculate_labours_total_combined(frm);
+	},
+	total_excl(frm, cdt, cdn) {
+		calculate_labours_total_combined(frm);
+	},
+	non_oem_labour_items_remove(frm) {
+		calculate_labours_total_combined(frm);
+		calculate_duration_total_combined(frm);
 	},
 });
 
@@ -1174,21 +1242,39 @@ function vehicle_service_part_price(frm, cdt, cdn) {
 }
 
 // Labour: dealer Company Service Labour Rate + (that × Item custom_service_gp / 100)
-function vehicle_service_labour_rate(frm, cdt, cdn) {
+// item_field: "item" for Service Labour Items
+function vehicle_service_labour_rate(frm, cdt, cdn, item_field) {
+	item_field = item_field || "item";
 	let row = locals[cdt][cdn];
-	if (!row.item || !frm.doc.dealer) return Promise.resolve();
+	let item_code = row[item_field];
+	if (!item_code || !frm.doc.dealer) return Promise.resolve();
 
 	return frappe.db.get_value("Company", frm.doc.dealer, "custom_service_labour_rate")
 		.then(company_res => {
 			let msg = company_res && company_res.message;
 			let base_rate = (msg != null && typeof msg === "object") ? (msg.custom_service_labour_rate || 0) : (msg != null ? msg : 0);
-			return frappe.db.get_doc("Item", row.item).then(item_doc => {
+			return frappe.db.get_doc("Item", item_code).then(item_doc => {
 				let gp_pct = item_doc.custom_service_gp || 0;
 				let rate_hour = base_rate + (base_rate * (gp_pct / 100));
 				let total_excl = rate_hour * (row.duration_hours || 0);
 				frappe.model.set_value(cdt, cdn, "rate_hour", rate_hour);
 				frappe.model.set_value(cdt, cdn, "total_excl", total_excl);
 			});
+		});
+}
+
+// Non OEM Labour: Company Service Labour Rate only (no Item GP)
+function vehicle_service_labour_rate_company_only(frm, cdt, cdn) {
+	let row = locals[cdt][cdn];
+	if (!frm.doc.dealer) return Promise.resolve();
+
+	return frappe.db.get_value("Company", frm.doc.dealer, "custom_service_labour_rate")
+		.then(company_res => {
+			let msg = company_res && company_res.message;
+			let rate_hour = (msg != null && typeof msg === "object") ? (msg.custom_service_labour_rate || 0) : (msg != null ? msg : 0);
+			let total_excl = rate_hour * (row.duration_hours || 0);
+			frappe.model.set_value(cdt, cdn, "rate_hour", rate_hour);
+			frappe.model.set_value(cdt, cdn, "total_excl", total_excl);
 		});
 }
 
@@ -1200,12 +1286,16 @@ function recalc_all_parts_and_labour(frm) {
 	let labour_promises = (frm.doc.service_labour_items || []).map(row =>
 		vehicle_service_labour_rate(frm, "Service Labour Items", row.name)
 	);
-	return Promise.all([...parts_promises, ...labour_promises]).then(() => {
+	let non_oem_labour_promises = (frm.doc.non_oem_labour_items || []).map(row =>
+		vehicle_service_labour_rate_company_only(frm, "Non OEM Labour Items", row.name)
+	);
+	return Promise.all([...parts_promises, ...labour_promises, ...non_oem_labour_promises]).then(() => {
 		frm.refresh_field("service_parts_items");
 		frm.refresh_field("service_labour_items");
-		calculate_sub_total(frm, "parts_total_excl", "service_parts_items");
-		calculate_sub_total(frm, "labours_total_excl", "service_labour_items");
-		calculate_labour_hours(frm, "duration_total", "service_labour_items");
+		frm.refresh_field("non_oem_labour_items");
+		calculate_parts_total_combined(frm);
+		calculate_labours_total_combined(frm);
+		calculate_duration_total_combined(frm);
 		frm.refresh_field("parts_total_excl");
 		frm.refresh_field("labours_total_excl");
 		frm.refresh_field("duration_total");
@@ -1246,7 +1336,21 @@ const calculate_sub_total = (frm, field_name, table_name) => {
 	refresh_summary_totals(frm);
 };
 
-// LABOUR HOURS
+// Parts total = OEM parts total_excl + Non OEM parts total_excl (one combined total)
+const calculate_parts_total_combined = (frm) => {
+	let oem = 0;
+	for (const row of frm.doc.service_parts_items || []) {
+		oem += row.total_excl || 0;
+	}
+	let non_oem = 0;
+	for (const row of frm.doc.non_oem_parts_items || []) {
+		non_oem += row.total_excl || 0;
+	}
+	frappe.model.set_value(frm.doc.doctype, frm.doc.name, "parts_total_excl", oem + non_oem);
+	refresh_summary_totals(frm);
+};
+
+// LABOUR HOURS (single table)
 const calculate_labour_hours = (frm, field_name, table_name) => {
 	let hours_total = 0;
 
@@ -1255,6 +1359,31 @@ const calculate_labour_hours = (frm, field_name, table_name) => {
 	}
 
 	frappe.model.set_value(frm.doc.doctype, frm.doc.name, field_name, hours_total);
+};
+
+// Labour total = OEM labour total_excl + Non OEM labour total_excl; duration_total = sum of both tables' duration_hours
+const calculate_labours_total_combined = (frm) => {
+	let oem = 0;
+	for (const row of frm.doc.service_labour_items || []) {
+		oem += row.total_excl || 0;
+	}
+	let non_oem = 0;
+	for (const row of frm.doc.non_oem_labour_items || []) {
+		non_oem += row.total_excl || 0;
+	}
+	frappe.model.set_value(frm.doc.doctype, frm.doc.name, "labours_total_excl", oem + non_oem);
+	refresh_summary_totals(frm);
+};
+
+const calculate_duration_total_combined = (frm) => {
+	let hours = 0;
+	for (const row of frm.doc.service_labour_items || []) {
+		hours += row.duration_hours || 0;
+	}
+	for (const row of frm.doc.non_oem_labour_items || []) {
+		hours += row.duration_hours || 0;
+	}
+	frappe.model.set_value(frm.doc.doctype, frm.doc.name, "duration_total", hours);
 };
 
 // STOCK NUMBER INCREMENT

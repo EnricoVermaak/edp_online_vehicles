@@ -11,9 +11,7 @@
   "description",
   "qty",
   "price_excl",
-  "total_excl",
-  "non_oem",
-  "descrip"
+  "total_excl"
  ],
  "fields": [
   {
@@ -56,18 +54,6 @@
    "in_list_view": 1,
    "label": "Total (Excl)",
    "read_only": 1
-  },
-  {
-   "fieldname": "non_oem",
-   "fieldtype": "Data",
-   "in_list_view": 1,
-   "label": "Non OEM"
-  },
-  {
-   "fieldname": "descrip",
-   "fieldtype": "Data",
-   "in_list_view": 1,
-   "label": "Non OEM Description"
   }
  ],
  "index_web_pages_for_search": 1,

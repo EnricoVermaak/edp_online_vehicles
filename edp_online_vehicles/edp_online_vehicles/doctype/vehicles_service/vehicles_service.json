@@ -67,7 +67,10 @@
   "inspection_items",
   "parts_tab",
   "scan_disk",
+  "section_break_oem_parts",
   "service_parts_items",
+  "section_break_non_oem",
+  "non_oem_parts_items",
   "part_schedule_date",
   "section_break_aeza",
   "column_break_evat",
@@ -75,7 +78,10 @@
   "column_break_tcqf",
   "parts_total_excl",
   "labour_tab",
+  "section_break_oem_labour",
   "service_labour_items",
+  "section_break_non_oem_labour",
+  "non_oem_labour_items",
   "section_break_ufqr",
   "column_break_tbni",
   "edit_labour",
@@ -183,11 +189,13 @@
   },
   {
    "depends_on": "eval:doc.vin_serial_no",
+   "depends_on": "eval:doc.vin_serial_no",
    "fieldname": "service_type",
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "Service Type",
    "options": "Service Schedules",
+   "reqd": 1
    "reqd": 1
   },
   {
@@ -307,10 +315,27 @@
    "label": "Parts"
   },
   {
+   "fieldname": "section_break_oem_parts",
+   "fieldtype": "Section Break",
+   "label": "OEM Parts"
+  },
+  {
    "fieldname": "service_parts_items",
    "fieldtype": "Table",
    "label": "Service Parts Items",
    "options": "Service Parts Items",
+   "read_only_depends_on": "eval: doc.edit_parts == 0"
+  },
+  {
+   "fieldname": "section_break_non_oem",
+   "fieldtype": "Section Break",
+   "label": "Non OEM Parts"
+  },
+  {
+   "fieldname": "non_oem_parts_items",
+   "fieldtype": "Table",
+   "label": "Non OEM Parts Items",
+   "options": "Non OEM Parts Items",
    "read_only_depends_on": "eval: doc.edit_parts == 0"
   },
   {
@@ -319,10 +344,27 @@
    "label": "Labour"
   },
   {
+   "fieldname": "section_break_oem_labour",
+   "fieldtype": "Section Break",
+   "label": "OEM Labour"
+  },
+  {
    "fieldname": "service_labour_items",
    "fieldtype": "Table",
    "label": "Service Labour Items",
    "options": "Service Labour Items",
+   "read_only_depends_on": "eval: doc.edit_labour == 0"
+  },
+  {
+   "fieldname": "section_break_non_oem_labour",
+   "fieldtype": "Section Break",
+   "label": "Non OEM Labour"
+  },
+  {
+   "fieldname": "non_oem_labour_items",
+   "fieldtype": "Table",
+   "label": "Non OEM Labour Items",
+   "options": "Non OEM Labour Items",
    "read_only_depends_on": "eval: doc.edit_labour == 0"
   },
   {

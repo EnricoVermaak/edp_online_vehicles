@@ -130,8 +130,6 @@ def create_service_from_booking(booking_name):
                 "qty": row.qty,
                 "price_excl": row.price_excl,
                 "total_excl": row.total_excl,
-                "non_oem": row.non_oem,
-                "descrip": row.descrip,
             })
 
         for row in booking.table_ottr:
@@ -141,8 +139,6 @@ def create_service_from_booking(booking_name):
                 "duration_hours": row.duration_hours,
                 "rate_hour": row.rate_hour,
                 "total_excl": row.total_excl,
-                "non_oem": row.non_oem,
-                "non_oem_description": row.non_oem_description,
             })
 
 

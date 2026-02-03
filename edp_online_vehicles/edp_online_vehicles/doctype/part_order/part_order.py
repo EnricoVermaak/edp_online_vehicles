@@ -5,10 +5,17 @@ from collections import Counter
 
 import frappe
 from frappe.model.document import Document
-from frappe.utils import today
+from frappe.utils import add_to_date, getdate, flt, today
 
 
 class PartOrder(Document):
+	def before_insert(self):
+		# Set delivery_date from Parts Settings: current date + Order Turn Around Time (Hours)
+		if not self.get("delivery_date"):
+			settings = frappe.get_single("Parts Settings")
+			hours = flt(settings.get("order_turn_around_time_hours") or 0)
+			self.delivery_date = getdate(add_to_date(today(), hours=hours))
+
 	def validate(self):
 		if self.docstatus == 0:
 			# Retrieve child tables; default to empty lists if they're None.
