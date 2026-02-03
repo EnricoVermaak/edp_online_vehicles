@@ -189,13 +189,11 @@
   },
   {
    "depends_on": "eval:doc.vin_serial_no",
-   "depends_on": "eval:doc.vin_serial_no",
    "fieldname": "service_type",
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "Service Type",
    "options": "Service Schedules",
-   "reqd": 1
    "reqd": 1
   },
   {
