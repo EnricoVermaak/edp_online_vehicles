@@ -152,7 +152,14 @@ frappe.ui.form.on("Part Order", {
 		calculate_sub_total(frm, "total_excl", "table_avsu");
 	},
 });
+
 frappe.ui.form.on("Part Order Item", {
+	airfreight: function (frm, cdt, cdn) {
+		calculate_airfreight(frm, cdt, cdn);
+	},
+	dealer_billing_excl: function (frm, cdt, cdn) {
+		calculate_airfreight(frm, cdt, cdn);
+	},
 	part_no(frm, cdt, cdn) {
 		let row = locals[cdt][cdn];
 
@@ -198,12 +205,13 @@ frappe.ui.form.on("Part Order Item", {
 				.then((air_freight_percentage) => {
 					let airfreight =
 						dealer_billing_amount * (air_freight_percentage / 100);
+						
 					return frappe.model
 						.set_value(
 							cdt,
 							cdn,
 							"air_freight_cost_excl",
-							airfreight,
+							0
 						)
 						.then(() => {
 							let total_excl =
@@ -308,4 +316,33 @@ function formatTimeDifference(frm) {
 		":" +
 		seconds.toString().padStart(2, "0")
 	);
+}
+
+function calculate_airfreight(frm, cdt, cdn) {
+	let row = locals[cdt][cdn];
+
+	// Agar base price nahi hai to stop
+	if (!row.dealer_billing_excl) {
+		row.air_freight_cost_excl = 0;
+		frm.refresh_field("table_avsu");
+		return;
+	}
+
+	// Agar checkbox OFF hai
+	if (!row.airfreight) {
+		row.air_freight_cost_excl = row.dealer_billing_excl;
+		frm.refresh_field("table_avsu");
+		return;
+	}
+
+	// Settings se percentage lao
+	frappe.db.get_single_value("Parts Settings", "air_freight_cost_")
+		.then(percent => {
+			percent = percent || 0;
+
+			let extra_cost = row.dealer_billing_excl * percent / 100;
+			row.air_freight_cost_excl = row.dealer_billing_excl + extra_cost;
+
+			frm.refresh_field("table_avsu");
+		});
 }

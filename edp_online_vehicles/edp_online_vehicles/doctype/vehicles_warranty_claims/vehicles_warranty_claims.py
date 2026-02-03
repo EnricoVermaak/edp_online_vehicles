@@ -52,11 +52,11 @@ class VehiclesWarrantyClaims(Document):
 		if out_of_warranty:
 			if allow_goodwill:
 				# Show warning but still allow save
-				frappe.msgprint(
-					"Please note the selected vehicle falls outside the allocated warranty plan parameters. "
-					"Please contact Head Office for more information.",
-					indicator="orange"
-				)
+				# frappe.msgprint(
+				# 	"Please note the selected vehicle falls outside the allocated warranty plan parameters. "
+				# 	"Please contact Head Office for more information.",
+				# 	indicator="orange"
+				# )
 				self.type = "Goodwill"
 			else:
 				# Block claim: prevent save

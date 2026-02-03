@@ -26,6 +26,7 @@
   "model_colours",
   "vehicles_stock_availability_tab",
   "vehicles_stock_availability_section",
+  "create_other_service_schedule",
   "only_show_models_in_stock_at_hq",
   "hide_unconfirmed_shipments",
   "hide_dealer_stock_availability",
@@ -466,13 +467,19 @@
    "fieldname": "update_settings",
    "fieldtype": "Button",
    "label": "Update Settings"
+  },
+  {
+   "default": "0",
+   "fieldname": "create_other_service_schedule",
+   "fieldtype": "Check",
+   "label": "Create Other Service Schedule"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2026-01-14 11:05:55.602010",
+ "modified": "2026-02-03 10:48:35.153255",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicle Stock Settings",
