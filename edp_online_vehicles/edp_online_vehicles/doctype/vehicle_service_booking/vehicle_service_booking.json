@@ -75,7 +75,7 @@
    "in_list_view": 1,
    "in_standard_filter": 1,
    "label": "Status",
-   "options": "Pending\nArrived\nCancelled",
+   "options": "Pending\nArrived\nCompleted\nCancelled",
    "reqd": 1
   },
   {
@@ -276,7 +276,7 @@
  "index_web_pages_for_search": 1,
  "is_calendar_and_gantt": 1,
  "links": [],
- "modified": "2026-01-28 08:03:18.890185",
+ "modified": "2026-02-03 15:20:39.214527",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicle Service Booking",

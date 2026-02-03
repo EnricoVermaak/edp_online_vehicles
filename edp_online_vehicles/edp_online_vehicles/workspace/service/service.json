@@ -21,8 +21,56 @@
   {
    "hidden": 0,
    "is_query_report": 0,
+   "label": "Vehicle",
+   "link_count": 1,
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Vehicle Lookup",
+   "link_count": 0,
+   "link_to": "Vehicle Lookup",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Services",
+   "link_count": 2,
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Service Booking",
+   "link_count": 0,
+   "link_to": "Vehicle Service Booking",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Service",
+   "link_count": 0,
+   "link_to": "Vehicles Service",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
    "label": "Reports",
-   "link_count": 8,
+   "link_count": 7,
    "link_type": "DocType",
    "onboard": 0,
    "type": "Card Break"
@@ -80,16 +128,6 @@
   {
    "hidden": 0,
    "is_query_report": 1,
-   "label": "Load Test",
-   "link_count": 0,
-   "link_to": "Load Test Report",
-   "link_type": "Report",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 1,
    "label": "Parts Linked to Services",
    "link_count": 0,
    "link_to": "Parts Linked to Services Report",
@@ -106,67 +144,9 @@
    "link_type": "Report",
    "onboard": 0,
    "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Services",
-   "link_count": 3,
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Card Break"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Service Booking",
-   "link_count": 0,
-   "link_to": "Vehicle Service Booking",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Service",
-   "link_count": 0,
-   "link_to": "Vehicles Service",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Breakdown",
-   "link_count": 0,
-   "link_to": "Vehicles Breakdown",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Vehicle",
-   "link_count": 1,
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Card Break"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Vehicle Lookup",
-   "link_count": 0,
-   "link_to": "Vehicle Lookup",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
   }
  ],
- "modified": "2025-12-26 08:44:32.045314",
+ "modified": "2026-02-03 14:39:44.267828",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Service",
