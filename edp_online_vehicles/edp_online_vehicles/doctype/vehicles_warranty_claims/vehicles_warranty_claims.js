@@ -588,9 +588,44 @@ function validate_odo_reading(frm) {
 				}
 			});
 		}
-	})
+	});
 
+	// Rollback check for warranty: ODO cannot be lower than previous warranty claims (unless allowed in settings)
+	frappe.db
+		.get_single_value("Vehicles Warranty Settings", "allow_warranty_odo_reading_roll_back")
+		.then((allow_odo_rollback) => {
+			if (allow_odo_rollback) {
+				return;
+			}
 
+			// Fetch previous warranty claims for this VIN 
+			frappe.db
+				.get_list("Vehicles Warranty Claims", {
+					filters: {
+						vin_serial_no: frm.doc.vin_serial_no,
+						name: ["!=", frm.doc.name],
+					},
+					fields: ["odo_reading"],
+				})
+				.then((records) => {
+					let biggest_reading = 0;
+					(records || []).forEach((reading) => {
+						if (reading.odo_reading && reading.odo_reading > biggest_reading) {
+							biggest_reading = reading.odo_reading;
+						}
+					});
+
+					if (biggest_reading && frm.doc.odo_reading < biggest_reading) {
+						frm.set_value("odo_reading", null);
+						frappe.throw(
+							__(
+								"The entered odometer reading cannot be lower than the previous warranty claim reading of {0}.",
+								[biggest_reading],
+							),
+						);
+					}
+				});
+		});
 }
 frappe.ui.form.on('Warranty Part Item', {
 	part_no: function (frm, cdt, cdn) {
