@@ -5,6 +5,7 @@
  "creation": "2024-03-14 01:54:39.763880",
  "doctype": "DocType",
  "engine": "InnoDB",
+ "is_submittable": 1,
  "field_order": [
   "section_break_6gue",
   "vin_serial_no",
@@ -101,6 +102,9 @@
   "approved_by",
   "authorised_by_signature",
   "authorised_by_full_names",
+  "mandatory_documents_tab",
+  "mandatory_documents_section",
+  "mandatory_documents",
   "attached_document_tab",
   "attached_documents",
   "summary_tab",
@@ -223,7 +227,8 @@
    "fieldname": "reported_by",
    "fieldtype": "Link",
    "label": "Reported By",
-   "options": "User"
+   "options": "User",
+   "read_only": 1
   },
   {
    "fieldname": "technician",
@@ -515,6 +520,23 @@
    "fieldname": "part_schedule_date",
    "fieldtype": "Date",
    "label": "Scheduled Delivery Date for Parts"
+  },
+  {
+   "fieldname": "mandatory_documents_tab",
+   "fieldtype": "Tab Break",
+   "label": "Mandatory Documents"
+  },
+  {
+   "fieldname": "mandatory_documents_section",
+   "fieldtype": "Section Break",
+   "label": "Mandatory Documents"
+  },
+  {
+   "description": "Populated from Warranty Settings. Attach a file for each required document.",
+   "fieldname": "mandatory_documents",
+   "fieldtype": "Table",
+   "label": "Mandatory Documents",
+   "options": "Order Documents"
   },
   {
    "fieldname": "attached_documents",

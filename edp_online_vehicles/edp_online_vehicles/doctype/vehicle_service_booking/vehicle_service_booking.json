@@ -16,8 +16,8 @@
   "vin_serial_no",
   "model",
   "model_description",
-  "odo_reading_hours",
   "service_type",
+  "odo_reading_hours",
   "customer_column",
   "customer",
   "customer_full_name",
@@ -39,6 +39,7 @@
   "service_notes",
   "parts_tab",
   "table_jwkk",
+  "part_schedule_date",
   "labour_tab",
   "table_ottr"
  ],
@@ -184,6 +185,11 @@
    "options": "Service Parts Items"
   },
   {
+   "fieldname": "part_schedule_date",
+   "fieldtype": "Date",
+   "label": "Schedule Part Delivery Date"
+  },
+  {
    "fieldname": "labour_tab",
    "fieldtype": "Tab Break",
    "label": "Labour"
@@ -276,7 +282,7 @@
  "index_web_pages_for_search": 1,
  "is_calendar_and_gantt": 1,
  "links": [],
- "modified": "2026-02-03 15:20:39.214527",
+ "modified": "2026-02-03 14:59:20.798188",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicle Service Booking",

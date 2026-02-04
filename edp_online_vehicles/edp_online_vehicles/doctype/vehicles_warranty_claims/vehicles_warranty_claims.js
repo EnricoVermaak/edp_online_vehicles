@@ -43,6 +43,26 @@ frappe.ui.form.on("Vehicles Warranty Claims", {
 			update_labour_totals(frm);
 		}
 		refresh_summary_totals(frm);
+
+		// Populate mandatory documents from Warranty Settings 
+		const has_no_mandatory_rows = !frm.doc.mandatory_documents || frm.doc.mandatory_documents.length === 0;
+		if (has_no_mandatory_rows) {
+			frappe.db.get_doc("Vehicles Warranty Settings").then((settings) => {
+				if (settings.mandatory_documents && settings.mandatory_documents.length) {
+					for (let row of settings.mandatory_documents) {
+						frm.add_child("mandatory_documents", {
+							document_name: row.document_name,
+						});
+					}
+					frm.refresh_field("mandatory_documents");
+				}
+			});
+		}
+		if (frm.fields_dict.mandatory_documents && frm.fields_dict.mandatory_documents.grid) {
+			frm.fields_dict.mandatory_documents.grid.wrapper.find(".grid-remove-rows").hide();
+			frm.fields_dict.mandatory_documents.grid.cannot_add_rows = true;
+			frm.refresh_field("mandatory_documents");
+		}
 		frm.set_query("labour_code", "labour_items", () => ({
 			filters: { item_group: "Warranty Claim Labour" }
 		}));
@@ -115,6 +135,22 @@ frappe.ui.form.on("Vehicles Warranty Claims", {
 			},
 			"Create",
 		);
+
+		if (frappe.user_roles.includes("Warranty Administrator") || frappe.session.user === "Administrator") {
+			frm.add_custom_button(
+				__("Submit to DMS"),
+				() => {
+					frappe.confirm(
+						__("Mark this warranty claim as submitted to DMS?"),
+						() => {
+							frm.set_value("submitted_to_dms", frappe.datetime.now_datetime());
+							frm.save();
+						}
+					);
+				},
+				__("Actions"),
+			);
+		}
 
 		frm.add_custom_button("Scan", () => {
 			// Create a new instance of ZXing's BrowserMultiFormatReader each time the dialog is opened
