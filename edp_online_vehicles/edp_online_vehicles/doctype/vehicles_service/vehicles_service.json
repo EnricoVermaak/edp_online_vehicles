@@ -472,6 +472,7 @@
    "fetch_if_empty": 1,
    "fieldname": "price_list",
    "fieldtype": "Link",
+   "hidden": 1,
    "label": "Price List",
    "options": "Price List"
   },
@@ -913,7 +914,7 @@
    "link_fieldname": "services"
   }
  ],
- "modified": "2026-02-02 19:33:56.542281",
+ "modified": "2026-02-03 16:29:01.376237",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicles Service",

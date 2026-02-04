@@ -12,6 +12,7 @@
   "mandatory_stock_check_on_day_of_every_month",
   "mandatory_stock_check_due_in_days",
   "default_model_image",
+  "create_other_service_schedule",
   "update_settings",
   "shipment_tab",
   "shipment_section",
@@ -26,7 +27,6 @@
   "model_colours",
   "vehicles_stock_availability_tab",
   "vehicles_stock_availability_section",
-  "create_other_service_schedule",
   "only_show_models_in_stock_at_hq",
   "hide_unconfirmed_shipments",
   "hide_dealer_stock_availability",
@@ -470,6 +470,7 @@
   },
   {
    "default": "0",
+   "description": "If checked, an \"other\" service schedule will be created on new model administration creation.\nIf not checked, no service schedule will be created automatically.",
    "fieldname": "create_other_service_schedule",
    "fieldtype": "Check",
    "label": "Create Other Service Schedule"
@@ -479,7 +480,7 @@
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2026-02-03 10:48:35.153255",
+ "modified": "2026-02-03 15:59:48.798195",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicle Stock Settings",
