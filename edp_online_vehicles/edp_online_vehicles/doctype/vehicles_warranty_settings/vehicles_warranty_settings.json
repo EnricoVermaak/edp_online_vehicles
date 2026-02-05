@@ -9,7 +9,10 @@
   "allow_user_to_create_material_request_from_vehicles_service",
   "allow_user_to_create_sales_order_from_vehicles_service",
   "convert_out_of_warranty_to_goodwill",
-  "allow_goodwill_for_out_of_warranty_claims"
+  "allow_goodwill_for_out_of_warranty_claims",
+  "allow_warranty_odo_reading_roll_back",
+  "mandatory_documents_section",
+  "mandatory_documents"
  ],
  "fields": [
   {
@@ -41,6 +44,24 @@
    "fieldname": "allow_goodwill_for_out_of_warranty_claims",
    "fieldtype": "Check",
    "label": "Allow Goodwill for Out of Warranty Claims"
+  },
+  {
+   "default": "0",
+   "fieldname": "allow_warranty_odo_reading_roll_back",
+   "fieldtype": "Check",
+   "label": "Allow Warranty Odo Reading Roll Back"
+  },
+  {
+   "fieldname": "mandatory_documents_section",
+   "fieldtype": "Section Break",
+   "label": "Mandatory Documents for Warranty Claims"
+  },
+  {
+   "description": "Head Office defines which documents are mandatory when loading a warranty claim. These will appear on the claim form for the user to attach.",
+   "fieldname": "mandatory_documents",
+   "fieldtype": "Table",
+   "label": "Mandatory Documents",
+   "options": "DocType Documents"
   }
  ],
  "index_web_pages_for_search": 1,

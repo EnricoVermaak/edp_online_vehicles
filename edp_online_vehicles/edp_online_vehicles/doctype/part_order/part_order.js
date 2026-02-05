@@ -154,10 +154,8 @@ frappe.ui.form.on("Part Order", {
 });
 
 frappe.ui.form.on("Part Order Item", {
+	// Airfreight only calculated when checkbox is toggled; unchecked => 0
 	airfreight: function (frm, cdt, cdn) {
-		calculate_airfreight(frm, cdt, cdn);
-	},
-	dealer_billing_excl: function (frm, cdt, cdn) {
 		calculate_airfreight(frm, cdt, cdn);
 	},
 	part_no(frm, cdt, cdn) {
@@ -198,37 +196,14 @@ frappe.ui.form.on("Part Order Item", {
 					.then(() => dealer_billing_amount);
 			});
 
-		// Chain airfreightPromise to wait on pricePromise.
-		let airfreightPromise = pricePromise.then((dealer_billing_amount) => {
-			return frappe.db
-				.get_single_value("Parts Settings", "air_freight_cost_")
-				.then((air_freight_percentage) => {
-					let airfreight =
-						dealer_billing_amount * (air_freight_percentage / 100);
-						
-					return frappe.model
-						.set_value(
-							cdt,
-							cdn,
-							"air_freight_cost_excl",
-							0
-						)
-						.then(() => {
-							let total_excl =
-								row.dealer_billing_excl -
-								(row.disc_amount || 0) +
-								(row.air_freight_cost_excl || 0);
-							return frappe.model.set_value(
-								cdt,
-								cdn,
-								"total_excl",
-								total_excl,
-							);
-						});
-				});
+		// When part is selected: set airfreight to 0 (only calculated when user checks the airfreight checkbox)
+		let totalPromise = pricePromise.then(() => {
+			return frappe.model
+				.set_value(cdt, cdn, "air_freight_cost_excl", 0)
+				.then(() => calculate_total(frm, cdt, cdn));
 		});
 
-		return Promise.all([sohPromise, pricePromise, airfreightPromise]);
+		return Promise.all([sohPromise, pricePromise, totalPromise]);
 	},
 
 	table_avsu_remove(frm, cdt, cdn) {
@@ -244,11 +219,13 @@ frappe.ui.form.on("Part Order Item", {
 	qty(frm, cdt, cdn) {
 		let row = locals[cdt][cdn];
 		if (row.qty && row.qty > 0) {
-			let totalPromise = calculate_total(frm, cdt, cdn);
-			return Promise.all([totalPromise]);
+			// Recalc airfreight (air_freight_cost_excl = per-unit * qty); it will call calculate_total when done
+			calculate_airfreight(frm, cdt, cdn);
+			return Promise.resolve(calculate_total(frm, cdt, cdn));
 		} else {
 			frappe.msgprint("Quantity must be greater than zero.");
 			return frappe.model.set_value(cdt, cdn, "qty", 1).then(() => {
+				calculate_airfreight(frm, cdt, cdn);
 				return calculate_total(frm, cdt, cdn);
 			});
 		}
@@ -270,11 +247,10 @@ const calculate_total = (frm, cdt, cdn) => {
 
 	if (!row.dealer_billing_excl || !row.qty) return;
 
+	// air_freight_cost_excl is stored as (per-unit airfreight * qty), so add it to (dealer_billing - disc) * qty
 	let total =
-		(row.dealer_billing_excl -
-			(row.disc_amount || 0) +
-			(row.air_freight_cost_excl || 0)) *
-		row.qty;
+		(row.dealer_billing_excl - (row.disc_amount || 0)) * row.qty +
+		(row.air_freight_cost_excl || 0);
 	return frappe.model.set_value(cdt, cdn, "total_excl", total);
 };
 
@@ -328,21 +304,23 @@ function calculate_airfreight(frm, cdt, cdn) {
 		return;
 	}
 
-	// Agar checkbox OFF hai
+	// Agar checkbox OFF hai: airfreight value is zero
 	if (!row.airfreight) {
-		row.air_freight_cost_excl = row.dealer_billing_excl;
+		row.air_freight_cost_excl = 0;
+		calculate_total(frm, cdt, cdn);
 		frm.refresh_field("table_avsu");
 		return;
 	}
 
-	// Settings se percentage lao
+	// Settings se percentage lao: air_freight_cost_excl = (percentage-based amount per unit) * qty
 	frappe.db.get_single_value("Parts Settings", "air_freight_cost_")
 		.then(percent => {
 			percent = percent || 0;
 
-			let extra_cost = row.dealer_billing_excl * percent / 100;
-			row.air_freight_cost_excl = row.dealer_billing_excl + extra_cost;
+			let extra_cost_per_unit = row.dealer_billing_excl * percent / 100;
+			row.air_freight_cost_excl = extra_cost_per_unit * (row.qty || 1);
 
+			calculate_total(frm, cdt, cdn);
 			frm.refresh_field("table_avsu");
 		});
 }

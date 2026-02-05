@@ -429,7 +429,7 @@ frappe.ui.form.on("Vehicles Service", {
 							settings.allow_user_to_create_sales_order_from_vehicles_service
 						) {
 							frm.add_custom_button(
-								"Sales Order",
+								"Part Order",
 								() => {
 									if (
 										!frm.doc.service_parts_items.length > 0
@@ -459,41 +459,41 @@ frappe.ui.form.on("Vehicles Service", {
 							);
 						}
 
-						if (
-							settings.allow_user_to_create_material_request_from_vehicles_service
-						) {
-							frm.add_custom_button(
-								"Material Request",
-								() => {
-									if (
-										!frm.doc.service_parts_items.length >
-										0 &&
-										!frm.doc.service_labour_items.length > 0
-									) {
-										frappe.throw(
-											"No parts added to the parts table, please add parts to perform this action",
-										);
-									} else if (!frm.doc.part_schedule_date) {
-										frappe.throw(
-											"Please select a Scheduled Delivery Date under Parts Table",
-										);
-									} else {
-										frappe.call({
-											method: "edp_online_vehicles.events.create_material_request.create_material_request_service",
-											args: {
-												docname: frm.doc.name,
-											},
-											callback: function (r) {
-												if (r.message) {
-													frappe.msgprint(r.message);
-												}
-											},
-										});
-									}
-								},
-								"Create",
-							);
-						}
+						// if (
+						// 	settings.allow_user_to_create_material_request_from_vehicles_service
+						// ) {
+						// 	frm.add_custom_button(
+						// 		"Material Request",
+						// 		() => {
+						// 			if (
+						// 				!frm.doc.service_parts_items.length >
+						// 				0 &&
+						// 				!frm.doc.service_labour_items.length > 0
+						// 			) {
+						// 				frappe.throw(
+						// 					"No parts added to the parts table, please add parts to perform this action",
+						// 				);
+						// 			} else if (!frm.doc.part_schedule_date) {
+						// 				frappe.throw(
+						// 					"Please select a Scheduled Delivery Date under Parts Table",
+						// 				);
+						// 			} else {
+						// 				frappe.call({
+						// 					method: "edp_online_vehicles.events.create_material_request.create_material_request_service",
+						// 					args: {
+						// 						docname: frm.doc.name,
+						// 					},
+						// 					callback: function (r) {
+						// 						if (r.message) {
+						// 							frappe.msgprint(r.message);
+						// 						}
+						// 					},
+						// 				});
+						// 			}
+						// 		},
+						// 		"Create",
+						// 	);
+						// }
 					}
 				},
 			});

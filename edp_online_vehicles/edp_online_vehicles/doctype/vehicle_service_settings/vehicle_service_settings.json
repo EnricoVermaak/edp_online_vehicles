@@ -8,6 +8,7 @@
   "section_break_vfle",
   "allow_user_to_create_material_request_from_vehicles_service",
   "allow_user_to_create_sales_order_from_vehicles_service",
+  "allow_user_to_create_part_order_from_vehicle_service_booking",
   "show_prices_on_vehicles_services",
   "show_prices_on_request_for_services",
   "allow_service_odo_reading_roll_back",
@@ -37,6 +38,12 @@
    "fieldname": "allow_user_to_create_sales_order_from_vehicles_service",
    "fieldtype": "Check",
    "label": "Allow user to create Sales Order from Vehicles Service"
+  },
+  {
+   "default": "1",
+   "fieldname": "allow_user_to_create_part_order_from_vehicle_service_booking",
+   "fieldtype": "Check",
+   "label": "Allow user to create Part Order from Vehicle Service Booking"
   },
   {
    "default": "0",

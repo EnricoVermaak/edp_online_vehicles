@@ -14,6 +14,32 @@ frappe.ui.form.on("Vehicle Service Booking", {
                     }
                 });
             });
+
+            frappe.call({
+                method: "frappe.client.get",
+                args: { doctype: "Vehicle Service Settings" },
+                callback: function (r) {
+                    if (r.message && r.message.allow_user_to_create_part_order_from_vehicle_service_booking) {
+                        frm.add_custom_button(__("Part Order"), function () {
+                            if (!frm.doc.table_jwkk || frm.doc.table_jwkk.length === 0) {
+                                frappe.throw(__("No parts added to the parts table, please add parts to perform this action"));
+                            }
+                            if (!frm.doc.part_schedule_date) {
+                                frappe.throw(__("Please select a Scheduled Delivery Date under Parts Table"));
+                            }
+                            frappe.call({
+                                method: "edp_online_vehicles.events.create_part_order.create_part_order_from_booking",
+                                args: { docname: frm.doc.name },
+                                callback: function (r) {
+                                    if (r.message) {
+                                        frappe.msgprint(r.message);
+                                    }
+                                }
+                            });
+                        }, __("Create"));
+                    }
+                }
+            });
         }
     },
     onload(frm) {

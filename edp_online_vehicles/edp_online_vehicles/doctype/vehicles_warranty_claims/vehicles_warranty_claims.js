@@ -43,6 +43,26 @@ frappe.ui.form.on("Vehicles Warranty Claims", {
 			update_labour_totals(frm);
 		}
 		refresh_summary_totals(frm);
+
+		// Populate mandatory documents from Warranty Settings 
+		const has_no_mandatory_rows = !frm.doc.mandatory_documents || frm.doc.mandatory_documents.length === 0;
+		if (has_no_mandatory_rows) {
+			frappe.db.get_doc("Vehicles Warranty Settings").then((settings) => {
+				if (settings.mandatory_documents && settings.mandatory_documents.length) {
+					for (let row of settings.mandatory_documents) {
+						frm.add_child("mandatory_documents", {
+							document_name: row.document_name,
+						});
+					}
+					frm.refresh_field("mandatory_documents");
+				}
+			});
+		}
+		if (frm.fields_dict.mandatory_documents && frm.fields_dict.mandatory_documents.grid) {
+			frm.fields_dict.mandatory_documents.grid.wrapper.find(".grid-remove-rows").hide();
+			frm.fields_dict.mandatory_documents.grid.cannot_add_rows = true;
+			frm.refresh_field("mandatory_documents");
+		}
 		frm.set_query("labour_code", "labour_items", () => ({
 			filters: { item_group: "Warranty Claim Labour" }
 		}));
@@ -115,6 +135,22 @@ frappe.ui.form.on("Vehicles Warranty Claims", {
 			},
 			"Create",
 		);
+
+		if (frappe.user_roles.includes("Warranty Administrator") || frappe.session.user === "Administrator") {
+			frm.add_custom_button(
+				__("Submit to DMS"),
+				() => {
+					frappe.confirm(
+						__("Mark this warranty claim as submitted to DMS?"),
+						() => {
+							frm.set_value("submitted_to_dms", frappe.datetime.now_datetime());
+							frm.save();
+						}
+					);
+				},
+				__("Actions"),
+			);
+		}
 
 		frm.add_custom_button("Scan", () => {
 			// Create a new instance of ZXing's BrowserMultiFormatReader each time the dialog is opened
@@ -552,9 +588,44 @@ function validate_odo_reading(frm) {
 				}
 			});
 		}
-	})
+	});
 
+	// Rollback check for warranty: ODO cannot be lower than previous warranty claims (unless allowed in settings)
+	frappe.db
+		.get_single_value("Vehicles Warranty Settings", "allow_warranty_odo_reading_roll_back")
+		.then((allow_odo_rollback) => {
+			if (allow_odo_rollback) {
+				return;
+			}
 
+			// Fetch previous warranty claims for this VIN 
+			frappe.db
+				.get_list("Vehicles Warranty Claims", {
+					filters: {
+						vin_serial_no: frm.doc.vin_serial_no,
+						name: ["!=", frm.doc.name],
+					},
+					fields: ["odo_reading"],
+				})
+				.then((records) => {
+					let biggest_reading = 0;
+					(records || []).forEach((reading) => {
+						if (reading.odo_reading && reading.odo_reading > biggest_reading) {
+							biggest_reading = reading.odo_reading;
+						}
+					});
+
+					if (biggest_reading && frm.doc.odo_reading < biggest_reading) {
+						frm.set_value("odo_reading", null);
+						frappe.throw(
+							__(
+								"The entered odometer reading cannot be lower than the previous warranty claim reading of {0}.",
+								[biggest_reading],
+							),
+						);
+					}
+				});
+		});
 }
 frappe.ui.form.on('Warranty Part Item', {
 	part_no: function (frm, cdt, cdn) {

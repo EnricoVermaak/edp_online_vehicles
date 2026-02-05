@@ -855,6 +855,7 @@
    "label": "ETA Date"
   },
   {
+   "depends_on": "eval: frappe.user.has_role('Service Administrator');",
    "fieldname": "submitted_to_dms",
    "fieldtype": "Datetime",
    "label": "Submitted To DMS"

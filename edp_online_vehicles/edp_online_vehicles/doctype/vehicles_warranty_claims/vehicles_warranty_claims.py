@@ -142,6 +142,16 @@ class VehiclesWarrantyClaims(Document):
 			else:
 				new_doc.insert(ignore_permissions=True)
 
+	def before_submit(self):
+		self.reported_by = frappe.session.user
+
+		if self.mandatory_documents:
+			missing = [row.document_name for row in self.mandatory_documents if not row.get("document")]
+			if missing:
+				frappe.throw(
+					frappe._("Please attach a file for every mandatory document: {0}").format(", ".join(missing))
+				)
+
 	def before_insert(self):
 		service_docs = frappe.get_all(
 			"Vehicles Service",
