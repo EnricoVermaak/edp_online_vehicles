@@ -1,5 +1,6 @@
 {
  "actions": [],
+ "allow_import": 1,
  "allow_rename": 1,
  "autoname": "field:plan_description",
  "creation": "2025-04-15 16:48:00.632032",
@@ -96,7 +97,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-10-13 14:55:45.854949",
+ "modified": "2026-02-05 09:56:07.602927",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicles Service Plan Administration",

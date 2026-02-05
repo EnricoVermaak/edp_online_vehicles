@@ -38,9 +38,9 @@
     mod
   ));
 
-  // ../edp_online_vehicles/node_modules/onscan.js/onscan.js
+  // ../erpnext/node_modules/onscan.js/onscan.js
   var require_onscan = __commonJS({
-    "../edp_online_vehicles/node_modules/onscan.js/onscan.js"(exports, module) {
+    "../erpnext/node_modules/onscan.js/onscan.js"(exports, module) {
       (function(global, factory) {
         typeof exports === "object" && typeof module !== "undefined" ? module.exports = factory() : typeof define === "function" && define.amd ? define(factory()) : global.onScan = factory();
       })(exports, function() {
@@ -4418,4 +4418,4 @@ Return`,
     }
   };
 })();
-//# sourceMappingURL=point_of_sale.bundle.K2ZCTGNG.js.map
+//# sourceMappingURL=point_of_sale.bundle.A77CAMCT.js.map

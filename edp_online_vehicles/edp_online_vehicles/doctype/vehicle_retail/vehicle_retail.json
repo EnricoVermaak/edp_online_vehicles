@@ -160,7 +160,7 @@
    "fetch_from": "customer.phone",
    "fetch_if_empty": 1,
    "fieldname": "customer_phone",
-   "fieldtype": "Phone",
+   "fieldtype": "Data",
    "label": "Customer Phone"
   },
   {
@@ -260,7 +260,7 @@
   {
    "fetch_from": "fleet_customer.phone",
    "fieldname": "fleet_customer_phone",
-   "fieldtype": "Phone",
+   "fieldtype": "Data",
    "label": "Fleet Customer Phone",
    "read_only": 1
   },
@@ -283,14 +283,14 @@
    "fetch_from": "customer.mobile",
    "fetch_if_empty": 1,
    "fieldname": "customer_mobile",
-   "fieldtype": "Phone",
+   "fieldtype": "Data",
    "label": "Customer Mobile"
   },
   {
    "fetch_from": "fleet_customer.mobile",
    "fetch_if_empty": 1,
    "fieldname": "fleet_customer_mobile",
-   "fieldtype": "Phone",
+   "fieldtype": "Data",
    "label": "Fleet Customer Mobile",
    "read_only": 1
   },
@@ -328,8 +328,7 @@
   {
    "fieldname": "total_retail_excl",
    "fieldtype": "Currency",
-   "label": "Total Retail (Excl)",
-   "read_only": 1
+   "label": "Total Retail (Excl)"
   },
   {
    "fieldname": "customer_invoice_document",
@@ -345,7 +344,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-02-03 19:00:49.449563",
+ "modified": "2026-02-05 07:17:51.855230",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicle Retail",

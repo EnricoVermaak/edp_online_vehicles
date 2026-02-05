@@ -1,5 +1,6 @@
 {
  "actions": [],
+ "allow_import": 1,
  "autoname": "format:S-{YY}{MM}-{######}",
  "creation": "2024-03-13 22:25:14.747000",
  "doctype": "DocType",
@@ -914,7 +915,7 @@
    "link_fieldname": "services"
   }
  ],
- "modified": "2026-02-03 16:29:01.376237",
+ "modified": "2026-02-05 10:05:31.288877",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicles Service",
