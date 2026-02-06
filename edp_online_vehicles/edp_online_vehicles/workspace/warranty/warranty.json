@@ -5,7 +5,7 @@
    "label": "Warranty Claims"
   }
  ],
- "content": "[{\"id\":\"kFwVKkYBiG\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Warranty</span>\",\"col\":12}},{\"id\":\"P0dmP5lh8-\",\"type\":\"chart\",\"data\":{\"chart_name\":\"Warranty Claims\",\"col\":12}},{\"id\":\"v6Rf34ULTD\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"zlyrf7Gwrz\",\"type\":\"card\",\"data\":{\"card_name\":\"Warranty\",\"col\":4}},{\"id\":\"vBsV3MoQXT\",\"type\":\"card\",\"data\":{\"card_name\":\"Administration\",\"col\":4}}]",
+ "content": "[{\"id\":\"kFwVKkYBiG\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Warranty</span>\",\"col\":12}},{\"id\":\"P0dmP5lh8-\",\"type\":\"chart\",\"data\":{\"chart_name\":\"Warranty Claims\",\"col\":12}},{\"id\":\"v6Rf34ULTD\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"zlyrf7Gwrz\",\"type\":\"card\",\"data\":{\"card_name\":\"Warranty\",\"col\":4}}]",
  "creation": "2024-11-27 11:30:47.866375",
  "custom_blocks": [],
  "docstatus": 0,
@@ -61,45 +61,6 @@
   {
    "hidden": 0,
    "is_query_report": 0,
-   "label": "Administration",
-   "link_count": 3,
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Card Break"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Vehicles Warranty Settings",
-   "link_count": 0,
-   "link_to": "Vehicles Warranty Settings",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Vehicle Linked Warranty Plan",
-   "link_count": 0,
-   "link_to": "Vehicle Linked Warranty Plan",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Vehicles Warranty Plan Administration",
-   "link_count": 0,
-   "link_to": "Vehicles Warranty Plan Administration",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
    "label": "Warranty",
    "link_count": 3,
    "link_type": "DocType",
@@ -137,7 +98,7 @@
    "type": "Link"
   }
  ],
- "modified": "2025-12-19 13:08:20.746909",
+ "modified": "2026-02-06 08:23:16.447547",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Warranty",

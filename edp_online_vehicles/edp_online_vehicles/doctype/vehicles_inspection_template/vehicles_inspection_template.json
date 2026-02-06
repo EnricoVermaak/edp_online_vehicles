@@ -1,5 +1,6 @@
 {
  "actions": [],
+ "allow_import": 1,
  "allow_rename": 1,
  "autoname": "field:inspection_template_description",
  "creation": "2024-06-14 09:19:18.037724",
@@ -43,7 +44,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-08-29 11:38:13.428908",
+ "modified": "2026-02-06 08:18:16.809159",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicles Inspection Template",
@@ -75,18 +76,15 @@
    "write": 1
   },
   {
-   "create": 0,
-   "delete": 0,
    "email": 1,
    "export": 1,
    "print": 1,
    "read": 1,
    "report": 1,
-   "role": "Dealer Vehicle Administrator",
-   "share": 0,
-   "write": 0
+   "role": "Dealer Vehicle Administrator"
   }
  ],
+ "row_format": "Dynamic",
  "search_fields": "inspection_template_description",
  "show_title_field_in_link": 1,
  "sort_field": "modified",

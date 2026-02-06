@@ -1,5 +1,6 @@
 {
  "actions": [],
+ "allow_import": 1,
  "allow_rename": 1,
  "autoname": "format:HQ-PO-{MM}{YY}-{######}",
  "creation": "2025-03-04 16:53:51.395409",
@@ -73,7 +74,8 @@
    "in_standard_filter": 1,
    "label": "Order Type",
    "options": "Part Order Type",
-   "read_only": 1
+   "read_only": 1,
+   "reqd": 1
   },
   {
    "fieldname": "delivery_method",
@@ -137,7 +139,8 @@
    "fieldname": "table_ugma",
    "fieldtype": "Table",
    "options": "Part Order Item",
-   "read_only": 1
+   "read_only": 1,
+   "reqd": 1
   },
   {
    "fieldname": "section_break_ywid",
@@ -410,7 +413,7 @@
    "link_fieldname": "hq_part_order"
   }
  ],
- "modified": "2025-12-10 22:14:34.711875",
+ "modified": "2026-02-06 08:35:29.850074",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "HQ Part Order",

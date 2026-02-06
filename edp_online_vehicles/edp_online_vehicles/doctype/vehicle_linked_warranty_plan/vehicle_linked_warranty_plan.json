@@ -1,5 +1,6 @@
 {
  "actions": [],
+ "allow_import": 1,
  "allow_rename": 1,
  "creation": "2025-10-15 11:01:11.483455",
  "doctype": "DocType",
@@ -31,7 +32,8 @@
    "fieldname": "status",
    "fieldtype": "Select",
    "label": "Status",
-   "options": "Pending Activation\nActive\nExpired\nCancelled"
+   "options": "Pending Activation\nActive\nExpired\nCancelled",
+   "reqd": 1
   },
   {
    "fieldname": "column_break_vlrc",
@@ -47,7 +49,8 @@
    "in_list_view": 1,
    "in_standard_filter": 1,
    "label": "VIN/ Serial No",
-   "options": "Vehicle Stock"
+   "options": "Vehicle Stock",
+   "reqd": 1
   },
   {
    "fetch_from": "vin_serial_no.description",
@@ -75,7 +78,8 @@
    "in_list_view": 1,
    "in_standard_filter": 1,
    "label": "Warranty Plan",
-   "options": "Vehicles Warranty Plan Administration"
+   "options": "Vehicles Warranty Plan Administration",
+   "reqd": 1
   },
   {
    "fetch_from": "warranty_plan.warranty_odo_limit",
@@ -109,7 +113,7 @@
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-11-04 11:12:56.947824",
+ "modified": "2026-02-06 08:30:34.747357",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicle Linked Warranty Plan",
@@ -134,5 +138,6 @@
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": [],
- "title_field": "warranty_plan"
+ "title_field": "warranty_plan",
+ "track_changes": 1
 }
