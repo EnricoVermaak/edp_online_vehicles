@@ -45,37 +45,3 @@ def create_part_order_from_booking(docname):
 	newdoc.insert()
 	newdoc_link = get_link_to_form("Part Order", newdoc.name)
 	frappe.msgprint(f"New Part Order is Created {newdoc_link}")
-
-@frappe.whitelist()
-def create_part_order_from_service(docname):
-	doc = frappe.get_doc("Vehicles Service", docname)
-	order_types = frappe.get_all("Part Order Type", pluck="name")
-	if not order_types:
-		frappe.throw("No Part Order Type found. Please create a Part Order Type first.")
-	order_type = order_types[0]
-	delivery_date = getdate(doc.part_schedule_date)
-	
-	new_doc = frappe.new_doc("Part Order")
-	new_doc.dealer = doc.dealer
-	new_doc.order_type = order_type
-	new_doc.delivery_method = "Delivery"
-	new_doc.delivery_date = delivery_date
-	new_doc.dealer_order_no = docname
-	new_doc.customer = doc.customer
-
-	for part in doc.service_parts_items:
-		# frappe.throw(f"Adding part {part.item} to Part Order")
-		new_doc.append(
-			"table_avsu",
-			{
-				"part_no": part.item,
-				"description": part.description,
-				"qty": part.qty,
-				"dealer_billing_excl": part.price_excl,
-				"total_excl": part.total_excl,
-			},
-		)
-
-	new_doc.insert()
-	new_doc_link = get_link_to_form("Part Order", new_doc.name)
-	frappe.msgprint(f"New Part Order is Created {new_doc_link}")

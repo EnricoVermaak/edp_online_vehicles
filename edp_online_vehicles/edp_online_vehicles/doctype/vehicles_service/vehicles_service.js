@@ -311,6 +311,32 @@ frappe.ui.form.on("Vehicles Service", {
 					});
 			}
 		}
+		if(!frm.is_new()){
+			frm.add_custom_button("Part Order", function () {
+				frappe.model.with_doctype("Part Order", function () {
+					var doc = frappe.model.get_new_doc("Part Order");
+					doc.dealer = frm.doc.dealer
+					doc.order_type = "Daily"
+					doc.dealer_order_no = frm.doc.name
+					doc.delivery_method = "Delivery"
+					doc.delivery_date = frm.doc.part_schedule_date
+					doc.sales_person = frappe.session.user
+
+					for (let child of frm.doc.service_parts_items){
+						var row = frappe.model.add_child(
+							doc,
+							"table_avsu",
+						);
+						row.part_no = child.item;
+						row.description = child.description;
+						row.qty = child.qty;
+						row.dealer_billing_excl = child.price_excl;
+						row.total_excl = child.total_excl;
+					}
+					frappe.set_route("Form", doc.doctype, doc.name);
+				});
+			}, "Create");
+		}
 
 		// frm.add_custom_button(
 		// 	__("Request for Service"),
@@ -426,117 +452,88 @@ frappe.ui.form.on("Vehicles Service", {
 			// 	"Create",
 			// );
 
-			frappe.call({
-				method: "frappe.client.get",
-				args: {
-					doctype: "Vehicle Service Settings",
-				},
-				callback: function (r) {
-					if (r.message) {
-						var settings = r.message;
+			// frappe.call({
+			// 	method: "frappe.client.get",
+			// 	args: {
+			// 		doctype: "Vehicle Service Settings",
+			// 	},
+			// 	callback: function (r) {
+			// 		if (r.message) {
+			// 			var settings = r.message;
 
-						// Check if the checkboxes are checked
-						if (
-							settings.allow_user_to_create_sales_order_from_vehicles_service
-						) {
-							// frm.add_custom_button(
-							// 	"Part Order",
-							// 	() => {
-							// 		if (
-							// 			!frm.doc.service_parts_items.length > 0
-							// 		) {
-							// 			frappe.throw(
-							// 				"No parts added to the parts table, please add parts to perform this action",
-							// 			);
-							// 		} else if (!frm.doc.part_schedule_date) {
-							// 			frappe.throw(
-							// 				"Please select a Scheduled Delivery Date under Parts Table",
-							// 			);
-							// 		} else {
-							// 			frappe.call({
-							// 				method: "edp_online_vehicles.events.create_sales_order.create_sales_order_service",
-							// 				args: {
-							// 					docname: frm.doc.name,
-							// 				},
-							// 				callback: function (r) {
-							// 					if (r.message) {
-							// 						frappe.msgprint(r.message);
-							// 					}
-							// 				},
-							// 			});
-							// 		}
-							// 	},
-							// 	"Create",
-							// );
-							frm.add_custom_button(
-								"Part Order",
-								() => {
-									if (
-										!frm.doc.service_parts_items.length > 0
-									) {
-										frappe.throw(
-											"No parts added to the parts table, please add parts to perform this action",
-										);
-									} else if (!frm.doc.part_schedule_date) {
-										frappe.throw(
-											"Please select a Scheduled Delivery Date under Parts Table",
-										);
-									} else {
-										frappe.call({
-											method: "edp_online_vehicles.events.create_part_order.create_part_order_from_service",
-											args: {
-												docname: frm.doc.name,
-											},
-											callback: function (r) {
-												if (r.message) {
-													frappe.msgprint(r.message);
-												}
-											},
-										});
-									}
-								},
-								"Create",
-							);
-						}
+			// 			// Check if the checkboxes are checked
+			// 			if (
+			// 				settings.allow_user_to_create_sales_order_from_vehicles_service
+			// 			) {
+			// 				frm.add_custom_button(
+			// 					"Part Order",
+			// 					() => {
+			// 						if (
+			// 							!frm.doc.service_parts_items.length > 0
+			// 						) {
+			// 							frappe.throw(
+			// 								"No parts added to the parts table, please add parts to perform this action",
+			// 							);
+			// 						} else if (!frm.doc.part_schedule_date) {
+			// 							frappe.throw(
+			// 								"Please select a Scheduled Delivery Date under Parts Table",
+			// 							);
+			// 						} else {
+			// 							frappe.call({
+			// 								method: "edp_online_vehicles.events.create_sales_order.create_sales_order_service",
+			// 								args: {
+			// 									docname: frm.doc.name,
+			// 								},
+			// 								callback: function (r) {
+			// 									if (r.message) {
+			// 										frappe.msgprint(r.message);
+			// 									}
+			// 								},
+			// 							});
+			// 						}
+			// 					},
+			// 					"Create",
+			// 				);
+			// 			}
 
-						// if (
-						// 	settings.allow_user_to_create_material_request_from_vehicles_service
-						// ) {
-						// 	frm.add_custom_button(
-						// 		"Material Request",
-						// 		() => {
-						// 			if (
-						// 				!frm.doc.service_parts_items.length >
-						// 				0 &&
-						// 				!frm.doc.service_labour_items.length > 0
-						// 			) {
-						// 				frappe.throw(
-						// 					"No parts added to the parts table, please add parts to perform this action",
-						// 				);
-						// 			} else if (!frm.doc.part_schedule_date) {
-						// 				frappe.throw(
-						// 					"Please select a Scheduled Delivery Date under Parts Table",
-						// 				);
-						// 			} else {
-						// 				frappe.call({
-						// 					method: "edp_online_vehicles.events.create_material_request.create_material_request_service",
-						// 					args: {
-						// 						docname: frm.doc.name,
-						// 					},
-						// 					callback: function (r) {
-						// 						if (r.message) {
-						// 							frappe.msgprint(r.message);
-						// 						}
-						// 					},
-						// 				});
-						// 			}
-						// 		},
-						// 		"Create",
-						// 	);
-						// }
-					}
-				},
-			});
+			// 			// if (
+			// 			// 	settings.allow_user_to_create_material_request_from_vehicles_service
+			// 			// ) {
+			// 			// 	frm.add_custom_button(
+			// 			// 		"Material Request",
+			// 			// 		() => {
+			// 			// 			if (
+			// 			// 				!frm.doc.service_parts_items.length >
+			// 			// 				0 &&
+			// 			// 				!frm.doc.service_labour_items.length > 0
+			// 			// 			) {
+			// 			// 				frappe.throw(
+			// 			// 					"No parts added to the parts table, please add parts to perform this action",
+			// 			// 				);
+			// 			// 			} else if (!frm.doc.part_schedule_date) {
+			// 			// 				frappe.throw(
+			// 			// 					"Please select a Scheduled Delivery Date under Parts Table",
+			// 			// 				);
+			// 			// 			} else {
+			// 			// 				frappe.call({
+			// 			// 					method: "edp_online_vehicles.events.create_material_request.create_material_request_service",
+			// 			// 					args: {
+			// 			// 						docname: frm.doc.name,
+			// 			// 					},
+			// 			// 					callback: function (r) {
+			// 			// 						if (r.message) {
+			// 			// 							frappe.msgprint(r.message);
+			// 			// 						}
+			// 			// 					},
+			// 			// 				});
+			// 			// 			}
+			// 			// 		},
+			// 			// 		"Create",
+			// 			// 	);
+			// 			// }
+			// 		}
+			// 	},
+			// });
 
 			frm.add_custom_button(
 				"Internal Docs and Notes",
