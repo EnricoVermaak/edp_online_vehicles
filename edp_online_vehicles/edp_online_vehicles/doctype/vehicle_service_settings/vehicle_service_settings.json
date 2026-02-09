@@ -9,7 +9,6 @@
   "allow_user_to_create_sales_order_from_vehicles_service",
   "allow_user_to_create_part_order_from_vehicle_service_booking",
   "show_prices_on_vehicles_services",
-  "show_prices_on_request_for_services",
   "allow_service_odo_reading_roll_back",
   "allow_additional_parts_any_service",
   "default_service_type_max_allowance",
@@ -45,12 +44,6 @@
    "fieldname": "show_prices_on_vehicles_services",
    "fieldtype": "Check",
    "label": "Show prices on Vehicles Services"
-  },
-  {
-   "default": "0",
-   "fieldname": "show_prices_on_request_for_services",
-   "fieldtype": "Check",
-   "label": "Show Prices on Request for Services"
   },
   {
    "default": "0",
@@ -118,7 +111,7 @@
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2026-02-09 21:47:59.511159",
+ "modified": "2026-02-10 00:42:23.335904",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicle Service Settings",
