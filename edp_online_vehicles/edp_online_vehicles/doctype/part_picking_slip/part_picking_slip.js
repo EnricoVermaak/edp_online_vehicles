@@ -62,6 +62,46 @@ frappe.ui.form.on("Part Picking Slip", {
 			frm.set_value("total_qty_picked", 0);
 		}
 	},
+	part_order_no(frm) {
+		frm.clear_table("table_qoik");
+		if (frm.doc.part_order_no) {
+			frappe.db
+				.get_doc("HQ Part Order", frm.doc.part_order_no)
+				.then((doc) => {
+					for (let row of doc.table_ugma) {
+						// let outstanding_qty = row.qty_ordered - row.qty_picked;
+
+						frm.add_child("table_qoik", {
+							part_no: row.part_no,
+							description: row.description,
+							qty_ordered: row.qty,
+							qty_picked: row.qty_picked,
+							outstanding_qty: row.qty - row.qty_picked,
+						});
+					}
+
+					frm.refresh_field("table_qoik");
+
+					let total_qty_ordered = 0;
+					let total_qty_picked = 0;
+					if (frm.doc.table_qoik.length > 0) {
+						for (let row of frm.doc.table_qoik) {
+							total_qty_ordered += row.qty_ordered;
+							total_qty_picked += row.qty_picked;
+						}
+					}
+
+					frm.set_value("total_qty_ordered", total_qty_ordered);
+					frm.set_value("total_qty_picked", total_qty_picked);
+					frm.set_value("ordered_bydealer", doc.dealer);
+					frm.set_value(
+						"ordered_on_datetime",
+						doc.order_date_time,
+					);
+				});
+		}
+	}
+
 });
 
 frappe.ui.form.on("Part Picking Slip Items", {

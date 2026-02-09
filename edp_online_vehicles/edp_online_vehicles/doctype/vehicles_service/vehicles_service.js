@@ -332,6 +332,7 @@ frappe.ui.form.on("Vehicles Service", {
 						row.qty = child.qty;
 						row.dealer_billing_excl = child.price_excl;
 						row.total_excl = child.total_excl;
+						row.dealer = frm.doc.dealer
 					}
 					frappe.set_route("Form", doc.doctype, doc.name);
 				});

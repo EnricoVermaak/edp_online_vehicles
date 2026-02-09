@@ -8,9 +8,9 @@ from frappe.model.mapper import get_mapped_doc
 
 class VehiclesService(Document):
 
-    def validate(self):
-        self._set_system_status_from_odo_range()
-        self._enforce_odo_range_block()
+    # def validate(self):
+    #     self._set_system_status_from_odo_range()
+    #     self._enforce_odo_range_block()
 
     def on_update(self):
         if not self.odo_reading_hours or self.odo_reading_hours == 0:
