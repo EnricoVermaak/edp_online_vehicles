@@ -6,7 +6,6 @@
  "engine": "InnoDB",
  "field_order": [
   "section_break_vfle",
-  "allow_user_to_create_material_request_from_vehicles_service",
   "allow_user_to_create_sales_order_from_vehicles_service",
   "allow_user_to_create_part_order_from_vehicle_service_booking",
   "show_prices_on_vehicles_services",
@@ -19,19 +18,15 @@
   "auto_job_card_no_prefix",
   "last_auto_job_card_no",
   "section_break_status_sync",
-  "status_sync_mappings"
+  "status_sync_mappings",
+  "section_break_oeab",
+  "mandatory_documents"
  ],
  "fields": [
   {
    "fieldname": "section_break_vfle",
    "fieldtype": "Section Break",
    "label": "General Settings"
-  },
-  {
-   "default": "1",
-   "fieldname": "allow_user_to_create_material_request_from_vehicles_service",
-   "fieldtype": "Check",
-   "label": "Allow user to create Material Request from Vehicles Service"
   },
   {
    "default": "1",
@@ -108,12 +103,22 @@
    "fieldtype": "Table",
    "label": "Status Sync Mappings",
    "options": "Status Sync Mapping"
+  },
+  {
+   "fieldname": "section_break_oeab",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "mandatory_documents",
+   "fieldtype": "Table",
+   "label": "Mandatory Documents",
+   "options": "DocType Documents"
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2026-01-28 07:44:21.396408",
+ "modified": "2026-02-09 21:47:59.511159",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicle Service Settings",

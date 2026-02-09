@@ -84,6 +84,7 @@ frappe.ui.form.on("Vehicle Lookup", {
 
     },
     refresh(frm) {
+        frm.disable_save();
         // Refresh tables when form is refreshed to show updated status
         if (frm.doc.vin_serial_no_link) {
             frm.trigger("vin_serial_no_link");

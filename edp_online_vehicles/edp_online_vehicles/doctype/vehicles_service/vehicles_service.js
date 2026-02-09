@@ -163,6 +163,17 @@ frappe.ui.form.on("Vehicles Service", {
 
 
 	onload(frm) {
+		frm.doc.attach_documents = [];
+
+			// Fetch settings and populate child tables
+			frappe.db.get_doc("Vehicle Service Settings").then((doc) => {
+				for (let man_row of doc.mandatory_documents) {
+					frm.add_child("attach_documents", {
+						document_name: man_row.document_name,
+					});
+				}
+				frm.refresh_field("attach_documents");
+			});
 		odo_limit_message_shown = false;
 		if (frm.doc.vehicles_incidents) {
 			frappe.db
@@ -428,6 +439,35 @@ frappe.ui.form.on("Vehicles Service", {
 						if (
 							settings.allow_user_to_create_sales_order_from_vehicles_service
 						) {
+							// frm.add_custom_button(
+							// 	"Part Order",
+							// 	() => {
+							// 		if (
+							// 			!frm.doc.service_parts_items.length > 0
+							// 		) {
+							// 			frappe.throw(
+							// 				"No parts added to the parts table, please add parts to perform this action",
+							// 			);
+							// 		} else if (!frm.doc.part_schedule_date) {
+							// 			frappe.throw(
+							// 				"Please select a Scheduled Delivery Date under Parts Table",
+							// 			);
+							// 		} else {
+							// 			frappe.call({
+							// 				method: "edp_online_vehicles.events.create_sales_order.create_sales_order_service",
+							// 				args: {
+							// 					docname: frm.doc.name,
+							// 				},
+							// 				callback: function (r) {
+							// 					if (r.message) {
+							// 						frappe.msgprint(r.message);
+							// 					}
+							// 				},
+							// 			});
+							// 		}
+							// 	},
+							// 	"Create",
+							// );
 							frm.add_custom_button(
 								"Part Order",
 								() => {
@@ -443,7 +483,7 @@ frappe.ui.form.on("Vehicles Service", {
 										);
 									} else {
 										frappe.call({
-											method: "edp_online_vehicles.events.create_sales_order.create_sales_order_service",
+											method: "edp_online_vehicles.events.create_part_order.create_part_order_from_service",
 											args: {
 												docname: frm.doc.name,
 											},
