@@ -1,5 +1,19 @@
 frappe.ui.form.on("Vehicle Lookup", {
     vin_serial_no_link(frm) {
+        if(frm.doc.vin_serial_no_link){
+            frappe.call({
+                method: "edp_online_vehicles.events.remaining_vehicles.get_remaining_vehicles",
+                args: { vehicle_id: frm.doc.vin_serial_no_link},
+                callback: function (r) {
+                    frm.set_value("no_of_remaining_vehicles", r.message.length);
+                    frm.clear_table("remaining_vehicles");
+                    r.message.forEach(function (row) {
+                        frm.add_child("remaining_vehicles", { service_schedule: row});
+                    });
+                    frm.refresh_field("remaining_vehicles");
+                }
+            });
+        }
         frappe.call({
             method: "edp_online_vehicles.events.plans.get_vehicle_details",
             args: { vehicle_id: frm.doc.vin_serial_no_link },

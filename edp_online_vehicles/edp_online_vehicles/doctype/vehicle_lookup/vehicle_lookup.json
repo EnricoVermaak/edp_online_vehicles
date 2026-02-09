@@ -33,6 +33,9 @@
   "table_wzas",
   "service_history_section",
   "table_gmug",
+  "remaining_vehicles_section",
+  "no_of_remaining_vehicles",
+  "remaining_vehicles",
   "warranty_plan_and_history_tab",
   "warranty_plan_section",
   "table_shau",
@@ -226,6 +229,22 @@
    "fieldname": "table_exum",
    "fieldtype": "Table",
    "options": "Warranty History"
+  },
+  {
+   "fieldname": "remaining_vehicles_section",
+   "fieldtype": "Section Break",
+   "label": "Remaining Vehicles"
+  },
+  {
+   "fieldname": "remaining_vehicles",
+   "fieldtype": "Table",
+   "label": "Remaining Vehicles Detail",
+   "options": "Remaining Vehicles"
+  },
+  {
+   "fieldname": "no_of_remaining_vehicles",
+   "fieldtype": "Int",
+   "label": "No of Remaining Vehicles"
   }
  ],
  "grid_page_length": 50,
@@ -233,7 +252,7 @@
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2025-12-26 08:52:10.240005",
+ "modified": "2026-02-09 20:50:59.595136",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicle Lookup",
