@@ -29,6 +29,7 @@ def create_fleet_customer(
 	company_reg_no,
 	customer_name,
 	customer_surname,
+	gender,
 	mobile,
 	email,
 	address,
@@ -50,6 +51,7 @@ def create_fleet_customer(
 	fleet_cust_doc.company_reg_no = company_reg_no
 	fleet_cust_doc.customer_name = customer_name
 	fleet_cust_doc.customer_surname = customer_surname
+	fleet_cust_doc.gender = gender
 	fleet_cust_doc.mobile = mobile
 	fleet_cust_doc.email = email
 	fleet_cust_doc.address = address

@@ -90,6 +90,8 @@ frappe.ui.form.on("Vehicle Retail", {
 		}
 
 		previous_status_value = frm.doc.status;
+
+		set_vin_query(frm);
 	},
 	onload: function (frm) {
 		// Reset the field to its previous status if no new value is selected
@@ -212,7 +214,11 @@ frappe.ui.form.on("Vehicle Retail", {
 							args: {
 								doc: frm.doc.name,
 							},
-							callback: function (r) {},
+							callback: function (r) {
+								if (!r.exc && r.message && typeof frappe.ask_print_manufacturer_certificates === "function") {
+									frappe.ask_print_manufacturer_certificates(frm.doc.name);
+								}
+							},
 						});
 					}
 				},
@@ -249,7 +255,7 @@ frappe.ui.form.on("Vehicle Retail", {
 			frappe.validated = false;
 		}
 	},
-	after_submit(frm) {
+		after_submit(frm) {
 		for (const row of frm.doc["vehicles_sale_items"]) {
 			row.profit_loss_amount = row.retail_amount - row.ho_invoice_amount;
 			row.profit_loss_ =
@@ -258,6 +264,9 @@ frappe.ui.form.on("Vehicle Retail", {
 				100;
 		}
 
+		if (typeof frappe.ask_print_manufacturer_certificates === "function") {
+			frappe.ask_print_manufacturer_certificates(frm.doc.name);
+		}
 		// frappe.confirm(
 		//   'Do you want to release to NATIS?',
 		//   function () {
@@ -295,6 +304,9 @@ frappe.ui.form.on("Vehicle Retail", {
 		});
 	},
 	dealer(frm) {
+		// Re-apply VIN filter when dealer changes
+		set_vin_query(frm);
+
 		frappe.call({
 			method: "edp_online_vehicles.events.set_filters.get_users",
 			args: {
@@ -421,16 +433,16 @@ frappe.ui.form.on("Vehicle Retail", {
 		frm.set_value("fleet_customer", "");
 		frm.set_value("fleet_customer_mobile", "");
 
+		if (frm._fleet_customer_dialog) {
+			frm._fleet_customer_dialog.hide();
+			frm._fleet_customer_dialog.$wrapper.remove();
+			delete frm._fleet_customer_dialog;
+		}
+
+		// Create fresh dialog instance
 		const dialog = new frappe.ui.Dialog({
 			title: __("New Fleet Customer"),
 			fields: [
-				{
-					label: __("Customer Type"),
-					fieldname: "customer_type",
-					fieldtype: "Link",
-					options: "Fleet Customer Category",
-					reqd: 1,
-				},
 				{
 					label: __("Dealership"),
 					fieldname: "company",
@@ -461,10 +473,23 @@ frappe.ui.form.on("Vehicle Retail", {
 					fieldtype: "Data",
 				},
 				{
+					label: __("ID No"),
+					fieldname: "id_no",
+					fieldtype: "Data",
+					description: __("South African ID: 13 digits"),
+				},
+				{
+					label: __("Gender"),
+					fieldname: "gender",
+					fieldtype: "Link",
+					options: "Gender",
+				},
+				{
 					label: __("Mobile"),
 					fieldname: "mobile",
-					fieldtype: "Phone",
+					fieldtype: "Data",
 					reqd: 1,
+					description: __("Enter mobile with country code (e.g., +27812471255)")
 				},
 				{
 					label: __("Email"),
@@ -573,6 +598,7 @@ frappe.ui.form.on("Vehicle Retail", {
 						company_reg_no: values.company_reg_no || "",
 						customer_name: values.customer_name || "",
 						customer_surname: values.customer_surname || "",
+						gender: values.gender || "",
 						mobile: values.mobile || "",
 						email: values.email || "",
 						address: values.address || "",
@@ -614,6 +640,50 @@ frappe.ui.form.on("Vehicle Retail", {
 					},
 				});
 			},
+			secondary_action_label: __('Cancel'),
+			secondary_action() {
+				dialog.hide();
+			}
+		});
+
+		frm._fleet_customer_dialog = dialog;
+
+		dialog.fields_dict.company_name?.set_value('');
+		dialog.fields_dict.company_reg_no?.set_value('');
+		dialog.fields_dict.customer_name?.set_value('');
+		dialog.fields_dict.customer_surname?.set_value('');
+		dialog.fields_dict.mobile?.set_value('');
+		dialog.fields_dict.email?.set_value('');
+		dialog.fields_dict.address?.set_value('');
+		dialog.fields_dict.suburb?.set_value('');
+		dialog.fields_dict.city_town?.set_value('');
+		dialog.fields_dict.country?.set_value('');
+		dialog.fields_dict.province_state?.set_value('');
+		dialog.fields_dict.code?.set_value('');
+		dialog.fields_dict.would_you_like_to_receive_marketing_updates_via_SMS?.set_value('');
+		dialog.fields_dict.would_you_like_to_receive_marketing_updates_via_email?.set_value('');
+		dialog.fields_dict.would_you_like_to_receive_marketing_updates_via_post?.set_value('');
+		dialog.fields_dict.did_you_confirm_all_popi_regulations_with_your_customer?.set_value('');
+		dialog.fields_dict.id_no?.set_value('');
+		dialog.fields_dict.gender?.set_value('');
+
+		if (dialog.fields_dict.id_no && dialog.fields_dict.id_no.input) {
+			$(dialog.fields_dict.id_no.input).off("blur.fleet_id_validation").on("blur.fleet_id_validation", function () {
+				const id_number = dialog.get_value("id_no");
+				frappe.db.get_single_value("System Settings", "country").then((country) => {
+					const result = validate_sa_id_for_toast(id_number, country);
+					if (result) {
+						frappe.show_alert({ message: __(result.message), indicator: result.indicator }, 5);
+					}
+				});
+			});
+		}
+
+		dialog.$wrapper.on('hidden.bs.modal', function() {
+			if (frm._fleet_customer_dialog) {
+				frm._fleet_customer_dialog.$wrapper.remove();
+				delete frm._fleet_customer_dialog;
+			}
 		});
 
 		dialog.show();
@@ -623,6 +693,23 @@ frappe.ui.form.on("Vehicle Retail", {
 frappe.ui.form.on("Vehicles Sale Items", {
 	vin_serial_no(frm, cdt, cdn) {
 		let row = locals[cdt][cdn];
+
+		if (row.vin_serial_no) {
+			const duplicates = (frm.doc.vehicles_sale_items || []).filter(
+				(r) => r.vin_serial_no === row.vin_serial_no && r.name !== cdn
+			);
+			if (duplicates.length) {
+				frappe.model.set_value(cdt, cdn, "vin_serial_no", null);
+				frappe.model.set_value(cdt, cdn, "model", "");
+				frappe.model.set_value(cdt, cdn, "colour", "");
+				frappe.msgprint({
+					title: __("Duplicate VIN"),
+					message: __("This VIN is already in the list. Each vehicle can only be added once."),
+					indicator: "red",
+				});
+				return;
+			}
+		}
 
 		frappe.db
 			.get_list("Vehicle Stock", {
@@ -704,3 +791,66 @@ const update_total_retail_excl = (frm) => {
     }
     frm.set_value("total_retail_excl", total);
 };
+
+function set_vin_query(frm) {
+    frm.set_query("vin_serial_no", "vehicles_sale_items", function (doc, cdt, cdn) {
+        const filters = {
+            "availability_status": "Available",
+        };
+        if (frm.doc.dealer) {
+            filters["dealer"] = frm.doc.dealer;
+        }
+        // Exclude VINs already selected in other rows
+        const used = (frm.doc.vehicles_sale_items || [])
+            .filter((row) => row.vin_serial_no && row.name !== cdn)
+            .map((row) => row.vin_serial_no);
+        if (used.length) {
+            filters["name"] = ["not in", used];
+        }
+        return { filters: filters };
+    });
+}
+
+function validate_sa_id_for_toast(id_number, country) {
+	if (!id_number || country !== "South Africa") return null;
+	const n = (id_number + "").replace(/\s/g, "");
+	if (n.length !== 13 || isNaN(n)) {
+		return { message: "ID number must be 13 digits.", indicator: "red" };
+	}
+	if (!validate_sa_id_luhn(n)) {
+		return { message: "Invalid South African ID Number.", indicator: "red" };
+	}
+	const birthdate = n.substr(0, 6);
+	const citizenship = n.charAt(10);
+	if (!validate_sa_id_date(birthdate)) {
+		return { message: "Invalid South African ID Number.", indicator: "red" };
+	}
+	if (citizenship !== "0" && citizenship !== "1") {
+		return { message: "Invalid South African ID Number.", indicator: "red" };
+	}
+	return { message: "ID number is valid.", indicator: "green" };
+}
+
+function validate_sa_id_date(birthdate) {
+	const month = parseInt(birthdate.substr(2, 2), 10);
+	const day = parseInt(birthdate.substr(4, 2), 10);
+	if (month < 1 || month > 12) return false;
+	if (day < 1 || day > 31) return false;
+	if (month === 2 && day > 29) return false;
+	return true;
+}
+
+function validate_sa_id_luhn(id_number) {
+	let sum = 0;
+	let alternate = false;
+	for (let i = id_number.length - 1; i >= 0; i--) {
+		let n = parseInt(id_number.charAt(i), 10);
+		if (alternate) {
+			n *= 2;
+			if (n > 9) n -= 9;
+		}
+		sum += n;
+		alternate = !alternate;
+	}
+	return sum % 10 === 0;
+}

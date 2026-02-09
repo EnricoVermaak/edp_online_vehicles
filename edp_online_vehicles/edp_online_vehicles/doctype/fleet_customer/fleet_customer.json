@@ -7,6 +7,7 @@
  "engine": "InnoDB",
  "field_order": [
   "customer_type",
+  "gender",
   "company_name",
   "fleet_code",
   "customer_name",
@@ -68,10 +69,17 @@
    "mandatory_depends_on": "eval:(doc.customer_type == \"Individual\" || doc.customer_type == \"Foreigner\");"
   },
   {
+   "allow_in_quick_entry": 1,
    "fieldname": "customer_type",
    "fieldtype": "Link",
    "label": "Customer Type",
    "options": "Fleet Customer Category"
+  },
+  {
+   "fieldname": "gender",
+   "fieldtype": "Link",
+   "label": "Gender",
+   "options": "Gender"
   },
   {
    "fieldname": "from_lead",
@@ -94,6 +102,7 @@
    "mandatory_depends_on": "eval:doc.customer_type == \"Individual\""
   },
   {
+   "allow_in_quick_entry": 1,
    "fieldname": "check_qvlp",
    "fieldtype": "Select",
    "label": "Would you like to receive marketing updates via SMS?",
@@ -106,6 +115,7 @@
    "label": "References"
   },
   {
+   "allow_in_quick_entry": 1,
    "fieldname": "would_you_like_to_receive_marketing_updates_via_email",
    "fieldtype": "Select",
    "label": "Would you like to receive marketing updates via Email?",
@@ -113,6 +123,7 @@
    "reqd": 1
   },
   {
+   "allow_in_quick_entry": 1,
    "fieldname": "would_you_like_to_receive_marketing_updates_via_post",
    "fieldtype": "Select",
    "label": "Would you like to receive marketing updates via Post?",
@@ -120,6 +131,7 @@
    "reqd": 1
   },
   {
+   "allow_in_quick_entry": 1,
    "fieldname": "did_you_confirm_all_popi_regulations_with_your_customer",
    "fieldtype": "Select",
    "label": "Did you confirm all POPI regulations with your customer?",
@@ -132,6 +144,7 @@
    "label": "VAT No"
   },
   {
+   "allow_in_quick_entry": 1,
    "fieldname": "company_reg_no",
    "fieldtype": "Data",
    "in_list_view": 1,
@@ -153,6 +166,7 @@
    "precision": "0"
   },
   {
+   "allow_in_quick_entry": 1,
    "fieldname": "mobile",
    "fieldtype": "Phone",
    "in_list_view": 1,
@@ -161,6 +175,7 @@
    "reqd": 1
   },
   {
+   "allow_in_quick_entry": 1,
    "fieldname": "email",
    "fieldtype": "Data",
    "in_list_view": 1,
@@ -169,23 +184,28 @@
    "reqd": 1
   },
   {
+   "allow_in_quick_entry": 1,
    "fieldname": "address",
    "fieldtype": "Small Text",
    "label": "Address",
    "reqd": 1
   },
   {
+   "allow_in_quick_entry": 1,
    "fieldname": "city_town",
    "fieldtype": "Data",
    "label": "City/ Town",
    "reqd": 1
   },
   {
+   "allow_in_quick_entry": 1,
    "fieldname": "province_state",
-   "fieldtype": "Select",
-   "label": "Province/ State"
+   "fieldtype": "Link",
+   "label": "Province/ State",
+   "options": "Province or State"
   },
   {
+   "allow_in_quick_entry": 1,
    "fieldname": "code",
    "fieldtype": "Data",
    "label": "Postal Code",
@@ -257,6 +277,7 @@
    "label": "Fleet Discount Percentage "
   },
   {
+   "allow_in_quick_entry": 1,
    "fieldname": "company_name",
    "fieldtype": "Data",
    "label": "Company Name"
@@ -267,6 +288,7 @@
    "label": "Customer Full Name"
   },
   {
+   "allow_in_quick_entry": 1,
    "fieldname": "suburb",
    "fieldtype": "Data",
    "label": "Suburb",
@@ -279,6 +301,7 @@
    "precision": "0"
   },
   {
+   "allow_in_quick_entry": 1,
    "fieldname": "country",
    "fieldtype": "Link",
    "label": "Country",
@@ -319,7 +342,7 @@
    "link_fieldname": "customer"
   }
  ],
- "modified": "2025-11-05 12:32:32.387552",
+ "modified": "2026-02-08 17:00:54.315328",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Fleet Customer",
@@ -338,6 +361,7 @@
    "write": 1
   }
  ],
+ "quick_entry": 1,
  "row_format": "Dynamic",
  "search_fields": "customer_name,customer_surname,id_no,mobile",
  "sort_field": "modified",

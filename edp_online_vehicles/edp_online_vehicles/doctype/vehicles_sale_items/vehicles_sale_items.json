@@ -39,7 +39,6 @@
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "VIN/ Serial No",
-   "link_filters": "[[\"Vehicle Stock\",\"availability_status\",\"=\",\"Available\"]]",
    "options": "Vehicle Stock"
   },
   {

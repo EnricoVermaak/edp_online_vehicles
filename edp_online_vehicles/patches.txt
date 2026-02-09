@@ -5,3 +5,5 @@
 [post_model_sync]
 # Patches added in this section will be executed after doctypes are migrated
 edp_online_vehicles.patches.add_serial_no_index_to_stock_entry_detail
+# edp_online_vehicles.patches.copy_certificate_number_to_control_no
+# edp_online_vehicles.patches.copy_series_to_range

@@ -462,6 +462,17 @@ frappe.ui.form.on("Vehicles Shipment Items", {
 				frappe.msgprint(__("No Target Warehouse data available"));
 				frappe.model.set_value(cdt, cdn, "model_code", null);
 			}
+
+			// Auto-populate colour from model's default Model Colour
+			frappe.db
+				.get_value("Model Colour", { model: row.model_code, default: 1 }, "name")
+				.then((r) => {
+					if (r && r.message && r.message.name) {
+						frappe.model.set_value(cdt, cdn, "colour", r.message.name);
+					} else {
+						frappe.model.set_value(cdt, cdn, "colour", "");
+					}
+				});
 		}
 	},
 
