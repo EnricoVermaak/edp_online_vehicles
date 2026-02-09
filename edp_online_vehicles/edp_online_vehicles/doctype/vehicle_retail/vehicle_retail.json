@@ -47,9 +47,19 @@
   "customer_phone",
   "customer_mobile",
   "customer_address",
+  "customer_suburb",
+  "customer_city_town",
+  "customer_code",
+  "customer_province_state",
+  "customer_country",
   "fleet_customer_phone",
   "fleet_customer_mobile",
   "fleet_customer_address",
+  "fleet_customer_suburb",
+  "fleet_customer_city_town",
+  "fleet_customer_code",
+  "fleet_customer_province_state",
+  "fleet_customer_country",
   "amended_from"
  ],
  "fields": [
@@ -180,6 +190,53 @@
    "label": "Customer Address"
   },
   {
+   "depends_on": "eval: doc.customer",
+   "fetch_from": "customer.suburb",
+   "fetch_if_empty": 1,
+   "fieldname": "customer_suburb",
+   "fieldtype": "Data",
+   "label": "Suburb",
+   "read_only": 1
+  },
+  {
+   "depends_on": "eval: doc.customer",
+   "fetch_from": "customer.city_town",
+   "fetch_if_empty": 1,
+   "fieldname": "customer_city_town",
+   "fieldtype": "Data",
+   "label": "City/ Town",
+   "read_only": 1
+  },
+  {
+   "depends_on": "eval: doc.customer",
+   "fetch_from": "customer.code",
+   "fetch_if_empty": 1,
+   "fieldname": "customer_code",
+   "fieldtype": "Int",
+   "label": "Postal Code",
+   "read_only": 1
+  },
+  {
+   "depends_on": "eval: doc.customer",
+   "fetch_from": "customer.province_state",
+   "fetch_if_empty": 1,
+   "fieldname": "customer_province_state",
+   "fieldtype": "Link",
+   "label": "Province/ State",
+   "options": "Province or State",
+   "read_only": 1
+  },
+  {
+   "depends_on": "eval: doc.customer",
+   "fetch_from": "customer.country",
+   "fetch_if_empty": 1,
+   "fieldname": "customer_country",
+   "fieldtype": "Link",
+   "label": "Country",
+   "options": "Country",
+   "read_only": 1
+  },
+  {
    "fetch_from": "sales_person.sales_person_name",
    "fieldname": "sales_person_full_names",
    "fieldtype": "Data",
@@ -272,10 +329,58 @@
    "read_only": 1
   },
   {
+   "depends_on": "eval: doc.fleet_customer",
    "fetch_from": "fleet_customer.address",
    "fieldname": "fleet_customer_address",
    "fieldtype": "Small Text",
    "label": "Fleet Customer Address",
+   "read_only": 1
+  },
+  {
+   "depends_on": "eval: doc.fleet_customer",
+   "fetch_from": "fleet_customer.suburb",
+   "fetch_if_empty": 1,
+   "fieldname": "fleet_customer_suburb",
+   "fieldtype": "Data",
+   "label": "Suburb",
+   "read_only": 1
+  },
+  {
+   "depends_on": "eval: doc.fleet_customer",
+   "fetch_from": "fleet_customer.city_town",
+   "fetch_if_empty": 1,
+   "fieldname": "fleet_customer_city_town",
+   "fieldtype": "Data",
+   "label": "City/ Town",
+   "read_only": 1
+  },
+  {
+   "depends_on": "eval: doc.fleet_customer",
+   "fetch_from": "fleet_customer.code",
+   "fetch_if_empty": 1,
+   "fieldname": "fleet_customer_code",
+   "fieldtype": "Data",
+   "label": "Postal Code",
+   "read_only": 1
+  },
+  {
+   "depends_on": "eval: doc.fleet_customer",
+   "fetch_from": "fleet_customer.province_state",
+   "fetch_if_empty": 1,
+   "fieldname": "fleet_customer_province_state",
+   "fieldtype": "Link",
+   "label": "Province/ State",
+   "options": "Province or State",
+   "read_only": 1
+  },
+  {
+   "depends_on": "eval: doc.fleet_customer",
+   "fetch_from": "fleet_customer.country",
+   "fetch_if_empty": 1,
+   "fieldname": "fleet_customer_country",
+   "fieldtype": "Link",
+   "label": "Country",
+   "options": "Country",
    "read_only": 1
   },
   {

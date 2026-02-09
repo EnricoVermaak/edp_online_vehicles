@@ -4,11 +4,31 @@
 let microdot = "";
 let microdot_fitted_by = "";
 
+function is_vehicle_already_retailed(frm) {
+	return (
+		frm.doc.retail_date ||
+		frm.doc.availability_status === "Sold"
+	);
+}
+
+function show_already_retailed_message(frm) {
+	const vin = frm.doc.vin_serial_no || frm.doc.name;
+	frappe.msgprint(
+		__("Vehicle {0} has already been retailed and cannot be transferred or retailed again.", [vin]),
+		__("Already Retailed"),
+		true
+	);
+}
+
 frappe.ui.form.on("Vehicle Stock", {
 	refresh: function (frm) {
 		frm.add_custom_button(
 			"Retail Vehicle",
 			function () {
+				if (is_vehicle_already_retailed(frm)) {
+					show_already_retailed_message(frm);
+					return;
+				}
 				frappe.model.with_doctype("Vehicle Retail", function () {
 					var doc = frappe.model.get_new_doc("Vehicle Retail");
 
@@ -31,6 +51,10 @@ frappe.ui.form.on("Vehicle Stock", {
 			frm.add_custom_button(
 				"Transfer to Dealer",
 				function () {
+					if (is_vehicle_already_retailed(frm)) {
+						show_already_retailed_message(frm);
+						return;
+					}
 					const dialog = new frappe.ui.Dialog({
 						title: __("Allocate Stock"),
 						fields: [

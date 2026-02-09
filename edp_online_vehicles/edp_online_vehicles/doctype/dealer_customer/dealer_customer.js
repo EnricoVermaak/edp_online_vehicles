@@ -1,8 +1,19 @@
 // Copyright (c) 2024, NexTash and contributors
 // For license information, please see license.txt
 
+var POPI_FIELDS = [
+	"check_qvlp",
+	"would_you_like_to_receive_marketing_updates_via_email",
+	"would_you_like_to_receive_marketing_updates_via_post",
+	"did_you_confirm_all_popi_regulations_with_your_customer",
+];
+
 frappe.ui.form.on("Dealer Customer", {
 	refresh(frm) {
+		POPI_FIELDS.forEach(function (fieldname) {
+			frm.set_df_property(fieldname, "reqd", 1);
+		});
+
 		// Trigger ID number validation and age calculation on blur
 		$(frm.fields_dict["id_no"].input).on("blur", function () {
 			validate_id_no(frm);
@@ -109,6 +120,15 @@ frappe.ui.form.on("Dealer Customer", {
 	},
 
 	before_save(frm) {
+		for (let i = 0; i < POPI_FIELDS.length; i++) {
+			let fieldname = POPI_FIELDS[i];
+			let value = frm.doc[fieldname];
+			if (value === undefined || value === null || (typeof value === "string" && value.trim() === "")) {
+				let label = frm.fields_dict[fieldname] ? frm.fields_dict[fieldname].df.label : fieldname;
+				frappe.throw(__("Please answer all POPI questions. Missing: {0}", [label]));
+			}
+		}
+
 		let fullname =
 			frm.doc.customer_name + " " + (frm.doc.customer_surname || "");
 
@@ -134,17 +154,17 @@ function validate_id_no(frm) {
 					) {
 						if (validate_south_african_id(id_number)) {
 							frappe.validated = true;
-
+							frappe.show_alert({ message: __("ID number is valid."), indicator: "green" }, 5);
 							// Calculate and set age
 							const birthdate = id_number.substr(0, 6);
 							const age = calculate_age_from_id(birthdate);
 							frm.set_value("age", age);
 						} else {
-							frappe.msgprint("Invalid South African ID Number.");
+							frappe.show_alert({ message: __("Invalid South African ID Number."), indicator: "red" }, 5);
 							frappe.validated = false;
 						}
 					} else {
-						frappe.msgprint("ID number must be 13 digits.");
+						frappe.show_alert({ message: __("ID number must be 13 digits."), indicator: "red" }, 5);
 						frappe.validated = false;
 					}
 				}
