@@ -55,3 +55,9 @@ class PartPickingSlip(Document):
 
 	def before_submit(self):
 		self.status = "Completed"
+
+	# def after_insert(self):
+	# 	doc = frappe.new_doc("Pick List")
+	# 	for item in self.table_qoik:
+	# 		doc.append("locations", {"item_code": item.part_no, "qty": item.qty_ordered})
+	# 	doc.save()

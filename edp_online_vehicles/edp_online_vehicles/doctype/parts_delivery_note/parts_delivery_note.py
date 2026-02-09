@@ -403,3 +403,9 @@ class PartsDeliveryNote(Document):
 		m = (total_seconds % 3600) // 60
 		s = total_seconds % 60
 		return f"{h:02}:{m:02}:{s:02}"
+	
+	# def after_insert(self):
+	# 	doc = frappe.new_doc("Delivery Note")
+	# 	for item in self.table_qoik:
+	# 		doc.append("locations", {"item_code": item.part_no, "qty": item.qty_ordered})
+	# 	doc.save()
