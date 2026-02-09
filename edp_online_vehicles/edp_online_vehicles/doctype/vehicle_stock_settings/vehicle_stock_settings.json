@@ -16,7 +16,6 @@
   "update_settings",
   "shipment_tab",
   "shipment_section",
-  "automatically_allocate_received_shipments",
   "automatically_reserve_stock",
   "set_default_warehouse",
   "sla_days",
@@ -40,9 +39,7 @@
   "vehicle_order_no_prefix",
   "apply_fifo_rule_on_vehicles_orders",
   "allow_dealer_to_dealer_orders",
-  "allow_stock_allocation_on_invoice",
   "allow_stock_allocation_on_invoice_paid",
-  "automatically_allocate_stock_on_creation_of_delivery_note",
   "automatically_submit_main_equipment_order_document",
   "display_floorplan",
   "allow_scheduled_orders",
@@ -140,6 +137,7 @@
   },
   {
    "default": "0",
+   "description": "When enabled, a reconciliation must be submitted once every month on the specified day. The system will block further processing until the reconciliation is completed.",
    "fieldname": "mandatory_unit_stock_check",
    "fieldtype": "Check",
    "label": "Manditory Unit Recon"
@@ -169,13 +167,6 @@
   },
   {
    "default": "0",
-   "description": "When a Sales Invoice is created for a Vehicle it will move to the Invoiced Dealer's Default Warehouse.",
-   "fieldname": "allow_stock_allocation_on_invoice",
-   "fieldtype": "Check",
-   "label": "Automatically Allocate Stock on Invoice"
-  },
-  {
-   "default": "0",
    "description": "When a Sales Invoice for a Vehicle is fully Paid the Vehicle will then move to the Invoiced Dealer's Default Warehouse.",
    "fieldname": "allow_stock_allocation_on_invoice_paid",
    "fieldtype": "Check",
@@ -199,13 +190,6 @@
    "fieldtype": "Table",
    "label": "Vehicles Sales Documents",
    "options": "DocType Documents"
-  },
-  {
-   "default": "0",
-   "description": "Automatically Allocate stock to Dealer when a Delivery Note is created.",
-   "fieldname": "automatically_allocate_stock_on_creation_of_delivery_note",
-   "fieldtype": "Check",
-   "label": "Automatically Allocate Stock on Creation of Delivery Note"
   },
   {
    "depends_on": "eval: doc.automatically_create_stock_number == 1;",
@@ -315,12 +299,6 @@
    "fieldtype": "Table",
    "label": "Status Order",
    "options": "Status Order Items"
-  },
-  {
-   "default": "0",
-   "fieldname": "automatically_allocate_received_shipments",
-   "fieldtype": "Check",
-   "label": "Automatically allocate received shipment vehicles to open back orders"
   },
   {
    "default": "0",
@@ -480,7 +458,7 @@
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2026-02-03 15:59:48.798195",
+ "modified": "2026-02-06 12:54:13.588431",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicle Stock Settings",
