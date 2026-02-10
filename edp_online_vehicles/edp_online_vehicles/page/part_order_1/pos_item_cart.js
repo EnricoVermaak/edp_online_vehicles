@@ -752,7 +752,6 @@ edp_online_vehicles.PartOrder.ItemCart = class {
 					${item_data.description}
 				</div>
 				${get_description_html()}
-				${get_dealer_html()}
 			</div>
 			${get_rate_discount_html()}`,
 		);
@@ -777,18 +776,6 @@ edp_online_vehicles.PartOrder.ItemCart = class {
 			me.$cart_items_wrapper
 				.find(".item-rate-amount")
 				.css("width", max_width);
-		}
-		function get_dealer_html() {
-			if (!item_data.dealer) return "";
-
-			return `
-				<div class="item-dealer">
-					<span class="indicator-pill whitespace-nowrap blue">
-						<span>${__("Dealer")}</span>
-					</span>
-					<span class="dealer-name">${item_data.dealer}</span>
-				</div>
-			`;
 		}
 
 
