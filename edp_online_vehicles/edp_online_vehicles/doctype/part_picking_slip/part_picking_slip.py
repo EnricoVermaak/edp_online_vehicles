@@ -56,8 +56,70 @@ class PartPickingSlip(Document):
 	def before_submit(self):
 		self.status = "Completed"
 
-	# def after_insert(self):
-	# 	doc = frappe.new_doc("Pick List")
-	# 	for item in self.table_qoik:
-	# 		doc.append("locations", {"item_code": item.part_no, "qty": item.qty_ordered})
-	# 	doc.save()
+	def after_insert(self):
+		if not self.part_order_no:
+			frappe.throw("HQ Part Order is required")
+
+		# 1. HQ Part Order
+		hq_order = frappe.get_doc("HQ Part Order", self.part_order_no)
+
+		if not hq_order.part_order:
+			frappe.throw("Part Order not linked in HQ Part Order")
+
+		# 2. Part Order
+		part_order = hq_order.part_order
+
+		# 2. Find Sales Order linked to Part Order
+		sales_order = frappe.db.get_value(
+			"Sales Order",
+			{"custom_part_order": part_order},
+			# , "docstatus": 1
+			"name"
+		)
+
+		if not sales_order:
+			frappe.throw(f"No submitted Sales Order found for Part Order {part_order}")
+
+		so = frappe.get_doc("Sales Order", sales_order)
+
+		# 3. Prevent duplicate Pick List
+		if frappe.db.exists("Pick List", {"sales_order": so.name}):
+			return
+
+		# 4. Create Pick List
+		pick_list = frappe.new_doc("Pick List")
+		pick_list.sales_order = so.name
+		pick_list.parent_warehouse = so.items[0].warehouse if so.items else None
+		pick_list.customer = so.customer
+		pick_list.company = so.company
+		pick_list.purpose = "Delivery"
+
+		# for item in so.items:
+		# 	# frappe.throw(f"Processing item: {item.item_code}")
+		# 	pick_list.append("locations", {
+		# 		"item_code": item.item_code,
+		# 		"qty": item.qty,
+		# 		"stock_uom": item.uom,
+		# 		"warehouse": item.warehouse,
+		# 		"sales_order": so.name,
+		# 		"sales_order_item": item.name
+		# 	})
+		# pick_list.set_item_locations()
+
+		pick_list.save()
+		pick_doc = frappe.get_doc("Pick List", pick_list.name)
+		for item in so.items:
+			# frappe.throw(f"Processing item: {item.item_code}")
+			pick_doc.append("locations", {
+				"item_code": item.item_code,
+				"qty": item.qty,
+				"stock_uom": item.uom,
+				"warehouse": item.warehouse,
+				"sales_order": so.name,
+				"sales_order_item": item.name
+			})
+		pick_doc.save()
+
+		# pick_list.submit()
+
+		# self.db_set("pick_list", pick_list.name)

@@ -30,7 +30,7 @@
    "default": "1",
    "fieldname": "allow_user_to_create_sales_order_from_vehicles_service",
    "fieldtype": "Check",
-   "label": "Allow user to create Sales Order from Vehicles Service"
+   "label": "Allow user to create Part Order from Vehicles Service"
   },
   {
    "default": "1",
@@ -104,7 +104,7 @@
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2026-02-10 00:45:22.406152",
+ "modified": "2026-02-10 15:06:31.483160",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicle Service Settings",

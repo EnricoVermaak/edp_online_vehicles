@@ -155,6 +155,7 @@ class PartOrder(Document):
 			newdoc.customer = self.dealer
 			newdoc.order_type = "Sales"
 			newdoc.custom_sales_category = "Parts"
+			newdoc.custom_part_order = self.name
 
 			hq_company = frappe.db.get_value("Company", {"custom_head_office": 1}, "name")
 
@@ -181,6 +182,8 @@ class PartOrder(Document):
 				)
 
 			newdoc.insert()
+			newdoc.submit()
+
 
 		if dealer_items:
 			# Group items by dealer

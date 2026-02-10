@@ -7,7 +7,7 @@ frappe.ui.form.on("HQ Part Order", {
 			frm.add_custom_button("Create Part Picking Slip", function () {
 				frappe.model.with_doctype("Part Picking Slip", function () {
 					var doc = frappe.model.get_new_doc("Part Picking Slip");
-					doc.part_order_no = frm.doc.part_order
+					doc.part_order_no = frm.doc.name
 					for (let child of frm.doc.table_ugma){
 						var row = frappe.model.add_child(
 							doc,
