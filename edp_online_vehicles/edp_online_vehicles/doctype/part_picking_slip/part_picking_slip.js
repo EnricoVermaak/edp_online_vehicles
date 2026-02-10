@@ -108,26 +108,43 @@ frappe.ui.form.on("Part Picking Slip Items", {
 	qty_picked(frm, cdt, cdn) {
 		let row = locals[cdt][cdn];
 
+		let qty_ordered = row.qty_ordered || 0;
+		let qty_picked = row.qty_picked || 0;
+		let outstanding_qty = row.outstanding_qty || qty_ordered;
+
 		if (row.qty_picked === null) {
 			frappe.model.set_value(cdt, cdn, "qty_picked", 0);
+			return;
 		}
 
-		if (row.qty_picked > 0) {
-			if (row.qty_picked > row.outstanding_qty) {
-				frappe.model.set_value(cdt, cdn, "qty_picked", 0);
+		if (qty_picked > outstanding_qty) {
+			frappe.model.set_value(cdt, cdn, "qty_picked", 0);
 
-				frappe.msgprint(
-					"Qty Picked cannot be more than Outstanding Qty",
-				);
-			}
-
-			let total_picked = 0;
-
-			for (let row of frm.doc.table_qoik) {
-				total_picked += row.qty_picked;
-			}
-
-			frm.set_value("total_qty_picked", total_picked);
+			frappe.msgprint(
+				"Qty Picked cannot be more than Outstanding Qty"
+			);
+			return;
 		}
-	},
+
+		let new_outstanding = qty_ordered - qty_picked;
+
+		if (new_outstanding < 0) {
+			new_outstanding = 0;
+		}
+
+		frappe.model.set_value(
+			cdt,
+			cdn,
+			"outstanding_qty",
+			new_outstanding
+		);
+
+		let total_picked = 0;
+
+		(frm.doc.table_qoik || []).forEach(row => {
+			total_picked += row.qty_picked || 0;
+		});
+
+		frm.set_value("total_qty_picked", total_picked);
+	}
 });
