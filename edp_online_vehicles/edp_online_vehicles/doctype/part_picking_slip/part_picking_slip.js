@@ -7,7 +7,9 @@ frappe.ui.form.on("Part Picking Slip", {
 			frm.add_custom_button('Create Parts Delivery Note', function(){
 				frappe.model.with_doctype("Parts Delivery Note", function () {
 					var doc = frappe.model.get_new_doc("Parts Delivery Note");
-					doc.part_picking_slip = frm.doc.name;
+					doc.part_order_no = frm.doc.part_order_no;
+					doc.ordered_by_user = frappe.session.user;
+					doc.part_order_date_time = frm.doc.ordered_on_datetime;
 					for (let child of frm.doc.table_qoik){
 							var row = frappe.model.add_child(
 								doc,
