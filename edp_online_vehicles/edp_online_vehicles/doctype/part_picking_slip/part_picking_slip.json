@@ -94,7 +94,8 @@
    "in_list_view": 1,
    "in_standard_filter": 1,
    "label": "Part Order No",
-   "options": "HQ Part Order"
+   "options": "HQ Part Order",
+   "read_only": 1
   },
   {
    "fieldname": "d2d_part_order",
@@ -123,7 +124,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-02-10 14:12:32.682439",
+ "modified": "2026-02-11 09:55:41.238582",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Part Picking Slip",
