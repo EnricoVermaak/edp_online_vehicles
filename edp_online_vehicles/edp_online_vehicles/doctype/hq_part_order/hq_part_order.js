@@ -66,6 +66,7 @@ frappe.ui.form.on("HQ Part Order", {
 						child.part_no = row.part_no;
 						child.description = row.description;
 						child.qty = row.qty_ordered;
+						child.qty_picked = row.qty_picked;
 					});
 
 					frm.refresh_field('table_ugma');

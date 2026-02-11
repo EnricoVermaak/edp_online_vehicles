@@ -52,11 +52,12 @@ class PartPickingSlip(Document):
 
 		hq_doc.save()
 		frappe.db.commit()
+		self.create_pick_list()
 
 	def before_submit(self):
 		self.status = "Completed"
 
-	def after_insert(self):
+	def create_pick_list(self):
 		if not self.part_order_no:
 			frappe.throw("HQ Part Order is required")
 
@@ -94,32 +95,18 @@ class PartPickingSlip(Document):
 		pick_list.company = so.company
 		pick_list.purpose = "Delivery"
 
-		# for item in so.items:
-		# 	# frappe.throw(f"Processing item: {item.item_code}")
-		# 	pick_list.append("locations", {
-		# 		"item_code": item.item_code,
-		# 		"qty": item.qty,
-		# 		"stock_uom": item.uom,
-		# 		"warehouse": item.warehouse,
-		# 		"sales_order": so.name,
-		# 		"sales_order_item": item.name
-		# 	})
-		# pick_list.set_item_locations()
-
-		pick_list.save()
-		pick_doc = frappe.get_doc("Pick List", pick_list.name)
 		for item in so.items:
-			# frappe.throw(f"Processing item: {item.item_code}")
-			pick_doc.append("locations", {
+			pick_list.append("locations", {
 				"item_code": item.item_code,
 				"qty": item.qty,
-				"stock_uom": item.uom,
+				"stock_qty": item.qty,
+				"picked_qty": 0,
+				"stock_uom": item.stock_uom,
+				"uom": item.uom,
+				"conversion_factor": item.conversion_factor or 1,
 				"warehouse": item.warehouse,
 				"sales_order": so.name,
-				"sales_order_item": item.name
-			})
-		pick_doc.save()
-
-		# pick_list.submit()
-
-		# self.db_set("pick_list", pick_list.name)
+				"sales_order_item": item.name,
+				"item_name": item.item_name,})
+		pick_list.save()
+		pick_list.submit()

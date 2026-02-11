@@ -215,7 +215,8 @@
   {
    "fieldname": "qty_picked",
    "fieldtype": "Int",
-   "label": "Qty Picked"
+   "label": "Qty Picked",
+   "read_only": 1
   },
   {
    "fieldname": "qty_invoiced",
@@ -238,7 +239,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2026-02-03 11:07:44.021944",
+ "modified": "2026-02-11 13:59:19.426777",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Part Order Item",
