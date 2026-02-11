@@ -88,6 +88,7 @@ frappe.ui.form.on("Vehicles Service", {
 				}
 
 				frm.refresh_field("service_labour_items");
+				frm.refresh_field("non_oem_labour_items");
 				frm.refresh_field("service_parts_items");
 				frm.refresh_field("non_oem_parts_items");
 			});
