@@ -67,19 +67,24 @@ frappe.ui.form.on("Dealer Claims", {
 	// 	});
 	// },
 	claim_status(frm){
-		if (frm.doc.claim_status == "Pending") {
+		// Remove buttons first to avoid duplicates
+		frm.remove_custom_button('Updated');
+		frm.remove_custom_button('Submit Claim');
+		
+		// Show "Updated" button only when status is "Claim Pending Info"
+		if (frm.doc.claim_status == "Claim Pending Info") {
 			frm.add_custom_button("Updated", function () {
 				frm.set_value("claim_status", "Claim Updated");
 				frm.save();
 			});
+		}
+		
+		// Show "Submit Claim" button only when status is "Pending"
+		if (frm.doc.claim_status == "Pending") {
 			frm.add_custom_button("Submit Claim", function () {
 				frm.set_value("claim_status", "Claim Submitted");
 				frm.save();
 			});
-		}
-		else{
-			frm.remove_custom_button('Updated');
-			frm.remove_custom_button('Submit Claim');
 		}
 	},
 	refresh(frm) {
@@ -88,11 +93,21 @@ frappe.ui.form.on("Dealer Claims", {
 		} else {
 			frm.set_df_property("claim_status", "read_only", 1);
 		}
-		if (frm.doc.claim_status == "Pending") {
+		
+		// Remove buttons first to avoid duplicates
+		frm.remove_custom_button('Updated');
+		frm.remove_custom_button('Submit Claim');
+		
+		// Show "Updated" button only when status is "Claim Pending Info"
+		if (frm.doc.claim_status == "Claim Pending Info") {
 			frm.add_custom_button("Updated", function () {
 				frm.set_value("claim_status", "Claim Updated");
 				frm.save();
 			});
+		}
+		
+		// Show "Submit Claim" button only when status is "Pending"
+		if (frm.doc.claim_status == "Pending") {
 			frm.add_custom_button("Submit Claim", function () {
 				frm.set_value("claim_status", "Claim Submitted");
 				frm.save();
