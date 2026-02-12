@@ -19,7 +19,7 @@ def update_hq_from_dn_after_insert(doc, method):
 
     delivery_notes = frappe.get_all(
         "Delivery Note",
-        filters={"hq_part_order": hq_name},
+        filters={"custom_hq_part_order": hq_name},
         fields=["name"]
     )
 
