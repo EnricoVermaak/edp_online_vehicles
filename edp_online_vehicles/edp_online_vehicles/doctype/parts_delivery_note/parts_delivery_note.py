@@ -59,27 +59,27 @@ class PartsDeliveryNote(Document):
 
 			self.name = f"PDN-{self.d2d_part_order}-{index}"
 
-	def validate(self):
-		active_note_conditions = [
-			(
-				self.part_order_no
-				and frappe.db.exists(
-					"Parts Delivery Note", {"part_order_no": self.part_order_no, "docstatus": "Draft"}
-				)
-			),
-			(
-				self.d2d_part_order
-				and frappe.db.exists(
-					"Parts Delivery Note", {"d2d_part_order": self.d2d_part_order, "docstatus": "Draft"}
-				)
-			),
-		]
+	# def validate(self):
+	# 	active_note_conditions = [
+	# 		(
+	# 			self.part_order_no
+	# 			and frappe.db.exists(
+	# 				"Parts Delivery Note", {"part_order_no": self.part_order_no, "docstatus": "Draft"}
+	# 			)
+	# 		),
+	# 		(
+	# 			self.d2d_part_order
+	# 			and frappe.db.exists(
+	# 				"Parts Delivery Note", {"d2d_part_order": self.d2d_part_order, "docstatus": "Draft"}
+	# 			)
+	# 		),
+	# 	]
 
-		if any(active_note_conditions):
-			frappe.throw(
-				"An active delivery note already exists for this order. "
-				"Please finalize the existing delivery note before proceeding."
-			)
+	# 	if any(active_note_conditions):
+	# 		frappe.throw(
+	# 			"An active delivery note already exists for this order. "
+	# 			"Please finalize the existing delivery note before proceeding."
+	# 		)
 
 	def on_submit(self):
 		if self.part_order_no:
