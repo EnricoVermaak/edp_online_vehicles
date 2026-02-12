@@ -347,19 +347,19 @@ edp_online_vehicles.PartOrder.ItemSelector = class {
 			// Convert quantities to numbers:
 			const hq = parseFloat(hq_qty) || 0;
 			const dealer = parseFloat(dealer_qty) || 0;
+			let ordered_quantities = [];
 
 			// If no HQ stock but dealer stock is available, trigger popup.
 			if (hq === 0 && dealer > 0) {
 				try {
-					let { ordered_qty, company, is_backorder } =
-						await showDealerOrderPopup(part_no);
+					let ordered_quantities_from_dealer = await showDealerOrderPopup(part_no);
+					ordered_quantities = ordered_quantities_from_dealer.ordered_quantities;
 
-					if (is_backorder) {
-						backorder = true;
+					for (const ordered_quantity of ordered_quantities) {
+						if (ordered_quantity.qty == 0) {
+							ordered_quantities.splice(ordered_quantities.indexOf(ordered_quantity), 1);
+						}
 					}
-
-					dealer_ordered_qty = ordered_qty;
-					dealer_company = company;
 				} catch (error) {
 					return;
 				}
@@ -377,24 +377,34 @@ edp_online_vehicles.PartOrder.ItemSelector = class {
 				});
 			}
 
-			// Continue only if user clicks "Order" or if popup was never triggered.
-			me.events.item_selected({
-				field: "qty",
-				value: "+1",
-				item: {
-					part_no,
-					batch_no,
-					serial_no,
-					uom,
-					rate,
-					stock_uom,
-					item_name,
-					item_image,
-					dealer_ordered_qty,
-					dealer_company,
-					backorder,
-				},
-			});
+			if(ordered_quantities.length == 0) {
+				ordered_quantities.push({ company: dealer_company, qty: dealer_ordered_qty, is_backorder: backorder });
+			}
+				
+			for (const ordered_quantity of ordered_quantities) {
+				dealer_company = ordered_quantity.company;
+				dealer_ordered_qty = ordered_quantity.qty;
+				backorder = ordered_quantity.is_backorder;
+
+				// Continue only if user clicks "Order" or if popup was never triggered.
+				me.events.item_selected({
+					field: "qty",
+					value: "+1",
+					item: {
+						part_no,
+						batch_no,
+						serial_no,
+						uom,
+						rate,
+						stock_uom,
+						item_name,
+						item_image,
+						dealer_ordered_qty,
+						dealer_company,
+						backorder,
+					},
+				});
+			}
 
 			me.search_field.set_focus();
 		});
@@ -694,6 +704,7 @@ function showDealerOrderPopup(part_no) {
 					let totalQty = 0;
 					let selectedCompany = "";
 					let isBackorder = false;
+					let ordered_quantities = [];
 
 					$(".qty-input").each(function () {
 						let comp = $(this).data("company");
@@ -708,15 +719,15 @@ function showDealerOrderPopup(part_no) {
 								isBackorder = true;
 							}
 						}
+						
+						ordered_quantities.push({ company: comp, qty: qty, is_backorder: isBackorder });
 						totalQty += qty;
 					});
 
 					$popup.remove();
 					$overlay.remove();
 					resolve({
-						ordered_qty: totalQty,
-						company: selectedCompany,
-						is_backorder: isBackorder,
+						ordered_quantities: ordered_quantities,
 					});
 				});
 
