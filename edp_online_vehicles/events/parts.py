@@ -19,7 +19,7 @@ def update_hq_from_dn_after_insert(doc, method):
 
     delivery_notes = frappe.get_all(
         "Delivery Note",
-        filters={"custom_hq_part_order": hq_name},
+        filters={"custom_hq_part_order": hq_name },
         fields=["name"]
     )
 
@@ -35,8 +35,7 @@ def update_hq_from_dn_after_insert(doc, method):
     for row in hq_doc.table_qmpy:
         if flt(row.qty_ordered):
             row._delivered = (row.qty_delivered / row.qty_ordered) * 100
-        else:
-            row._delivered = 0
+     
 
     total_ordered = sum([flt(row.qty_ordered) for row in hq_doc.table_qmpy])
     total_delivered = sum([flt(row.qty_delivered) for row in hq_doc.table_qmpy])
@@ -44,8 +43,7 @@ def update_hq_from_dn_after_insert(doc, method):
     hq_doc.total_qty_parts_ordered = total_ordered
     if total_ordered:
         hq_doc._delivered = (total_delivered / total_ordered) * 100
-    else:
-        hq_doc._delivered = 0
+
 
     hq_doc.save(ignore_permissions=True)
-    frappe.db.commit()
+    # frappe.db.commit()
