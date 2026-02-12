@@ -225,12 +225,7 @@ doc_events = {
         "validate": "edp_online_vehicles.edp_online_vehicles.doctype.dealer_claims.dealer_claims.dealer",
 		"after_save": "edp_online_vehicles.edp_online_vehicles.doctype.dealer_claims.dealer_claims.after_save"
     },
-    "Parts Delivery Note": {
-        "before_save": "edp_online_vehicles.edp_online_vehicles.doctype.parts_delivery_note.parts_delivery_note.before_save",
-        "on_submit": "edp_online_vehicles.edp_online_vehicles.doctype.parts_delivery_note.parts_delivery_note.on_submit",
-        "on_cancel": "edp_online_vehicles.edp_online_vehicles.doctype.parts_delivery_note.parts_delivery_note.on_cancel"
-    },
-      "Delivery Note": {
+    "Delivery Note": {
         "after_insert": "edp_online_vehicles.events.parts.update_hq_from_dn_after_insert",
     },
 
