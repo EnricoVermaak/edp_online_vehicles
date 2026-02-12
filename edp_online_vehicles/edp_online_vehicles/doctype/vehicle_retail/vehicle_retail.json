@@ -33,6 +33,7 @@
   "natis_release_date",
   "payment_date",
   "delivery_date",
+  "vehicle_microdot",
   "customer_information_tab",
   "customer",
   "customer_name",
@@ -444,12 +445,18 @@
    "fieldname": "registration_year",
    "fieldtype": "Int",
    "label": "Registration Year"
+  },
+  {
+   "fieldname": "vehicle_microdot",
+   "fieldtype": "Link",
+   "label": "Vehicle Microdot",
+   "options": "Vehicles Microdots"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-02-05 07:17:51.855230",
+ "modified": "2026-02-12 15:18:21.052992",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicle Retail",

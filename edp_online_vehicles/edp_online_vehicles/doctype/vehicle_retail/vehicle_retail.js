@@ -37,7 +37,7 @@ frappe.ui.form.on("Vehicle Retail", {
 								},
 							});
 						},
-						() => {},
+						() => { },
 					);
 				});
 			}
@@ -93,7 +93,19 @@ frappe.ui.form.on("Vehicle Retail", {
 
 		set_vin_query(frm);
 	},
+	
 	onload: function (frm) {
+			frappe.db.get_single_value(
+				"Vehicle Stock Settings",
+				"allow_microdot_allocation_on_retail"
+			).then(enabled => {
+				console.log("loraaaaa",enabled);
+				
+
+				frm.set_df_property("vehicle_microdot", "hidden", !enabled);
+				frm.refresh_field("vehicle_microdot");
+
+			});
 		// Reset the field to its previous status if no new value is selected
 		$(document).on("blur", '[data-fieldname="status"]', function () {
 			if (!frm.doc.status || frm.doc.status === "") {
@@ -255,7 +267,7 @@ frappe.ui.form.on("Vehicle Retail", {
 			frappe.validated = false;
 		}
 	},
-		after_submit(frm) {
+	after_submit(frm) {
 		for (const row of frm.doc["vehicles_sale_items"]) {
 			row.profit_loss_amount = row.retail_amount - row.ho_invoice_amount;
 			row.profit_loss_ =
@@ -339,9 +351,8 @@ frappe.ui.form.on("Vehicle Retail", {
 
 				const { customer_name, customer_surname, mobile, phone } =
 					response.message;
-				const full_name = `${customer_name || ""} ${
-					customer_surname || ""
-				}`.trim();
+				const full_name = `${customer_name || ""} ${customer_surname || ""
+					}`.trim();
 
 				frm.set_value("customer_name", full_name);
 				frm.set_value("customer_mobile", mobile || "");
@@ -548,30 +559,30 @@ const calculate_sub_total = (frm, field_name, table_name) => {
 };
 
 const update_total_retail_excl = (frm) => {
-    let total = 0;
-    for (const row of frm.doc.vehicles_sale_items || []) {
-        total += flt(row.retail_amount);
-    }
-    frm.set_value("total_retail_excl", total);
+	let total = 0;
+	for (const row of frm.doc.vehicles_sale_items || []) {
+		total += flt(row.retail_amount);
+	}
+	frm.set_value("total_retail_excl", total);
 };
 
 function set_vin_query(frm) {
-    frm.set_query("vin_serial_no", "vehicles_sale_items", function (doc, cdt, cdn) {
-        const filters = {
-            "availability_status": "Available",
-        };
-        if (frm.doc.dealer) {
-            filters["dealer"] = frm.doc.dealer;
-        }
-        // Exclude VINs already selected in other rows
-        const used = (frm.doc.vehicles_sale_items || [])
-            .filter((row) => row.vin_serial_no && row.name !== cdn)
-            .map((row) => row.vin_serial_no);
-        if (used.length) {
-            filters["name"] = ["not in", used];
-        }
-        return { filters: filters };
-    });
+	frm.set_query("vin_serial_no", "vehicles_sale_items", function (doc, cdt, cdn) {
+		const filters = {
+			"availability_status": "Available",
+		};
+		if (frm.doc.dealer) {
+			filters["dealer"] = frm.doc.dealer;
+		}
+		// Exclude VINs already selected in other rows
+		const used = (frm.doc.vehicles_sale_items || [])
+			.filter((row) => row.vin_serial_no && row.name !== cdn)
+			.map((row) => row.vin_serial_no);
+		if (used.length) {
+			filters["name"] = ["not in", used];
+		}
+		return { filters: filters };
+	});
 }
 
 function validate_sa_id_for_toast(id_number, country) {

@@ -696,16 +696,23 @@ frappe.ui.form.on("Vehicle Order", {
 			};
 		});
 
+		// ADDED / CORRECTED
 		if (frm.doc.docstatus === 1) {
-			// hide all "Insert Below" buttons in any child‑table popup
-			$(".grid-append-row").hide();
+			// 1. Disable row addition via Frappe API (Safe & Error-free)
+			if (frm.fields_dict["vehicles_basket"]) {
+				frm.fields_dict["vehicles_basket"].grid.cannot_add_rows = true;
+			}
 
-			frappe.dom.add_css(`
-                .grid-insert-row-below {
-                display: none !important;
-                }
-            `);
+			// 2. Hide UI buttons via CSS (Modern method to avoid console errors)
+			frappe.dom.set_style(`
+				.grid-insert-row-below, 
+				.grid-append-row,
+				.grid-insert-row {
+					display: none !important;
+				}
+			`);
 		}
+
 
 		frm.fields_dict["vehicles_basket"].grid.add_custom_button(
 			"Add Multiple",
@@ -1075,9 +1082,32 @@ frappe.ui.form.on("Vehicle Order", {
 	onload_post_render: function (frm) {
 		$("p.help-box.small.text-muted").hide();
 
-		frm.fields_dict.order_date_time.datepicker.update({
-			minDate: new Date(frappe.datetime.get_today()),
-		});
+		// frm.fields_dict.order_date_time.datepicker.update({
+		// 	minDate: new Date(frappe.datetime.get_today()),
+		// });
+
+		frappe.db
+			.get_single_value(
+				"Vehicle Stock Settings",
+				"allow_scheduled_orders",
+			)
+			.then((allow_scheduled_orders) => {
+				if (allow_scheduled_orders === 0) {
+					// frm.fields_dict.order_date_time.datepicker.update({
+					// 	maxDate: new Date(frappe.datetime.get_today()),
+					// });
+					frm.fields_dict['order_date_time'].datepicker.update({
+						maxDate: new Date(frappe.datetime.get_today())
+					});
+
+				} else {
+					frm.fields_dict['order_date_time'].datepicker.update({
+						minDate: new Date(frappe.datetime.get_today())
+					});
+				}
+			});
+
+
 
 		if (
 			frm.fields_dict["vehicles_basket"] &&

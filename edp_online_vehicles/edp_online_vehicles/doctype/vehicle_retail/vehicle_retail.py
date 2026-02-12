@@ -7,6 +7,33 @@ from frappe.utils import add_months, now_datetime
 
 
 class VehicleRetail(Document):
+    def after_insert(self):
+        # Get Single DocType properly
+        doc = frappe.get_single("Vehicle Stock Settings")
+
+        if not doc.allow_microdot_allocation_on_retail:
+            return
+
+        # Safety check
+        if not self.vehicle_microdot:
+            return
+
+        # Get Microdot document
+        microdot = frappe.get_doc("Vehicles Microdots", self.vehicle_microdot)
+
+        # Update status
+        microdot.status = "Used"
+        microdot.save(ignore_permissions=True)
+
+        # Create Apply Vehicles Microdot document
+        newdoc = frappe.new_doc("Apply Vehicles Microdot")
+        newdoc.microdot = microdot.name
+        newdoc.dealer = microdot.dealer
+        newdoc.microdot_fitted_by = frappe.session.user
+        newdoc.status = microdot.status
+        newdoc.date_applied = microdot.date_applied
+        newdoc.vin_serial_no = microdot.vin_serial_no  # safer from current doc
+        newdoc.insert(ignore_permissions=True)
 
     def on_submit(self):
         # Call both update methods after submission
