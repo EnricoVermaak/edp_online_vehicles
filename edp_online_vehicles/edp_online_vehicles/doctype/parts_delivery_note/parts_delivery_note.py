@@ -59,29 +59,8 @@ class PartsDeliveryNote(Document):
 
 			self.name = f"PDN-{self.d2d_part_order}-{index}"
 
-	# def validate(self):
-	# 	active_note_conditions = [
-	# 		(
-	# 			self.part_order_no
-	# 			and frappe.db.exists(
-	# 				"Parts Delivery Note", {"part_order_no": self.part_order_no, "docstatus": "Draft"}
-	# 			)
-	# 		),
-	# 		(
-	# 			self.d2d_part_order
-	# 			and frappe.db.exists(
-	# 				"Parts Delivery Note", {"d2d_part_order": self.d2d_part_order, "docstatus": "Draft"}
-	# 			)
-	# 		),
-	# 	]
-
-	# 	if any(active_note_conditions):
-	# 		frappe.throw(
-	# 			"An active delivery note already exists for this order. "
-	# 			"Please finalize the existing delivery note before proceeding."
-	# 		)
-
 	def on_submit(self):
+		self.create_delivery_note()
 		if self.part_order_no:
 			# Retrieve the HQ Part Order and linked Part Order documents
 			hq_doc = frappe.get_doc("HQ Part Order", self.part_order_no)
@@ -389,6 +368,7 @@ class PartsDeliveryNote(Document):
 				frappe.msgprint(f"An error occurred: {e!s}")
 
 			frappe.db.commit()
+			
 
 	def before_submit(self):
 		self.status = "Delivered"
@@ -405,86 +385,26 @@ class PartsDeliveryNote(Document):
 		m = (total_seconds % 3600) // 60
 		s = total_seconds % 60
 		return f"{h:02}:{m:02}:{s:02}"
-	
-	# def after_insert(self):
-	# 	doc = frappe.new_doc("Delivery Note")
-	# 	for item in self.table_qoik:
-	# 		doc.append("locations", {"item_code": item.part_no, "qty": item.qty_ordered})
-	# 	doc.save()
 
-def before_save(doc, method=None):
-    if not doc.get("erp_delivery_note"):
-        dn = create_delivery_note(doc)
-        doc.erp_delivery_note = dn.name
-    else:
-        update_delivery_note(doc)
+	def create_delivery_note(self):
+		dn = frappe.new_doc("Delivery Note")
+		dn.custom_hq_part_order= self.part_order_no
 
+		if self.deliver_to == "Customer":
+			dn.customer = self.customer or self.fleet_customer
+		else:
+			dn.customer = self.dealer
 
+		if self.delivery_time:
+			dt = get_datetime(self.delivery_time)
+			dn.posting_date = dt.date()
+			dn.posting_time = dt.time()
 
+		for row in self.delivery_note_item:
+			dn.append("items", {
+				"item_code": row.part_no,
+				"qty": row.qty_ordered,
+			})
 
-def on_submit(doc):
-    if doc.erp_delivery_note:
-        dn = frappe.get_doc("Delivery Note", doc.erp_delivery_note)
-        if dn.docstatus == 0:
-            dn.submit()
-
-
-def on_cancel(doc):
-    if doc.erp_delivery_note:
-        dn = frappe.get_doc("Delivery Note", doc.erp_delivery_note)
-        if dn.docstatus == 1:
-            dn.cancel()
-
-
-def create_delivery_note(doc):
-    dn = frappe.new_doc("Delivery Note")
-    dn.custom_hq_part_order= doc.part_order_no
-
-    if doc.deliver_to == "Customer":
-        dn.customer = doc.customer or doc.fleet_customer
-    else:
-        dn.customer = doc.dealer
-
-    if doc.delivery_time:
-        dt = get_datetime(doc.delivery_time)
-        dn.posting_date = dt.date()
-        dn.posting_time = dt.time()
-
-    for row in doc.delivery_note_item:
-        dn.append("items", {
-            "item_code": row.part_no,
-            "qty": row.qty_ordered,
-        })
-
-    dn.insert(ignore_permissions=True)
-    return dn
-
-
-def update_delivery_note(doc):
-    if not doc.erp_delivery_note:
-        return
-
-    dn = frappe.get_doc("Delivery Note", doc.erp_delivery_note)
-
-    if dn.docstatus != 0:
-        return
-
-    if doc.deliver_to == "Customer":
-        dn.customer = doc.customer or doc.fleet_customer
-    else:
-        dn.customer = doc.dealer
-
-    if doc.delivery_time:
-        dt = get_datetime(doc.delivery_time)
-        dn.posting_date = dt.date()
-        dn.posting_time = dt.time()
-
-    dn.set("items", [])
-
-    for row in doc.delivery_note_item:
-        dn.append("items", {
-            "item_code": row.part_no,
-            "qty": row.qty_ordered
-        })
-
-    dn.save(ignore_permissions=True)
+		dn.insert(ignore_permissions=True)
+		dn.submit()

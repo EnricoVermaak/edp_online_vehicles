@@ -66,7 +66,54 @@ frappe.ui.form.on("Dealer Claims", {
 	// 		}
 	// 	});
 	// },
+	claim_status(frm){
+		// Remove buttons first to avoid duplicates
+		frm.remove_custom_button('Updated');
+		frm.remove_custom_button('Submit Claim');
+		
+		// Show "Updated" button only when status is "Claim Pending Info"
+		if (frm.doc.claim_status == "Claim Pending Info") {
+			frm.add_custom_button("Updated", function () {
+				frm.set_value("claim_status", "Claim Updated");
+				frm.save();
+			});
+		}
+		
+		// Show "Submit Claim" button only when status is "Pending"
+		if (frm.doc.claim_status == "Pending") {
+			frm.add_custom_button("Submit Claim", function () {
+				frm.set_value("claim_status", "Claim Submitted");
+				frm.save();
+			});
+		}
+	},
 	refresh(frm) {
+		if (frappe.user.has_role("Claim Administrator")) {
+			frm.set_df_property("claim_status", "read_only", 0);
+		} else {
+			frm.set_df_property("claim_status", "read_only", 1);
+		}
+		
+		// Remove buttons first to avoid duplicates
+		frm.remove_custom_button('Updated');
+		frm.remove_custom_button('Submit Claim');
+		
+		// Show "Updated" button only when status is "Claim Pending Info"
+		if (frm.doc.claim_status == "Claim Pending Info") {
+			frm.add_custom_button("Updated", function () {
+				frm.set_value("claim_status", "Claim Updated");
+				frm.save();
+			});
+		}
+		
+		// Show "Submit Claim" button only when status is "Pending"
+		if (frm.doc.claim_status == "Pending") {
+			frm.add_custom_button("Submit Claim", function () {
+				frm.set_value("claim_status", "Claim Submitted");
+				frm.save();
+			});
+		}
+
 		// Child table field filter for VIN
         frm.fields_dict["table_exgk"].grid.get_field("vin_serial_no").get_query = function(doc, cdt, cdn) {
 

@@ -233,18 +233,18 @@
   {
    "fieldname": "remaining_vehicles_section",
    "fieldtype": "Section Break",
-   "label": "Remaining Vehicles"
+   "label": "Service Schedules"
   },
   {
    "fieldname": "remaining_vehicles",
    "fieldtype": "Table",
-   "label": "Remaining Vehicles Detail",
+   "label": "Remaining Service Schedules",
    "options": "Remaining Vehicles"
   },
   {
    "fieldname": "no_of_remaining_vehicles",
    "fieldtype": "Int",
-   "label": "No of Remaining Vehicles"
+   "label": "No of Service Schedules"
   }
  ],
  "grid_page_length": 50,
@@ -252,7 +252,7 @@
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2026-02-09 20:50:59.595136",
+ "modified": "2026-02-12 10:48:50.036086",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicle Lookup",
