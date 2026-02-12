@@ -438,6 +438,7 @@ def on_cancel(doc):
 
 def create_delivery_note(doc):
     dn = frappe.new_doc("Delivery Note")
+    dn.hq_part_order = doc.part_order_no
 
     if doc.deliver_to == "Customer":
         dn.customer = doc.customer or doc.fleet_customer
