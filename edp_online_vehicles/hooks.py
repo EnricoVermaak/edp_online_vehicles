@@ -229,7 +229,10 @@ doc_events = {
         "before_save": "edp_online_vehicles.edp_online_vehicles.doctype.parts_delivery_note.parts_delivery_note.before_save",
         "on_submit": "edp_online_vehicles.edp_online_vehicles.doctype.parts_delivery_note.parts_delivery_note.on_submit",
         "on_cancel": "edp_online_vehicles.edp_online_vehicles.doctype.parts_delivery_note.parts_delivery_note.on_cancel"
-    }
+    },
+      "Delivery Note": {
+        "after_insert": "edp_online_vehicles.events.parts.update_hq_from_dn_after_insert",
+    },
 
 
 }
