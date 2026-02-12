@@ -182,7 +182,8 @@
    "fieldname": "final_status_date",
    "fieldtype": "Datetime",
    "hidden": 1,
-   "label": "Final Status Date"
+   "label": "Final Status Date",
+   "read_only": 1
   },
   {
    "fieldname": "dealer_ref_no",
@@ -388,7 +389,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-11-07 14:51:52.163147",
+ "modified": "2026-02-12 15:07:12.797286",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Dealer Claims",

@@ -293,7 +293,7 @@
    "hidden": 0,
    "is_query_report": 0,
    "label": "Vehicles",
-   "link_count": 7,
+   "link_count": 6,
    "link_type": "DocType",
    "onboard": 0,
    "type": "Card Break"
@@ -357,19 +357,9 @@
    "link_type": "DocType",
    "onboard": 0,
    "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Buy Back/ Trade In",
-   "link_count": 0,
-   "link_to": "Vehicle Buy Back",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
   }
  ],
- "modified": "2026-02-04 10:33:27.631840",
+ "modified": "2026-02-12 14:59:37.574792",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicles",
