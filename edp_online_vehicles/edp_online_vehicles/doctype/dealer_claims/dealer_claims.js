@@ -66,7 +66,39 @@ frappe.ui.form.on("Dealer Claims", {
 	// 		}
 	// 	});
 	// },
+	claim_status(frm){
+		if (frm.doc.claim_status == "Pending") {
+			frm.add_custom_button("Updated", function () {
+				frm.set_value("claim_status", "Claim Updated");
+				frm.save();
+			});
+			frm.add_custom_button("Submit Claim", function () {
+				frm.set_value("claim_status", "Claim Submitted");
+				frm.save();
+			});
+		}
+		else{
+			frm.remove_custom_button('Updated');
+			frm.remove_custom_button('Submit Claim');
+		}
+	},
 	refresh(frm) {
+		if (frappe.user.has_role("Claim Administrator")) {
+			frm.set_df_property("claim_status", "read_only", 0);
+		} else {
+			frm.set_df_property("claim_status", "read_only", 1);
+		}
+		if (frm.doc.claim_status == "Pending") {
+			frm.add_custom_button("Updated", function () {
+				frm.set_value("claim_status", "Claim Updated");
+				frm.save();
+			});
+			frm.add_custom_button("Submit Claim", function () {
+				frm.set_value("claim_status", "Claim Submitted");
+				frm.save();
+			});
+		}
+
 		// Child table field filter for VIN
         frm.fields_dict["table_exgk"].grid.get_field("vin_serial_no").get_query = function(doc, cdt, cdn) {
 
