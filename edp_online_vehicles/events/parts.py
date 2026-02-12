@@ -7,7 +7,7 @@ def update_hq_from_dn_after_insert(doc, method):
     Fully fixed: row-wise delivery %, parent totals, only submitted DNs considered.
     """
 
-    hq_name = doc.hq_part_order
+    hq_name = doc.custom_hq_part_order
     if not hq_name:
         return 
 

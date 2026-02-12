@@ -354,4 +354,12 @@ fixtures = [
 			]
 		],
 	},
+       {
+        "dt": "Custom Field",
+        "filters": [
+            ["name", "in", [
+                "Delivery Note-custom_hq_part_order",
+            ]]
+        ]
+    }
 ]
