@@ -178,7 +178,6 @@
    "label": "Floorplan "
   },
   {
-   "default": "Now",
    "fieldname": "order_date_time",
    "fieldtype": "Datetime",
    "label": "Order Date/ Time"
@@ -225,7 +224,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-02-12 16:09:39.576272",
+ "modified": "2026-02-13 12:44:19.588589",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicle Order",

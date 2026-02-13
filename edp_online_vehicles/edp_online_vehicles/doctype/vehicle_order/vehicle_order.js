@@ -1105,6 +1105,7 @@ frappe.ui.form.on("Vehicle Order", {
 						minDate: new Date(frappe.datetime.get_today())
 					});
 				}
+				frm.set_value('order_date_time', frappe.datetime.now_datetime());
 			});
 
 
@@ -1121,6 +1122,7 @@ frappe.ui.form.on("Vehicle Order", {
 		} else {
 			console.log("vehicles_basket grid is not defined on this form.");
 		}
+		
 	},
 
 	deliver_to_dealer: function (frm) {
@@ -2954,6 +2956,7 @@ frappe.ui.form.on("Vehicles Order Item", {
 
 	colour: function (frm, cdt, cdn) {
 		var row = locals[cdt][cdn];
+		check_and_fetch(frm, cdt, cdn);
 
 		let order_from = row.order_from;
 		let anycolor = "Any Colour - " + row.model;
@@ -3358,6 +3361,38 @@ frappe.ui.form.on("Vehicles Order Item", {
 	},
 });
 
+function check_and_fetch(frm, cdt, cdn) {
+    let row = locals[cdt][cdn];
+
+    if (!row.model || !row.colour) {
+        return;
+    }
+
+    frappe.call({
+        method: "edp_online_vehicles.events.add_comment.get_dealers",
+        args: {
+            model: row.model,
+            colour: row.colour
+        },
+        callback: function (r) {
+            console.log("Response", r.message);
+
+            let options = [];
+            if (r.message && r.message.length > 0) {
+                options = r.message;
+            }
+
+			if (options.length) {
+				setTimeout(() => {
+					updateDealerOptions(frm, options);
+				}, 100);
+			}
+            // Update the dropdown options for both possible field names
+        }
+    });
+}
+
+
 const calculate_sub_total = (frm, field_name, table_name) => {
 	let sub_total = 0;
 	for (const row of frm.doc[table_name]) {
@@ -3373,17 +3408,11 @@ const calculate_sub_total = (frm, field_name, table_name) => {
 };
 
 function updateDealerOptions(frm, options) {
-	if (!options || options.length === 0) {
+    if (!options || options.length === 0) {
 		console.warn("No dealers available to set.");
 		return;
-	}
-
-	frm.fields_dict.vehicles_basket.grid.update_docfield_property(
-		"dealer",
-		"options",
-		[""].concat(options),
-	);
-
+    }
+    frm.fields_dict.vehicles_basket.grid.update_docfield_property("dealer","options", [""].concat(options));
 	// frm.refresh_field('vehicles_basket')
 }
 

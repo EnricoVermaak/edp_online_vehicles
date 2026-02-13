@@ -9,6 +9,7 @@ let customer_address = false;
 
 frappe.ui.form.on("Vehicle Retail", {
 	refresh(frm) {
+	
 		if (frm.doc.docstatus == 1) {
 			frm.toggle_enable(["status"], false);
 			frm.toggle_enable(["retail_date"], false);
@@ -42,6 +43,7 @@ frappe.ui.form.on("Vehicle Retail", {
 				});
 			}
 		}
+
 
 		let status_order = [];
 		let myPromise = new Promise((resolve, reject) => {
@@ -98,9 +100,7 @@ frappe.ui.form.on("Vehicle Retail", {
 			frappe.db.get_single_value(
 				"Vehicle Stock Settings",
 				"allow_microdot_allocation_on_retail"
-			).then(enabled => {
-				console.log("loraaaaa",enabled);
-				
+			).then(enabled => {				
 
 				frm.set_df_property("vehicle_microdot", "hidden", !enabled);
 				frm.refresh_field("vehicle_microdot");
@@ -112,6 +112,13 @@ frappe.ui.form.on("Vehicle Retail", {
 				frm.set_value("status", previous_status_value);
 			}
 		});
+			frm.set_query("vehicle_microdot", function() {
+            return {
+                filters: {
+                    "status": "Received",
+                }
+            };
+        });
 
 		frappe.call({
 			method: "edp_online_vehicles.events.get_settings.get_retail_settings",
