@@ -5,61 +5,61 @@ let stockNo = "";
 
 frappe.ui.form.on("Vehicles Shipment", {
 
-    validate: function(frm) {
+	validate: function (frm) {
 
-        frappe.call({
-            method: "frappe.client.get",
-            args: {
-                doctype: "Vehicle Stock Settings",
-                name: "Vehicle Stock Settings"
-            },
-            callback: function(r) {
-                if (!r.message) return;
+		frappe.call({
+			method: "frappe.client.get",
+			args: {
+				doctype: "Vehicle Stock Settings",
+				name: "Vehicle Stock Settings"
+			},
+			callback: function (r) {
+				if (!r.message) return;
 
-                let settings = r.message;
+				let settings = r.message;
 
-                if (!settings.automatically_create_stock_number) {
-                    return;
-                }
+				if (!settings.automatically_create_stock_number) {
+					return;
+				}
 
-                let last_no = settings.last_automated_stock_no;
+				let last_no = settings.last_automated_stock_no;
 
-                if (!last_no) return;
-                let match = last_no.match(/^([a-zA-Z]+)(\d+)$/);
-                if (!match) return;
+				if (!last_no) return;
+				let match = last_no.match(/^([a-zA-Z]+)(\d+)$/);
+				if (!match) return;
 
-                let prefix = match[1];
-                let number = parseInt(match[2]);
+				let prefix = match[1];
+				let number = parseInt(match[2]);
 
-                let updated = false;
+				let updated = false;
 
-                frm.doc.vehicles_shipment_items.forEach(row => {
+				frm.doc.vehicles_shipment_items.forEach(row => {
 
-                    if (!row.stock_no) {
-                        number += 1;
-                        row.stock_no = prefix + number;
-                        updated = true;
-                    }
+					if (!row.stock_no) {
+						number += 1;
+						row.stock_no = prefix + number;
+						updated = true;
+					}
 
-                });
+				});
 
-                if (updated) {
-                    frm.refresh_field("vehicles_shipment_items");
-                    frappe.call({
-                        method: "frappe.client.set_value",
-                        args: {
-                            doctype: "Vehicle Stock Settings",
-                            name: "Vehicle Stock Settings",
-                            fieldname: {
-                                last_automated_stock_no: prefix + number
-                            }
-                        }
-                    });
-                }
+				if (updated) {
+					frm.refresh_field("vehicles_shipment_items");
+					frappe.call({
+						method: "frappe.client.set_value",
+						args: {
+							doctype: "Vehicle Stock Settings",
+							name: "Vehicle Stock Settings",
+							fieldname: {
+								last_automated_stock_no: prefix + number
+							}
+						}
+					});
+				}
 
-            }
-        });
-    },
+			}
+		});
+	},
 
 	refresh(frm) {
 		frm.set_query("target_warehouse", () => {
@@ -82,444 +82,148 @@ frappe.ui.form.on("Vehicles Shipment", {
 					}
 				});
 		}
-		if (!frm.is_new() && frm.doc.docstatus === 0) {
-			frm.add_custom_button(__("Allocate To Order"), () => {
-				// 1) Get selected rows
-				const child_grid = frm.fields_dict.vehicles_shipment_items?.grid;
-				if (!child_grid) {
-					frappe.throw(__("Child table 'vehicles_shipment_items' not found on this form."));
-				}
+		frm.add_custom_button(__("Receive"), function () {
+			frappe.dom.freeze();
 
-				const selected_rows =
-					(child_grid.get_selected_children && child_grid.get_selected_children()) || [];
+			let selected_items = [];
+			let selected_rows = [];
+			let updated = false;
 
-				if (!selected_rows.length) {
-					frappe.throw(__("Please select at least one item to allocate."));
-				}
+			// ────────────────────────────────────────────────
+			//  First: Get current last stock number (if auto-create is enabled)
+			// ────────────────────────────────────────────────
+			frappe.call({
+				method: "frappe.client.get",
+				args: {
+					doctype: "Vehicle Stock Settings",
+					name: "Vehicle Stock Settings"
+				},
+				async: false,          // ← important: we need this value synchronously
+				callback: function (r) {
+					if (!r.message) return;
+					let settings = r.message;
 
-				// 2) Validate selected rows
-				selected_rows.forEach((row) => {
-					if (!row.model_code) frappe.throw(__("Please select models for all selected items."));
-					if (!row.colour) frappe.throw(__("Please select a colour for all selected items."));
-					if (!row.vin_serial_no) frappe.throw(__("Please select VIN/Serial No for all selected items."));
-				});
-
-				// 3) Build dialog rows
-				const dialog_rows = selected_rows.map(r => ({
-					vin_serial_no: r.vin_serial_no,
-					model: r.model_code,
-					colour: r.colour,
-					order: r.reserve_to_order || null,
-					order_options: [],
-					status: r.status
-				}));
-
-				// 4) Create dialog
-				const d = new frappe.ui.Dialog({
-					title: __("Allocate To Order"),
-					size: "extra-large",
-					fields: [
-						{
-							fieldname: "order_table",
-							fieldtype: "Table",
-							label: __("Selected Items"),
-							cannot_add_rows: true,
-							cannot_delete_rows: true,
-							in_place_edit: true,
-							data: dialog_rows,
-							fields: [
-								{
-									fieldname: "vin_serial_no",
-									label: __("VIN/Serial No"),
-									fieldtype: "Data",
-									read_only: 1,
-									in_list_view: 1,
-									columns: 2
-								},
-								{
-									fieldname: "model",
-									label: __("Model"),
-									fieldtype: "Data",
-									read_only: 1,
-									in_list_view: 1,
-									columns: 2
-								},
-								{
-									fieldname: "order",
-									label: __("Order"),
-									fieldtype: "Link",
-									options: "Head Office Vehicle Orders",
-									reqd: 1,
-									in_list_view: 1,
-									columns: 4
-								},
-								{
-									fieldname: "dealer",
-									label: __("Dealer"),
-									fieldtype: "Data",
-									read_only: 1,
-									in_list_view: 1,
-									columns: 1
-								}
-							]
-						}
-					],
-					primary_action_label: __("Allocate"),
-					primary_action() {
-						const allocations = d.fields_dict.order_table.grid.get_data().map(r => ({
-							vin_serial_no: r.vin_serial_no,
-							order: r.order
-						}));
-
-						allocations.forEach(row => {
-							if (!row.order) return;
-
-							frm.doc.vehicles_shipment_items.forEach(vin => {
-
-								if ((vin.vin_serial_no === row.vin_serial_no) && (!vin.reserve_to_order) && row.order !== "No orders Available" && row.order !== "Vehicle already received") {
-
-									frappe.model.set_value(
-										vin.doctype,
-										vin.name,
-										"reserve_to_order",
-										row.order
-									);
-
-								}
-							});
-						});
-
-						frm.refresh_field("vehicles_shipment_items");
-						frappe.msgprint("Vehicles has successfully been allocated orders.")
-						d.hide();
-						frm.save()
+					if (!settings.automatically_create_stock_number) {
+						process_selected_items(); // skip numbering
+						return;
 					}
-				});
 
-				// 5) Per-row Link filtering
-				const dialog_grid = d.fields_dict.order_table.grid;
+					let last_no = settings.last_automated_stock_no || "";
+					let match = last_no.match(/^([a-zA-Z]+)(\d+)$/);
+					if (!match) {
+						frappe.throw("Last stock number format is invalid in settings.");
+						return;
+					}
 
-				dialog_grid.get_field("order").get_query = function (doc, cdt, cdn) {
-					// ✅ Dialog tables sometimes don't have locals[cdt][cdn]
-					const grid_row = dialog_grid.get_row(cdn);
-					const r = grid_row ? grid_row.doc : null;
+					let prefix = match[1];
+					let number = parseInt(match[2]);
 
-					const opts = (r && Array.isArray(r.order_options) && r.order_options.length)
-						? r.order_options
-						: ["__none__"];
-
-					return {
-						filters: [["Head Office Vehicle Orders", "name", "in", opts]],
-						order_by: "order_datetime asc"
-					};
-				};
-
-
-				// 6) Fetch options + set defaults, then refresh table and show
-				const used_orders = new Set();
-
-				const fetch_promises = dialog_rows.map(row => {
-					return new Promise(resolve => {
-
-						// If already has order assigned before dialog
-						if (row.order) {
-
-							used_orders.add(row.order);   // mark as used immediately
-
-							frappe.call({
-								method: "edp_online_vehicles.events.get_available_orders.get_order_dealer",
-								args: { order_no: row.order },
-								callback: function (r) {
-									row.dealer = r.message;
-									row._order_locked = 1;
-									resolve();
-								},
-								error: () => resolve()
-							});
-
-							return;
-						}
-
-						// If vehicle already received
-						if (row.status === "Received") {
-							row.order = "Vehicle already received";
-							row._order_locked = 1;
-							resolve();
-							return;
-						}
-
-						// Fetch available orders
-						frappe.call({
-							method: "edp_online_vehicles.events.get_available_orders.get_unallocated_hq_deals",
-							args: { model: row.model, colour: row.colour },
-							callback: function (r) {
-
-								let orders = r.message || [];
-
-								// 🚀 Remove orders already used in this dialog
-								orders = orders.filter(o => !used_orders.has(o.name));
-
-								if (orders.length > 0) {
-
-									row.order_options = orders.map(o => o.name);
-									row.order = orders[0].name;
-									row.dealer = orders[0].order_placed_by || null;
-
-									used_orders.add(row.order);  // mark this one as used
-
-								} else {
-									row.order = "No orders Available";
-									row._order_locked = 1;
-								}
-
-								resolve();
-							},
-							error: () => resolve()
-						});
-
-					});
-				});
-				function remove_check_column(grid) {
-					const $w = grid.wrapper;
-
-					// remove header + body "row-check" cells entirely
-					$w.find('.grid-heading-row .row-check').remove();
-					$w.find('.grid-body .row-check').remove();
-				}
-
-				// wrap refresh so it happens every time the grid redraws
-				function patch_grid_refresh(grid) {
-					if (grid.__no_check_patched) return;
-					grid.__no_check_patched = true;
-
-					const _refresh = grid.refresh.bind(grid);
-					grid.refresh = function () {
-						_refresh();
-						remove_check_column(grid);
-					};
-				}
-
-				// usage (after you have dialog_grid)
-				patch_grid_refresh(dialog_grid);
-
-				Promise.all(fetch_promises).then(() => {
-					dialog_rows.sort((a, b) => {
-
-						// Define priority ranking
-						const getPriority = (row) => {
-							if (row.order === "Vehicle already received") return 4;
-							if (row.order === "No orders Available") return 3;
-							if (row._order_locked) return 2;
-							return 1; // normal rows first
-						};
-
-						return getPriority(a) - getPriority(b);
-					});
-
-					dialog_grid.refresh(); // this will auto-strip the column now
-					d.show();
-
-					setTimeout(() => {
-						dialog_grid.grid_rows.forEach((grid_row) => {
-							if (!grid_row.doc._order_locked) return;
-
-							// Disable the cell in the grid row (per-row, no shared state)
-							const $cell = grid_row.row && grid_row.row.find('[data-fieldname="order"]');
-							if ($cell && $cell.length) {
-								$cell.find("input").prop("disabled", true).attr("readonly", true);
-								$cell.find(".link-btn, button").prop("disabled", true);
-								// stop click from opening link picker
-								$cell.css("pointer-events", "none");
-							}
-
-							// If user opens the row form, disable it there too
-							if (grid_row.grid_form?.fields_dict?.order) {
-								const ctrl = grid_row.grid_form.fields_dict.order;
-								ctrl.$input?.prop("disabled", true).attr("readonly", true);
-								ctrl.$wrapper?.css("pointer-events", "none");
-							}
-						});
-					}, 120);
-				});
-
-				// Promise.all(fetch_promises).then(() => {
-				// 	dialog_grid.refresh(); // ensure rows exist
-
-				// 	const $g = dialog_grid.wrapper.find('.form-grid');
-
-				// 	// Hide the entire checkbox column (header + rows)
-				// 	$g.find('.grid-heading-row .row-check').css({ display: 'none', width: 0, padding: 0, margin: 0 });
-				// 	$g.find('.grid-body .row-check').css({ display: 'none', width: 0, padding: 0, margin: 0 });
-
-				// 	// Optional: if you ALSO want to remove the "No." column
-				// 	// $g.find('.grid-heading-row .row-index, .grid-body .row-index')
-				// 	//   .css({ display: 'none', width: 0, padding: 0, margin: 0 });
-
-				// 	// Remove any leftover left spacing some layouts add
-				// 	$g.find('.grid-heading-row .grid-row .data-row').css({ 'margin-left': 0, 'padding-left': 0 });
-				// 	$g.find('.grid-body .data-row').css({ 'margin-left': 0, 'padding-left': 0 });
-
-				// 	// Force reflow so the bootstrap cols recalc nicely
-				// 	$g[0]?.offsetHeight;
-
-				// 	dialog_grid.refresh();
-				// 	d.show();
-
-				// 	setTimeout(() => {
-				// 		dialog_grid.grid_rows.forEach((grid_row) => {
-				// 			if (!grid_row.doc._order_locked) return;
-
-				// 			// Disable the cell in the grid row (per-row, no shared state)
-				// 			const $cell = grid_row.row && grid_row.row.find('[data-fieldname="order"]');
-				// 			if ($cell && $cell.length) {
-				// 				$cell.find("input").prop("disabled", true).attr("readonly", true);
-				// 				$cell.find(".link-btn, button").prop("disabled", true);
-				// 				// stop click from opening link picker
-				// 				$cell.css("pointer-events", "none");
-				// 			}
-
-				// 			// If user opens the row form, disable it there too
-				// 			if (grid_row.grid_form?.fields_dict?.order) {
-				// 				const ctrl = grid_row.grid_form.fields_dict.order;
-				// 				ctrl.$input?.prop("disabled", true).attr("readonly", true);
-				// 				ctrl.$wrapper?.css("pointer-events", "none");
-				// 			}
-				// 		});
-				// 	}, 120);
-				// });
-
-
-			});
-			frm.add_custom_button(__("Receive"), function () {
-				frappe.dom.freeze();
-
-				var selected_items = [];
-				var selected_rows = [];
-				var promises = [];
-
-				frm.doc["vehicles_shipment_items"].forEach(function (row) {
-					if (row.__checked) {
-						if (!row.target_warehouse) {
+					// ────────────────────────────────────────────────
+					//  Assign stock numbers to checked rows that don't have one
+					// ────────────────────────────────────────────────
+					frm.doc.vehicles_shipment_items.forEach(row => {
+						if (row.__checked && !row.stock_no) {
+							number += 1;
 							frappe.model.set_value(
 								row.doctype,
 								row.name,
-								"target_warehouse",
-								frm.doc.target_warehouse
+								"stock_no",
+								prefix + number
 							);
+							updated = true;
 						}
+					});
 
-						if (!row.colour) {
-							frappe.throw(
-								"Please ensure all selected vehicles have colours assigned to them."
-							);
-						}
+					if (updated) {
+						frm.refresh_field("vehicles_shipment_items");
 
-						if (row.vin_serial_no) {
-							const promise = frappe.db
-								.get_doc("Vehicle Stock Settings")
-								.then((setting_doc) => {
-									if (setting_doc.automatically_create_stock_number) {
-										var lastStockNo = stockNo;
-										const nextStockNo = incrementStockNumber(lastStockNo);
-										console.log(nextStockNo);
-
-										frappe.model.set_value(
-											row.doctype,
-											row.name,
-											"stock_no",
-											nextStockNo
-										);
-									}
-									selected_items.push(row);
-								});
-							promises.push(promise);
-						} else {
-							frappe.throw(
-								"Please ensure all selected vehicles have VIN/Serial No's assigned to them."
-							);
-						}
-						selected_rows.push(row);
-
+						// Update the last used number in settings
+						frappe.call({
+							method: "frappe.client.set_value",
+							args: {
+								doctype: "Vehicle Stock Settings",
+								name: "Vehicle Stock Settings",
+								fieldname: "last_automated_stock_no",
+								value: prefix + number
+							},
+							freeze: true,
+							freeze_message: __("Updating stock number sequence...")
+						});
 					}
+
+					process_selected_items();
+				}
+			});
+
+			function process_selected_items() {
+				// Your existing validation + collection logic
+				frm.doc.vehicles_shipment_items.forEach(function (row) {
+					if (!row.__checked) return;
+
+					if (!row.target_warehouse) {
+						frappe.model.set_value(
+							row.doctype,
+							row.name,
+							"target_warehouse",
+							frm.doc.target_warehouse
+						);
+					}
+
+					if (!row.colour) {
+						frappe.throw("Please ensure all selected vehicles have colours assigned.");
+					}
+
+					if (!row.vin_serial_no) {
+						frappe.throw("Please ensure all selected vehicles have VIN/Serial No assigned.");
+					}
+
+					selected_items.push(row);
+					selected_rows.push(row);
 				});
+
+				if (selected_items.length === 0) {
+					frappe.dom.unfreeze();
+					frappe.throw("Please select at least one item.");
+					return;
+				}
+
+				// Your existing create_linked_plans call
 				frappe.call({
 					method: "edp_online_vehicles.events.linked_plans.create_linked_plans",
 					args: { selected_items: JSON.stringify(selected_rows) },
 				}).then(() => {
-					console.log("Plans created successfully!");
+					console.log("Plans created successfully");
 				});
 
-
-				// Wait for all promises to resolve
-				Promise.all(promises).then(() => {
-					// Update Stockno counter in Vehicle Stock Settings
-					frappe.call({
-						method: "edp_online_vehicles.events.update_stock_settings.update_stock_no",
-						args: {
-							stockNo: stockNo,
-						},
-					});
-
-					if (selected_items.length > 0) {
-						// ------------------------------------------------------
-						// Create Vehicle Linked Warranty & Service Plan Logic
-						// ------------------------------------------------------
-						let creation_promises = [];
-
-						Promise.all(creation_promises).then(() => {
-							console.log("All Warranty & Service Plan docs created successfully!");
+				// Then create stock entry
+				frm.call("create_stock_entry", {
+					selected_items: JSON.stringify(selected_items),
+				}).then((r) => {
+					if (r.message === "Received") {
+						selected_items.forEach(row => {
+							frappe.model.set_value(
+								row.doctype,
+								row.name,
+								"status",
+								"Received"
+							);
 						});
 
-						// ------------------------------------------------------
-						// Continue with stock entry logic
-						// ------------------------------------------------------
-						frm
-							.call("create_stock_entry", {
-								selected_items: JSON.stringify(selected_items),
-							})
-							.then((r) => {
-								if (r.message) {
-									if (r.message == "Received") {
-										for (let row of selected_items) {
-											frappe.model.set_value(
-												row.doctype,
-												row.name,
-												"status",
-												"Received"
-											);
-										}
-
-										frappe.dom.unfreeze();
-										frm.save_or_update();
-
-										const host = window.location.hostname;
-										const isMahindra = [
-											"msademo.edponline.co.za",
-											"msa.edponline.co.za",
-											"mahindra.localhost",
-										].includes(host);
-
-										if (isMahindra) {
-											frappe.call({
-												method:
-													"edp_api.api.TAC.tac_integration.tac_landing_outgoing",
-												args: {
-													selected_items: JSON.stringify(selected_items),
-												},
-											});
-										}
-									}
-								}
-							});
-
-					} else {
+						frm.save_or_update();
 						frappe.dom.unfreeze();
-						frappe.throw("Please Select at least One Item.");
+
+						// Mahindra TAC integration (if applicable)
+						const host = window.location.hostname;
+						if (["msademo.edponline.co.za", "msa.edponline.co.za", "mahindra.localhost"].includes(host)) {
+							frappe.call({
+								method: "edp_api.api.TAC.tac_integration.tac_landing_outgoing",
+								args: { selected_items: JSON.stringify(selected_items) }
+							});
+						}
 					}
 				});
-			});
-		}
-
+			}
+		});
 
 
 		frm.set_query(
@@ -1150,19 +854,19 @@ function handle_custom_buttons(frm) {
 	}
 }
 
-function incrementStockNumber(stockNumber) {
-	// Split the prefix and number part
-	const prefix = stockNumber.match(/[A-Za-z]+/)[0];
-	const number = stockNumber.match(/\d+/)[0];
+// function incrementStockNumber(stockNumber) {
+// 	// Split the prefix and number part
+// 	const prefix = stockNumber.match(/[A-Za-z]+/)[0];
+// 	const number = stockNumber.match(/\d+/)[0];
 
-	// Increment the numeric part
-	const incrementedNumber = (parseInt(number, 10) + 1)
-		.toString()
-		.padStart(6, "0");
+// 	// Increment the numeric part
+// 	const incrementedNumber = (parseInt(number, 10) + 1)
+// 		.toString()
+// 		.padStart(6, "0");
 
-	// Combine prefix and incremented number
-	return prefix + incrementedNumber;
-}
+// 	// Combine prefix and incremented number
+// 	return prefix + incrementedNumber;
+// }
 
 
 

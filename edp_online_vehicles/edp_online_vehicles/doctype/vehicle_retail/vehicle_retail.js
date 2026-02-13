@@ -97,6 +97,17 @@ frappe.ui.form.on("Vehicle Retail", {
 	},
 	
 	onload: function (frm) {
+			frm.doc.mandatory_documents = [];
+
+			// Fetch settings and populate child tables
+			frappe.db.get_doc("Vehicle Stock Settings").then((doc) => {
+				for (let man_row of doc.mandetory_documents) {
+					frm.add_child("mandatory_documents", {
+						document_name: man_row.document_name,
+					});
+				}
+				frm.refresh_field("mandatory_documents");
+			});
 			frappe.db.get_single_value(
 				"Vehicle Stock Settings",
 				"allow_microdot_allocation_on_retail"
