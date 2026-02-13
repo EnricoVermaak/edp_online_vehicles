@@ -306,8 +306,7 @@
    "in_standard_filter": 1,
    "label": "Vin/Serial No",
    "options": "Vehicle Stock",
-   "read_only": 1,
-   "unique": 1
+   "read_only": 1
   },
   {
    "fieldname": "shipment_no",

@@ -4,6 +4,63 @@
 let stockNo = "";
 
 frappe.ui.form.on("Vehicles Shipment", {
+
+    validate: function(frm) {
+
+        frappe.call({
+            method: "frappe.client.get",
+            args: {
+                doctype: "Vehicle Stock Settings",
+                name: "Vehicle Stock Settings"
+            },
+            callback: function(r) {
+                if (!r.message) return;
+
+                let settings = r.message;
+
+                if (!settings.automatically_create_stock_number) {
+                    return;
+                }
+
+                let last_no = settings.last_automated_stock_no;
+
+                if (!last_no) return;
+                let match = last_no.match(/^([a-zA-Z]+)(\d+)$/);
+                if (!match) return;
+
+                let prefix = match[1];
+                let number = parseInt(match[2]);
+
+                let updated = false;
+
+                frm.doc.vehicles_shipment_items.forEach(row => {
+
+                    if (!row.stock_no) {
+                        number += 1;
+                        row.stock_no = prefix + number;
+                        updated = true;
+                    }
+
+                });
+
+                if (updated) {
+                    frm.refresh_field("vehicles_shipment_items");
+                    frappe.call({
+                        method: "frappe.client.set_value",
+                        args: {
+                            doctype: "Vehicle Stock Settings",
+                            name: "Vehicle Stock Settings",
+                            fieldname: {
+                                last_automated_stock_no: prefix + number
+                            }
+                        }
+                    });
+                }
+
+            }
+        });
+    },
+
 	refresh(frm) {
 		frm.set_query("target_warehouse", () => {
 			return {
@@ -513,13 +570,13 @@ frappe.ui.form.on("Vehicles Shipment", {
 		//     }
 		// };
 
-		frappe.db.get_doc("Vehicle Stock Settings").then((setting_doc) => {
-			if (setting_doc.automatically_create_stock_number) {
-				stockNo = setting_doc.last_automated_stock_no;
+		// frappe.db.get_doc("Vehicle Stock Settings").then((setting_doc) => {
+		// 	if (setting_doc.automatically_create_stock_number) {
+		// 		stockNo = setting_doc.last_automated_stock_no;
 
-				console.log(stockNo);
-			}
-		});
+		// 		console.log(stockNo);
+		// 	}
+		// });
 	},
 	before_save: async function (frm) {
 		let received_qty = 0;

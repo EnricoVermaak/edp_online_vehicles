@@ -168,64 +168,60 @@ has_permission = {
 # Hook on document methods and events
 
 doc_events = {
-    "DocShare": {
-        "after_insert": "edp_online_vehicles.events.share_edp.after_insert",
-    },
-    "DocType": {
-        "validate": "edp_online_vehicles.events.developer_validation.get_permission"
-    },
-    "Property Setter": {
-        "validate": "edp_online_vehicles.events.developer_validation.get_permission"
-    },
-    "Custom Field": {
-        "validate": "edp_online_vehicles.events.developer_validation.get_permission"
-    },
-    "ToDo": {"on_update": "edp_online_vehicles.events.share_edp.remove_share"},
-    "Customer": {
-        "autoname": "edp_online_vehicles.events.customer.autoname",
-        "on_update": "edp_online_vehicles.events.customer_check_filed.update_vehicles_services",
-    },
-    "Delivery Trip": {
-        "validate": "edp_online_vehicles.events.create_si.create_si_from_delivery_trip",
-    },
-    "Company": {
-        "before_insert": "edp_online_vehicles.events.adjust_company_name.adjust_company_name",
-        "after_insert": "edp_online_vehicles.events.create_customer.create_customer_if_checked",
-    },
-    "Sales Invoice": {
-        "autoname": "edp_online_vehicles.events.create_si.sales_invoice_name",
-    },
-    "Pick List": {
-        "before_insert": "edp_online_vehicles.events.sale_order_custom_job_reference.set_job_card_no_on_pick_list"
-    },
-    "Delivery Note": {
-        "before_insert": "edp_online_vehicles.events.sale_order_custom_job_reference.set_job_card_no_delivery_note",
-        "on_submit": [
-            "edp_online_vehicles.events.generate_pdf.attach_pdf",
-            "edp_online_vehicles.events.auto_move_stock.auto_move_stock_delivery_note",
-        ],
-    },
-    "Stock Entry": {
-        "on_submit": "edp_online_vehicles.edp_online_vehicles.doctype.vehicle_stock.vehicle_stock.set_vehicle_received_date",
-    },
-    "Employee Onboarding": {
-        "on_submit": "edp_online_vehicles.events.create_final_seperation_doc.create_final_onboarding_doc"
-    },
-    "Employee Separation": {
-        "on_submit": "edp_online_vehicles.events.create_final_seperation_doc.create_final_seperation_doc"
-    },
-    "Head Office Vehicle Orders": {
-        "after_insert": "edp_online_vehicles.events.create_sales_order.create_sales_order_hq_equip_sale"
-    },
-    "Vehicles Dealer to Dealer Order": {
-        "after_insert": "edp_online_vehicles.events.create_sales_order.create_sales_order_dealer_equip_sale"
-    },
-    "Payment Entry": {
-        "on_submit": "edp_online_vehicles.events.check_sales_invoice.check_sales_invoice_on_payment"
-    },
-    "Item": {
-        "after_insert": "edp_online_vehicles.events.check_item_settings.check_item_settings"
-    },
+	"DocShare": {
+		"after_insert": "edp_online_vehicles.events.share_edp.after_insert",
+	},
+	"DocType": {"validate": "edp_online_vehicles.events.developer_validation.get_permission"},
+	"Property Setter": {
+		"validate": "edp_online_vehicles.events.developer_validation.get_permission"
+	},
+	"Custom Field": {"validate": "edp_online_vehicles.events.developer_validation.get_permission"},
+	"ToDo": {"on_update": "edp_online_vehicles.events.share_edp.remove_share"},
+	"Customer": {
+		"autoname": "edp_online_vehicles.events.customer.autoname",
+		"on_update": "edp_online_vehicles.events.customer_check_filed.update_vehicles_services",
+	},
+	"Delivery Trip": {
+		"validate": "edp_online_vehicles.events.create_si.create_si_from_delivery_trip",
+	},
+	"Company": {
+		"before_insert": "edp_online_vehicles.events.adjust_company_name.adjust_company_name",
+		"after_insert": "edp_online_vehicles.events.create_customer.create_customer_if_checked",
+	},
+	"Sales Invoice": {
+		"autoname": "edp_online_vehicles.events.create_si.sales_invoice_name",
+	},
+	"Pick List": {
+		"before_insert": "edp_online_vehicles.events.sale_order_custom_job_reference.set_job_card_no_on_pick_list"
+	},
+	"Delivery Note": {
+		"before_insert": "edp_online_vehicles.events.sale_order_custom_job_reference.set_job_card_no_delivery_note",
+		"on_submit": [
+			"edp_online_vehicles.events.generate_pdf.attach_pdf",
+			"edp_online_vehicles.events.auto_move_stock.auto_move_stock_delivery_note",
+		],
+        "on_update": "edp_online_vehicles.events.part_order.update_part_order",
+        "after_insert": "edp_online_vehicles.events.parts.update_hq_from_dn_after_insert",
+	},
+	"Stock Entry": {
+		"on_submit": "edp_online_vehicles.edp_online_vehicles.doctype.vehicle_stock.vehicle_stock.set_vehicle_received_date",
+	},
+	"Employee Onboarding": {
+		"on_submit": "edp_online_vehicles.events.create_final_seperation_doc.create_final_onboarding_doc"
+	},
+	"Employee Separation": {
+		"on_submit": "edp_online_vehicles.events.create_final_seperation_doc.create_final_seperation_doc"
+	},
+	"Head Office Vehicle Orders": {
+		"after_insert": "edp_online_vehicles.events.create_sales_order.create_sales_order_hq_equip_sale"
+	},
+	"Vehicles Dealer to Dealer Order": {
+		"after_insert": "edp_online_vehicles.events.create_sales_order.create_sales_order_dealer_equip_sale"
+	},
+	"Payment Entry": {
+		"on_submit": "edp_online_vehicles.events.check_sales_invoice.check_sales_invoice_on_payment"
+	},
+	"Item": {"after_insert": "edp_online_vehicles.events.check_item_settings.check_item_settings"},
     "Dealer Claims": {
         "validate": "edp_online_vehicles.edp_online_vehicles.doctype.dealer_claims.dealer_claims.dealer",
         "after_save": "edp_online_vehicles.edp_online_vehicles.doctype.dealer_claims.dealer_claims.after_save",
@@ -329,6 +325,7 @@ auth_hooks = ["edp_online_vehicles.auth.set_default"]
 # }
 
 fixtures = [
+<<<<<<< HEAD
     {
         "dt": "Property Setter",
         "filters": [["name", "in", ["Delivery Trip-departure_time-reqd"]]],
@@ -352,4 +349,32 @@ fixtures = [
             ]
         ],
     },
+=======
+	{"dt": "Property Setter", "filters": [["name", "in", ["Delivery Trip-departure_time-reqd"]]]},
+	{"dt": "Website Sidebar", "filters": [["name", "in", ["EDP Sidebar"]]]},
+	{
+		"dt": "Web Form",
+		"filters": [["name", "in", ["rfs", "vehicles-warranty-claim", "vehicles", "services"]]],
+	},
+	{
+		"dt": "Portal Settings",
+		"filters": [
+			[
+				"name",
+				"in",
+				[
+					"Portal Settings",
+				],
+			]
+		],
+	},
+       {
+        "dt": "Custom Field",
+        "filters": [
+            ["name", "in", [
+                "Delivery Note-custom_hq_part_order",
+            ]]
+        ]
+    }
+>>>>>>> 41762e501e93dd5628783d653b1ba50f0e13e485
 ]

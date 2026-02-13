@@ -9,6 +9,7 @@ let customer_address = false;
 
 frappe.ui.form.on("Vehicle Retail", {
 	refresh(frm) {
+	
 		if (frm.doc.docstatus == 1) {
 			frm.toggle_enable(["status"], false);
 			frm.toggle_enable(["retail_date"], false);
@@ -37,11 +38,12 @@ frappe.ui.form.on("Vehicle Retail", {
 								},
 							});
 						},
-						() => {},
+						() => { },
 					);
 				});
 			}
 		}
+
 
 		let status_order = [];
 		let myPromise = new Promise((resolve, reject) => {
@@ -93,13 +95,30 @@ frappe.ui.form.on("Vehicle Retail", {
 
 		set_vin_query(frm);
 	},
+	
 	onload: function (frm) {
+			frappe.db.get_single_value(
+				"Vehicle Stock Settings",
+				"allow_microdot_allocation_on_retail"
+			).then(enabled => {				
+
+				frm.set_df_property("vehicle_microdot", "hidden", !enabled);
+				frm.refresh_field("vehicle_microdot");
+
+			});
 		// Reset the field to its previous status if no new value is selected
 		$(document).on("blur", '[data-fieldname="status"]', function () {
 			if (!frm.doc.status || frm.doc.status === "") {
 				frm.set_value("status", previous_status_value);
 			}
 		});
+			frm.set_query("vehicle_microdot", function() {
+            return {
+                filters: {
+                    "status": "Received",
+                }
+            };
+        });
 
 		frappe.call({
 			method: "edp_online_vehicles.events.get_settings.get_retail_settings",
@@ -255,7 +274,7 @@ frappe.ui.form.on("Vehicle Retail", {
 			frappe.validated = false;
 		}
 	},
-		after_submit(frm) {
+	after_submit(frm) {
 		for (const row of frm.doc["vehicles_sale_items"]) {
 			row.profit_loss_amount = row.retail_amount - row.ho_invoice_amount;
 			row.profit_loss_ =
@@ -339,9 +358,8 @@ frappe.ui.form.on("Vehicle Retail", {
 
 				const { customer_name, customer_surname, mobile, phone } =
 					response.message;
-				const full_name = `${customer_name || ""} ${
-					customer_surname || ""
-				}`.trim();
+				const full_name = `${customer_name || ""} ${customer_surname || ""
+					}`.trim();
 
 				frm.set_value("customer_name", full_name);
 				frm.set_value("customer_mobile", mobile || "");
@@ -433,260 +451,23 @@ frappe.ui.form.on("Vehicle Retail", {
 		frm.set_value("fleet_customer", "");
 		frm.set_value("fleet_customer_mobile", "");
 
-		if (frm._fleet_customer_dialog) {
-			frm._fleet_customer_dialog.hide();
-			frm._fleet_customer_dialog.$wrapper.remove();
-			delete frm._fleet_customer_dialog;
-		}
-
-		// Create fresh dialog instance
-		const dialog = new frappe.ui.Dialog({
-			title: __("New Fleet Customer"),
-			fields: [
-				{
-					label: __("Dealership"),
-					fieldname: "company",
-					fieldtype: "Data",
-					read_only: 1,
-					default: frm.doc.dealer,
-				},
-				{
-					label: __("Company Name"),
-					fieldname: "company_name",
-					fieldtype: "Data",
-				},
-				{
-					label: __("Company Reg No"),
-					fieldname: "company_reg_no",
-					fieldtype: "Data",
-					reqd: 1,
-				},
-				{
-					label: __("Customer Name"),
-					fieldname: "customer_name",
-					fieldtype: "Data",
-					reqd: 1,
-				},
-				{
-					label: __("Customer Surname"),
-					fieldname: "customer_surname",
-					fieldtype: "Data",
-				},
-				{
-					label: __("ID No"),
-					fieldname: "id_no",
-					fieldtype: "Data",
-					description: __("South African ID: 13 digits"),
-				},
-				{
-					label: __("Gender"),
-					fieldname: "gender",
-					fieldtype: "Link",
-					options: "Gender",
-				},
-				{
-					label: __("Mobile"),
-					fieldname: "mobile",
-					fieldtype: "Data",
-					reqd: 1,
-					description: __("Enter mobile with country code (e.g., +27812471255)")
-				},
-				{
-					label: __("Email"),
-					fieldname: "email",
-					fieldtype: "Data",
-					reqd: 1,
-				},
-
-				{
-					fieldtype: "Column Break",
-				},
-
-				{
-					label: __("Address"),
-					fieldname: "address",
-					fieldtype: "Small Text",
-					reqd: 1,
-				},
-				{
-					label: __("Suburb"),
-					fieldname: "suburb",
-					fieldtype: "Data",
-					reqd: 1,
-				},
-				{
-					label: __("City/ Town"),
-					fieldname: "city_town",
-					fieldtype: "Data",
-					reqd: 1,
-				},
-				{
-					label: __("Country"),
-					fieldname: "country",
-					fieldtype: "Data",
-					reqd: 1,
-				},
-				{
-					label: __("Province/ State"),
-					fieldname: "province_state",
-					fieldtype: "Link",
-					options: "Province or State",
-					reqd: 1,
-				},
-				{
-					label: __("Postal Code"),
-					fieldname: "code",
-					fieldtype: "Data",
-					reqd: 1,
-				},
-				// {
-				//     fieldtype: 'Section Break'
-				// },
-				{
-					fieldtype: "Column Break",
-				},
-				{
-					label: __(
-						"Would you like to receive marketing updates via SMS?",
-					),
-					fieldname:
-						"would_you_like_to_receive_marketing_updates_via_SMS",
-					fieldtype: "Select",
-					options: ["Yes", "No"],
-					reqd: 1,
-				},
-				{
-					label: __(
-						"Would you like to receive marketing updates via Email?",
-					),
-					fieldname:
-						"would_you_like_to_receive_marketing_updates_via_email",
-					fieldtype: "Select",
-					options: ["Yes", "No"],
-					reqd: 1,
-				},
-				{
-					label: __(
-						"Would you like to receive marketing updates via Post?",
-					),
-					fieldname:
-						"would_you_like_to_receive_marketing_updates_via_post",
-					fieldtype: "Select",
-					options: ["Yes", "No"],
-					reqd: 1,
-				},
-				{
-					label: __(
-						"Did you confirm all POPI regulations with your customer?",
-					),
-					fieldname:
-						"did_you_confirm_all_popi_regulations_with_your_customer",
-					fieldtype: "Select",
-					options: ["Yes", "No"],
-					reqd: 1,
-				},
-			],
-			size: "extra-large",
-			primary_action_label: __("Save"),
-			primary_action(values) {
-				frappe.call({
-					method: "edp_online_vehicles.events.create_customer.create_fleet_customer",
-					args: {
-						customer_type: values.customer_type || "",
-						company: values.company || "",
-						company_name: values.company_name || "",
-						company_reg_no: values.company_reg_no || "",
-						customer_name: values.customer_name || "",
-						customer_surname: values.customer_surname || "",
-						gender: values.gender || "",
-						mobile: values.mobile || "",
-						email: values.email || "",
-						address: values.address || "",
-						suburb: values.suburb || "",
-						city_town: values.city_town || "",
-						country: values.country || "",
-						province_state: values.province_state || "",
-						code: values.code || "",
-						would_you_like_to_receive_marketing_updates_via_SMS:
-							values.would_you_like_to_receive_marketing_updates_via_SMS ||
-							"",
-						would_you_like_to_receive_marketing_updates_via_email:
-							values.would_you_like_to_receive_marketing_updates_via_email ||
-							"",
-						would_you_like_to_receive_marketing_updates_via_post:
-							values.would_you_like_to_receive_marketing_updates_via_post ||
-							"",
-						did_you_confirm_all_popi_regulations_with_your_customer:
-							values.did_you_confirm_all_popi_regulations_with_your_customer ||
-							"",
-					},
-					callback: function (r) {
-						if (!r.exc) {
-							frappe.msgprint({
-								title: __("Success"),
-								message: __(
-									"Fleet Customer was created successfully.",
-								),
-								indicator: "green",
-							});
-							dialog.hide();
-
-							frm.set_value(
-								"company_reg_no",
-								values.company_reg_no,
-							);
-							frm.set_value("fleet_customer", r.message);
-						}
-					},
-				});
+		const initial_doc = { doctype: "Fleet Customer" };
+		if (frm.doc.dealer) initial_doc.company = frm.doc.dealer;
+		frappe.ui.form.make_quick_entry(
+			"Fleet Customer",
+			(doc) => {
+				if (frm.doctype === "Vehicle Retail") {
+					frm.set_value("fleet_customer", doc.name);
+					const display = (doc.company_name || doc.customer_name || "").trim() || doc.name;
+					frm.set_value("fleet_customer_name", display);
+					if (doc.company_reg_no) frm.set_value("company_reg_no", doc.company_reg_no);
+				}
 			},
-			secondary_action_label: __('Cancel'),
-			secondary_action() {
-				dialog.hide();
-			}
-		});
-
-		frm._fleet_customer_dialog = dialog;
-
-		dialog.fields_dict.company_name?.set_value('');
-		dialog.fields_dict.company_reg_no?.set_value('');
-		dialog.fields_dict.customer_name?.set_value('');
-		dialog.fields_dict.customer_surname?.set_value('');
-		dialog.fields_dict.mobile?.set_value('');
-		dialog.fields_dict.email?.set_value('');
-		dialog.fields_dict.address?.set_value('');
-		dialog.fields_dict.suburb?.set_value('');
-		dialog.fields_dict.city_town?.set_value('');
-		dialog.fields_dict.country?.set_value('');
-		dialog.fields_dict.province_state?.set_value('');
-		dialog.fields_dict.code?.set_value('');
-		dialog.fields_dict.would_you_like_to_receive_marketing_updates_via_SMS?.set_value('');
-		dialog.fields_dict.would_you_like_to_receive_marketing_updates_via_email?.set_value('');
-		dialog.fields_dict.would_you_like_to_receive_marketing_updates_via_post?.set_value('');
-		dialog.fields_dict.did_you_confirm_all_popi_regulations_with_your_customer?.set_value('');
-		dialog.fields_dict.id_no?.set_value('');
-		dialog.fields_dict.gender?.set_value('');
-
-		if (dialog.fields_dict.id_no && dialog.fields_dict.id_no.input) {
-			$(dialog.fields_dict.id_no.input).off("blur.fleet_id_validation").on("blur.fleet_id_validation", function () {
-				const id_number = dialog.get_value("id_no");
-				frappe.db.get_single_value("System Settings", "country").then((country) => {
-					const result = validate_sa_id_for_toast(id_number, country);
-					if (result) {
-						frappe.show_alert({ message: __(result.message), indicator: result.indicator }, 5);
-					}
-				});
-			});
-		}
-
-		dialog.$wrapper.on('hidden.bs.modal', function() {
-			if (frm._fleet_customer_dialog) {
-				frm._fleet_customer_dialog.$wrapper.remove();
-				delete frm._fleet_customer_dialog;
-			}
-		});
-
-		dialog.show();
+			(dialog) => {
+				if (frm.doc.dealer && dialog.fields_dict?.company) dialog.set_value("company", frm.doc.dealer);
+			},
+			initial_doc
+		);
 	},
 });
 
@@ -785,30 +566,30 @@ const calculate_sub_total = (frm, field_name, table_name) => {
 };
 
 const update_total_retail_excl = (frm) => {
-    let total = 0;
-    for (const row of frm.doc.vehicles_sale_items || []) {
-        total += flt(row.retail_amount);
-    }
-    frm.set_value("total_retail_excl", total);
+	let total = 0;
+	for (const row of frm.doc.vehicles_sale_items || []) {
+		total += flt(row.retail_amount);
+	}
+	frm.set_value("total_retail_excl", total);
 };
 
 function set_vin_query(frm) {
-    frm.set_query("vin_serial_no", "vehicles_sale_items", function (doc, cdt, cdn) {
-        const filters = {
-            "availability_status": "Available",
-        };
-        if (frm.doc.dealer) {
-            filters["dealer"] = frm.doc.dealer;
-        }
-        // Exclude VINs already selected in other rows
-        const used = (frm.doc.vehicles_sale_items || [])
-            .filter((row) => row.vin_serial_no && row.name !== cdn)
-            .map((row) => row.vin_serial_no);
-        if (used.length) {
-            filters["name"] = ["not in", used];
-        }
-        return { filters: filters };
-    });
+	frm.set_query("vin_serial_no", "vehicles_sale_items", function (doc, cdt, cdn) {
+		const filters = {
+			"availability_status": "Available",
+		};
+		if (frm.doc.dealer) {
+			filters["dealer"] = frm.doc.dealer;
+		}
+		// Exclude VINs already selected in other rows
+		const used = (frm.doc.vehicles_sale_items || [])
+			.filter((row) => row.vin_serial_no && row.name !== cdn)
+			.map((row) => row.vin_serial_no);
+		if (used.length) {
+			filters["name"] = ["not in", used];
+		}
+		return { filters: filters };
+	});
 }
 
 function validate_sa_id_for_toast(id_number, country) {

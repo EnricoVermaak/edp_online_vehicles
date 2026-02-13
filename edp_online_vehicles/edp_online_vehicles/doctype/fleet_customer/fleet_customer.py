@@ -8,10 +8,9 @@ from frappe.model.naming import make_autoname
 
 class FleetCustomer(Document):
 	def autoname(self):
-		prefix = frappe.get_single("Vehicle Stock Settings").fleet_customer_prefix
-
-		# date = current_month_year = getdate().strftime('%m%y')
-
+		prefix = frappe.db.get_value(
+			"Vehicle Stock Settings", "Vehicle Stock Settings", "fleet_customer_prefix"
+		)
 		if prefix:
 			self.name = make_autoname(f"{prefix}.#######")
 		else:
@@ -19,3 +18,12 @@ class FleetCustomer(Document):
 
 	def before_save(self):
 		self.fleet_code = self.name
+
+	def after_insert(self):
+		if self.fleet_code:
+			frappe.db.set_value(
+				"Vehicle Stock Settings",
+				"Vehicle Stock Settings",
+				"last_fleet_no",
+				self.fleet_code,
+			)

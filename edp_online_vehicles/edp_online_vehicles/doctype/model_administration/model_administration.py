@@ -1,3 +1,4 @@
+import re
 import frappe
 from frappe.model.document import Document
 class ModelAdministration(Document):
@@ -37,6 +38,11 @@ class ModelAdministration(Document):
             new_doc.insert(ignore_permissions=True)
 
         frappe.db.commit()
+        
+        if not self.model_default_image:
+            default_image = frappe.get_doc("Model Default Image")
+            self.model_default_image = default_image.default_model_image
+                  
 
     def after_save(self):
         for row in self.model_colours:

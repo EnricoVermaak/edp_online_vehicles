@@ -1,16 +1,16 @@
 {
  "actions": [],
  "allow_rename": 1,
- "creation": "2025-03-04 16:42:59.852901",
+ "creation": "2026-02-13 10:50:43.014785",
  "doctype": "DocType",
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
   "part_no",
   "description",
-  "qty_ordered",
-  "qty_picked",
-  "outstanding_qty"
+  "qty",
+  "price_excl",
+  "total_excl"
  ],
  "fields": [
   {
@@ -19,7 +19,6 @@
    "in_list_view": 1,
    "label": "Part No",
    "options": "Item",
-   "read_only": 1,
    "reqd": 1
   },
   {
@@ -31,36 +30,40 @@
    "read_only": 1
   },
   {
-   "fieldname": "qty_ordered",
+   "default": "1",
+   "fieldname": "qty",
    "fieldtype": "Int",
    "in_list_view": 1,
-   "label": "Qty Ordered",
+   "label": "Qty"
+  },
+  {
+   "fetch_from": "part_no.standard_rate",
+   "fieldname": "price_excl",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Price (Excl)",
    "read_only": 1
   },
   {
-   "fieldname": "qty_picked",
-   "fieldtype": "Int",
+   "fieldname": "total_excl",
+   "fieldtype": "Currency",
    "in_list_view": 1,
-   "label": "Qty Picked"
-  },
-  {
-   "fieldname": "outstanding_qty",
-   "fieldtype": "Int",
-   "in_list_view": 1,
-   "label": "Outstanding Qty",
+   "label": "Total (Excl)",
    "read_only": 1
   }
  ],
+ "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2026-02-09 23:17:14.248415",
+ "modified": "2026-02-13 10:57:02.454255",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
- "name": "Part Picking Slip Items",
+ "name": "Dealer Claim Parts",
  "owner": "Administrator",
  "permissions": [],
  "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": []

@@ -322,8 +322,7 @@
    "fieldname": "service_parts_items",
    "fieldtype": "Table",
    "label": "Service Parts Items",
-   "options": "Service Parts Items",
-   "read_only_depends_on": "eval: doc.edit_parts == 0"
+   "options": "Service Parts Items"
   },
   {
    "fieldname": "section_break_non_oem",
@@ -351,8 +350,7 @@
    "fieldname": "service_labour_items",
    "fieldtype": "Table",
    "label": "Service Labour Items",
-   "options": "Service Labour Items",
-   "read_only_depends_on": "eval: doc.edit_labour == 0"
+   "options": "Service Labour Items"
   },
   {
    "fieldname": "section_break_non_oem_labour",
@@ -916,7 +914,7 @@
    "link_fieldname": "services"
   }
  ],
- "modified": "2026-02-05 10:05:31.288877",
+ "modified": "2026-02-11 10:33:47.055989",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicles Service",

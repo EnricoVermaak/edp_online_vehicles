@@ -28,12 +28,12 @@ frappe.ui.form.on("Dealer Claims", {
 	// 						name: child_row.vin_serial_no
 	// 					},
 	// 					callback: function(r) {
-	// 						if (r.message) {
-	// 							if (r.message.original_purchasing_dealer && r.message.original_purchasing_dealer !== frm.doc.dealer) {
-	// 								frappe.msgprint("❌ Vehicle was not purchased by the selected dealership on this claim.");
-	// 								frappe.model.set_value(cdt2, cdn2, "vin_serial_no", ""); // clear field
-	// 								return;
-	// 							}
+	// 						// if (r.message) {
+	// 						// 	if (r.message.original_purchasing_dealer && r.message.original_purchasing_dealer !== frm.doc.dealer) {
+	// 						// 		frappe.msgprint("❌ Vehicle was not purchased by the selected dealership on this claim.");
+	// 						// 		frappe.model.set_value(cdt2, cdn2, "vin_serial_no", ""); // clear field
+	// 						// 		return;
+	// 						// 	}
 
 	// 							// 🔹 2. Check if VIN already claimed under same category
 	// 							frappe.call({
@@ -66,7 +66,87 @@ frappe.ui.form.on("Dealer Claims", {
 	// 		}
 	// 	});
 	// },
+	claim_status(frm){
+		if (frm.doc.claim_status == "Approved for Remittance") {
+			if (previous_status != "Submitted for HOD Approval") {
+				frappe.msgprint("Claim status can only be changed to 'Approved for Remittance' when the current status is 'Submitted for HOD Approval'.");
+				frm.set_value("claim_status", previous_status || "");
+				return;
+			}
+		}
+		
+		previous_status = frm.doc.claim_status;
+		
+		// Remove buttons first to avoid duplicates
+		frm.remove_custom_button('');
+//		frm.remove_custom_button('Submit Claim');
+		
+		// Show "Updated" button only when status is "Claim Pending Info"
+		if (frm.doc.claim_status == "Claim Pending Info") {
+			frm.add_custom_button("Submit Update", function () {
+				frm.set_value("claim_status", "Claim Updated");
+				frm.save();
+			});
+		}
+		
+		// Show "Submit Claim" button only when status is "Pending"
+		// if (frm.doc.claim_status == "Pending") {
+		// 	frm.add_custom_button("Submit Claim", function () {
+		// 		frm.set_value("claim_status", "Claim Submitted");
+		// 		frm.save();
+		// 	});
+		// }
+	},
 	refresh(frm) {
+		var allowed_statuses = ["Pending", "Claim Submitted", "Claim Pending Info", "Claim Declined"];
+		var is_claim_administrator = frappe.user.has_role("Claim Administrator");
+		var is_read_only_status = frm.doc.claim_status && !allowed_statuses.includes(frm.doc.claim_status);
+
+		if (is_claim_administrator) {
+			frm.set_df_property("claim_status", "read_only", 0);
+		} else {
+			frm.set_df_property("claim_status", "read_only", 1);
+
+			if (is_read_only_status) {
+				frm.fields.forEach(function(field) {
+					frm.set_df_property(field.df.fieldname, "read_only", 1);
+				});
+
+				if (frm.fields_dict.table_exgk) {
+					frm.fields_dict.table_exgk.grid.cannot_add_rows = true;
+					frm.fields_dict.table_exgk.grid.cannot_delete_rows = true;
+				}
+				if (frm.fields_dict.table_zhls) {
+					frm.fields_dict.table_zhls.grid.cannot_add_rows = true;
+					frm.fields_dict.table_zhls.grid.cannot_delete_rows = true;
+				}
+				if (frm.fields_dict.documents) {
+					frm.fields_dict.documents.grid.cannot_add_rows = true;
+					frm.fields_dict.documents.grid.cannot_delete_rows = true;
+				}
+			}
+		}
+		
+		// Remove buttons first to avoid duplicates
+		frm.remove_custom_button('Submit Update');
+//		frm.remove_custom_button('Submit Claim');
+		
+		// Show "Updated" button only when status is "Claim Pending Info"
+		if (frm.doc.claim_status == "Claim Pending Info") {
+			frm.add_custom_button("Submit Update", function () {
+				frm.set_value("claim_status", "Claim Updated");
+				frm.save();
+			});
+		}
+		
+		// // Show "Submit Claim" button only when status is "Pending"
+		// if (frm.doc.claim_status == "Pending") {
+		// 	frm.add_custom_button("Submit Claim", function () {
+		// 		frm.set_value("claim_status", "Claim Submitted");
+		// 		frm.save();
+		// 	});
+		// }
+
 		// Child table field filter for VIN
         frm.fields_dict["table_exgk"].grid.get_field("vin_serial_no").get_query = function(doc, cdt, cdn) {
 
@@ -310,6 +390,11 @@ frappe.ui.form.on("Dealer Claims", {
 						var claim_category_data = r.message;
 
 						var category_options = [];
+						frm.claim_types_data = {};
+						frm.claim_types_mandatory_vin = {};
+						frm.claim_types_mandatory_part = {};
+						frm.claim_types_retail_only = {};
+						frm.claim_types_original_dealer_only = {};
 
 						(claim_category_data.claim_types || []).forEach(
 							function (category_row) {
@@ -317,6 +402,22 @@ frappe.ui.form.on("Dealer Claims", {
 									label: category_row.claim_type_description,
 									value: category_row.claim_type_description,
 								});
+								frm.claim_types_data[
+									category_row.claim_type_description
+								] = category_row.claim_type_code;
+								frm.claim_types_mandatory_vin[
+									category_row.claim_type_description
+								] = category_row.vin_serial_no_mandatory;
+								frm.claim_types_mandatory_part[
+									category_row.claim_type_description
+								] = category_row.parts_mandatory;
+								frm.claim_types_retail_only[
+									category_row.claim_type_description
+								] = category_row.only_allow_retailed_units;
+								frm.claim_types_original_dealer_only[
+									category_row.claim_type_description
+								] =
+									category_row.only_allow_original_purchasing_dealer;
 							},
 						);
 
@@ -326,6 +427,43 @@ frappe.ui.form.on("Dealer Claims", {
 							.join("\n");
 
 						field.refresh();
+
+						if (frm.doc.claim_description) {
+							var mandatory_vin = frm.claim_types_mandatory_vin[frm.doc.claim_description] == 1;
+							frm.toggle_reqd("table_exgk", mandatory_vin);
+							frm.refresh_field("table_exgk");
+
+							var mandatory_part = frm.claim_types_mandatory_part[frm.doc.claim_description] == 1;
+							frm.toggle_reqd("table_zhls", mandatory_part);
+							frm.refresh_field("table_zhls");
+
+							if (mandatory_part) {
+								frm.set_df_property("claim_amt", "read_only", 1);
+							} else {
+								frm.set_df_property("claim_amt", "read_only", 0);
+							}
+
+							if (frm.claim_types_retail_only) {
+								frm.show_only_retail =
+									frm.claim_types_retail_only[frm.doc.claim_description];
+							}
+
+							if (frm.claim_types_original_dealer_only) {
+								frm.show_only_original_dealer =
+									frm.claim_types_original_dealer_only[frm.doc.claim_description];
+							}
+
+							if (claim_category_data.claim_types) {
+								claim_category_data.claim_types.forEach(function(type) {
+									if (type.claim_type_description === frm.doc.claim_description) {
+										if (type.mandatory_fleet_customer === 1) {
+											frm.set_df_property("fleet_customer", "reqd", 1);
+											frm.set_df_property("company_registration_no", "reqd", 1);
+										}
+									}
+								});
+							}
+						}
 					}
 				},
 			});
@@ -437,30 +575,29 @@ frappe.ui.form.on("Dealer Claims", {
 					});
 				});
 
-			if (frm.claim_types_mandatory_vin) {
-				frm.clear_table("table_exgk");
-
-				var mandatory_vin =
-					frm.claim_types_mandatory_vin[frm.doc.claim_description];
-
-				if (mandatory_vin) {
-					frm.toggle_reqd("table_exgk", mandatory_vin == 1);
-				}
-
-				frm.refresh_field("table_exgk");
+			var mandatory_vin = false;
+			if (frm.claim_types_mandatory_vin && frm.doc.claim_description) {
+				mandatory_vin = frm.claim_types_mandatory_vin[frm.doc.claim_description] == 1;
 			}
+			
+			frm.clear_table("table_exgk");
+			frm.toggle_reqd("table_exgk", mandatory_vin);
+			frm.refresh_field("table_exgk");
 
-			if (frm.claim_types_mandatory_part) {
-				frm.clear_table("claim_parts");
+			var mandatory_part = false;
+			if (frm.claim_types_mandatory_part && frm.doc.claim_description) {
+				mandatory_part = frm.claim_types_mandatory_part[frm.doc.claim_description] == 1;
+			}
+			
+			frm.clear_table("table_zhls");
+			frm.toggle_reqd("table_zhls", mandatory_part);
+			frm.refresh_field("table_zhls");
 
-				var mandatory_part =
-					frm.claim_types_mandatory_part[frm.doc.claim_description];
-
-				if (mandatory_part) {
-					frm.toggle_reqd("claim_parts", mandatory_part == 1);
-				}
-
-				frm.refresh_field("claim_parts");
+			if (mandatory_part) {
+				frm.set_df_property("claim_amt", "read_only", 1);
+				frm.set_value("claim_amt", 0);
+			} else {
+				frm.set_df_property("claim_amt", "read_only", 0);
 			}
 
 			if (frm.claim_types_retail_only) {
@@ -745,6 +882,7 @@ frappe.ui.form.on("Dealer Claims", {
 			frm.doc.final_status_date = frappe.datetime.now_datetime();
 		}
 
+		
 		frm.doc["table_exgk"].forEach(function (row) {
 			if (row.vin_serial_no) {
 				frappe.db
@@ -785,6 +923,50 @@ frappe.ui.form.on("Dealer Claims", {
 					});
 			}
 		});
+		if (frm.doc.fleet_customer && frm.doc.table_exgk && frm.doc.table_exgk.length > 0) {
+			let invalidVehicles = [];
+			let checkCount = 0;
+			let totalChecks = 0;
+
+			frm.doc.table_exgk.forEach(function (row) {
+				if (row.vin_serial_no) {
+					totalChecks++;
+				}
+			});
+
+			if (totalChecks === 0) {
+			} else {
+				frm.doc.table_exgk.forEach(function (row) {
+					if (row.vin_serial_no) {
+						frappe.call({
+							method: "frappe.client.get",
+							args: {
+								doctype: "Vehicle Stock",
+								name: row.vin_serial_no
+							},
+							async: false,
+							callback: function (r) {
+								checkCount++;
+								if (r.message) {
+									let vehicle = r.message;
+									if (!vehicle.fleet_customer || vehicle.fleet_customer !== frm.doc.fleet_customer) {
+										invalidVehicles.push(row.vin_serial_no);
+									}
+								}
+								
+								if (checkCount === totalChecks) {
+									if (invalidVehicles.length > 0) {
+										frappe.validated = false;
+										frappe.throw(__("Fleet Customer Incorrect"));
+									}
+								}
+							}
+						});
+					}
+				});
+			}
+		}
+
 		if (frm.doc.claim_status === "Pending") {
 			frm.doc.claim_status = "Claim Submitted";
 		}
@@ -887,6 +1069,13 @@ frappe.ui.form.on("Dealer Claims", {
 						frm.set_value("fleet_customer_name", full_name);
 						frm.set_value("fleet_customer", r.message[0]);
 						frm.set_value("fleet_customer_mobile", r.message[3]);
+						frm.set_value("part_percentage_discount", r.message[4]);
+						rm.set_value("vehicle_percentage_discount", r.message[5]);
+						// frm.set_value("part_percentage_discount", r.message[4]);
+						// frm.set_value("part_percentage_discount", r.message[4]);
+						// frm.set_value("part_percentage_discount", r.message[4]);
+						// frm.set_value("part_percentage_discount", r.message[4]);
+						// frm.set_value("part_percentage_discount", r.message[4]);
 
 						let reg_no = frm.doc.company_registration_no;
 						let cleaned_reg_no = reg_no.replace(/\s/g, "");
@@ -902,10 +1091,8 @@ frappe.ui.form.on("Dealer Claims", {
 						}
 					} else {
 						frm.set_value("company_registration_no", null);
-						//Here - Monique
 						frm.set_value("fleet_customer_name", "");
 						frm.set_value("fleet_customer", "");
-						//Here - Monique
 						frappe.throw(__("Fleet customer not found."));
 					}
 				},
@@ -913,19 +1100,22 @@ frappe.ui.form.on("Dealer Claims", {
 		}
 	},
 
-	claim_amt(frm) {
-		if (frm.doc.claim_amt) {
-			if (
-				frm.doc.claim_amt > previous_claim_amount &&
-				previous_claim_amount != 0
-			) {
-				frm.set_value("claim_amt", previous_claim_amount);
+	// claim_amt(frm) {
+	// 	if (frm.doc.claim_amt) {
+	// 		if (
+	// 			frm.doc.claim_amt > previous_claim_amount &&
+	// 			previous_claim_amount != 0
+	// 		) {
+	// 			frm.set_value("claim_amt", previous_claim_amount);
 
-				frappe.msgprint(
-					"You cannot set claim amount to a higher amount than it was previously. You can only set a lower amount.",
-				);
-			}
-		}
+	// 			frappe.msgprint(
+	// 				"You cannot set claim amount to a higher amount than it was previously. You can only set a lower amount.",
+	// 			);
+	// 		}
+	// 	}
+	// },
+	part_percentage_discount: function(frm) {
+		calculate_fleet_discount(frm);
 	},
 });
 
@@ -933,7 +1123,6 @@ frappe.ui.form.on("Vehicles Item", {
     vin_serial_no: async function (frm, cdt, cdn) {
         let row = locals[cdt][cdn];
 
-        // Step 1: Claim type check
         if (!frm.doc.claim_type_code) {
             if (row.vin_serial_no) {
                 frappe.model.set_value(cdt, cdn, "vin_serial_no", null);
@@ -944,40 +1133,52 @@ frappe.ui.form.on("Vehicles Item", {
 
         if (!row.vin_serial_no) return;
 
-        // Step 2: Check if Vehicle belongs to selected dealer
-        try {
-            let vehicle_res = await frappe.call({
-                method: "frappe.client.get",
-                args: {
-                    doctype: "Vehicle Stock",
-                    name: row.vin_serial_no,
-                },
-            });
-
-            if (
-                vehicle_res.message &&
-                vehicle_res.message.original_purchasing_dealer &&
-                vehicle_res.message.original_purchasing_dealer !== frm.doc.dealer
-            ) {
-                frappe.msgprint("Vehicle was not purchased by the selected dealership on this claim.");
-                frappe.model.set_value(cdt, cdn, "vin_serial_no", null);
-                return; // stop further checks
+        // Fetch retail date from Vehicle Retail
+        frappe.call({
+            method: "edp_online_vehicles.edp_online_vehicles.doctype.dealer_claims.dealer_claims.get_retail_date",
+            args: {
+                vin_serial_no: row.vin_serial_no
+            },
+            callback: function(r) {
+                if (r.message) {
+                    frappe.model.set_value(cdt, cdn, "retailed_date", r.message);
+                }
             }
-        } catch (e) {
-            console.error("Dealer validation failed:", e);
-        }
+        });
 
-        // Step 3: Existing duplicate check (your original logic)
+        // DONT ENABLE
+        // try {
+        //     let vehicle_res = await frappe.call({
+        //         method: "frappe.client.get",
+        //         args: {
+        //             doctype: "Vehicle Stock",
+        //             name: row.vin_serial_no,
+        //         },
+        //     });
+
+        //     if (
+        //         vehicle_res.message &&
+        //         vehicle_res.message.original_purchasing_dealer &&
+        //         vehicle_res.message.original_purchasing_dealer !== frm.doc.dealer
+        //     ) {
+        //         frappe.msgprint("Vehicle was not purchased by the selected dealership on this claim.");
+        //         frappe.model.set_value(cdt, cdn, "vin_serial_no", null);
+        //         return; // stop further checks
+        //     }
+        // } catch (e) {
+        //     console.error("Dealer validation failed:", e);
+        // }
+
         frappe.db.get_doc("Dealer Claim Category", frm.doc.claim_category).then((res) => {
             res.claim_types.forEach(function (r) {
                 if (r.claim_type_code === frm.doc.claim_type_code && !r.allow_duplicate_claim) {
                     frappe.call({
                         method: "edp_online_vehicles.edp_online_vehicles.doctype.dealer_claims.dealer_claims.dealer",
                         args: {
-							doc: frm.doc,
-							vinno: row.vin_serial_no,
-							dealer: frm.doc.dealer,
-							claim_type_code: frm.doc.claim_type_code,
+        					doc: frm.doc,
+        					vinno: row.vin_serial_no,
+        					dealer: frm.doc.dealer,
+        					claim_type_code: frm.doc.claim_type_code,
                         },
                         callback: function (r) {
                             if (r.message && r.message.length > 0) {
@@ -994,3 +1195,59 @@ frappe.ui.form.on("Vehicles Item", {
     },
 });
 
+const calculate_parts_total_excl = (frm) => {
+    let total = 0;
+    (frm.doc.table_zhls || []).forEach(row => {
+        total += (row.price_excl || 0) * (row.qty || 0);
+    });
+    frm.set_value("parts_total_excl", total);
+    frm.refresh_field("parts_total_excl");
+    calculate_fleet_discount(frm);
+};
+
+const calculate_fleet_discount = (frm) => {
+    let parts_total = parseFloat(frm.doc.parts_total_excl) || 0;
+    let discount_percentage = parseFloat(frm.doc.part_percentage_discount) || 0;
+    let discount_amount = parts_total * (discount_percentage / 100);
+    frm.set_value("total_fleet_discount_amt_excl", discount_amount);
+    frm.set_value("claim_amt", discount_amount);
+    frm.refresh_field("total_fleet_discount_amt_excl");
+    frm.refresh_field("claim_amt");
+};
+
+frappe.ui.form.on("Dealer Claim Parts", {
+    part_no(frm, cdt, cdn) {
+        let row = locals[cdt][cdn];
+        setTimeout(function() {
+            let updated_row = locals[cdt][cdn];
+            if (updated_row.part_no) {
+                let qty = updated_row.qty || 1;
+                let price_excl = updated_row.price_excl || 0;
+                let total = qty * price_excl;
+                frappe.model.set_value(cdt, cdn, "total_excl", total);
+                frm.refresh_field("table_zhls");
+                calculate_parts_total_excl(frm);
+            }
+        }, 100);
+    },
+    price_excl(frm, cdt, cdn) {
+        let row = locals[cdt][cdn];
+        let total_excl = (row.price_excl || 0) * (row.qty || 0);
+        frappe.model.set_value(cdt, cdn, "total_excl", total_excl);
+        frm.refresh_field("table_zhls");
+        calculate_parts_total_excl(frm);
+    },
+    qty(frm, cdt, cdn) {
+        let row = locals[cdt][cdn];
+        let total_excl = (row.price_excl || 0) * (row.qty || 0);
+        frappe.model.set_value(cdt, cdn, "total_excl", total_excl);
+        frm.refresh_field("table_zhls");
+        calculate_parts_total_excl(frm);
+    },
+    table_zhls_remove(frm) {
+        calculate_parts_total_excl(frm);
+    },
+    total_excl(frm) {
+        calculate_parts_total_excl(frm);
+    },
+});

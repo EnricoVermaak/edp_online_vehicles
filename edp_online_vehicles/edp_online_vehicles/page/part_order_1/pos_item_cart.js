@@ -778,6 +778,7 @@ edp_online_vehicles.PartOrder.ItemCart = class {
 				.css("width", max_width);
 		}
 
+
 		function get_rate_discount_html() {
 			if (
 				item_data.dealer_billing_excl &&
@@ -787,12 +788,19 @@ edp_online_vehicles.PartOrder.ItemCart = class {
 				if (item_data.dealer_ordered_qty > 0) {
 					if (item_data.backorder) {
 						return `
-						<div class="item-pill">
-							<span class="indicator-pill whitespace-nowrap orange">
-								<span>${__("Backorder")}</span>
-							</span>
-						</div>
+						<div class="flex-column gap-1 align-flex-end">
+							<div class="item-pill">
+								<span class="indicator-pill whitespace-nowrap blue">
+									<span>${item_data.dealer}</span>
+								</span>
+							</div>
 
+							<div class="item-pill">
+								<span class="indicator-pill whitespace-nowrap orange">
+									<span>${__("Backorder")}</span>
+								</span>
+							</div>
+						</div>
 						<div class="item-qty-rate">
 							<div class="item-qty"><span>${item_data.qty || 0}</span></div>
 							<div class="item-rate-amount">
@@ -802,10 +810,18 @@ edp_online_vehicles.PartOrder.ItemCart = class {
 						</div>`;
 					} else {
 						return `
-						<div class="item-pill">
-							<span class="indicator-pill whitespace-nowrap orange">
-								<span>${__("Dealer")}</span>
-							</span>
+						<div class="flex-column gap-1 align-flex-end">
+							<div class="item-pill">
+								<span class="indicator-pill whitespace-nowrap blue">
+									<span>${item_data.dealer}</span>
+								</span>
+							</div>
+
+							<div class="item-pill">
+								<span class="indicator-pill whitespace-nowrap orange">
+									<span>${__("Dealer")}</span>
+								</span>
+							</div>
 						</div>
 
 						<div class="item-qty-rate">
@@ -836,10 +852,18 @@ edp_online_vehicles.PartOrder.ItemCart = class {
 				if (item_data.dealer_ordered_qty > 0) {
 					if (item_data.backorder) {
 						return `
-						<div class="item-pill">
-							<span class="indicator-pill whitespace-nowrap orange">
-								<span>${__("Backorder")}</span>
-							</span>
+						<div class="flex-column gap-1 align-flex-end">
+							<div class="item-pill">
+								<span class="indicator-pill whitespace-nowrap blue">
+									<span>${item_data.dealer}</span>
+								</span>
+							</div>
+
+							<div class="item-pill">
+								<span class="indicator-pill whitespace-nowrap orange">
+									<span>${__("Backorder")}</span>
+								</span>
+							</div>
 						</div>
 
 						<div class="item-qty-rate">
@@ -850,10 +874,18 @@ edp_online_vehicles.PartOrder.ItemCart = class {
 						</div>`;
 					} else {
 						return `
-						<div class="item-pill">
-							<span class="indicator-pill whitespace-nowrap orange">
-								<span>${__("Dealer")}</span>
-							</span>
+						<div class="flex-column gap-1 align-flex-end">
+							<div class="item-pill">
+								<span class="indicator-pill whitespace-nowrap blue">
+									<span>${item_data.dealer}</span>
+								</span>
+							</div>
+
+							<div class="item-pill">
+								<span class="indicator-pill whitespace-nowrap orange">
+									<span>${__("Dealer")}</span>
+								</span>
+							</div>
 						</div>
 
 						<div class="item-qty-rate">

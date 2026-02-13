@@ -58,11 +58,12 @@
   "column_break_fxof",
   "total_vehicles",
   "parts_tab",
-  "claim_parts",
+  "table_zhls",
   "section_break_mxfs",
   "column_break_zhxq",
   "column_break_xcej",
-  "parts_total_excl"
+  "parts_total_excl",
+  "total_fleet_discount_amt_excl"
  ],
  "fields": [
   {
@@ -108,7 +109,7 @@
    "fieldname": "claim_amt",
    "fieldtype": "Currency",
    "in_list_view": 1,
-   "label": "Claim Amt",
+   "label": "Claim Amt (Excl)",
    "reqd": 1
   },
   {
@@ -118,7 +119,7 @@
    "in_list_view": 1,
    "in_standard_filter": 1,
    "label": "Claim Status",
-   "options": "Pending\nClaim Submitted\nSubmitted for HOD Approval\nClaim Updated\nApproved for Remittance\nClaim Declined\nClaim Pending Info\nCancelled\nRemittance"
+   "options": "Pending\nClaim Submitted\nSubmitted for HOD Approval\nClaim Updated\nApproved for Remittance\nClaim Declined\nClaim Pending Info\nCancelled"
   },
   {
    "fieldname": "claim_age",
@@ -182,7 +183,8 @@
    "fieldname": "final_status_date",
    "fieldtype": "Datetime",
    "hidden": 1,
-   "label": "Final Status Date"
+   "label": "Final Status Date",
+   "read_only": 1
   },
   {
    "fieldname": "dealer_ref_no",
@@ -238,12 +240,6 @@
    "label": "Parts"
   },
   {
-   "fieldname": "claim_parts",
-   "fieldtype": "Table",
-   "label": "Claim Parts",
-   "options": "Service Parts Items"
-  },
-  {
    "fieldname": "section_break_mxfs",
    "fieldtype": "Section Break"
   },
@@ -259,7 +255,8 @@
    "depends_on": "eval: doc.table_exgk",
    "fieldname": "parts_total_excl",
    "fieldtype": "Currency",
-   "label": "Parts Total (Excl)"
+   "label": "Parts Total (Excl)",
+   "read_only": 1
   },
   {
    "fieldname": "company_registration_no",
@@ -278,7 +275,6 @@
    "read_only": 1
   },
   {
-   "fetch_from": "fleet_customer.email",
    "fieldname": "fleet_customer_email",
    "fieldtype": "Data",
    "label": "Fleet Customer Email",
@@ -306,7 +302,6 @@
    "read_only": 1
   },
   {
-   "fetch_from": "fleet_customer.parts_discount",
    "fieldname": "part_percentage_discount",
    "fieldtype": "Percent",
    "label": "Part Discount (%)",
@@ -384,11 +379,23 @@
    "fieldtype": "Int",
    "label": "Updated Claim Age",
    "read_only": 1
+  },
+  {
+   "fieldname": "table_zhls",
+   "fieldtype": "Table",
+   "options": "Dealer Claim Parts"
+  },
+  {
+   "fieldname": "total_fleet_discount_amt_excl",
+   "fieldtype": "Currency",
+   "label": "Total Fleet Discount Amt (Excl)",
+   "precision": "2",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-11-07 14:51:52.163147",
+ "modified": "2026-02-13 12:13:38.066824",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Dealer Claims",

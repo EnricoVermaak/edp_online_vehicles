@@ -6,6 +6,8 @@ from datetime import timedelta
 import frappe
 import frappe.utils
 from frappe.model.document import Document
+from frappe.utils import get_datetime
+
 
 
 class PartsDeliveryNote(Document):
@@ -57,29 +59,8 @@ class PartsDeliveryNote(Document):
 
 			self.name = f"PDN-{self.d2d_part_order}-{index}"
 
-	def validate(self):
-		active_note_conditions = [
-			(
-				self.part_order_no
-				and frappe.db.exists(
-					"Parts Delivery Note", {"part_order_no": self.part_order_no, "docstatus": "Draft"}
-				)
-			),
-			(
-				self.d2d_part_order
-				and frappe.db.exists(
-					"Parts Delivery Note", {"d2d_part_order": self.d2d_part_order, "docstatus": "Draft"}
-				)
-			),
-		]
-
-		if any(active_note_conditions):
-			frappe.throw(
-				"An active delivery note already exists for this order. "
-				"Please finalize the existing delivery note before proceeding."
-			)
-
 	def on_submit(self):
+		self.create_delivery_note()
 		if self.part_order_no:
 			# Retrieve the HQ Part Order and linked Part Order documents
 			hq_doc = frappe.get_doc("HQ Part Order", self.part_order_no)
@@ -387,6 +368,7 @@ class PartsDeliveryNote(Document):
 				frappe.msgprint(f"An error occurred: {e!s}")
 
 			frappe.db.commit()
+			
 
 	def before_submit(self):
 		self.status = "Delivered"
@@ -403,3 +385,26 @@ class PartsDeliveryNote(Document):
 		m = (total_seconds % 3600) // 60
 		s = total_seconds % 60
 		return f"{h:02}:{m:02}:{s:02}"
+
+	def create_delivery_note(self):
+		dn = frappe.new_doc("Delivery Note")
+		dn.custom_hq_part_order= self.part_order_no
+
+		if self.deliver_to == "Customer":
+			dn.customer = self.customer or self.fleet_customer
+		else:
+			dn.customer = self.dealer
+
+		if self.delivery_time:
+			dt = get_datetime(self.delivery_time)
+			dn.posting_date = dt.date()
+			dn.posting_time = dt.time()
+
+		for row in self.delivery_note_item:
+			dn.append("items", {
+				"item_code": row.part_no,
+				"qty": row.qty_ordered,
+			})
+
+		dn.insert(ignore_permissions=True)
+		dn.submit()

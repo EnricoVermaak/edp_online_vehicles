@@ -20,7 +20,7 @@ def get_fleet_cust_data(reg_no):
 		data = frappe.db.get_value(
 			"Fleet Customer",
 			{"company_reg_no": reg_no},
-			["name", "customer_name", "customer_surname", "mobile"],
+			["name", "customer_name", "customer_surname", "mobile", "parts_discount", "vehicle_discount"],
 		)
-		if data:
+		if data: 
 			return data

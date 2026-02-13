@@ -696,16 +696,23 @@ frappe.ui.form.on("Vehicle Order", {
 			};
 		});
 
+		// ADDED / CORRECTED
 		if (frm.doc.docstatus === 1) {
-			// hide all "Insert Below" buttons in any child‑table popup
-			$(".grid-append-row").hide();
+			// 1. Disable row addition via Frappe API (Safe & Error-free)
+			if (frm.fields_dict["vehicles_basket"]) {
+				frm.fields_dict["vehicles_basket"].grid.cannot_add_rows = true;
+			}
 
-			frappe.dom.add_css(`
-                .grid-insert-row-below {
-                display: none !important;
-                }
-            `);
+			// 2. Hide UI buttons via CSS (Modern method to avoid console errors)
+			frappe.dom.set_style(`
+				.grid-insert-row-below, 
+				.grid-append-row,
+				.grid-insert-row {
+					display: none !important;
+				}
+			`);
 		}
+
 
 		frm.fields_dict["vehicles_basket"].grid.add_custom_button(
 			"Add Multiple",
@@ -1075,9 +1082,33 @@ frappe.ui.form.on("Vehicle Order", {
 	onload_post_render: function (frm) {
 		$("p.help-box.small.text-muted").hide();
 
-		frm.fields_dict.order_date_time.datepicker.update({
-			minDate: new Date(frappe.datetime.get_today()),
-		});
+		// frm.fields_dict.order_date_time.datepicker.update({
+		// 	minDate: new Date(frappe.datetime.get_today()),
+		// });
+
+		frappe.db
+			.get_single_value(
+				"Vehicle Stock Settings",
+				"allow_scheduled_orders",
+			)
+			.then((allow_scheduled_orders) => {
+				if (allow_scheduled_orders === 0) {
+					// frm.fields_dict.order_date_time.datepicker.update({
+					// 	maxDate: new Date(frappe.datetime.get_today()),
+					// });
+					frm.fields_dict['order_date_time'].datepicker.update({
+						maxDate: new Date(frappe.datetime.get_today())
+					});
+
+				} else {
+					frm.fields_dict['order_date_time'].datepicker.update({
+						minDate: new Date(frappe.datetime.get_today())
+					});
+				}
+				frm.set_value('order_date_time', frappe.datetime.now_datetime());
+			});
+
+
 
 		if (
 			frm.fields_dict["vehicles_basket"] &&
@@ -1091,6 +1122,7 @@ frappe.ui.form.on("Vehicle Order", {
 		} else {
 			console.log("vehicles_basket grid is not defined on this form.");
 		}
+		
 	},
 
 	deliver_to_dealer: function (frm) {
@@ -2924,6 +2956,7 @@ frappe.ui.form.on("Vehicles Order Item", {
 
 	colour: function (frm, cdt, cdn) {
 		var row = locals[cdt][cdn];
+		check_and_fetch(frm, cdt, cdn);
 
 		let order_from = row.order_from;
 		let anycolor = "Any Colour - " + row.model;
@@ -3328,6 +3361,37 @@ frappe.ui.form.on("Vehicles Order Item", {
 	},
 });
 
+function check_and_fetch(frm, cdt, cdn) {
+    let row = locals[cdt][cdn];
+
+    if (!row.model || !row.colour) {
+        return;
+    }
+
+    frappe.call({
+        method: "edp_online_vehicles.events.add_comment.get_dealers",
+        args: {
+            model: row.model,
+            colour: row.colour
+        },
+        callback: function (r) {
+            console.log("Response", r.message);
+
+            let options = [];
+            if (r.message && r.message.length > 0) {
+                options = r.message;
+            }
+
+			// if (options.length) {
+				
+			// }
+            // Update the dropdown options for both possible field names
+        	updateDealerOptions1(frm, options);
+        }
+    });
+}
+
+
 const calculate_sub_total = (frm, field_name, table_name) => {
 	let sub_total = 0;
 	for (const row of frm.doc[table_name]) {
@@ -3342,18 +3406,16 @@ const calculate_sub_total = (frm, field_name, table_name) => {
 	);
 };
 
-function updateDealerOptions(frm, options) {
-	if (!options || options.length === 0) {
+function updateDealerOptions(params) {
+	return
+}
+
+function updateDealerOptions1(frm, options) {
+    if (!options || options.length === 0) {
 		console.warn("No dealers available to set.");
 		return;
-	}
-
-	frm.fields_dict.vehicles_basket.grid.update_docfield_property(
-		"dealer",
-		"options",
-		[""].concat(options),
-	);
-
+    }
+    frm.fields_dict.vehicles_basket.grid.update_docfield_property("dealer","options", [""].concat(options));
 	// frm.refresh_field('vehicles_basket')
 }
 

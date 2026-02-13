@@ -9,22 +9,26 @@ from frappe.utils import now_datetime
 
 class DealerClaims(Document):
 	def validate(self):
-		# --- 0️⃣ Auto-set tracking dates based on status ---
+		if self.claim_status == "Approved for Remittance":
+			if self.is_new():
+				frappe.throw("Claim status cannot be set to 'Approved for Remittance' for new claims.")
+			else:
+				previous_status = frappe.db.get_value("Dealer Claims", self.name, "claim_status")
+				if previous_status != "Submitted for HOD Approval":
+					frappe.throw("Claim status can only be changed to 'Approved for Remittance' when the current status is 'Submitted for HOD Approval'.")
+		
 		if self.claim_status == "Claim Pending Info" and not self.claim_pending_info_date:
 			self.claim_pending_info_date = now_datetime()
 
 		if self.claim_status == "Claim Updated" and not self.claim_updated_date:
 			self.claim_updated_date = now_datetime()
 
-		# ⚠️ ❌ Remove this - causes recursion
 		# if self.claim_status == "Remittance":
 		#     self.save()
 
-		# 2️⃣ Only proceed if there's *any* status
 		if not self.claim_status or not self.name:
 			return
 
-		# 3️⃣ Check if a Status Tracker exists
 		tracker_name = frappe.db.get_value(
 			"Status Tracker",
 			{"status_doctype": "Dealer Claims", "document": self.name},
@@ -33,32 +37,25 @@ class DealerClaims(Document):
 		if not tracker_name:
 			return
 
-		# 4️⃣ Load the Status Tracker doc
 		st = frappe.get_doc("Status Tracker", tracker_name)
 
-		# 5️⃣ Make sure it has at least one row in its child table
 		if not st.status_tracking_table:
 			return
 
-		# 6️⃣ Get the last row
 		last_row = st.status_tracking_table[-1]
 
-		# 7️⃣ Parse its timestamp
 		prev_dt = last_row.status_updated_on
 		if isinstance(prev_dt, str):
 			prev_dt = datetime.fromisoformat(prev_dt)
 
-		# 8️⃣ Current timestamp
 		now_dt = now_datetime()
 
-		# 9️⃣ Compute delta
 		delta = now_dt - prev_dt
 		days = delta.days
 		seconds = delta.seconds
 		hours, remainder = divmod(seconds, 3600)
 		minutes, secs = divmod(remainder, 60)
 
-		# 🔟 Build a readable time string
 		parts = []
 		if days:
 			parts.append(f"{days} Day{'s' if days != 1 else ''}")
@@ -70,7 +67,6 @@ class DealerClaims(Document):
 			parts.append(f"{secs} Second{'s' if secs != 1 else ''}")
 		elapsed_str = " ".join(parts) or "0 Seconds"
 
-		# 1️⃣1️⃣ Append a new row to the status_tracking_table
 		st.append(
 			"status_tracking_table",
 			{
@@ -80,7 +76,6 @@ class DealerClaims(Document):
 			},
 		)
 
-		# 1️⃣2️⃣ Save the updated tracker
 		st.save(ignore_permissions=True)
 		frappe.db.commit()
           
@@ -148,15 +143,15 @@ def dealer(doc=None, vinno=None, dealer=None, claim_type_code=None, docname=None
         except Exception:
             frappe.throw("No document or docname provided.")
 
-    # 🔹 2. Normal validation for vehicle and duplicate VIN
+
     for row in doc.table_exgk:
         if row.vin_serial_no:
-            # Check if the vehicle belongs to this dealer
-            vehicle = frappe.get_doc("Vehicle Stock", row.vin_serial_no)
-            if not vehicle.original_purchasing_dealer or vehicle.original_purchasing_dealer != doc.dealer:
-                frappe.throw(
-                    "Vehicle was not purchased by the selected dealership on this claim."
-                )
+            # # Check if the vehicle belongs to this dealer
+            # vehicle = frappe.get_doc("Vehicle Stock", row.vin_serial_no)
+            # if not vehicle.original_purchasing_dealer or vehicle.original_purchasing_dealer != doc.dealer:
+            #     frappe.throw(
+            #         "Vehicle was not purchased by the selected dealership on this claim."
+            #     )
 
             # Check if this VIN has already been claimed under the same category (excluding cancelled)
             existing_claim = frappe.db.sql(
@@ -225,7 +220,7 @@ def dealer(doc=None, vinno=None, dealer=None, claim_type_code=None, docname=None
                 frappe.throw("VIN/Serial Number list is mandatory for this claim type.")
 
         if matching_row.parts_mandatory:
-            if not doc.claim_parts or len(doc.claim_parts) == 0:
+            if not doc.table_zhls or len(doc.table_zhls) == 0:
                 frappe.throw("Claim Parts list is mandatory for this claim type.")
 
     # Step 3: Check for duplicate VIN/Serial Numbers in the claim
@@ -234,6 +229,13 @@ def dealer(doc=None, vinno=None, dealer=None, claim_type_code=None, docname=None
         if row.vin_serial_no in vin_list:
             frappe.throw(f"Duplicate VIN Serial No found: {row.vin_serial_no}")
         vin_list.append(row.vin_serial_no)
+
+    if doc.fleet_customer and doc.table_exgk:
+        for row in doc.table_exgk:
+            if row.vin_serial_no:
+                vehicle = frappe.get_doc("Vehicle Stock", row.vin_serial_no)
+                if not vehicle.fleet_customer or vehicle.fleet_customer != doc.fleet_customer:
+                    frappe.throw("Fleet Customer Incorrect")
 
     # Step 4: Ensure invoice_number is unique across Dealer Claims (excluding cancelled)
     if (doc.invoice_number or "").strip():
@@ -307,6 +309,7 @@ def dealer(doc=None, vinno=None, dealer=None, claim_type_code=None, docname=None
                 "N/A"
             )
 
+
             # Create message for unmatched VINs
             message = "<br>".join([
                 f"VIN <strong>{vin}</strong> is not eligible for <strong>{doc.claim_description}</strong>. "
@@ -314,14 +317,11 @@ def dealer(doc=None, vinno=None, dealer=None, claim_type_code=None, docname=None
                 for vin in missing_vins
             ])
 
-            # Update and persist claim status
-            doc.claim_status = "Claim Declined"
-            if doc.name:
-                frappe.db.set_value("Dealer Claims", doc.name, "claim_status", "Claim Declined")
-                frappe.db.commit()
 
-            # Show message and stop processing
-            frappe.msgprint(message, indicator="red", alert=False)
+            if sale_type != None: # should allow if no sale type is selected
+                frappe.throw(message, frappe.ValidationError)
+
+
 
     except Exception as e:
         if isinstance(e, frappe.ValidationError):
@@ -411,3 +411,22 @@ def update_claim_age():
 
 		except Exception as e:
 			frappe.log_error(message=str(e), title="Claim Age (Days) Update Error")
+
+@frappe.whitelist()
+def get_retail_date(vin_serial_no):
+	if not vin_serial_no:
+		return None
+	
+	result = frappe.db.sql("""
+		SELECT vr.retail_date
+		FROM `tabVehicle Retail` vr
+		INNER JOIN `tabVehicles Sale Items` vsi ON vsi.parent = vr.name
+		WHERE vsi.vin_serial_no = %s
+		AND vr.docstatus = 1
+		ORDER BY vr.retail_date DESC
+		LIMIT 1
+	""", (vin_serial_no,), as_dict=True)
+	
+	if result and len(result) > 0:
+		return result[0].retail_date
+	return None

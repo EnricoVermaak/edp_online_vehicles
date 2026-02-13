@@ -150,7 +150,7 @@
    "in_list_view": 1,
    "in_standard_filter": 1,
    "label": "Company Reg No",
-   "mandatory_depends_on": "eval:doc.customer_type == \"Business\"",
+   "reqd": 1,
    "unique": 1
   },
   {
@@ -200,9 +200,10 @@
   {
    "allow_in_quick_entry": 1,
    "fieldname": "province_state",
-   "fieldtype": "Link",
+   "fieldtype": "Data",
    "label": "Province/ State",
-   "options": "Province or State"
+   "options": "Province or State",
+   "reqd": 1
   },
   {
    "allow_in_quick_entry": 1,
@@ -240,13 +241,15 @@
   {
    "fieldname": "linked_vehicles_tab",
    "fieldtype": "Tab Break",
-   "label": "Linked Vehicles"
+   "label": "Linked Vehicles",
+   "permlevel": 1
   },
   {
    "fieldname": "vehicles_linked_to_customer",
    "fieldtype": "Table",
    "label": "Vehicles Linked to Customer",
    "options": "Linked Vehicles",
+   "permlevel": 1,
    "read_only": 1
   },
   {
@@ -280,7 +283,8 @@
    "allow_in_quick_entry": 1,
    "fieldname": "company_name",
    "fieldtype": "Data",
-   "label": "Company Name"
+   "label": "Company Name",
+   "reqd": 1
   },
   {
    "fieldname": "customer_full_name",
@@ -305,7 +309,8 @@
    "fieldname": "country",
    "fieldtype": "Link",
    "label": "Country",
-   "options": "Country"
+   "options": "Country",
+   "reqd": 1
   },
   {
    "fieldname": "other_section",
@@ -342,7 +347,7 @@
    "link_fieldname": "customer"
   }
  ],
- "modified": "2026-02-08 17:00:54.315328",
+ "modified": "2026-02-09 14:33:27.654581",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Fleet Customer",

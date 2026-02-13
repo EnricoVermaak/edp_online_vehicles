@@ -12,6 +12,7 @@
   "order_type",
   "delivery_method",
   "sales_person",
+  "part_picking_slip",
   "column_break_fzrr",
   "part_order",
   "dealer",
@@ -64,7 +65,8 @@
   "section_break_sgsf",
   "total_picking_time",
   "column_break_zefm",
-  "total_despatch_time"
+  "total_despatch_time",
+  "dashboard_tab"
  ],
  "fields": [
   {
@@ -139,7 +141,6 @@
    "fieldname": "table_ugma",
    "fieldtype": "Table",
    "options": "Part Order Item",
-   "read_only": 1,
    "reqd": 1
   },
   {
@@ -398,6 +399,18 @@
    "fieldname": "dms_no",
    "fieldtype": "Data",
    "label": "DMS No"
+  },
+  {
+   "fieldname": "dashboard_tab",
+   "fieldtype": "Tab Break",
+   "label": "Connections",
+   "show_dashboard": 1
+  },
+  {
+   "fieldname": "part_picking_slip",
+   "fieldtype": "Link",
+   "label": "Part Picking Slip",
+   "options": "Part Picking Slip"
   }
  ],
  "index_web_pages_for_search": 1,
@@ -413,7 +426,7 @@
    "link_fieldname": "hq_part_order"
   }
  ],
- "modified": "2026-02-06 08:35:29.850074",
+ "modified": "2026-02-09 14:30:29.454584",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "HQ Part Order",
