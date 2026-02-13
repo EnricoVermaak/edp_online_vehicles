@@ -139,7 +139,6 @@
    "in_standard_filter": 1,
    "label": "Vehicles",
    "options": "Vehicles Shipment Items",
-   "read_only": 1,
    "reqd": 1
   },
   {
@@ -233,13 +232,13 @@
    "fieldname": "documents",
    "fieldtype": "Table",
    "label": "Documents",
-   "options": "Attached Documents"
+   "options": "DocType Documents"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-02-11 16:51:32.821468",
+ "modified": "2026-02-13 16:49:42.898563",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicles Shipment",

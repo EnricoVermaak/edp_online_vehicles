@@ -325,7 +325,6 @@ auth_hooks = ["edp_online_vehicles.auth.set_default"]
 # }
 
 fixtures = [
-<<<<<<< HEAD
     {
         "dt": "Property Setter",
         "filters": [["name", "in", ["Delivery Trip-departure_time-reqd"]]],
@@ -349,32 +348,6 @@ fixtures = [
             ]
         ],
     },
-=======
-	{"dt": "Property Setter", "filters": [["name", "in", ["Delivery Trip-departure_time-reqd"]]]},
-	{"dt": "Website Sidebar", "filters": [["name", "in", ["EDP Sidebar"]]]},
-	{
-		"dt": "Web Form",
-		"filters": [["name", "in", ["rfs", "vehicles-warranty-claim", "vehicles", "services"]]],
-	},
-	{
-		"dt": "Portal Settings",
-		"filters": [
-			[
-				"name",
-				"in",
-				[
-					"Portal Settings",
-				],
-			]
-		],
-	},
-       {
-        "dt": "Custom Field",
-        "filters": [
-            ["name", "in", [
-                "Delivery Note-custom_hq_part_order",
-            ]]
-        ]
-    }
->>>>>>> 41762e501e93dd5628783d653b1ba50f0e13e485
+
 ]
+
