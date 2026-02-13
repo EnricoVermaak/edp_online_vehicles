@@ -3382,12 +3382,11 @@ function check_and_fetch(frm, cdt, cdn) {
                 options = r.message;
             }
 
-			if (options.length) {
-				setTimeout(() => {
-					updateDealerOptions(frm, options);
-				}, 100);
-			}
+			// if (options.length) {
+				
+			// }
             // Update the dropdown options for both possible field names
+        	updateDealerOptions1(frm, options);
         }
     });
 }
@@ -3407,7 +3406,11 @@ const calculate_sub_total = (frm, field_name, table_name) => {
 	);
 };
 
-function updateDealerOptions(frm, options) {
+function updateDealerOptions(params) {
+	return
+}
+
+function updateDealerOptions1(frm, options) {
     if (!options || options.length === 0) {
 		console.warn("No dealers available to set.");
 		return;
