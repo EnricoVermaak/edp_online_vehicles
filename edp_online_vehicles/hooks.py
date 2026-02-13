@@ -199,9 +199,9 @@ doc_events = {
 		"on_submit": [
 			"edp_online_vehicles.events.generate_pdf.attach_pdf",
 			"edp_online_vehicles.events.auto_move_stock.auto_move_stock_delivery_note",
+            "edp_online_vehicles.events.parts.update_hq_from_dn_after_insert"
 		],
         "on_update": "edp_online_vehicles.events.part_order.update_part_order",
-        "after_insert": "edp_online_vehicles.events.parts.update_hq_from_dn_after_insert",
 	},
 	"Stock Entry": {
 		"on_submit": "edp_online_vehicles.edp_online_vehicles.doctype.vehicle_stock.vehicle_stock.set_vehicle_received_date",
