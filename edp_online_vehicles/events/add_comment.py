@@ -20,25 +20,27 @@ def add_comments(doctype, docname, message):
 def get_dealers(model=None, colour=None):
     if not model or not colour:
         return []
+    settings = frappe.get_single("Vehicle Stock Settings")
+    allow = settings.allow_dealer_to_dealer_orders
+    if allow:
+        stock_dealers = frappe.get_all(
+            "Vehicle Stock",
+            filters={
+                "model": model,
+                "colour": colour,
+                "availability_status": "Available"
+            },
+            pluck="dealer"
+        )
 
-    stock_dealers = frappe.get_all(
-        "Vehicle Stock",
-        filters={
-            "model": model,
-            "colour": colour,
-            "availability_status": "Available"
-        },
-        pluck="dealer"
-    )
+        head_office_companies = frappe.get_all(
+            "Company",
+            filters={"custom_head_office": 1},
+            pluck="name"
+        )
 
-    head_office_companies = frappe.get_all(
-        "Company",
-        filters={
-            "custom_head_office": 1,
-            "name": ["in", stock_dealers]  
-        },
-        pluck="name"
-    )
-    all_dealers = list(set(stock_dealers + head_office_companies))
+        all_dealers = stock_dealers + head_office_companies
 
-    return all_dealers
+        all_dealers = list(set(all_dealers))
+
+        return all_dealers
