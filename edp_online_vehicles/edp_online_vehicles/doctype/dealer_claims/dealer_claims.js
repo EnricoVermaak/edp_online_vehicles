@@ -69,7 +69,7 @@ frappe.ui.form.on("Dealer Claims", {
 	claim_status(frm){
 		if (frm.doc.claim_status == "Approved for Remittance") {
 			if (previous_status != "Submitted for HOD Approval") {
-				frappe.msgprint("Claim status can only be changed to 'Approved for Remittance'.");
+				frappe.msgprint("Claim status can only be changed to 'Approved for Remittance' when the current status is 'Submitted for HOD Approval'.");
 				frm.set_value("claim_status", previous_status || "");
 				return;
 			}
@@ -1116,6 +1116,9 @@ frappe.ui.form.on("Dealer Claims", {
 	// },
 	part_percentage_discount: function(frm) {
 		calculate_fleet_discount(frm);
+	},
+	table_zhls_remove: function(frm) {
+		calculate_parts_total_excl(frm);
 	},
 });
 
