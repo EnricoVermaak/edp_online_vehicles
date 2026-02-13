@@ -69,7 +69,7 @@ frappe.ui.form.on("Dealer Claims", {
 	claim_status(frm){
 		// Remove buttons first to avoid duplicates
 		frm.remove_custom_button('Updated');
-		frm.remove_custom_button('Submit Claim');
+//		frm.remove_custom_button('Submit Claim');
 		
 		// Show "Updated" button only when status is "Claim Pending Info"
 		if (frm.doc.claim_status == "Claim Pending Info") {
@@ -80,12 +80,12 @@ frappe.ui.form.on("Dealer Claims", {
 		}
 		
 		// Show "Submit Claim" button only when status is "Pending"
-		if (frm.doc.claim_status == "Pending") {
-			frm.add_custom_button("Submit Claim", function () {
-				frm.set_value("claim_status", "Claim Submitted");
-				frm.save();
-			});
-		}
+		// if (frm.doc.claim_status == "Pending") {
+		// 	frm.add_custom_button("Submit Claim", function () {
+		// 		frm.set_value("claim_status", "Claim Submitted");
+		// 		frm.save();
+		// 	});
+		// }
 	},
 	refresh(frm) {
 		if (frappe.user.has_role("Claim Administrator")) {
@@ -96,7 +96,7 @@ frappe.ui.form.on("Dealer Claims", {
 		
 		// Remove buttons first to avoid duplicates
 		frm.remove_custom_button('Updated');
-		frm.remove_custom_button('Submit Claim');
+//		frm.remove_custom_button('Submit Claim');
 		
 		// Show "Updated" button only when status is "Claim Pending Info"
 		if (frm.doc.claim_status == "Claim Pending Info") {
@@ -106,13 +106,13 @@ frappe.ui.form.on("Dealer Claims", {
 			});
 		}
 		
-		// Show "Submit Claim" button only when status is "Pending"
-		if (frm.doc.claim_status == "Pending") {
-			frm.add_custom_button("Submit Claim", function () {
-				frm.set_value("claim_status", "Claim Submitted");
-				frm.save();
-			});
-		}
+		// // Show "Submit Claim" button only when status is "Pending"
+		// if (frm.doc.claim_status == "Pending") {
+		// 	frm.add_custom_button("Submit Claim", function () {
+		// 		frm.set_value("claim_status", "Claim Submitted");
+		// 		frm.save();
+		// 	});
+		// }
 
 		// Child table field filter for VIN
         frm.fields_dict["table_exgk"].grid.get_field("vin_serial_no").get_query = function(doc, cdt, cdn) {
@@ -484,31 +484,23 @@ frappe.ui.form.on("Dealer Claims", {
 					});
 				});
 
-			if (frm.claim_types_mandatory_vin) {
-				frm.clear_table("table_exgk");
-
-				var mandatory_vin =
-					frm.claim_types_mandatory_vin[frm.doc.claim_description];
-
-				if (mandatory_vin) {
-					frm.toggle_reqd("table_exgk", mandatory_vin == 1);
-				}
-
-				frm.refresh_field("table_exgk");
+			var mandatory_vin = false;
+			if (frm.claim_types_mandatory_vin && frm.doc.claim_description) {
+				mandatory_vin = frm.claim_types_mandatory_vin[frm.doc.claim_description] == 1;
 			}
+			
+			frm.clear_table("table_exgk");
+			frm.toggle_reqd("table_exgk", mandatory_vin);
+			frm.refresh_field("table_exgk");
 
-			if (frm.claim_types_mandatory_part) {
-				frm.clear_table("claim_parts");
-
-				var mandatory_part =
-					frm.claim_types_mandatory_part[frm.doc.claim_description];
-
-				if (mandatory_part) {
-					frm.toggle_reqd("claim_parts", mandatory_part == 1);
-				}
-
-				frm.refresh_field("claim_parts");
+			var mandatory_part = false;
+			if (frm.claim_types_mandatory_part && frm.doc.claim_description) {
+				mandatory_part = frm.claim_types_mandatory_part[frm.doc.claim_description] == 1;
 			}
+			
+			frm.clear_table("table_zhls");
+			frm.toggle_reqd("table_zhls", mandatory_part);
+			frm.refresh_field("table_zhls");
 
 			if (frm.claim_types_retail_only) {
 				frm.show_only_retail =
@@ -979,6 +971,13 @@ frappe.ui.form.on("Dealer Claims", {
 						frm.set_value("fleet_customer_name", full_name);
 						frm.set_value("fleet_customer", r.message[0]);
 						frm.set_value("fleet_customer_mobile", r.message[3]);
+						frm.set_value("part_percentage_discount", r.message[4]);
+						rm.set_value("vehicle_percentage_discount", r.message[5]);
+						// frm.set_value("part_percentage_discount", r.message[4]);
+						// frm.set_value("part_percentage_discount", r.message[4]);
+						// frm.set_value("part_percentage_discount", r.message[4]);
+						// frm.set_value("part_percentage_discount", r.message[4]);
+						// frm.set_value("part_percentage_discount", r.message[4]);
 
 						let reg_no = frm.doc.company_registration_no;
 						let cleaned_reg_no = reg_no.replace(/\s/g, "");

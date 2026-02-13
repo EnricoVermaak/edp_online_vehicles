@@ -212,7 +212,7 @@ def dealer(doc=None, vinno=None, dealer=None, claim_type_code=None, docname=None
                 frappe.throw("VIN/Serial Number list is mandatory for this claim type.")
 
         if matching_row.parts_mandatory:
-            if not doc.claim_parts or len(doc.claim_parts) == 0:
+            if not doc.table_zhls or len(doc.table_zhls) == 0:
                 frappe.throw("Claim Parts list is mandatory for this claim type.")
 
     # Step 3: Check for duplicate VIN/Serial Numbers in the claim
