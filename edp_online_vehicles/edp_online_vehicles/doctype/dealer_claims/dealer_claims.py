@@ -309,6 +309,7 @@ def dealer(doc=None, vinno=None, dealer=None, claim_type_code=None, docname=None
                 "N/A"
             )
 
+
             # Create message for unmatched VINs
             message = "<br>".join([
                 f"VIN <strong>{vin}</strong> is not eligible for <strong>{doc.claim_description}</strong>. "
@@ -316,7 +317,11 @@ def dealer(doc=None, vinno=None, dealer=None, claim_type_code=None, docname=None
                 for vin in missing_vins
             ])
 
-            frappe.throw(message, frappe.ValidationError)
+
+            if sale_type != None: # should allow if no sale type is selected
+                frappe.throw(message, frappe.ValidationError)
+
+
 
     except Exception as e:
         if isinstance(e, frappe.ValidationError):

@@ -69,7 +69,7 @@ frappe.ui.form.on("Dealer Claims", {
 	claim_status(frm){
 		if (frm.doc.claim_status == "Approved for Remittance") {
 			if (previous_status != "Submitted for HOD Approval") {
-				frappe.msgprint("Claim status can only be changed to 'Approved for Remittance' when the current status is 'Submitted for HOD Approval'.");
+				frappe.msgprint("Claim status can only be changed to 'Approved for Remittance'.");
 				frm.set_value("claim_status", previous_status || "");
 				return;
 			}
@@ -1117,9 +1117,6 @@ frappe.ui.form.on("Dealer Claims", {
 	part_percentage_discount: function(frm) {
 		calculate_fleet_discount(frm);
 	},
-	table_zhls_remove: function(frm) {
-		calculate_parts_total_excl(frm);
-	},
 });
 
 frappe.ui.form.on("Vehicles Item", {
@@ -1185,29 +1182,28 @@ frappe.ui.form.on("Vehicles Item", {
     },
 });
 
-function calculate_parts_total_excl(frm) {
-    let parts_total = 0;
-    if (frm.doc.table_zhls && frm.doc.table_zhls.length > 0) {
-        frm.doc.table_zhls.forEach(function(row) {
-            if (row.total_excl) {
-                parts_total += parseFloat(row.total_excl) || 0;
-            }
-        });
-    }
-    frm.set_value("parts_total_excl", parts_total);
+const calculate_parts_total_excl = (frm) => {
+    let total = 0;
+    (frm.doc.table_zhls || []).forEach(row => {
+        total += (row.price_excl || 0) * (row.qty || 0);
+    });
+    frm.set_value("parts_total_excl", total);
+    frm.refresh_field("parts_total_excl");
     calculate_fleet_discount(frm);
-}
+};
 
-function calculate_fleet_discount(frm) {
+const calculate_fleet_discount = (frm) => {
     let parts_total = parseFloat(frm.doc.parts_total_excl) || 0;
     let discount_percentage = parseFloat(frm.doc.part_percentage_discount) || 0;
-    let discount_amount = parts_total * (discount_percentage/100);
+    let discount_amount = parts_total * (discount_percentage / 100);
     frm.set_value("total_fleet_discount_amt_excl", discount_amount);
-	frm.set_value("claim_amt", discount_amount);
-}
+    frm.set_value("claim_amt", discount_amount);
+    frm.refresh_field("total_fleet_discount_amt_excl");
+    frm.refresh_field("claim_amt");
+};
 
 frappe.ui.form.on("Dealer Claim Parts", {
-    part_no: function(frm, cdt, cdn) {
+    part_no(frm, cdt, cdn) {
         let row = locals[cdt][cdn];
         setTimeout(function() {
             let updated_row = locals[cdt][cdn];
@@ -1216,27 +1212,29 @@ frappe.ui.form.on("Dealer Claim Parts", {
                 let price_excl = updated_row.price_excl || 0;
                 let total = qty * price_excl;
                 frappe.model.set_value(cdt, cdn, "total_excl", total);
+                frm.refresh_field("table_zhls");
                 calculate_parts_total_excl(frm);
             }
         }, 100);
     },
-    qty: function(frm, cdt, cdn) {
+    price_excl(frm, cdt, cdn) {
         let row = locals[cdt][cdn];
-        if (row.price_excl !== undefined) {
-            let total = (row.qty || 0) * (row.price_excl || 0);
-            frappe.model.set_value(cdt, cdn, "total_excl", total);
-            calculate_parts_total_excl(frm);
-        }
+        let total_excl = (row.price_excl || 0) * (row.qty || 0);
+        frappe.model.set_value(cdt, cdn, "total_excl", total_excl);
+        frm.refresh_field("table_zhls");
+        calculate_parts_total_excl(frm);
     },
-    price_excl: function(frm, cdt, cdn) {
+    qty(frm, cdt, cdn) {
         let row = locals[cdt][cdn];
-        if (row.qty !== undefined) {
-            let total = (row.qty || 0) * (row.price_excl || 0);
-            frappe.model.set_value(cdt, cdn, "total_excl", total);
-            calculate_parts_total_excl(frm);
-        }
+        let total_excl = (row.price_excl || 0) * (row.qty || 0);
+        frappe.model.set_value(cdt, cdn, "total_excl", total_excl);
+        frm.refresh_field("table_zhls");
+        calculate_parts_total_excl(frm);
     },
-    total_excl: function(frm, cdt, cdn) {
+    table_zhls_remove(frm) {
+        calculate_parts_total_excl(frm);
+    },
+    total_excl(frm) {
         calculate_parts_total_excl(frm);
     },
 });
