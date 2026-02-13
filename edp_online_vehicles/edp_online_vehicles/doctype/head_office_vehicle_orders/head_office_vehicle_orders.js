@@ -432,11 +432,20 @@ frappe.ui.form.on("Head Office Vehicle Orders", {
 						if (selected_tab === "reserved" && selected_vin) {
 							frappe.confirm(
 								__(
-									"This VIN/Serial No has been reserved. Do you wish to continue?",
+									"This VIN/Serial No has been reserved. Are you sure you want to allocate this vehicle to the order?",
 								),
 								() => applySelection(),
-								() => {},
+								() => { },
 							);
+						} else if (selected_tab === "shipment" && selected_vin) {
+							frappe.confirm(
+								__(
+									"This VIN/Serial No is part of a shipment that has not been. Are you sure you want to allocate this vehicle to the order?",
+								),
+								() => applySelection_shipment(),
+								() => { },
+							);
+
 						} else if (selected_vin) {
 							applySelection();
 						} else {
@@ -452,6 +461,11 @@ frappe.ui.form.on("Head Office Vehicle Orders", {
 							frm.set_value("status", "Processed");
 							frm.toggle_display("vinserial_no", true);
 							frm.set_value("shipment_stock", "");
+							dialog.hide();
+						}
+						function applySelection_shipment() {
+							frm.set_value("status", "Processed");
+							frm.set_value("shipment_stock", selected_vin);
 							dialog.hide();
 						}
 					},
@@ -686,7 +700,7 @@ frappe.ui.form.on("Head Office Vehicle Orders", {
 										.toUpperCase();
 									$(this).toggle(
 										vin.includes(vinTxt) &&
-											col.includes(colTxt),
+										col.includes(colTxt),
 									);
 								});
 						},
@@ -716,7 +730,7 @@ frappe.ui.form.on("Head Office Vehicle Orders", {
 										.toUpperCase();
 									$(this).toggle(
 										vin.includes(vinTxt) &&
-											col.includes(colTxt),
+										col.includes(colTxt),
 									);
 								});
 						},
@@ -746,7 +760,7 @@ frappe.ui.form.on("Head Office Vehicle Orders", {
 										.toUpperCase();
 									$(this).toggle(
 										vin.includes(vinTxt) &&
-											col.includes(colTxt),
+										col.includes(colTxt),
 									);
 								});
 						},
@@ -764,7 +778,7 @@ frappe.ui.form.on("Head Office Vehicle Orders", {
 	},
 
 	un_allocate: function (frm) {
-		if (previous_vinno_value) {
+		if (previous_vinno_value || frm.doc.shipment_no) {
 			const dialog = new frappe.ui.Dialog({
 				title: __("Reason"),
 				fields: [
@@ -779,25 +793,39 @@ frappe.ui.form.on("Head Office Vehicle Orders", {
 				primary_action(values) {
 					if (values.comment) {
 						let comment = values.comment;
+						if (frm.doc.vinserial_no) {
+							frm.set_value("vinserial_no", null).then(() => {
+								frm.call("remove_allocated_vinno", {
+									previous_vinno_value,
+									comment,
+								}).then((r) => {
+									if (r.message) {
+										frappe.show_alert(
+											{
+												message: r.message,
+											},
+											10,
+										);
 
-						frm.set_value("vinserial_no", null).then(() => {
-							frm.call("remove_allocated_vinno", {
-								previous_vinno_value,
-								comment,
-							}).then((r) => {
-								if (r.message) {
-									frappe.show_alert(
-										{
-											message: r.message,
-										},
-										10,
-									);
-
-									frm.save();
-									dialog.hide();
-								}
+									}
+								});
 							});
-						});
+						}
+						
+						if (frm.doc.shipment_stock) {
+							frappe.call({
+								method: "edp_online_vehicles.events.get_available_orders.unallocate_shipment",
+								args: {
+									shipment_no: frm.doc.shipment_no,
+									shipment_stock: frm.doc.shipment_stock
+								}
+							})
+							frm.set_value("shipment_stock", null)
+							frm.set_value("shipment_no", null)
+							frm.set_value("shipment_target_warehouse", null)
+						}
+						frm.save();
+						dialog.hide();
 					} else {
 						frappe.msgprint(
 							__(
@@ -874,7 +902,7 @@ frappe.ui.form.on("Head Office Vehicle Orders", {
 			},
 			freeze: true,
 			freeze_message: __("Checking Invoice..."),
-			callback: function(r) {
+			callback: function (r) {
 				if (r.message) {
 					frappe.show_alert({
 						message: r.message,
@@ -883,7 +911,7 @@ frappe.ui.form.on("Head Office Vehicle Orders", {
 				}
 				frm.reload_doc();
 			},
-			error: function(r) {
+			error: function (r) {
 				frappe.show_alert({
 					message: r.message || __("Failed to check invoice"),
 					indicator: "red"
@@ -900,7 +928,7 @@ frappe.ui.form.on("Head Office Vehicle Orders", {
 			},
 			freeze: true,
 			freeze_message: __("Requesting Credit Note..."),
-			callback: function(r) {
+			callback: function (r) {
 				if (r.message) {
 					frappe.show_alert({
 						message: r.message,
@@ -909,7 +937,7 @@ frappe.ui.form.on("Head Office Vehicle Orders", {
 				}
 				frm.reload_doc();
 			},
-			error: function(r) {
+			error: function (r) {
 				frappe.show_alert({
 					message: r.message || __("Failed to request credit note"),
 					indicator: "red"

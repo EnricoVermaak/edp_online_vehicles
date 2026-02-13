@@ -130,6 +130,7 @@ def head_office_orders_shipment_dialog_filter(model, availability_status, dealer
             esi.vin_serial_no <> ''
             AND esi.model_code = %(model)s
             AND esi.status = 'Not Received'
+            AND (esi.reserve_to_order is null OR esi.reserve_to_order = '')
          ORDER BY
             es.eta_warehouse ASC
       """,
@@ -214,10 +215,14 @@ def shipment_vin_serial_check(vin_serial_no, shipment_name):
 
 @frappe.whitelist()
 def back_order_custom_qry(doctype, txt, searchfield, start, page_len, filters):
-	model = filters.get("model")
-	colour = filters.get("colour")
+    model = filters.get("model")
+    colour = filters.get("colour")
 
-	return frappe.db.sql(
+    colour = frappe.get_value("Model Colour", colour, "colour")
+
+    # frappe.throw(f"colour: {colour}")
+
+    return frappe.db.sql(
 		"""
         SELECT hq.name, hq.description, hq.model, hq.colour
         FROM `tabHead Office Vehicle Orders` hq

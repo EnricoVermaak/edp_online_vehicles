@@ -8,8 +8,8 @@ app_license = "mit"
 # Apps
 # ------------------
 
-# 
-required_apps = ["erpnext", "hrms","insights"]
+#
+required_apps = ["hrms", "insights"]
 
 # Each item in the list will be shown as an app in the apps page
 # add_to_apps_screen = [
@@ -28,22 +28,22 @@ required_apps = ["erpnext", "hrms","insights"]
 # include js, css files in header of desk.html
 app_include_css = "edp_online_vehicles.bundle.css"
 app_include_js = [
-	"edp_online_vehicles1.bundle.js",
-	"/assets/edp_online_vehicles/js/vehicles_service_scan.js",
-	"/assets/edp_online_vehicles/js/recon_restrictions.js",
-	"/assets/edp_online_vehicles/js/breadcrumb.js",
-	"/assets/edp_online_vehicles/js/custom_nav_icon.js",
-	"/assets/edp_online_vehicles/js/popup_cleanup.js",
-	"/assets/edp_online_vehicles/js/hide_integration_workspaces.js",
-	"/assets/edp_online_vehicles/js/default_order_report_view.js",
-	"/assets/edp_online_vehicles/js/hide_searchbar.js",
+    "edp_online_vehicles1.bundle.js",
+    "/assets/edp_online_vehicles/js/vehicles_service_scan.js",
+    "/assets/edp_online_vehicles/js/recon_restrictions.js",
+    "/assets/edp_online_vehicles/js/breadcrumb.js",
+    "/assets/edp_online_vehicles/js/custom_nav_icon.js",
+    "/assets/edp_online_vehicles/js/popup_cleanup.js",
+    "/assets/edp_online_vehicles/js/hide_integration_workspaces.js",
+    "/assets/edp_online_vehicles/js/default_order_report_view.js",
+    "/assets/edp_online_vehicles/js/hide_searchbar.js",
 ]
 
 # include js, css files in header of web template
 web_include_css = "/assets/edp_online_vehicles/css/edp.css"
 web_include_js = [
-	"edp_online_vehicles.bundle.js",
-	"/assets/edp_online_vehicles/js/session_expiration_redirect.js",
+    "edp_online_vehicles.bundle.js",
+    "/assets/edp_online_vehicles/js/session_expiration_redirect.js",
 ]
 
 # include custom scss in every website theme (without file extension ".scss")
@@ -58,10 +58,10 @@ web_include_js = [
 
 # include js in doctype views
 doctype_js = {
-	"Delivery Trip": "public/js/delivery_trip.js",
-	"Employee Separation": "public/js/employee_separation.js",
-	"Sales Invoice": "public/js/sales_invoice.js",
-	"Company": "public/js/company.js",
+    "Delivery Trip": "public/js/delivery_trip.js",
+    "Employee Separation": "public/js/employee_separation.js",
+    "Sales Invoice": "public/js/sales_invoice.js",
+    "Company": "public/js/company.js",
 }
 # doctype_list_js = {"doctype" : "public/js/doctype_list.js"}
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
@@ -142,17 +142,17 @@ home_page = "/me"
 # Permissions evaluated in scripted ways
 
 permission_query_conditions = {
-	"Vehicles Service": "edp_online_vehicles.permissions.vehicles_service_query",
-	"Vehicle Stock": "edp_online_vehicles.permissions.vehicles_stock_query",
-	"Vehicles Warranty Claims": "edp_online_vehicles.permissions.vehicles_warranty_query",
-	"Request for Service": "edp_online_vehicles.permissions.request_for_service_query",
-	"Vehicles Load Test": "edp_online_vehicles.permissions.vehicles_load_test_query",
-	"Vehicles PDI Inspection": "edp_online_vehicles.permissions.vehicles_pdi_inspection_query",
-	"Vehicle Buy Back": "edp_online_vehicles.permissions.vehicle_buy_back_query",
+    "Vehicles Service": "edp_online_vehicles.permissions.vehicles_service_query",
+    "Vehicle Stock": "edp_online_vehicles.permissions.vehicles_stock_query",
+    "Vehicles Warranty Claims": "edp_online_vehicles.permissions.vehicles_warranty_query",
+    "Request for Service": "edp_online_vehicles.permissions.request_for_service_query",
+    "Vehicles Load Test": "edp_online_vehicles.permissions.vehicles_load_test_query",
+    "Vehicles PDI Inspection": "edp_online_vehicles.permissions.vehicles_pdi_inspection_query",
+    "Vehicle Buy Back": "edp_online_vehicles.permissions.vehicle_buy_back_query",
 }
 
 has_permission = {
-	"Vehicles PDI Inspection": "edp_online_vehicles.edp_online_vehicles.doctype.vehicles_pdi_inspection.vehicles_pdi_inspection.has_permission",
+    "Vehicles PDI Inspection": "edp_online_vehicles.edp_online_vehicles.doctype.vehicles_pdi_inspection.vehicles_pdi_inspection.has_permission",
 }
 
 # DocType Class
@@ -168,64 +168,68 @@ has_permission = {
 # Hook on document methods and events
 
 doc_events = {
-	"DocShare": {
-		"after_insert": "edp_online_vehicles.events.share_edp.after_insert",
-	},
-	"DocType": {"validate": "edp_online_vehicles.events.developer_validation.get_permission"},
-	"Property Setter": {
-		"validate": "edp_online_vehicles.events.developer_validation.get_permission"
-	},
-	"Custom Field": {"validate": "edp_online_vehicles.events.developer_validation.get_permission"},
-	"ToDo": {"on_update": "edp_online_vehicles.events.share_edp.remove_share"},
-	"Customer": {
-		"autoname": "edp_online_vehicles.events.customer.autoname",
-		"on_update": "edp_online_vehicles.events.customer_check_filed.update_vehicles_services",
-	},
-	"Delivery Trip": {
-		"validate": "edp_online_vehicles.events.create_si.create_si_from_delivery_trip",
-	},
-	"Company": {
-		"before_insert": "edp_online_vehicles.events.adjust_company_name.adjust_company_name",
-		"after_insert": "edp_online_vehicles.events.create_customer.create_customer_if_checked",
-	},
-	"Sales Invoice": {
-		"autoname": "edp_online_vehicles.events.create_si.sales_invoice_name",
-	},
-	"Pick List": {
-		"before_insert": "edp_online_vehicles.events.sale_order_custom_job_reference.set_job_card_no_on_pick_list"
-	},
-	"Delivery Note": {
-		"before_insert": "edp_online_vehicles.events.sale_order_custom_job_reference.set_job_card_no_delivery_note",
-		"on_submit": [
-			"edp_online_vehicles.events.generate_pdf.attach_pdf",
-			"edp_online_vehicles.events.auto_move_stock.auto_move_stock_delivery_note",
-		],
-	},
-	"Stock Entry": {
-		"on_submit": "edp_online_vehicles.edp_online_vehicles.doctype.vehicle_stock.vehicle_stock.set_vehicle_received_date",
-	},
-	"Employee Onboarding": {
-		"on_submit": "edp_online_vehicles.events.create_final_seperation_doc.create_final_onboarding_doc"
-	},
-	"Employee Separation": {
-		"on_submit": "edp_online_vehicles.events.create_final_seperation_doc.create_final_seperation_doc"
-	},
-	"Head Office Vehicle Orders": {
-		"after_insert": "edp_online_vehicles.events.create_sales_order.create_sales_order_hq_equip_sale"
-	},
-	"Vehicles Dealer to Dealer Order": {
-		"after_insert": "edp_online_vehicles.events.create_sales_order.create_sales_order_dealer_equip_sale"
-	},
-	"Payment Entry": {
-		"on_submit": "edp_online_vehicles.events.check_sales_invoice.check_sales_invoice_on_payment"
-	},
-	"Item": {"after_insert": "edp_online_vehicles.events.check_item_settings.check_item_settings"},
+    "DocShare": {
+        "after_insert": "edp_online_vehicles.events.share_edp.after_insert",
+    },
+    "DocType": {
+        "validate": "edp_online_vehicles.events.developer_validation.get_permission"
+    },
+    "Property Setter": {
+        "validate": "edp_online_vehicles.events.developer_validation.get_permission"
+    },
+    "Custom Field": {
+        "validate": "edp_online_vehicles.events.developer_validation.get_permission"
+    },
+    "ToDo": {"on_update": "edp_online_vehicles.events.share_edp.remove_share"},
+    "Customer": {
+        "autoname": "edp_online_vehicles.events.customer.autoname",
+        "on_update": "edp_online_vehicles.events.customer_check_filed.update_vehicles_services",
+    },
+    "Delivery Trip": {
+        "validate": "edp_online_vehicles.events.create_si.create_si_from_delivery_trip",
+    },
+    "Company": {
+        "before_insert": "edp_online_vehicles.events.adjust_company_name.adjust_company_name",
+        "after_insert": "edp_online_vehicles.events.create_customer.create_customer_if_checked",
+    },
+    "Sales Invoice": {
+        "autoname": "edp_online_vehicles.events.create_si.sales_invoice_name",
+    },
+    "Pick List": {
+        "before_insert": "edp_online_vehicles.events.sale_order_custom_job_reference.set_job_card_no_on_pick_list"
+    },
+    "Delivery Note": {
+        "before_insert": "edp_online_vehicles.events.sale_order_custom_job_reference.set_job_card_no_delivery_note",
+        "on_submit": [
+            "edp_online_vehicles.events.generate_pdf.attach_pdf",
+            "edp_online_vehicles.events.auto_move_stock.auto_move_stock_delivery_note",
+        ],
+    },
+    "Stock Entry": {
+        "on_submit": "edp_online_vehicles.edp_online_vehicles.doctype.vehicle_stock.vehicle_stock.set_vehicle_received_date",
+    },
+    "Employee Onboarding": {
+        "on_submit": "edp_online_vehicles.events.create_final_seperation_doc.create_final_onboarding_doc"
+    },
+    "Employee Separation": {
+        "on_submit": "edp_online_vehicles.events.create_final_seperation_doc.create_final_seperation_doc"
+    },
+    "Head Office Vehicle Orders": {
+        "after_insert": "edp_online_vehicles.events.create_sales_order.create_sales_order_hq_equip_sale"
+    },
+    "Vehicles Dealer to Dealer Order": {
+        "after_insert": "edp_online_vehicles.events.create_sales_order.create_sales_order_dealer_equip_sale"
+    },
+    "Payment Entry": {
+        "on_submit": "edp_online_vehicles.events.check_sales_invoice.check_sales_invoice_on_payment"
+    },
+    "Item": {
+        "after_insert": "edp_online_vehicles.events.check_item_settings.check_item_settings"
+    },
     "Dealer Claims": {
         "validate": "edp_online_vehicles.edp_online_vehicles.doctype.dealer_claims.dealer_claims.dealer",
-		"after_save": "edp_online_vehicles.edp_online_vehicles.doctype.dealer_claims.dealer_claims.after_save"
+        "after_save": "edp_online_vehicles.edp_online_vehicles.doctype.dealer_claims.dealer_claims.after_save",
     },
-
-
 }
 
 
@@ -237,13 +241,11 @@ scheduler_events = {
         "edp_online_vehicles.events.reserved_vehicles.update_reserved_vehicles_status",
         "edp_online_vehicles.edp_online_vehicles.doctype.dealer_claims.dealer_claims.update_claim_age",
     ],
-
     "cron": {
         "0 */6 * * *": [
             "edp_online_vehicles.events.vehicle_aging.update_vehicle_aging",
         ]
     },
-
     "cron": {
         "* * * * *": [
             "edp_online_vehicles.events.check_orders.check_orders_schedule",
@@ -327,22 +329,27 @@ auth_hooks = ["edp_online_vehicles.auth.set_default"]
 # }
 
 fixtures = [
-	{"dt": "Property Setter", "filters": [["name", "in", ["Delivery Trip-departure_time-reqd"]]]},
-	{"dt": "Website Sidebar", "filters": [["name", "in", ["EDP Sidebar"]]]},
-	{
-		"dt": "Web Form",
-		"filters": [["name", "in", ["rfs", "vehicles-warranty-claim", "vehicles", "services"]]],
-	},
-	{
-		"dt": "Portal Settings",
-		"filters": [
-			[
-				"name",
-				"in",
-				[
-					"Portal Settings",
-				],
-			]
-		],
-	},
+    {
+        "dt": "Property Setter",
+        "filters": [["name", "in", ["Delivery Trip-departure_time-reqd"]]],
+    },
+    {"dt": "Website Sidebar", "filters": [["name", "in", ["EDP Sidebar"]]]},
+    {
+        "dt": "Web Form",
+        "filters": [
+            ["name", "in", ["rfs", "vehicles-warranty-claim", "vehicles", "services"]]
+        ],
+    },
+    {
+        "dt": "Portal Settings",
+        "filters": [
+            [
+                "name",
+                "in",
+                [
+                    "Portal Settings",
+                ],
+            ]
+        ],
+    },
 ]

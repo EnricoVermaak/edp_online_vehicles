@@ -231,20 +231,20 @@
    "label": "Delivered"
   },
   {
-   "depends_on": "eval: doc.vinserial_no",
+   "depends_on": "eval: !doc.vinserial_no",
    "fieldname": "shipment_stock",
    "fieldtype": "Data",
    "label": "Shipment Stock",
    "read_only": 1
   },
   {
-   "depends_on": "eval: !doc.vinserial_no",
+   "depends_on": "eval: !doc.vinserial_no && !doc.shipment_stock",
    "fieldname": "allocate",
    "fieldtype": "Button",
    "label": "Allocate"
   },
   {
-   "depends_on": "eval: doc.vinserial_no",
+   "depends_on": "eval: doc.vinserial_no || doc.shipment_stock",
    "fetch_from": "vinserial_no.model",
    "fieldname": "model_delivered",
    "fieldtype": "Data",
@@ -252,15 +252,16 @@
    "read_only": 1
   },
   {
-   "depends_on": "eval: doc.vinserial_no",
+   "depends_on": "eval: doc.vinserial_no || doc.shipment_stock",
    "fetch_from": "vinserial_no.model_year",
+   "fetch_if_empty": 1,
    "fieldname": "modelyear_delivered",
    "fieldtype": "Data",
    "label": "Model Year",
    "read_only": 1
   },
   {
-   "depends_on": "eval: doc.vinserial_no",
+   "depends_on": "eval: doc.vinserial_no || doc.shipment_stock",
    "fieldname": "colour_delivered",
    "fieldtype": "Data",
    "label": "Colour",
@@ -309,7 +310,6 @@
    "unique": 1
   },
   {
-   "depends_on": "eval: doc.vinserial_no",
    "fieldname": "shipment_no",
    "fieldtype": "Link",
    "label": "Shipment No",
@@ -317,7 +317,6 @@
    "read_only": 1
   },
   {
-   "depends_on": "eval: doc.vinserial_no",
    "fieldname": "shipment_target_warehouse",
    "fieldtype": "Data",
    "label": "Shipment Target Warehouse",
@@ -356,6 +355,7 @@
   },
   {
    "fetch_from": "vinserial_no.description",
+   "fetch_if_empty": 1,
    "fieldname": "model_description",
    "fieldtype": "Data",
    "label": "Model Description",
@@ -391,7 +391,7 @@
    "read_only": 1
   },
   {
-   "depends_on": "eval: doc.vinserial_no && !doc.__unsaved == 1\r\n",
+   "depends_on": "eval: doc.vinserial_no || doc.shipment_stock",
    "fieldname": "un_allocate",
    "fieldtype": "Button",
    "label": "Un-Allocate"
@@ -600,7 +600,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-02-02 21:18:12.605849",
+ "modified": "2026-02-10 16:42:50.043479",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Head Office Vehicle Orders",

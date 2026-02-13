@@ -153,6 +153,7 @@
    "options": "Warehouse"
   },
   {
+   "allow_on_submit": 1,
    "fieldname": "reserve_to_order",
    "fieldtype": "Link",
    "label": "Reserve To Order",
@@ -230,7 +231,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2026-01-30 09:39:56.059734",
+ "modified": "2026-02-11 16:24:20.931452",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicles Shipment Items",

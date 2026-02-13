@@ -43,3 +43,7 @@ class ReservedVehicles(Document):
 			days_between = delta.days
 
 			self.total_days = days_between
+   
+	def on_insert(self):
+		frappe.db.set_value("Vehicle Stock", self.vin_serial_no, "availability_status", "Reserved")
+		frappe.db.commit()
