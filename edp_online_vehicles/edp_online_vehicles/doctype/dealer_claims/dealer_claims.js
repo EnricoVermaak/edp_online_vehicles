@@ -502,6 +502,13 @@ frappe.ui.form.on("Dealer Claims", {
 			frm.toggle_reqd("table_zhls", mandatory_part);
 			frm.refresh_field("table_zhls");
 
+			if (mandatory_part) {
+				frm.set_df_property("claim_amt", "read_only", 1);
+				frm.set_value("claim_amt", 0);
+			} else {
+				frm.set_df_property("claim_amt", "read_only", 0);
+			}
+
 			if (frm.claim_types_retail_only) {
 				frm.show_only_retail =
 					frm.claim_types_retail_only[frm.doc.claim_description];
@@ -1102,6 +1109,7 @@ function calculate_fleet_discount(frm) {
     let discount_percentage = parseFloat(frm.doc.part_percentage_discount) || 0;
     let discount_amount = parts_total * (discount_percentage/100);
     frm.set_value("total_fleet_discount_amt_excl", discount_amount);
+	frm.set_value("claim_amt", discount_amount);
 }
 
 frappe.ui.form.on("Dealer Claim Parts", {
