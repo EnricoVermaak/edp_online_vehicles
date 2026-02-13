@@ -9,6 +9,14 @@ from frappe.utils import now_datetime
 
 class DealerClaims(Document):
 	def validate(self):
+		if self.claim_status == "Approved for Remittance":
+			if self.is_new():
+				frappe.throw("Claim status cannot be set to 'Approved for Remittance' for new claims.")
+			else:
+				previous_status = frappe.db.get_value("Dealer Claims", self.name, "claim_status")
+				if previous_status != "Submitted for HOD Approval":
+					frappe.throw("Claim status can only be changed to 'Approved for Remittance' when the current status is 'Submitted for HOD Approval'.")
+		
 		if self.claim_status == "Claim Pending Info" and not self.claim_pending_info_date:
 			self.claim_pending_info_date = now_datetime()
 

@@ -67,13 +67,23 @@ frappe.ui.form.on("Dealer Claims", {
 	// 	});
 	// },
 	claim_status(frm){
+		if (frm.doc.claim_status == "Approved for Remittance") {
+			if (previous_status != "Submitted for HOD Approval") {
+				frappe.msgprint("Claim status can only be changed to 'Approved for Remittance'.");
+				frm.set_value("claim_status", previous_status || "");
+				return;
+			}
+		}
+		
+		previous_status = frm.doc.claim_status;
+		
 		// Remove buttons first to avoid duplicates
-		frm.remove_custom_button('Updated');
+		frm.remove_custom_button('');
 //		frm.remove_custom_button('Submit Claim');
 		
 		// Show "Updated" button only when status is "Claim Pending Info"
 		if (frm.doc.claim_status == "Claim Pending Info") {
-			frm.add_custom_button("Updated", function () {
+			frm.add_custom_button("Submit Update", function () {
 				frm.set_value("claim_status", "Claim Updated");
 				frm.save();
 			});
@@ -88,19 +98,42 @@ frappe.ui.form.on("Dealer Claims", {
 		// }
 	},
 	refresh(frm) {
-		if (frappe.user.has_role("Claim Administrator")) {
+		var allowed_statuses = ["Pending", "Claim Submitted", "Claim Pending Info", "Claim Declined"];
+		var is_claim_administrator = frappe.user.has_role("Claim Administrator");
+		var is_read_only_status = frm.doc.claim_status && !allowed_statuses.includes(frm.doc.claim_status);
+
+		if (is_claim_administrator) {
 			frm.set_df_property("claim_status", "read_only", 0);
 		} else {
 			frm.set_df_property("claim_status", "read_only", 1);
+
+			if (is_read_only_status) {
+				frm.fields.forEach(function(field) {
+					frm.set_df_property(field.df.fieldname, "read_only", 1);
+				});
+
+				if (frm.fields_dict.table_exgk) {
+					frm.fields_dict.table_exgk.grid.cannot_add_rows = true;
+					frm.fields_dict.table_exgk.grid.cannot_delete_rows = true;
+				}
+				if (frm.fields_dict.table_zhls) {
+					frm.fields_dict.table_zhls.grid.cannot_add_rows = true;
+					frm.fields_dict.table_zhls.grid.cannot_delete_rows = true;
+				}
+				if (frm.fields_dict.documents) {
+					frm.fields_dict.documents.grid.cannot_add_rows = true;
+					frm.fields_dict.documents.grid.cannot_delete_rows = true;
+				}
+			}
 		}
 		
 		// Remove buttons first to avoid duplicates
-		frm.remove_custom_button('Updated');
+		frm.remove_custom_button('Submit Update');
 //		frm.remove_custom_button('Submit Claim');
 		
 		// Show "Updated" button only when status is "Claim Pending Info"
 		if (frm.doc.claim_status == "Claim Pending Info") {
-			frm.add_custom_button("Updated", function () {
+			frm.add_custom_button("Submit Update", function () {
 				frm.set_value("claim_status", "Claim Updated");
 				frm.save();
 			});
@@ -357,6 +390,11 @@ frappe.ui.form.on("Dealer Claims", {
 						var claim_category_data = r.message;
 
 						var category_options = [];
+						frm.claim_types_data = {};
+						frm.claim_types_mandatory_vin = {};
+						frm.claim_types_mandatory_part = {};
+						frm.claim_types_retail_only = {};
+						frm.claim_types_original_dealer_only = {};
 
 						(claim_category_data.claim_types || []).forEach(
 							function (category_row) {
@@ -364,6 +402,22 @@ frappe.ui.form.on("Dealer Claims", {
 									label: category_row.claim_type_description,
 									value: category_row.claim_type_description,
 								});
+								frm.claim_types_data[
+									category_row.claim_type_description
+								] = category_row.claim_type_code;
+								frm.claim_types_mandatory_vin[
+									category_row.claim_type_description
+								] = category_row.vin_serial_no_mandatory;
+								frm.claim_types_mandatory_part[
+									category_row.claim_type_description
+								] = category_row.parts_mandatory;
+								frm.claim_types_retail_only[
+									category_row.claim_type_description
+								] = category_row.only_allow_retailed_units;
+								frm.claim_types_original_dealer_only[
+									category_row.claim_type_description
+								] =
+									category_row.only_allow_original_purchasing_dealer;
 							},
 						);
 
@@ -373,6 +427,43 @@ frappe.ui.form.on("Dealer Claims", {
 							.join("\n");
 
 						field.refresh();
+
+						if (frm.doc.claim_description) {
+							var mandatory_vin = frm.claim_types_mandatory_vin[frm.doc.claim_description] == 1;
+							frm.toggle_reqd("table_exgk", mandatory_vin);
+							frm.refresh_field("table_exgk");
+
+							var mandatory_part = frm.claim_types_mandatory_part[frm.doc.claim_description] == 1;
+							frm.toggle_reqd("table_zhls", mandatory_part);
+							frm.refresh_field("table_zhls");
+
+							if (mandatory_part) {
+								frm.set_df_property("claim_amt", "read_only", 1);
+							} else {
+								frm.set_df_property("claim_amt", "read_only", 0);
+							}
+
+							if (frm.claim_types_retail_only) {
+								frm.show_only_retail =
+									frm.claim_types_retail_only[frm.doc.claim_description];
+							}
+
+							if (frm.claim_types_original_dealer_only) {
+								frm.show_only_original_dealer =
+									frm.claim_types_original_dealer_only[frm.doc.claim_description];
+							}
+
+							if (claim_category_data.claim_types) {
+								claim_category_data.claim_types.forEach(function(type) {
+									if (type.claim_type_description === frm.doc.claim_description) {
+										if (type.mandatory_fleet_customer === 1) {
+											frm.set_df_property("fleet_customer", "reqd", 1);
+											frm.set_df_property("company_registration_no", "reqd", 1);
+										}
+									}
+								});
+							}
+						}
 					}
 				},
 			});
