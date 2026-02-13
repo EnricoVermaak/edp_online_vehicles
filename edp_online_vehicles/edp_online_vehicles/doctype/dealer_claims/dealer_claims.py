@@ -9,22 +9,18 @@ from frappe.utils import now_datetime
 
 class DealerClaims(Document):
 	def validate(self):
-		# --- 0️⃣ Auto-set tracking dates based on status ---
 		if self.claim_status == "Claim Pending Info" and not self.claim_pending_info_date:
 			self.claim_pending_info_date = now_datetime()
 
 		if self.claim_status == "Claim Updated" and not self.claim_updated_date:
 			self.claim_updated_date = now_datetime()
 
-		# ⚠️ ❌ Remove this - causes recursion
 		# if self.claim_status == "Remittance":
 		#     self.save()
 
-		# 2️⃣ Only proceed if there's *any* status
 		if not self.claim_status or not self.name:
 			return
 
-		# 3️⃣ Check if a Status Tracker exists
 		tracker_name = frappe.db.get_value(
 			"Status Tracker",
 			{"status_doctype": "Dealer Claims", "document": self.name},
@@ -33,32 +29,25 @@ class DealerClaims(Document):
 		if not tracker_name:
 			return
 
-		# 4️⃣ Load the Status Tracker doc
 		st = frappe.get_doc("Status Tracker", tracker_name)
 
-		# 5️⃣ Make sure it has at least one row in its child table
 		if not st.status_tracking_table:
 			return
 
-		# 6️⃣ Get the last row
 		last_row = st.status_tracking_table[-1]
 
-		# 7️⃣ Parse its timestamp
 		prev_dt = last_row.status_updated_on
 		if isinstance(prev_dt, str):
 			prev_dt = datetime.fromisoformat(prev_dt)
 
-		# 8️⃣ Current timestamp
 		now_dt = now_datetime()
 
-		# 9️⃣ Compute delta
 		delta = now_dt - prev_dt
 		days = delta.days
 		seconds = delta.seconds
 		hours, remainder = divmod(seconds, 3600)
 		minutes, secs = divmod(remainder, 60)
 
-		# 🔟 Build a readable time string
 		parts = []
 		if days:
 			parts.append(f"{days} Day{'s' if days != 1 else ''}")
@@ -70,7 +59,6 @@ class DealerClaims(Document):
 			parts.append(f"{secs} Second{'s' if secs != 1 else ''}")
 		elapsed_str = " ".join(parts) or "0 Seconds"
 
-		# 1️⃣1️⃣ Append a new row to the status_tracking_table
 		st.append(
 			"status_tracking_table",
 			{
@@ -80,7 +68,6 @@ class DealerClaims(Document):
 			},
 		)
 
-		# 1️⃣2️⃣ Save the updated tracker
 		st.save(ignore_permissions=True)
 		frappe.db.commit()
           
@@ -148,68 +135,68 @@ def dealer(doc=None, vinno=None, dealer=None, claim_type_code=None, docname=None
         except Exception:
             frappe.throw("No document or docname provided.")
 
-    # DISABLED FOR TESTING - 
-    # for row in doc.table_exgk:
-    #     if row.vin_serial_no:
-    #         # Check if the vehicle belongs to this dealer
-    #         vehicle = frappe.get_doc("Vehicle Stock", row.vin_serial_no)
-    #         if not vehicle.original_purchasing_dealer or vehicle.original_purchasing_dealer != doc.dealer:
-    #             frappe.throw(
-    #                 "Vehicle was not purchased by the selected dealership on this claim."
-    #             )
 
-    #         # Check if this VIN has already been claimed under the same category (excluding cancelled)
-    #         existing_claim = frappe.db.sql(
-    #             """
-    #             SELECT parent.name
-    #             FROM `tabVehicles Item` AS child
-    #             JOIN `tabDealer Claims` AS parent
-    #             ON child.parent = parent.name
-    #             WHERE parent.claim_category = %s
-    #             AND child.vin_serial_no = %s
-    #             AND parent.name != %s
-    #             AND parent.claim_status != 'Cancelled'
-    #             """,
-    #             (doc.claim_category, row.vin_serial_no, doc.name),
-    #         )
+    for row in doc.table_exgk:
+        if row.vin_serial_no:
+            # # Check if the vehicle belongs to this dealer
+            # vehicle = frappe.get_doc("Vehicle Stock", row.vin_serial_no)
+            # if not vehicle.original_purchasing_dealer or vehicle.original_purchasing_dealer != doc.dealer:
+            #     frappe.throw(
+            #         "Vehicle was not purchased by the selected dealership on this claim."
+            #     )
 
-    #         if existing_claim:
-    #             # Bypass duplicate claim check if status is "Remittance"
-    #             if doc.claim_status == "Remittance":
-    #                 pass
-    #             else:
-    #                 # Get all existing claims for this VIN and category
-    #                 existing_claims_list = frappe.db.sql(
-    #                     """
-    #                     SELECT parent.name
-    #                     FROM `tabVehicles Item` AS child
-    #                     JOIN `tabDealer Claims` AS parent
-    #                     ON child.parent = parent.name
-    #                     WHERE parent.claim_category = %s
-    #                     AND child.vin_serial_no = %s
-    #                     AND parent.name != %s
-    #                     AND parent.claim_status != 'Cancelled'
-    #                     """,
-    #                     (doc.claim_category, row.vin_serial_no, doc.name),
-    #                 )
-    #                 
-    #                 # Create links for all existing claims
-    #                 claim_links = []
-    #                 for claim in existing_claims_list:
-    #                     claim_link = f"<a href='/app/dealer-claims/{claim[0]}' target='_blank'>{claim[0]}</a>"
-    #                     claim_links.append(claim_link)
-    #                 
-    #                 links_html = ", ".join(claim_links)
+            # Check if this VIN has already been claimed under the same category (excluding cancelled)
+            existing_claim = frappe.db.sql(
+                """
+                SELECT parent.name
+                FROM `tabVehicles Item` AS child
+                JOIN `tabDealer Claims` AS parent
+                ON child.parent = parent.name
+                WHERE parent.claim_category = %s
+                AND child.vin_serial_no = %s
+                AND parent.name != %s
+                AND parent.claim_status != 'Cancelled'
+                """,
+                (doc.claim_category, row.vin_serial_no, doc.name),
+            )
 
-    #                 frappe.msgprint(
-    #                     f"VIN '<strong>{row.vin_serial_no}</strong>' has already been claimed under category '<strong>{doc.claim_category}</strong>' "
-    #                     f"in claim(s): {links_html}. Duplicate claim not allowed.",
-    #                     indicator='red',  
-    #                     alert=False       
-    #                 )
+            if existing_claim:
+                # Bypass duplicate claim check if status is "Remittance"
+                if doc.claim_status == "Remittance":
+                    pass
+                else:
+                    # Get all existing claims for this VIN and category
+                    existing_claims_list = frappe.db.sql(
+                        """
+                        SELECT parent.name
+                        FROM `tabVehicles Item` AS child
+                        JOIN `tabDealer Claims` AS parent
+                        ON child.parent = parent.name
+                        WHERE parent.claim_category = %s
+                        AND child.vin_serial_no = %s
+                        AND parent.name != %s
+                        AND parent.claim_status != 'Cancelled'
+                        """,
+                        (doc.claim_category, row.vin_serial_no, doc.name),
+                    )
+                    
+                    # Create links for all existing claims
+                    claim_links = []
+                    for claim in existing_claims_list:
+                        claim_link = f"<a href='/app/dealer-claims/{claim[0]}' target='_blank'>{claim[0]}</a>"
+                        claim_links.append(claim_link)
+                    
+                    links_html = ", ".join(claim_links)
 
-    #                 # Document ko save hone se rokne ke liye
-    #                 raise frappe.ValidationError("Duplicate claim not allowed.")
+                    frappe.msgprint(
+                        f"VIN '<strong>{row.vin_serial_no}</strong>' has already been claimed under category '<strong>{doc.claim_category}</strong>' "
+                        f"in claim(s): {links_html}. Duplicate claim not allowed.",
+                        indicator='red',  
+                        alert=False       
+                    )
+
+                    # Document ko save hone se rokne ke liye
+                    raise frappe.ValidationError("Duplicate claim not allowed.")
 
     # Step 2: Validate mandatory fields based on claim category and description
     category_doc = frappe.get_doc("Dealer Claim Category", doc.claim_category)
