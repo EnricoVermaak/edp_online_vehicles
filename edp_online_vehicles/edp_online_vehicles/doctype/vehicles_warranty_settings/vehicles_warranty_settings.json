@@ -6,8 +6,6 @@
  "engine": "InnoDB",
  "field_order": [
   "general_settings_section",
-  "allow_user_to_create_material_request_from_vehicles_service",
-  "allow_user_to_create_sales_order_from_vehicles_service",
   "allow_goodwill_for_out_of_warranty_claims",
   "allow_warranty_odo_reading_roll_back",
   "mandatory_documents_section",
@@ -18,18 +16,6 @@
    "fieldname": "general_settings_section",
    "fieldtype": "Section Break",
    "label": "General Settings"
-  },
-  {
-   "default": "0",
-   "fieldname": "allow_user_to_create_material_request_from_vehicles_service",
-   "fieldtype": "Check",
-   "label": "Allow user to create Material Request from Vehicles Service"
-  },
-  {
-   "default": "0",
-   "fieldname": "allow_user_to_create_sales_order_from_vehicles_service",
-   "fieldtype": "Check",
-   "label": "Allow user to create Sales Order from Vehicles Service"
   },
   {
    "default": "0",
@@ -59,7 +45,7 @@
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2026-02-13 08:23:28.672189",
+ "modified": "2026-02-13 10:52:58.727799",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicles Warranty Settings",

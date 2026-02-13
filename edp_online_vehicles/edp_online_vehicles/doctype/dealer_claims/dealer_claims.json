@@ -58,11 +58,12 @@
   "column_break_fxof",
   "total_vehicles",
   "parts_tab",
-  "claim_parts",
+  "table_zhls",
   "section_break_mxfs",
   "column_break_zhxq",
   "column_break_xcej",
-  "parts_total_excl"
+  "parts_total_excl",
+  "total_fleet_discount_amt_excl"
  ],
  "fields": [
   {
@@ -239,12 +240,6 @@
    "label": "Parts"
   },
   {
-   "fieldname": "claim_parts",
-   "fieldtype": "Table",
-   "label": "Claim Parts",
-   "options": "Service Parts Items"
-  },
-  {
    "fieldname": "section_break_mxfs",
    "fieldtype": "Section Break"
   },
@@ -260,7 +255,8 @@
    "depends_on": "eval: doc.table_exgk",
    "fieldname": "parts_total_excl",
    "fieldtype": "Currency",
-   "label": "Parts Total (Excl)"
+   "label": "Parts Total (Excl)",
+   "read_only": 1
   },
   {
    "fieldname": "company_registration_no",
@@ -385,11 +381,23 @@
    "fieldtype": "Int",
    "label": "Updated Claim Age",
    "read_only": 1
+  },
+  {
+   "fieldname": "table_zhls",
+   "fieldtype": "Table",
+   "options": "Dealer Claim Parts"
+  },
+  {
+   "fieldname": "total_fleet_discount_amt_excl",
+   "fieldtype": "Currency",
+   "label": "Total Fleet Discount Amt (Excl)",
+   "precision": "2",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-02-12 15:07:12.797286",
+ "modified": "2026-02-13 11:03:11.684156",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Dealer Claims",

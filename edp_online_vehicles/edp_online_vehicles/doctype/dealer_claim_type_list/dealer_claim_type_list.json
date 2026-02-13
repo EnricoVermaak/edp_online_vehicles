@@ -11,6 +11,7 @@
   "claim_type_description",
   "debit_account",
   "cost_code",
+  "profit_centre",
   "mandatory_fleet_code",
   "vehicle_settings_section",
   "vin_serial_no_mandatory",
@@ -103,18 +104,25 @@
    "fieldtype": "Link",
    "label": "Sale Type",
    "options": "Vehicle Sale Type"
+  },
+  {
+   "fieldname": "profit_centre",
+   "fieldtype": "Data",
+   "label": "Profit Centre"
   }
  ],
+ "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-11-05 12:24:57.468754",
+ "modified": "2026-02-13 11:06:17.817733",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Dealer Claim Type List",
  "owner": "Administrator",
  "permissions": [],
  "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": []
