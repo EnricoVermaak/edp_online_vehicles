@@ -411,3 +411,22 @@ def update_claim_age():
 
 		except Exception as e:
 			frappe.log_error(message=str(e), title="Claim Age (Days) Update Error")
+
+@frappe.whitelist()
+def get_retail_date(vin_serial_no):
+	if not vin_serial_no:
+		return None
+	
+	result = frappe.db.sql("""
+		SELECT vr.retail_date
+		FROM `tabVehicle Retail` vr
+		INNER JOIN `tabVehicles Sale Items` vsi ON vsi.parent = vr.name
+		WHERE vsi.vin_serial_no = %s
+		AND vr.docstatus = 1
+		ORDER BY vr.retail_date DESC
+		LIMIT 1
+	""", (vin_serial_no,), as_dict=True)
+	
+	if result and len(result) > 0:
+		return result[0].retail_date
+	return None

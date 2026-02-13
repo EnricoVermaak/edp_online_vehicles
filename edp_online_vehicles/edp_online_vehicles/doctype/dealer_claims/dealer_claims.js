@@ -69,7 +69,7 @@ frappe.ui.form.on("Dealer Claims", {
 	claim_status(frm){
 		if (frm.doc.claim_status == "Approved for Remittance") {
 			if (previous_status != "Submitted for HOD Approval") {
-				frappe.msgprint("Claim status can only be changed to 'Approved for Remittance'.");
+				frappe.msgprint("Claim status can only be changed to 'Approved for Remittance' when the current status is 'Submitted for HOD Approval'.");
 				frm.set_value("claim_status", previous_status || "");
 				return;
 			}
@@ -1132,6 +1132,19 @@ frappe.ui.form.on("Vehicles Item", {
         }
 
         if (!row.vin_serial_no) return;
+
+        // Fetch retail date from Vehicle Retail
+        frappe.call({
+            method: "edp_online_vehicles.edp_online_vehicles.doctype.dealer_claims.dealer_claims.get_retail_date",
+            args: {
+                vin_serial_no: row.vin_serial_no
+            },
+            callback: function(r) {
+                if (r.message) {
+                    frappe.model.set_value(cdt, cdn, "retailed_date", r.message);
+                }
+            }
+        });
 
         // DONT ENABLE
         // try {
