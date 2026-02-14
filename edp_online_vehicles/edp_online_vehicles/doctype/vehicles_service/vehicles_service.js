@@ -53,39 +53,22 @@ frappe.ui.form.on("Vehicles Service", {
 			frm.doc.__mandatory_names = mandatory_names;
 		});
 	},
-
-
-
-
 	service_type(frm) {
 		// Fetch the selected Service Schedule document
 		frappe.db.get_doc('Service Schedules', frm.doc.service_type)
 			.then(schedule => {
-
-				let labour = schedule.allow_users_to_add_edit_remove_labour; // check field
-				let part = schedule.allow_users_to_add_edit_remove_parts;  // check field
+				let labour = schedule.allow_users_to_add_edit_remove_labour;
+				let part = schedule.allow_users_to_add_edit_remove_parts;
 
 				// ===== LABOUR =====
-				if (labour == 1) {
-					frm.set_df_property("service_labour_items", "read_only", 0);
-					frm.set_df_property("non_oem_labour_items", "read_only", 0);
-					frm.set_value("edit_labour", 1);
-				} else {
-					frm.set_df_property("service_labour_items", "read_only", 1);
-					frm.set_df_property("non_oem_labour_items", "read_only", 1);
-					frm.set_value("edit_labour", 0);
-				}
+				frm.set_df_property("service_labour_items", "read_only", labour == 1 ? 0 : 1);
+				frm.set_df_property("non_oem_labour_items", "read_only", labour == 1 ? 0 : 1);
+				frm.set_value("edit_labour", labour == 1 ? 1 : 0);
 
 				// ===== PARTS =====
-				if (part == 1) {
-					frm.set_df_property("service_parts_items", "read_only", 0);
-					frm.set_df_property("non_oem_parts_items", "read_only", 0);
-					frm.set_value("edit_parts", 1);
-				} else {
-					frm.set_df_property("service_parts_items", "read_only", 1);
-					frm.set_df_property("non_oem_parts_items", "read_only", 1);
-					frm.set_value("edit_parts", 0);
-				}
+				frm.set_df_property("service_parts_items", "read_only", part == 1 ? 0 : 1);
+				frm.set_df_property("non_oem_parts_items", "read_only", part == 1 ? 0 : 1);
+				frm.set_value("edit_parts", part == 1 ? 1 : 0);
 
 				frm.refresh_field("service_labour_items");
 				frm.refresh_field("non_oem_labour_items");
@@ -93,42 +76,46 @@ frappe.ui.form.on("Vehicles Service", {
 				frm.refresh_field("non_oem_parts_items");
 			});
 
-
+		// If service_type is cleared, clear the tables
 		if (!frm.doc.service_type) {
-			frm.set_value("service_parts_items", []);
-			frm.set_value("service_labour_items", []);
-			return;
-		}
-
-		frm.doc.service_parts_items = [];
-		frm.doc.service_labour_items = [];
-		frappe.db.get_doc("Service Schedules", frm.doc.service_type).then((doc) => {
-			// Copy only item, description, qty (parts) and item, description, duration_hours (labour)
-			// Prices/rates recalculated below so manual and schedule load use same formula
-			for (let part of doc.service_parts_items || []) {
-				let row = frm.add_child("service_parts_items");
-				frappe.model.set_value(row.doctype, row.name, "item", part.item);
-				frappe.model.set_value(row.doctype, row.name, "description", part.description || "");
-				frappe.model.set_value(row.doctype, row.name, "qty", part.qty || 1);
-			}
-			for (let labour of doc.service_labour_items || []) {
-				let row = frm.add_child("service_labour_items");
-				frappe.model.set_value(row.doctype, row.name, "item", labour.item);
-				frappe.model.set_value(row.doctype, row.name, "description", labour.description || "");
-				frappe.model.set_value(row.doctype, row.name, "duration_hours", labour.duration_hours || 1);
-			}
+			frm.clear_table("service_parts_items");
+			frm.clear_table("service_labour_items");
 			frm.refresh_field("service_parts_items");
 			frm.refresh_field("service_labour_items");
+			return;
+		}
+		let has_parts = frm.doc.service_parts_items && frm.doc.service_parts_items.length > 0;
+		let has_labour = frm.doc.service_labour_items && frm.doc.service_labour_items.length > 0;
+		if (frm.is_new() && !has_parts && !has_labour) {
+			frm.clear_table("service_parts_items");
+			frm.clear_table("service_labour_items");
 
-			// Recalc all parts and labour with same formula (Standard Selling + GP% / Company rate + GP%)
-			recalc_all_parts_and_labour(frm).then(() => {
-				let schedule_allow_parts = doc.allow_users_to_add_edit_remove_parts || 0;
-				let schedule_allow_labour = doc.allow_users_to_add_edit_remove_labour || 0;
-				frm.set_value("edit_parts", schedule_allow_parts ? 1 : 0);
-				frm.set_value("edit_labour", schedule_allow_labour ? 1 : 0);
+			frappe.db.get_doc("Service Schedules", frm.doc.service_type).then((doc) => {
+				for (let part of doc.service_parts_items || []) {
+					let row = frm.add_child("service_parts_items");
+					frappe.model.set_value(row.doctype, row.name, "item", part.item);
+					frappe.model.set_value(row.doctype, row.name, "description", part.description || "");
+					frappe.model.set_value(row.doctype, row.name, "qty", part.qty || 1);
+				}
+				for (let labour of doc.service_labour_items || []) {
+					let row = frm.add_child("service_labour_items");
+					frappe.model.set_value(row.doctype, row.name, "item", labour.item);
+					frappe.model.set_value(row.doctype, row.name, "description", labour.description || "");
+					frappe.model.set_value(row.doctype, row.name, "duration_hours", labour.duration_hours || 1);
+				}
+				frm.refresh_field("service_parts_items");
+				frm.refresh_field("service_labour_items");
+
+				recalc_all_parts_and_labour(frm).then(() => {
+					let schedule_allow_parts = doc.allow_users_to_add_edit_remove_parts || 0;
+					let schedule_allow_labour = doc.allow_users_to_add_edit_remove_labour || 0;
+					frm.set_value("edit_parts", schedule_allow_parts ? 1 : 0);
+					frm.set_value("edit_labour", schedule_allow_labour ? 1 : 0);
+				});
 			});
-		});
+		}
 	},
+
 
 	// dealer: function (frm) {
 	// 	if (!frm.doc.dealer) {
@@ -166,15 +153,15 @@ frappe.ui.form.on("Vehicles Service", {
 	onload(frm) {
 		frm.doc.attach_documents = [];
 
-			// Fetch settings and populate child tables
-			frappe.db.get_doc("Vehicle Service Settings").then((doc) => {
-				for (let man_row of doc.mandatory_documents) {
-					frm.add_child("attach_documents", {
-						document_name: man_row.document_name,
-					});
-				}
-				frm.refresh_field("attach_documents");
-			});
+		// Fetch settings and populate child tables
+		frappe.db.get_doc("Vehicle Service Settings").then((doc) => {
+			for (let man_row of doc.mandatory_documents) {
+				frm.add_child("attach_documents", {
+					document_name: man_row.document_name,
+				});
+			}
+			frm.refresh_field("attach_documents");
+		});
 		odo_limit_message_shown = false;
 		if (frm.doc.vehicles_incidents) {
 			frappe.db
@@ -312,7 +299,7 @@ frappe.ui.form.on("Vehicles Service", {
 					});
 			}
 		}
-		if(!frm.is_new()){
+		if (!frm.is_new()) {
 			frm.add_custom_button("Part Order", function () {
 				frappe.model.with_doctype("Part Order", function () {
 					var doc = frappe.model.get_new_doc("Part Order");
@@ -323,7 +310,7 @@ frappe.ui.form.on("Vehicles Service", {
 					doc.delivery_date = frm.doc.part_schedule_date
 					doc.sales_person = frappe.session.user
 
-					for (let child of frm.doc.service_parts_items){
+					for (let child of frm.doc.service_parts_items) {
 						var row = frappe.model.add_child(
 							doc,
 							"table_avsu",
@@ -340,202 +327,9 @@ frappe.ui.form.on("Vehicles Service", {
 			}, "Create");
 		}
 
-		// frm.add_custom_button(
-		// 	__("Request for Service"),
-		// 	() => {
-		// 		new frappe.ui.form.MultiSelectDialog({
-		// 			doctype: "Request for Service",
-		// 			target: frm,
-		// 			add_filters_group: 1,
-		// 			date_field: "posting_date",
-		// 			setters: {
-		// 				//   customer: frm.doc.customer,
-		// 				//   custom_delivery_trip_assign: "No",
-		// 			},
-		// 			get_query_filters: {
-		// 				customer: frm.doc.customer,
-		// 			},
-		// 			action(selections) {
-		// 				if (selections && selections.length > 0) {
-		// 					frm.doc.service_parts_items = [];
-		// 					frm.doc.service_labour_items = [];
-		// 					for (let row of selections) {
-		// 						frappe.db
-		// 							.get_doc("Request for Service", row)
-		// 							.then((doc) => {
-		// 								for (let part of doc.parts) {
-		// 									let row = frm.add_child(
-		// 										"service_parts_items",
-		// 									);
-		// 
-		// 									let data = {
-		// 										item: part.item,
-		// 										description: part.description,
-		// 										qty: part.qty,
-		// 									};
-		// 
-		// 									for (const key in data) {
-		// 										frappe.model.set_value(
-		// 											row.doctype,
-		// 											row.name,
-		// 											key,
-		// 											data[key],
-		// 										);
-		// 									}
-		// 
-		// 									frm.refresh_field(
-		// 										"service_parts_items",
-		// 									);
-		// 								}
-		// 
-		// 								for (let labour of doc.labour) {
-		// 									let row = frm.add_child(
-		// 										"service_labour_items",
-		// 									);
-		// 
-		// 									let data = {
-		// 										item: labour.item,
-		// 										description:
-		// 											labour.labour_description,
-		// 										rate_hour: labour.rate_hour,
-		// 										duration_hours:
-		// 											labour.duration_hours,
-		// 										total_excl: labour.total_excl,
-		// 									};
-		// 
-		// 									for (const key in data) {
-		// 										frappe.model.set_value(
-		// 											row.doctype,
-		// 											row.name,
-		// 											key,
-		// 											data[key],
-		// 										);
-		// 									}
-		// 
-		// 									frm.refresh_field(
-		// 										"service_labour_items",
-		// 									);
-		// 								}
-		// 							});
-		// 					}
-		// 				}
-		// 				cur_dialog.hide();
-		// 			},
-		// 		});
-		// 	},
-		// 	__("Get Items"),
-		// );
+
 
 		if (!frm.is_new()) {
-			// frm.add_custom_button(
-			// 	"Request For Service",
-			// 	() => {
-			// 		if (
-			// 			!frm.doc.service_parts_items.length > 0 &&
-			// 			!frm.doc.service_labour_items.length > 0
-			// 		) {
-			// 			frappe.throw(
-			// 				"No parts added to the parts table, please add parts to perform this action",
-			// 			);
-			// 		} else {
-			// 			frappe.call({
-			// 				method: "edp_online_vehicles.events.rfs_child_add.rfs_fun",
-			// 				args: {
-			// 					docname: frm.doc.name,
-			// 				},
-			// 				callback: function (r) {
-			// 					if (r.message) {
-			// 						frappe.msgprint(r.message);
-			// 					}
-			// 				},
-			// 			});
-			// 		}
-			// 	},
-			// 	"Create",
-			// );
-
-			// frappe.call({
-			// 	method: "frappe.client.get",
-			// 	args: {
-			// 		doctype: "Vehicle Service Settings",
-			// 	},
-			// 	callback: function (r) {
-			// 		if (r.message) {
-			// 			var settings = r.message;
-
-			// 			// Check if the checkboxes are checked
-			// 			if (
-			// 				settings.allow_user_to_create_sales_order_from_vehicles_service
-			// 			) {
-			// 				frm.add_custom_button(
-			// 					"Part Order",
-			// 					() => {
-			// 						if (
-			// 							!frm.doc.service_parts_items.length > 0
-			// 						) {
-			// 							frappe.throw(
-			// 								"No parts added to the parts table, please add parts to perform this action",
-			// 							);
-			// 						} else if (!frm.doc.part_schedule_date) {
-			// 							frappe.throw(
-			// 								"Please select a Scheduled Delivery Date under Parts Table",
-			// 							);
-			// 						} else {
-			// 							frappe.call({
-			// 								method: "edp_online_vehicles.events.create_sales_order.create_sales_order_service",
-			// 								args: {
-			// 									docname: frm.doc.name,
-			// 								},
-			// 								callback: function (r) {
-			// 									if (r.message) {
-			// 										frappe.msgprint(r.message);
-			// 									}
-			// 								},
-			// 							});
-			// 						}
-			// 					},
-			// 					"Create",
-			// 				);
-			// 			}
-
-			// 			// if (
-			// 			// 	settings.allow_user_to_create_material_request_from_vehicles_service
-			// 			// ) {
-			// 			// 	frm.add_custom_button(
-			// 			// 		"Material Request",
-			// 			// 		() => {
-			// 			// 			if (
-			// 			// 				!frm.doc.service_parts_items.length >
-			// 			// 				0 &&
-			// 			// 				!frm.doc.service_labour_items.length > 0
-			// 			// 			) {
-			// 			// 				frappe.throw(
-			// 			// 					"No parts added to the parts table, please add parts to perform this action",
-			// 			// 				);
-			// 			// 			} else if (!frm.doc.part_schedule_date) {
-			// 			// 				frappe.throw(
-			// 			// 					"Please select a Scheduled Delivery Date under Parts Table",
-			// 			// 				);
-			// 			// 			} else {
-			// 			// 				frappe.call({
-			// 			// 					method: "edp_online_vehicles.events.create_material_request.create_material_request_service",
-			// 			// 					args: {
-			// 			// 						docname: frm.doc.name,
-			// 			// 					},
-			// 			// 					callback: function (r) {
-			// 			// 						if (r.message) {
-			// 			// 							frappe.msgprint(r.message);
-			// 			// 						}
-			// 			// 					},
-			// 			// 				});
-			// 			// 			}
-			// 			// 		},
-			// 			// 		"Create",
-			// 			// 	);
-			// 			// }
-			// 		}
-			// 	},
-			// });
 
 			frm.add_custom_button(
 				"Internal Docs and Notes",
@@ -707,7 +501,7 @@ frappe.ui.form.on("Vehicles Service", {
 		}
 
 
-		
+
 
 		if (!frm.doc.odo_reading_hours) {
 			frm.doc.odo_reading_hours = null;
@@ -963,47 +757,7 @@ frappe.ui.form.on("Vehicles Service", {
 	},
 
 	before_save: async function (frm) {
-		// let mandatory = frm.doc.__mandatory_names;
-		// let current_names = (frm.doc.attach_documents || [])
-		// 	.map(row => row.document_name?.trim())
-		// 	.filter(Boolean);
 
-		// mandatory.forEach(name => {
-		// 	if (!current_names.includes(name)) {
-		// 		frappe.throw(
-		// 			`Mandatory document name cannot be changed or replaced: "${name}"`
-		// 		);
-		// 	}
-		// });
-
-		//    if (!frm.doc.service_status || !frm.doc.__mandatory_names) {
-		//     return;
-		// }
-
-		// let expected = frm.doc.__mandatory_names; 
-		// let current = (frm.doc.attach_documents || []).map(row => row.document_name.trim());
-
-		// if (expected.length !== current.length) {
-		//     frappe.throw('You cannot add or remove mandatory document rows.');
-		//     frappe.validated = false;
-		//     return;
-		// }
-
-		// for (let name of expected) {
-		//     if (!current.includes(name)) {
-		//         frappe.throw(`You cannot change mandatory document name: "${name}"`);
-		//         frappe.validated = false;
-		//         return;
-		//     }
-		// }
-
-		// for (let name of current) {
-		//     if (!expected.includes(name)) {
-		//         frappe.throw(`Invalid document name: "${name}". Keep original names only.`);
-		//         frappe.validated = false;
-		//         return;
-		//     }
-		// }
 		const dt = frm.doctype;
 		const dn = frm.doc.name;
 		if (!frm.doc.job_card_no) {
@@ -1436,33 +1190,3 @@ function incrementStockNumber(stockNumber) {
 
 	return prefix + incrementedNumber;
 }
-
-
-
-
-//     refresh: function(frm) {
-//         frm.page.set_title_sub("");
-
-//         if (frm.doc.service_status) {
-//             const color = {
-//                 "Pending": "orange",
-//                 "In Progress": "blue",
-//                 "In Service": "purple",
-//                 "Completed": "green",
-//                 "Rejected": "red",
-//                 "Cancelled": "darkgrey"
-//             }[frm.doc.service_status] || "gray";
-
-//             setTimeout(() => {
-//                 $(".title-text").nextAll(".indicator-pill").remove(); // purana hata do
-//                 $(".title-text").after(
-//                     `<span class="indicator-pill ${color}" style="margin-left:10px; font-size:13px;">${frm.doc.service_status}</span>`
-//                 );
-//             }, 100);
-//         }
-//     },
-
-//     service_status: function(frm) {
-//         frm.trigger('refresh');
-//     }
-// });
