@@ -401,11 +401,48 @@ frappe.ui.form.on("Vehicles Warranty Claims", {
 		}
 		previous_status_value = frm.doc.status;
 	},
-	odo_reading: function (frm) {
-		// Validate Odo Reading when it changes (if VIN is set)
-		if (frm.doc.vin_serial_no) {
-			validate_odo_reading(frm);
+	date_of_failure: async function (frm) {
+
+		if (!frm.doc.vin_serial_no || !frm.doc.date_of_failure) return;
+
+		// ===== FETCH VEHICLE STOCK BY VIN =====
+		let vs = await frappe.db.get_value(
+			"Vehicle Stock",
+			 frm.doc.vin_serial_no,
+			["service_start_date", "service_end_date"]
+		);
+
+
+		if (!vs || !vs.message) return;
+
+		let start = vs.message.service_start_date;
+		let end = vs.message.service_end_date;
+		let failure = frm.doc.date_of_failure;
+
+		if (!start || !end) return;
+
+		// ===== CHECK RANGE =====
+		if (failure >= start && failure <= end) {
+			frm.set_value("type", "Normal");
+		} else {
+			frm.set_value("type", "Goodwill");
 		}
+	},
+
+	odo_reading: async function (frm) {
+		if (!frm.doc.odo_reading || !frm.doc.vin_serial_no) return;
+
+		const vs = await frappe.db.get_value(
+			"Vehicle Stock",
+			frm.doc.vin_serial_no,
+			"warranty_km_hours_limit"
+		);
+
+		if (vs?.message?.warranty_km_hours_limit === frm.doc.odo_reading) {
+			frm.set_value("type", "Goodwill");
+		}
+
+		// validate_odo_reading(frm);
 	},
 	vin_serial_no: function (frm) {
 		if (frm.doc.part_items && frm.doc.part_items.length > 0) {
@@ -909,18 +946,18 @@ function validate_part_item(frm, row) {
 			// Ab asli check: part allowed nahi to red + sirf "Part Not Covered"
 			if (!allowed_items.includes(row.part_no)) {
 				console.log("Row colours");
-				
+
 				set_row_color(frm, row, "#ffdddd");
 				frappe.model.set_value(
 					row.doctype,
 					row.name,
 					"system_note",
-					"Part Not Covered"          
+					"Part Not Covered"
 				);
 			}
 			else {
 				set_row_color(frm, row, "");
-				
+
 			}
 		}
 	});
