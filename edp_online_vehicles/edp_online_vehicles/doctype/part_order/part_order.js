@@ -13,6 +13,30 @@ frappe.ui.form.on("Part Order", {
 			});
 		}
 	},
+	onload_post_render: function (frm) {
+		let messages = [];
+		let changed = false;
+
+		(frm.doc.table_avsu || []).forEach(row => {
+			if (row.qty > row.soh) {
+				let target_qty = row.soh;
+				messages.push(__('Row #{0}: Quantity ({1}) adjusted to Stock on Hand ({2}).', [row.idx, row.qty, row.soh]));
+				row.qty = target_qty;
+				changed = true;
+			}
+		});
+		if (messages.length > 0) {
+			frappe.msgprint({
+				title: __('Stock Adjustment'),
+				indicator: 'orange',
+				message: messages.join('<br>')
+			});
+		}
+
+		if (changed) {
+			frm.refresh_field('table_avsu');
+		}
+	},
 	search(frm) {
 		if (frm.doc.company_reg_no) {
 			frappe.call({
@@ -152,7 +176,24 @@ frappe.ui.form.on("Part Order", {
 		calculate_sub_total(frm, "total_excl", "table_avsu");
 	},
 });
+function validate_part_basket(frm) {
+	frm.fields_dict['part_basket'].grid.get_rows().forEach(row => {
+		let item = row.doc;
 
+		// Qty exceeds SOH
+		if (item.qty > item.soh) {
+			frappe.msgprint({
+				message: `Qty for Part ${item.part_no} exceeds SOH!`,
+				indicator: 'red'
+			});
+		}
+
+		// Qty exactly equals SOH → set automatically
+		if (item.qty == item.soh) {
+			frappe.model.set_value(item.doctype, item.name, 'qty', item.soh);
+		}
+	});
+}
 frappe.ui.form.on("Part Order Item", {
 	// Airfreight only calculated when checkbox is toggled; unchecked => 0
 	airfreight: function (frm, cdt, cdn) {

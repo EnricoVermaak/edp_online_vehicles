@@ -17,6 +17,7 @@ frappe.ui.form.on("Part Picking Slip", {
 							);
 							row.part_no = child.part_no;
 							row.qty_ordered = child.qty_ordered;
+							row.outstanding_qty = child.qty_picked;
 						}
 					frappe.set_route("Form", doc.doctype, doc.name);
 				}); 
