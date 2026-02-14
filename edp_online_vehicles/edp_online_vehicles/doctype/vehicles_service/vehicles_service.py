@@ -257,7 +257,14 @@ class VehiclesService(Document):
                     "incident_description": doc.incident_description,
                 },
             )
-
+    def after_insert(self):
+        if self.name:
+            original_doc = frappe.get_doc("Vehicles Service", self.name)
+            
+            if not self.service_parts_items:
+                self.service_parts_items = original_doc.service_parts_items
+            if not self.service_labour_items:
+                self.service_labour_items = original_doc.service_labour_items
 
 @frappe.whitelist()
 def create_internal_docs_notes(source_name, target_doc=None):
