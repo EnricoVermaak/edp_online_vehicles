@@ -29,77 +29,9 @@ frappe.ui.form.on("Vehicles Shipment", {
 				});
 		}
 		frm.add_custom_button(__("Receive"), function () {
-			frappe.dom.freeze();
-
 			let selected_items = [];
 			let selected_rows = [];
-			let updated = false;
-
-			// ────────────────────────────────────────────────
-			//  First: Get current last stock number (if auto-create is enabled)
-			// ────────────────────────────────────────────────
-			// frappe.call({
-			// 	method: "frappe.client.get",
-			// 	args: {
-			// 		doctype: "Vehicle Stock Settings",
-			// 		name: "Vehicle Stock Settings"
-			// 	},
-			// 	async: false,          // ← important: we need this value synchronously
-			// 	callback: function (r) {
-			// 		if (!r.message) return;
-			// 		let settings = r.message;
-
-			// 		if (!settings.automatically_create_stock_number) {
-			// 			process_selected_items(); // skip numbering
-			// 			return;
-			// 		}
-
-			// 		let last_no = settings.last_automated_stock_no || "";
-			// 		let match = last_no.match(/^([a-zA-Z]+)(\d+)$/);
-			// 		if (!match) {
-			// 			frappe.throw("Last stock number format is invalid in settings.");
-			// 			return;
-			// 		}
-
-			// 		let prefix = match[1];
-			// 		let number = parseInt(match[2]);
-
-			// 		// ────────────────────────────────────────────────
-			// 		//  Assign stock numbers to checked rows that don't have one
-			// 		// ────────────────────────────────────────────────
-			// 		frm.doc.vehicles_shipment_items.forEach(row => {
-			// 			if (row.__checked && !row.stock_no) {
-			// 				number += 1;
-			// 				frappe.model.set_value(
-			// 					row.doctype,
-			// 					row.name,
-			// 					"stock_no",
-			// 					prefix + number
-			// 				);
-			// 				updated = true;
-			// 			}
-			// 		});
-
-			// 		if (updated) {
-			// 			frm.refresh_field("vehicles_shipment_items");
-
-			// 			// Update the last used number in settings
-			// 			frappe.call({
-			// 				method: "frappe.client.set_value",
-			// 				args: {
-			// 					doctype: "Vehicle Stock Settings",
-			// 					name: "Vehicle Stock Settings",
-			// 					fieldname: "last_automated_stock_no",
-			// 					value: prefix + number
-			// 				},
-			// 				freeze: true,
-			// 				freeze_message: __("Updating stock number sequence...")
-			// 			});
-			// 		}
-
-			// 		process_selected_items();
-			// 	}
-			// });
+			process_selected_items();
 
 			function process_selected_items() {
 				// Your existing validation + collection logic
@@ -137,6 +69,7 @@ frappe.ui.form.on("Vehicles Shipment", {
 				frappe.call({
 					method: "edp_online_vehicles.events.linked_plans.create_linked_plans",
 					args: { selected_items: JSON.stringify(selected_rows) },
+					freeze: true,
 				}).then(() => {
 					console.log("Plans created successfully");
 				});
