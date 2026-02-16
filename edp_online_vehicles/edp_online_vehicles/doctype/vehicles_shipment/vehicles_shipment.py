@@ -28,6 +28,7 @@ class VehiclesShipment(Document):
 				if match:
 					prefix = match.group(1)
 					number_str = match.group(2)
+					number_length = len(number_str)  # Original length preserve karna
 					full_number = int(number_str)
 					
 					print(f"lora full number: {full_number}")
@@ -42,7 +43,8 @@ class VehiclesShipment(Document):
 					for row in self.vehicles_shipment_items:
 						if not row.stock_no:
 							full_number += 1
-							row.stock_no = prefix + str(full_number)
+							# Leading zeros preserve karte hue format karna
+							row.stock_no = prefix + str(full_number).zfill(number_length)
 							updated = True
 					
 					# Update settings if any stock numbers were generated
@@ -51,10 +53,9 @@ class VehiclesShipment(Document):
 							"Vehicle Stock Settings",
 							"Vehicle Stock Settings",
 							"last_automated_stock_no",
-							prefix + str(full_number)
+							prefix + str(full_number).zfill(number_length)
 						)
-     
-     
+		
      
      
 		for row in self.vehicles_shipment_items:
