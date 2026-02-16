@@ -40,8 +40,8 @@ class ModelAdministration(Document):
         frappe.db.commit()
         
         if not self.model_default_image:
-            default_image = frappe.get_doc("Model Default Image")
-            self.model_default_image = default_image.default_model_image
+            stock_settings = frappe.get_doc("Vehicle Stock Settings")
+            self.db_set("model_default_image", stock_settings.default_model_image)
                   
 
     def after_save(self):
