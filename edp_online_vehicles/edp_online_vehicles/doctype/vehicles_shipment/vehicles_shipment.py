@@ -28,12 +28,9 @@ class VehiclesShipment(Document):
 				if match:
 					prefix = match.group(1)
 					number_str = match.group(2)
-					number_length = len(number_str)  # Original length preserve karna
+					number_length = len(number_str)  
 					full_number = int(number_str)
-					
-					print(f"lora full number: {full_number}")
-					
-					# **Sirf last digit nikalna**
+										
 					last_digit = int(str(full_number)[-1])
 					print(f"lora last digit: {last_digit}")
 					
