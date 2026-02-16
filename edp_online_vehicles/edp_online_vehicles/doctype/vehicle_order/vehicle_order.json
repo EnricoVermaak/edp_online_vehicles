@@ -178,11 +178,6 @@
    "label": "Floorplan "
   },
   {
-   "fieldname": "order_date_time",
-   "fieldtype": "Datetime",
-   "label": "Order Date/ Time"
-  },
-  {
    "fieldname": "documents_tab",
    "fieldtype": "Tab Break",
    "label": "Documents"
@@ -219,12 +214,17 @@
    "fieldtype": "Select",
    "label": "Deliver to Dealer",
    "reqd": 1
+  },
+  {
+   "fieldname": "order_date_time",
+   "fieldtype": "Datetime",
+   "label": "Order Date/ Time"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-02-13 12:44:19.588589",
+ "modified": "2026-02-16 13:53:49.753355",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicle Order",
