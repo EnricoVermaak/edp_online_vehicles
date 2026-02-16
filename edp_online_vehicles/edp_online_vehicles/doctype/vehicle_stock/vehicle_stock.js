@@ -181,6 +181,39 @@ frappe.ui.form.on("Vehicle Stock", {
 				},
 			};
 		});
+		// Exterior Colour (links to Model Colour)
+		frm.set_query("colour", function () {
+			return {
+				filters: {
+					discontinued: 0,
+					model: frm.doc.model || ""
+				}
+			};
+		});
+
+		// Interior Colour (links to Interior Model Colour)
+		frm.set_query("interior_colour", function () {
+			return {
+				filters: {
+					discontinued: 0,
+					model: frm.doc.model || ""
+				}
+			};
+		});
+
+		// Disable colour fields if no model is selected
+		frm.toggle_enable("colour", !!frm.doc.model);
+		frm.toggle_enable("interior_colour", !!frm.doc.model);
+
+		// Set filter for warranty plan description in child table
+		frm.set_query("warranty_plan_description", "table_pcgj", function () {
+			return {
+				filters: {
+					vin_serial_no: frm.doc.name || frm.doc.vin_serial_no || "",
+					status: ["!=", "Active"]
+				}
+			};
+		});
 	},
 
 
@@ -511,41 +544,9 @@ function addMonths(date, months) {
 
 
 frappe.ui.form.on("Vehicle Stock", {
-	refresh(frm) {
-		// Exterior Colour (links to Model Colour)
-		frm.set_query("colour", function () {
-			return {
-				filters: {
-					discontinued: 0,
-					model: frm.doc.model || ""
-				}
-			};
-		});
-
-		// Interior Colour (links to Interior Model Colour)
-		frm.set_query("interior_colour", function () {
-			return {
-				filters: {
-					discontinued: 0,
-					model: frm.doc.model || ""
-				}
-			};
-		});
-
-		// Disable colour fields if no model is selected
-		frm.toggle_enable("colour", !!frm.doc.model);
-		frm.toggle_enable("interior_colour", !!frm.doc.model);
-
-		// Set filter for warranty plan description in child table
-		frm.set_query("warranty_plan_description", "table_pcgj", function () {
-			return {
-				filters: {
-					vin_serial_no: frm.doc.name || frm.doc.vin_serial_no || "",
-					status: ["!=", "Active"]
-				}
-			};
-		});
-	},
+	// refresh(frm) {
+		
+	// },
 
 	model(frm) {
 		// Clear colour fields when model changes
