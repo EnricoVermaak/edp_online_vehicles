@@ -214,6 +214,35 @@ frappe.ui.form.on("Vehicle Stock", {
 				}
 			};
 		});
+
+
+		frm.add_custom_button('Create Linked Warranty Plan', () => {
+
+			frappe.model.with_doc('Vehicle Stock', frm.doc.name, () => {
+				const source = frappe.model.get_doc('Vehicle Stock', frm.doc.name);
+
+				frappe.new_doc('Vehicle Linked Warranty Plan', {
+					vin_serial_no: frm.doc.name,
+					model_description: source.description,
+					model_code: source.model,
+				});
+			});
+
+		}, 'Action');
+
+             frm.add_custom_button('Create Linked Service Plan', () => {
+
+            frappe.model.with_doc('Vehicle Stock', frm.doc.name, () => {
+                const source = frappe.model.get_doc('Vehicle Stock', frm.doc.name);
+
+                frappe.new_doc('Vehicle Linked Service Plan', {
+                    vin__serial_no: frm.doc.name,  // double underscore field
+                    model_description: source.description,
+                    model_code: source.model,
+                });
+            });
+
+        }, 'Action');
 	},
 
 
@@ -545,7 +574,7 @@ function addMonths(date, months) {
 
 frappe.ui.form.on("Vehicle Stock", {
 	// refresh(frm) {
-		
+
 	// },
 
 	model(frm) {
