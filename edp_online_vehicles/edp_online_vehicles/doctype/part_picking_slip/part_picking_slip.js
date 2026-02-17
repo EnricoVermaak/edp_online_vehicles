@@ -3,7 +3,7 @@
 
 frappe.ui.form.on("Part Picking Slip", {
 	refresh(frm) {
-		if(!frm.is_new()){
+		if(frm.doc.docstatus === 1) {
 			frm.add_custom_button('Create Parts Delivery Note', function(){
 				frappe.model.with_doctype("Parts Delivery Note", function () {
 					var doc = frappe.model.get_new_doc("Parts Delivery Note");
