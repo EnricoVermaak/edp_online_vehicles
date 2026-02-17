@@ -96,8 +96,13 @@
   }
  ],
  "index_web_pages_for_search": 1,
- "links": [],
- "modified": "2026-02-05 09:56:07.602927",
+ "links": [
+  {
+   "link_doctype": "Vehicle Linked Service Plan",
+   "link_fieldname": "service_plan"
+  }
+ ],
+ "modified": "2026-02-16 10:14:57.205650",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicles Service Plan Administration",

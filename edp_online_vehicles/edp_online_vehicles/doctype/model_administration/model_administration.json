@@ -14,9 +14,9 @@
   "nsc_no",
   "column_break_pvcv",
   "model_description",
+  "derivitive",
   "series_code",
   "make_code",
-  "derivitive",
   "column_break_ojyb",
   "brand",
   "series_description",
@@ -792,7 +792,7 @@
    "link_fieldname": "model"
   }
  ],
- "modified": "2026-01-26 10:04:55.258793",
+ "modified": "2026-02-16 10:04:40.681777",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Model Administration",
