@@ -84,24 +84,36 @@ frappe.ui.form.on("Vehicles Service", {
 		frm.clear_table("service_parts_items");
 		frm.clear_table("service_labour_items");
 
-		// ===== LOAD PARTS =====
-		(schedule.service_parts_items || []).forEach(part => {
-			let row = frm.add_child("service_parts_items");
-			row.item = part.item;
-			row.description = part.description || "";
-			row.qty = part.qty || 1;
-			row.price_excl=part.price_excl;
-			row.total_excl=part.total_excl
-		});
+		//          IMPORTANT CHANGE – LABOUR LOADING
+		// 1. First get the company labour rate (once)
+		let company_rate = 0;
+		if (frm.doc.dealer) {
+			let company_data = await frappe.db.get_value(
+				"Company",
+				frm.doc.dealer,
+				"custom_service_labour_rate"
+			);
+			company_rate = flt(company_data?.message?.custom_service_labour_rate || 0);
+		}
 
-		// ===== LOAD LABOUR =====
+		// 2. Load labour rows — but FORCE rate from company setting
 		(schedule.service_labour_items || []).forEach(labour => {
 			let row = frm.add_child("service_labour_items");
 			row.item = labour.item;
 			row.description = labour.description || "";
 			row.duration_hours = labour.duration_hours || 1;
-			row.rate_hour=labour.rate_hour;
-			row.total_excl=labour.total_excl
+			row.rate_hour = company_rate;
+			row.total_excl = company_rate * row.duration_hours;
+		});
+
+		// ===== LOAD PARTS (unchanged) =====
+		(schedule.service_parts_items || []).forEach(part => {
+			let row = frm.add_child("service_parts_items");
+			row.item = part.item;
+			row.description = part.description || "";
+			row.qty = part.qty || 1;
+			row.price_excl = part.price_excl;
+			row.total_excl = part.total_excl;
 		});
 
 		// ===== REFRESH UI =====
@@ -109,42 +121,12 @@ frappe.ui.form.on("Vehicles Service", {
 		frm.refresh_field("service_labour_items");
 		frm.refresh_field("non_oem_parts_items");
 		frm.refresh_field("non_oem_labour_items");
+
+		calculate_parts_total_combined(frm);
+		calculate_labours_total_combined(frm);
+		calculate_duration_total_combined(frm);
+		refresh_summary_totals(frm);
 	},
-
-
-	// dealer: function (frm) {
-	// 	if (!frm.doc.dealer) {
-	// 		return;
-	// 	}
-
-	// 	// Fetch values from Vehicles doctype
-	// 	frappe.db.get_doc('Company', frm.doc.dealer)
-	// 		.then(vehicle => {
-	// 			console.log(vehicle);
-
-
-	// 			// 1) Reset both child tables
-	// 			frm.clear_table('service_labour_items');
-	// 			frm.clear_table('service_parts_items');
-
-	// 			// ----------------------------
-	// 			//  CHILD TABLE 1
-	// 			// ----------------------------
-	// 			let labour_row = frm.add_child('service_labour_items');
-	// 			labour_row.rate_hour = vehicle.custom_service_labour_rate || 0;
-
-	// 			// ----------------------------
-	// 			//  CHILD TABLE 2
-	// 			// ----------------------------
-	// 			let parts_row = frm.add_child('service_parts_items');
-	// 			parts_row.price_excl = vehicle.custom_warranty_labour_rate || 0;
-
-	// 			frm.refresh_fields();
-	// 		});
-	// },
-
-
-
 	onload(frm) {
 		frm.doc.attach_documents = [];
 
@@ -884,11 +866,25 @@ frappe.ui.form.on("Non OEM Parts Items", {
 
 frappe.ui.form.on("Service Labour Items", {
 	item(frm, cdt, cdn) {
-		vehicle_service_labour_rate(frm, cdt, cdn).then(() => {
-			calculate_labours_total_combined(frm);
-			calculate_duration_total_combined(frm);
-			frm.refresh_field("service_labour_items");
-		});
+		let row = locals[cdt][cdn];
+
+		if (!row.item || !frm.doc.dealer) return;
+
+		frappe.db.get_value("Company", frm.doc.dealer, "custom_service_labour_rate")
+			.then(r => {
+				let rate = flt(r?.message?.custom_service_labour_rate || 0);
+				console.log("Rate", rate);
+
+				frappe.model.set_value(cdt, cdn, {
+					rate_hour: rate,
+					total_excl: rate * flt(row.duration_hours || 0)
+				});
+			})
+			.then(() => {
+				calculate_labours_total_combined(frm);
+				calculate_duration_total_combined(frm);
+				frm.refresh_field("service_labour_items");
+			});
 	},
 
 	service_labour_items_remove(frm) {
