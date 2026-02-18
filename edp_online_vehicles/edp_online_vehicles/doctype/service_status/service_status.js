@@ -12,11 +12,12 @@ frappe.ui.form.on("Service Status", {
 					.get_list("Service Status", {
 						filters: {
 							is_default_status: 1,
+							name: ["!=", frm.doc.name]
 						},
 						fields: ["name"],
 					})
 					.then((serv_status) => {
-						if (serv_status.length == 1) {
+						if (serv_status.length === 1) {
 							frappe.msgprint({
 								message:
 									"Service Status " +

@@ -317,7 +317,8 @@
   {
    "fieldname": "ho_date_received",
    "fieldtype": "Date",
-   "label": "HO Received Date"
+   "label": "HO Received Date",
+   "permlevel": 1
   },
   {
    "fieldname": "warranty_tab",
@@ -791,12 +792,14 @@
   {
    "fieldname": "model_conversion_date",
    "fieldtype": "Date",
-   "label": "Model Conversion Date"
+   "label": "Model Conversion Date",
+   "permlevel": 1
   },
   {
    "fieldname": "in_transit_date",
    "fieldtype": "Date",
-   "label": "In Transit Date"
+   "label": "In Transit Date",
+   "permlevel": 1
   },
   {
    "fieldname": "delivery_date",
@@ -811,18 +814,21 @@
    "fieldname": "head_office_age",
    "fieldtype": "Int",
    "label": "Head Office Age",
+   "permlevel": 1,
    "read_only": 1
   },
   {
    "fieldname": "model_conversion_age",
    "fieldtype": "Int",
    "label": "Model Conversion Age",
+   "permlevel": 1,
    "read_only": 1
   },
   {
    "fieldname": "in_transit_age",
    "fieldtype": "Int",
    "label": "In Transit Age",
+   "permlevel": 1,
    "read_only": 1
   },
   {
@@ -835,6 +841,7 @@
    "fieldname": "total_age",
    "fieldtype": "Int",
    "label": "Total Age",
+   "permlevel": 1,
    "read_only": 1
   }
  ],
@@ -883,7 +890,7 @@
    "link_fieldname": "vin_serial_no"
   }
  ],
- "modified": "2026-02-14 18:48:07.260197",
+ "modified": "2026-02-18 16:45:26.816218",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicle Stock",

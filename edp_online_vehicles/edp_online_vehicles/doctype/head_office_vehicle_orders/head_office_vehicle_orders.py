@@ -445,17 +445,20 @@ class HeadOfficeVehicleOrders(Document):
 
 			reserve_to = now + timedelta(hours=hours)
 
-			reserve_doc = frappe.new_doc("Reserved Vehicles")
+			if not frappe.db.exists('Reserved Vehicles', self.vinserial_no):
+				reserve_doc = frappe.new_doc("Reserved Vehicles")
 
-			reserve_doc.vin_serial_no = self.vinserial_no
-			reserve_doc.dealer = self.order_placed_by
-			reserve_doc.model = self.model
-			reserve_doc.status = "Reserved"
-			reserve_doc.reserve_reason = "Order Pending"
-			reserve_doc.reserve_from_date = now
-			reserve_doc.reserve_to_date = reserve_to
+				reserve_doc.vin_serial_no = self.vinserial_no
+				reserve_doc.dealer = self.order_placed_by
+				reserve_doc.model = self.model
+				reserve_doc.status = "Reserved"
+				reserve_doc.reserve_reason = "Order Pending"
+				reserve_doc.reserve_from_date = now
+				reserve_doc.reserve_to_date = reserve_to
 
-			reserve_doc.insert(ignore_permissions=True)
+				reserve_doc.insert(ignore_permissions=True)
+
+			
 
 			self.remove_tags()
 
