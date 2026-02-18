@@ -25,17 +25,20 @@ class ModelAdministration(Document):
                     new_colour = frappe.new_doc("Model Colour")
                     new_colour.model = self.model_code
                     new_colour.colour = colour.colour
+                    new_colour.oem_colour_code = colour.oem_colour_code
+                    new_colour.naamsa_colour_code = colour.naamsa_colour_code
+                    new_colour.natis_colour_code = colour.natis_colour_code
                     new_colour.insert(ignore_permissions=True)
 
-        doc = frappe.db.get_single_value("Vehicle Stock Settings", "create_other_service_schedule")
-        if doc:
-            new_doc = frappe.get_doc({
-                "doctype": "Service Schedules",
-                "model_code": self.model_code,
-                "interval": "Other",
-                "period_months": 0,
-            })
-            new_doc.insert(ignore_permissions=True)
+        # doc = frappe.db.get_single_value("Vehicle Stock Settings", "create_other_service_schedule")
+        # if doc:
+        #     new_doc = frappe.get_doc({
+        #         "doctype": "Service Schedules",
+        #         "model_code": self.model_code,
+        #         "interval": "Other",
+        #         "period_months": 0,
+        #     })
+        #     new_doc.insert(ignore_permissions=True)
 
         frappe.db.commit()
         
@@ -52,7 +55,10 @@ class ModelAdministration(Document):
                 if not frappe.db.exists("Model Colour", colour_name):
                     new_colour = frappe.new_doc("Model Colour")
                     new_colour.model = self.model_code
-                    new_colour.colour = row.colour
+                    # new_colour.colour = row.colour
+                    # new_colour.oem_colour_code = row.oem_colour_code
+                    # new_colour.naamsa_colour_code = row.naamsa_colour_code
+                    # new_colour.natis_colour_code = row.natis_colour_code
                     new_colour.insert(ignore_permissions=True)
                 else:
                     colour_doc = frappe.get_doc("Model Colour", colour_name)
