@@ -792,11 +792,7 @@
    "link_fieldname": "model"
   }
  ],
-<<<<<<< HEAD
  "modified": "2026-02-17 10:40:28.470260",
-=======
- "modified": "2026-02-16 10:04:40.681777",
->>>>>>> fec4d3460dd3568dec69747e2bae8791b3549fc0
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Model Administration",
