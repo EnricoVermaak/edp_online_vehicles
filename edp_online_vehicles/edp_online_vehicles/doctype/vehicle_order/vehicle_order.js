@@ -1011,12 +1011,11 @@ frappe.ui.form.on("Vehicle Order", {
 							frappe.validated = true;
 							dlg.hide();
 							frm._skip_stock_dialog = true;
-							frm.save();
-							if (
-								frm.doc.finance_option &&
-								frm.doc.dealer_order_no
-							) {
-								frappe.dom.freeze();
+							
+							if(frm.is_new() || frm.is_dirty()) {
+								frm.save();
+							}else{
+								frm.save("Submit");
 							}
 						},
 						secondary_action_label: __("Cancel"),
@@ -1058,6 +1057,8 @@ frappe.ui.form.on("Vehicle Order", {
 									args: {
 										doc: frm.doc.name,
 									},
+									freeze: true,
+									freeze_message: "Submitting Order in Background...",
 									callback: function (r) {
 										if (r.message) {
 											frappe.show_alert(
@@ -1067,7 +1068,6 @@ frappe.ui.form.on("Vehicle Order", {
 												30,
 											);
 
-											frappe.dom.unfreeze();
 											// run_order_creation(frm);
 										}
 									},
