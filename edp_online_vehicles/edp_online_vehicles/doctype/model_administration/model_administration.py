@@ -79,3 +79,8 @@ class ModelAdministration(Document):
 
         self.service_type_max_allowance = max_allowance
         self.service_type_minimum_allowance = min_allowance
+
+    def before_save(self):
+        automatically_reserve_stock = frappe.db.get_single_value("Vehicle Stock Settings","automatically_reserve_stock")
+        if automatically_reserve_stock:
+            self.automatically_reserve_model = 1

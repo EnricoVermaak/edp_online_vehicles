@@ -26,66 +26,79 @@ frappe.listview_settings["Vehicle Stock"] = {
 		// Hide the default "New" button
 		$('[data-label="Add Vehicle Stock"]').hide();
 		listview.page.add_actions_menu_item(__('Transfer to New Warehouse'), function () {
-			const selected_docs = listview.get_checked_items();
+			frappe.db.get_value("Company", { custom_active: 1 }, "name").then((r) => {
+				hq_company = r?.message?.name;
 
-			let vin = selected_docs.map(doc => doc.name);
+				const selected_docs = listview.get_checked_items();
+				const vin = selected_docs.map(d => d.name);
 
-			const dialog = new frappe.ui.Dialog({
-				title: __('Transfer to New Warehouse'),
-				fields: [
-					{
-						label: __('To Warehouse'),
-						fieldname: 'to_warehouse',
-						fieldtype: 'Link',
-						options: "Warehouse",
-					},
-					{
-						label: __('Vehicles'),
-						fieldname: 'selected_Vehicles',
-						fieldtype: 'Table',
-						read_only: 1,
-						cannot_add_rows: true,
-						in_place_edit: false,
-						fields: [
-							{
-								fieldname: 'vin_serial_no',
-								fieldtype: 'Link',
-								in_list_view: 1,
-								label: 'VIN/ Serial No',
-								options: 'Vehicle Stock',
-								read_only: 1
-							}
-						],
-						data: vin.map(v => ({ vin_serial_no: v }))
-					}
-				],
-				primary_action_label: __('Move'),
-				primary_action(values) {
-					dialog.hide();
-
-					frappe.dom.freeze();
-
-					frappe.call({
-						method: "edp_online_vehicles.events.move_vin_to_new_warehouse.move_vin_to_new_warehouse",
-						args: {
-							docnames: selected_docs.map(doc => doc.name),
-							to_warehouse: values.to_warehouse,
+				const dialog = new frappe.ui.Dialog({
+					title: __('Transfer to New Warehouse'),
+					fields: [
+						{
+							label: __('To Warehouse'),
+							fieldname: 'to_warehouse',
+							fieldtype: 'Link',
+							options: 'Warehouse',
+							get_query: function () {
+										return {
+											filters: {
+												company: hq_company,
+											},
+										};
+									},
 						},
-						callback: function (r) {
-							if (r.message == "Success") {
-								frappe.dom.unfreeze();
 
-								frappe.show_alert({
-									message: __('Vehicle/s successfully transferred to warehouse ' + values.to_warehouse),
-									indicator: 'green'
-								}, 10);
-							}
+						{
+							label: __('Vehicles'),
+							fieldname: 'selected_Vehicles',
+							fieldtype: 'Table',
+							read_only: 1,
+							cannot_add_rows: true,
+							in_place_edit: false,
+							fields: [
+								{
+									fieldname: 'vin_serial_no',
+									fieldtype: 'Link',
+									in_list_view: 1,
+									label: 'VIN/ Serial No',
+									options: 'Vehicle Stock',
+									read_only: 1
+								}
+							],
+							data: vin.map(v => ({ vin_serial_no: v }))
 						}
-					})
-				}
+					],
+					primary_action_label: __('Move'),
+					primary_action(values) {
+						dialog.hide();
+
+						frappe.dom.freeze();
+
+						frappe.call({
+							method: "edp_online_vehicles.events.move_vin_to_new_warehouse.move_vin_to_new_warehouse",
+							args: {
+								docnames: selected_docs.map(doc => doc.name),
+								to_warehouse: values.to_warehouse,
+							},
+							callback: function (r) {
+								if (r.message == "Success") {
+									frappe.dom.unfreeze();
+
+									frappe.show_alert({
+										message: __('Vehicle/s successfully transferred to warehouse ' + values.to_warehouse),
+										indicator: 'green'
+									}, 10);
+								}
+							}
+						})
+					}
+
+					
+				})
+				dialog.show();
 			});
 
-			dialog.show();
 		});
 		const default_dealer = frappe.defaults.get_default("company");
 		let dealers = "";

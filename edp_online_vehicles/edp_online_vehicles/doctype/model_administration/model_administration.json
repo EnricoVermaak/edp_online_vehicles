@@ -792,7 +792,7 @@
    "link_fieldname": "model"
   }
  ],
- "modified": "2026-01-26 10:04:55.258793",
+ "modified": "2026-02-17 10:40:28.470260",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Model Administration",
@@ -823,7 +823,6 @@
    "write": 1
   }
  ],
- "quick_entry": 1,
  "row_format": "Dynamic",
  "search_fields": "model_code,model_description,mm_code,model_year,category",
  "show_title_field_in_link": 1,

@@ -5,67 +5,68 @@ let stockNo = "";
 
 frappe.ui.form.on("Vehicles Shipment", {
 
-    validate: function(frm) {
+	validate: function (frm) {
 
-        frappe.call({
-            method: "frappe.client.get",
-            args: {
-                doctype: "Vehicle Stock Settings",
-                name: "Vehicle Stock Settings"
-            },
-            callback: function(r) {
-                if (!r.message) return;
+		frappe.call({
+			method: "frappe.client.get",
+			args: {
+				doctype: "Vehicle Stock Settings",
+				name: "Vehicle Stock Settings"
+			},
+			callback: function (r) {
+				if (!r.message) return;
 
-                let settings = r.message;
+				let settings = r.message;
 
-                if (!settings.automatically_create_stock_number) {
-                    return;
-                }
+				if (!settings.automatically_create_stock_number) {
+					return;
+				}
 
-                let last_no = settings.last_automated_stock_no;
+				let last_no = settings.last_automated_stock_no;
 
-                if (!last_no) return;
-                let match = last_no.match(/^([a-zA-Z]+)(\d+)$/);
-                if (!match) return;
+				if (!last_no) return;
+				let match = last_no.match(/^([a-zA-Z]+)(\d+)$/);
+				if (!match) return;
 
-                let prefix = match[1];
-                let number = parseInt(match[2]);
+				let prefix = match[1];
+				let number = parseInt(match[2]);
 
-                let updated = false;
+				let updated = false;
 
-                frm.doc.vehicles_shipment_items.forEach(row => {
+				frm.doc.vehicles_shipment_items.forEach(row => {
 
-                    if (!row.stock_no) {
-                        number += 1;
-                        row.stock_no = prefix + number;
-                        updated = true;
-                    }
+					if (!row.stock_no) {
+						number += 1;
+						row.stock_no = prefix + number;
+						updated = true;
+					}
 
-                });
+				});
 
-                if (updated) {
-                    frm.refresh_field("vehicles_shipment_items");
-                    frappe.call({
-                        method: "frappe.client.set_value",
-                        args: {
-                            doctype: "Vehicle Stock Settings",
-                            name: "Vehicle Stock Settings",
-                            fieldname: {
-                                last_automated_stock_no: prefix + number
-                            }
-                        }
-                    });
-                }
+				if (updated) {
+					frm.refresh_field("vehicles_shipment_items");
+					frappe.call({
+						method: "frappe.client.set_value",
+						args: {
+							doctype: "Vehicle Stock Settings",
+							name: "Vehicle Stock Settings",
+							fieldname: {
+								last_automated_stock_no: prefix + number
+							}
+						}
+					});
+				}
 
-            }
-        });
-    },
+			}
+		});
+	},
 
 	refresh(frm) {
 		frm.set_query("target_warehouse", () => {
 			return {
 				filters: {
 					is_group: 0,
+					company: frm.doc.dealer
 				},
 			};
 		});
@@ -397,8 +398,11 @@ frappe.ui.form.on("Vehicles Shipment", {
 				var selected_rows = [];
 				var promises = [];
 
+
+
+
 				frm.doc["vehicles_shipment_items"].forEach(function (row) {
-					if (row.__checked) {
+					if (row.__checked && row.status !== "Received") {
 						if (!row.target_warehouse) {
 							frappe.model.set_value(
 								row.doctype,
@@ -514,7 +518,7 @@ frappe.ui.form.on("Vehicles Shipment", {
 
 					} else {
 						frappe.dom.unfreeze();
-						frappe.throw("Please Select at least One Item.");
+						frappe.throw("Please Select at least one Item that is not Received.");
 					}
 				});
 			});
@@ -951,6 +955,7 @@ function handle_custom_buttons(frm) {
 
 							// Process rows from the uploaded file
 							let rowIndex = 7; // Start after the metadata/header rows
+							count_row = 0
 
 							function processRow(rowIndex) {
 								if (rowIndex < data.length) {
@@ -966,6 +971,7 @@ function handle_custom_buttons(frm) {
 									});
 
 									if (!blank_row) {
+										count_row++
 										// Get model and colour
 										const model = row[0];
 										const colour = row[11];
@@ -1121,6 +1127,8 @@ function handle_custom_buttons(frm) {
 									}
 								} else {
 									// Once all rows have been processed, notify the user
+									frm.set_value("total_vehicles",count_row)
+									
 									frappe.msgprint({
 										message: __(
 											"Table updated successfully",
