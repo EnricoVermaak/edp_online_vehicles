@@ -5,6 +5,7 @@ frappe.ui.form.on("Part Order", {
 	onload(frm) {
 		// New Part Order: set delivery_date from Parts Settings (current date + Order Turn Around Time)
 		if (frm.doc.__islocal) {
+			console.log("Test")
 			frappe.db.get_single_value("Parts Settings", "order_turn_around_time_hours").then((hours) => {
 				if (hours != null && hours > 0) {
 					let delivery = frappe.datetime.add_days(frappe.datetime.get_today(), hours / 24);
