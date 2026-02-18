@@ -110,9 +110,6 @@ frappe.ui.form.on("Parts Delivery Note", {
 					});
 			}
 		}
-		if (frm.is_new()) {
-			frm.set_value("total_qty_delivered", 0);
-		}
 	},
 	deliver_to(frm) {
 		if (frm.doc.deliver_to === "Dealer") {
@@ -141,17 +138,17 @@ frappe.ui.form.on("Parts Delivery Note Items", {
 	qty_delivered(frm, cdt, cdn) {
 		let row = locals[cdt][cdn];
 
-		if (row.qty_delivered === null) {
-			frappe.model.set_value(cdt, cdn, "qty_delivered", 0);
-		}
-
 		if (row.qty_delivered > 0) {
-			if (row.qty_delivered > row.outstanding_qty) {
-				frappe.model.set_value(cdt, cdn, "qty_delivered", 0);
+			if (row.qty_delivered > row.qty_ordered) {
+				frappe.model.set_value(cdt, cdn, "qty_delivered", row.qty_ordered);
+				frappe.model.set_value(cdt, cdn, "outstanding_qty", row.qty_ordered - row.qty_delivered);
 
 				frappe.msgprint(
-					"Qty Delivered cannot be more than Outstanding Qty",
+					"Qty Delivered cannot be more than Qty Ordered",
 				);
+			}
+			else{
+				frappe.model.set_value(cdt, cdn, "outstanding_qty", row.qty_ordered - row.qty_delivered);
 			}
 
 			let total_delivered = 0;

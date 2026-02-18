@@ -900,21 +900,8 @@
  "index_web_pages_for_search": 1,
  "is_calendar_and_gantt": 1,
  "is_submittable": 1,
- "links": [
-  {
-   "link_doctype": "Material Request",
-   "link_fieldname": "custom_linked_service_id"
-  },
-  {
-   "link_doctype": "Sales Order",
-   "link_fieldname": "custom_linked_service_id"
-  },
-  {
-   "link_doctype": "Internal Docs and Notes",
-   "link_fieldname": "services"
-  }
- ],
- "modified": "2026-02-11 10:33:47.055989",
+ "links": [],
+ "modified": "2026-02-16 10:12:57.969158",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicles Service",

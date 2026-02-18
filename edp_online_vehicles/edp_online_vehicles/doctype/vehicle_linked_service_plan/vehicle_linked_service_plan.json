@@ -114,7 +114,7 @@
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-02-05 09:58:56.469015",
+ "modified": "2026-02-16 17:52:03.982165",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicle Linked Service Plan",
@@ -135,7 +135,9 @@
  ],
  "row_format": "Dynamic",
  "rows_threshold_for_grid_search": 20,
+ "show_title_field_in_link": 1,
  "sort_field": "modified",
  "sort_order": "DESC",
- "states": []
+ "states": [],
+ "title_field": "service_plan"
 }

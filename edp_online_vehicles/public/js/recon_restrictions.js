@@ -49,6 +49,8 @@ frappe.router.on("change", () => {
 					console.log(response.message);
 
 					if (response.message === "incomplete") {
+						forceHideAwesomeBar()
+
 						// Show message to user
 						frappe.msgprint({
 							title: __("Mandatory Recon Incomplete"),
@@ -57,6 +59,17 @@ frappe.router.on("change", () => {
 							),
 							indicator: "red",
 						});
+						const current_route = frappe.get_route();
+
+						const allowed =
+							(current_route[0] === "List" &&
+								current_route[1] === "Vehicles Recon") ||
+							(current_route[0] === "Form" &&
+								current_route[1] === "Vehicles Recon");
+
+						if (!allowed) {
+							frappe.set_route("List", "Vehicles Recon");
+						}
 
 						// Function to wait for elements
 						function waitForContainers(callback) {
@@ -103,3 +116,22 @@ frappe.router.on("change", () => {
 		}
 	}
 });
+
+function forceHideAwesomeBar() {
+	if (document.getElementById("hide-awesome-style")) return;
+
+	const style = document.createElement("style");
+	style.id = "hide-awesome-style";
+	style.innerHTML = `
+		/* Frappe v15 selectors */
+		.navbar .search-bar,
+		.navbar .input-group.search-bar,
+		.navbar input[data-fieldname="search"],
+		.navbar .awesomplete {
+			display: none !important;
+			visibility: hidden !important;
+			width: 0 !important;
+		}
+	`;
+	document.head.appendChild(style);
+}

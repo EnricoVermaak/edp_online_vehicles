@@ -404,7 +404,11 @@ class PartsDeliveryNote(Document):
 			dn.append("items", {
 				"item_code": row.part_no,
 				"qty": row.qty_ordered,
+    			"custom_qty_delivered": row.qty_delivered,
 			})
+		total_custom_qty_delivered = sum(row.qty_delivered for row in self.delivery_note_item)
+		dn.custom_total_quantity_delivered = total_custom_qty_delivered
+
 
 		dn.insert(ignore_permissions=True)
 		dn.submit()

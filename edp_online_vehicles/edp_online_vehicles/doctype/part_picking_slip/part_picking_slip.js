@@ -3,21 +3,27 @@
 
 frappe.ui.form.on("Part Picking Slip", {
 	refresh(frm) {
-		if(!frm.is_new()){
+		if(frm.doc.docstatus === 1) {
 			frm.add_custom_button('Create Parts Delivery Note', function(){
 				frappe.model.with_doctype("Parts Delivery Note", function () {
 					var doc = frappe.model.get_new_doc("Parts Delivery Note");
 					doc.part_order_no = frm.doc.part_order_no;
 					doc.ordered_by_user = frappe.session.user;
 					doc.part_order_date_time = frm.doc.ordered_on_datetime;
+					let total_qty_delivered = 0 
 					for (let child of frm.doc.table_qoik){
 							var row = frappe.model.add_child(
 								doc,
 								"delivery_note_item",
 							);
 							row.part_no = child.part_no;
+							row.description = child.description;
 							row.qty_ordered = child.qty_ordered;
+							row.qty_delivered = child.qty_picked;
+							row.outstanding_qty = child.outstanding_qty;
+							total_qty_delivered += parseInt(child.qty_picked);
 						}
+					doc.total_qty_delivered = total_qty_delivered;
 					frappe.set_route("Form", doc.doctype, doc.name);
 				}); 
 			}) 	

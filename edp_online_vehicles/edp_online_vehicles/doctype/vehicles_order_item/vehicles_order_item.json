@@ -116,7 +116,8 @@
    "fieldname": "dealer",
    "fieldtype": "Select",
    "ignore_user_permissions": 1,
-   "label": "Order From"
+   "label": "Order From",
+   "read_only_depends_on": "eval: !doc.place_back_order"
   },
   {
    "depends_on": "eval:doc.place_back_order == 1;",
@@ -142,7 +143,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2026-02-13 09:34:57.985809",
+ "modified": "2026-02-17 14:37:14.679310",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicles Order Item",

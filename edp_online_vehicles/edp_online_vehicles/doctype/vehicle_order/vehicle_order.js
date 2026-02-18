@@ -2,6 +2,7 @@
 // For license information, please see license.txt
 
 frappe.ui.form.on("Vehicle Order", {
+
 	onload(frm, dt, dn) {
 		// Fetch and set company address on form load
 		if (frm.is_new()) {
@@ -1080,49 +1081,47 @@ frappe.ui.form.on("Vehicle Order", {
 		}
 	},
 	onload_post_render: function (frm) {
+		// Hide help text
 		$("p.help-box.small.text-muted").hide();
 
-		// frm.fields_dict.order_date_time.datepicker.update({
-		// 	minDate: new Date(frappe.datetime.get_today()),
-		// });
-
-		frappe.db
-			.get_single_value(
-				"Vehicle Stock Settings",
-				"allow_scheduled_orders",
-			)
+		frappe.db.get_single_value("Vehicle Stock Settings", "allow_scheduled_orders")
 			.then((allow_scheduled_orders) => {
-				if (allow_scheduled_orders === 0) {
-					// frm.fields_dict.order_date_time.datepicker.update({
-					// 	maxDate: new Date(frappe.datetime.get_today()),
-					// });
-					frm.fields_dict['order_date_time'].datepicker.update({
-						maxDate: new Date(frappe.datetime.get_today())
+
+				// 1. Only set the current date/time if the form is NEW
+				if (frm.is_new() && !frm.doc.order_date_time) {
+					// Set value without a full refresh
+					frm.doc.order_date_time = frappe.datetime.now_datetime();
+				}
+
+				// 2. Target the field directly
+				let field = frm.fields_dict['order_date_time'];
+				if (field && field.datepicker) {
+					let dp = field.datepicker;
+					let today = new Date(frappe.datetime.get_today());
+
+					// Update datepicker constraints
+					dp.update({
+						minDate: allow_scheduled_orders === 1 ? today : null,
+						maxDate: allow_scheduled_orders === 0 ? today : null
 					});
 
-				} else {
-					frm.fields_dict['order_date_time'].datepicker.update({
-						minDate: new Date(frappe.datetime.get_today())
-					});
+					// 3. Sync the visual input with the value
+					if (frm.doc.order_date_time) {
+						// This updates the calendar internal state
+						dp.selectDate(new Date(frm.doc.order_date_time));
+						// This updates the actual text box without redrawing the whole field
+						field.set_input(frm.doc.order_date_time);
+					}
 				}
-				frm.set_value('order_date_time', frappe.datetime.now_datetime());
+				// DO NOT use frm.refresh_field here, as it removes the description
 			});
 
-
-
-		if (
-			frm.fields_dict["vehicles_basket"] &&
-			frm.fields_dict["vehicles_basket"].grid
-		) {
-			frm.fields_dict["vehicles_basket"].grid.grid_rows.forEach(
-				(grid_row) => {
-					initialize_model_popover(grid_row);
-				},
-			);
-		} else {
-			console.log("vehicles_basket grid is not defined on this form.");
+		// Initialize grid rows for vehicles basket
+		if (frm.fields_dict["vehicles_basket"] && frm.fields_dict["vehicles_basket"].grid) {
+			frm.fields_dict["vehicles_basket"].grid.grid_rows.forEach((grid_row) => {
+				initialize_model_popover(grid_row);
+			});
 		}
-		
 	},
 
 	deliver_to_dealer: function (frm) {
@@ -3362,33 +3361,33 @@ frappe.ui.form.on("Vehicles Order Item", {
 });
 
 function check_and_fetch(frm, cdt, cdn) {
-    let row = locals[cdt][cdn];
+	let row = locals[cdt][cdn];
 
-    if (!row.model || !row.colour) {
-        return;
-    }
+	if (!row.model || !row.colour) {
+		return;
+	}
 
-    frappe.call({
-        method: "edp_online_vehicles.events.add_comment.get_dealers",
-        args: {
-            model: row.model,
-            colour: row.colour
-        },
-        callback: function (r) {
-            console.log("Response", r.message);
+	frappe.call({
+		method: "edp_online_vehicles.events.add_comment.get_dealers",
+		args: {
+			model: row.model,
+			colour: row.colour
+		},
+		callback: function (r) {
+			console.log("Response", r.message);
 
-            let options = [];
-            if (r.message && r.message.length > 0) {
-                options = r.message;
-            }
+			let options = [];
+			if (r.message && r.message.length > 0) {
+				options = r.message;
+			}
 
 			// if (options.length) {
-				
+
 			// }
-            // Update the dropdown options for both possible field names
-        	updateDealerOptions1(frm, options);
-        }
-    });
+			// Update the dropdown options for both possible field names
+			updateDealerOptions1(frm, options);
+		}
+	});
 }
 
 
@@ -3411,11 +3410,11 @@ function updateDealerOptions(params) {
 }
 
 function updateDealerOptions1(frm, options) {
-    if (!options || options.length === 0) {
+	if (!options || options.length === 0) {
 		console.warn("No dealers available to set.");
 		return;
-    }
-    frm.fields_dict.vehicles_basket.grid.update_docfield_property("dealer","options", [""].concat(options));
+	}
+	frm.fields_dict.vehicles_basket.grid.update_docfield_property("dealer", "options", [""].concat(options));
 	// frm.refresh_field('vehicles_basket')
 }
 

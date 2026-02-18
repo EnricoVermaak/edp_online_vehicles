@@ -45,59 +45,97 @@ def check_mandatory_recon():
 	# Get company's creation date
 	company_creation_date = frappe.db.get_value("Company", user_company, "creation")
 
-	# Calculate this month's recon period start and end dates
-	current_month_start_date = today.replace(day=recon_day, hour=0, minute=1, second=0)
+	# Calculate safe start day (avoid Feb 30 / 31 crash)
+	import calendar
 
-	# If the company was created after this month's mandatory recon start date, no restriction applies
-	if company_creation_date > current_month_start_date:
+	last_day_of_month = calendar.monthrange(today.year, today.month)[1]
+	safe_start_day = min(recon_day, last_day_of_month)
+
+	start_date = today.replace(day=safe_start_day, hour=0, minute=0, second=0)
+
+	# Calculate restriction date
+	restriction_date = start_date + timedelta(days=recon_due_days)
+
+	# If company created after start_date → allow
+	if company_creation_date > start_date:
 		return "complete"
 
-	# Check if today's date is before this month's recon period
-	if today < current_month_start_date:
-		# Calculate last month's recon period start and end
-		last_month_start_date = (current_month_start_date - timedelta(days=30)).replace(day=recon_day)
-		last_month_end_date = last_month_start_date + timedelta(
-			days=recon_due_days - 1, hours=23, minutes=58, seconds=59
-		)
+	# If today is BEFORE OR EQUAL to restriction date → allow
+	if today <= restriction_date:
+		return "complete"
 
-		# Check last month's recon period for completed recon
-		recon_last_month = frappe.db.exists(
-			"Vehicles Recon",
-			{
-				"company": user_company,
-				"docstatus": 1,  # Submitted documents
-				"submitted_on": ["between", [last_month_start_date, last_month_end_date]],
-			},
-		)
-
-		# Check for any recon submitted after last month's mandatory period
-		latest_recon_after_last_month = frappe.db.get_value(
-			"Vehicles Recon",
-			filters={
-				"company": user_company,
-				"docstatus": 1,
-				"submitted_on": [">", last_month_end_date],
-			},
-			fieldname="submitted_on",
-			order_by="submitted_on DESC",
-		)
-
-		if recon_last_month or latest_recon_after_last_month:
-			return "complete"
-		else:
-			return "incomplete"  # No recon for last month
-
-	# If today is within this month's recon period
-	recon_in_current_period = frappe.db.exists(
+	# If today is AFTER restriction date → recon required
+	recon_exists = frappe.db.exists(
 		"Vehicles Recon",
 		{
 			"company": user_company,
-			"docstatus": 1,  # Submitted documents
-			"submitted_on": [">=", current_month_start_date],
+			"docstatus": 1,
+			"submitted_on": [">=", start_date],
 		},
 	)
 
-	if recon_in_current_period:
+	if recon_exists:
 		return "complete"
 
 	return "incomplete"
+
+
+
+
+
+	# # Calculate this month's recon period start and end dates
+	# current_month_start_date = today.replace(day=recon_day, hour=0, minute=1, second=0)
+
+	# # If the company was created after this month's mandatory recon start date, no restriction applies
+	# if company_creation_date > current_month_start_date:
+	# 	return "complete"
+
+	# # Check if today's date is before this month's recon period
+	# if today < current_month_start_date:
+	# 	# Calculate last month's recon period start and end
+	# 	last_month_start_date = (current_month_start_date - timedelta(days=30)).replace(day=recon_day)
+	# 	last_month_end_date = last_month_start_date + timedelta(
+	# 		days=recon_due_days - 1, hours=23, minutes=58, seconds=59
+	# 	)
+
+	# 	# Check last month's recon period for completed recon
+	# 	recon_last_month = frappe.db.exists(
+	# 		"Vehicles Recon",
+	# 		{
+	# 			"company": user_company,
+	# 			"docstatus": 1,  # Submitted documents
+	# 			"submitted_on": ["between", [last_month_start_date, last_month_end_date]],
+	# 		},
+	# 	)
+
+	# 	# Check for any recon submitted after last month's mandatory period
+	# 	latest_recon_after_last_month = frappe.db.get_value(
+	# 		"Vehicles Recon",
+	# 		filters={
+	# 			"company": user_company,
+	# 			"docstatus": 1,
+	# 			"submitted_on": [">", last_month_end_date],
+	# 		},
+	# 		fieldname="submitted_on",
+	# 		order_by="submitted_on DESC",
+	# 	)
+
+	# 	if recon_last_month or latest_recon_after_last_month:
+	# 		return "complete"
+	# 	else:
+	# 		return "incomplete"  # No recon for last month
+
+	# # If today is within this month's recon period
+	# recon_in_current_period = frappe.db.exists(
+	# 	"Vehicles Recon",
+	# 	{
+	# 		"company": user_company,
+	# 		"docstatus": 1,  # Submitted documents
+	# 		"submitted_on": [">=", current_month_start_date],
+	# 	},
+	# )
+
+	# if recon_in_current_period:
+	# 	return "complete"
+
+	# return "incomplete"

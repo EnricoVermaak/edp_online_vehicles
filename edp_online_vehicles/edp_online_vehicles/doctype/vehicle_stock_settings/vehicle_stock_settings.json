@@ -302,10 +302,10 @@
   },
   {
    "default": "0",
-   "description": "When checked will always reserve stock that gets received.",
+   "description": "When enabled, all vehicle model settings will be configured to automatically reserve available stock upon receipt through a shipment.",
    "fieldname": "automatically_reserve_stock",
    "fieldtype": "Check",
-   "label": "Automatically Reserve Stock"
+   "label": "Auto-Reserve Stock on Shipment"
   },
   {
    "fieldname": "vehicle_order_no_prefix",
@@ -458,7 +458,7 @@
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2026-02-17 10:39:47.478999",
+ "modified": "2026-02-17 08:30:53.355365",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicle Stock Settings",

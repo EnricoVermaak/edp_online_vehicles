@@ -13,7 +13,48 @@ from frappe.utils import today
 
 
 class VehiclesShipment(Document):
+    
 	def validate(self):
+		# Auto-generate stock numbers if enabled
+		settings = frappe.get_doc("Vehicle Stock Settings", "Vehicle Stock Settings")
+		
+		if settings and settings.automatically_create_stock_number:
+			last_no = settings.last_automated_stock_no
+			
+			if last_no:
+				import re
+				match = re.match(r'^([a-zA-Z]+)(\d+)$', last_no)
+				
+				if match:
+					prefix = match.group(1)
+					number_str = match.group(2)
+					number_length = len(number_str)  
+					full_number = int(number_str)
+										
+					last_digit = int(str(full_number)[-1])
+					print(f"lora last digit: {last_digit}")
+					
+					updated = False
+					
+					# Iterate through vehicle shipment items
+					for row in self.vehicles_shipment_items:
+						if not row.stock_no:
+							full_number += 1
+							# Leading zeros preserve karte hue format karna
+							row.stock_no = prefix + str(full_number).zfill(number_length)
+							updated = True
+					
+					# Update settings if any stock numbers were generated
+					if updated:
+						frappe.db.set_value(
+							"Vehicle Stock Settings",
+							"Vehicle Stock Settings",
+							"last_automated_stock_no",
+							prefix + str(full_number).zfill(number_length)
+						)
+		
+     
+     
 		for row in self.vehicles_shipment_items:
 			if row.reserve_to_order:
 				order = frappe.get_doc("Head Office Vehicle Orders", row.reserve_to_order)

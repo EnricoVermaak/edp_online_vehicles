@@ -33,24 +33,14 @@ class PartPickingSlip(Document):
 	def on_submit(self):
 		# Retrieve the HQ Part Order document
 		hq_doc = frappe.get_doc("HQ Part Order", self.part_order_no)
+		hq_doc.db_set("part_picking_slip", self.name, notify=True)
 
-		# Loop through each part in the delivery_note_item child table
-		for part in self.table_qoik:
-			# Search for a matching record in table_qmpy by part_no
-			matching_record = None
-			for rec in hq_doc.get("table_qmpy"):
-				if rec.part_no == part.part_no:
-					matching_record = rec
-					break
 
-					# If no matching record is found, skip this part
-			if not matching_record:
-				continue
+		for slip_row in self.table_qoik:
+			for hq_row in hq_doc.table_ugma:
+				if hq_row.part_no == slip_row.part_no:
+					hq_row.db_set("qty_picked", slip_row.qty_picked)
 
-				# Update cumulative qty_delivered by adding the current delivery's qty_delivered
-			matching_record.qty_picked += part.qty_picked
-
-		hq_doc.save()
 		frappe.db.commit()
 		self.create_pick_list()
 

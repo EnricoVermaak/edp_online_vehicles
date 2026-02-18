@@ -51,11 +51,17 @@ class VehiclesService(Document):
 
         data = self.as_dict()
 
-        ignore_fields = {"name", "doctype", "owner", "creation",
-                         "modified", "modified_by", "idx", "docstatus"}
+        ignore_fields = {
+            "name", "doctype", "owner", "creation",
+            "modified", "modified_by", "idx", "docstatus"
+        }
         for field in ignore_fields:
             data.pop(field, None)
-        # frappe.throw(f"{data}and {history_name}")
+
+        data.pop("service_parts_items", None)
+        data.pop("attach_documents", None)
+        data.pop("service_labour_items", None)
+
         if history_name:
             history_doc = frappe.get_doc("Vehicle Service History", history_name)
             history_doc.update(data)
@@ -251,7 +257,7 @@ class VehiclesService(Document):
                     "incident_description": doc.incident_description,
                 },
             )
-
+    
 
 @frappe.whitelist()
 def create_internal_docs_notes(source_name, target_doc=None):

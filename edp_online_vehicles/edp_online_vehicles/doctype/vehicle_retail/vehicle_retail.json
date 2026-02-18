@@ -61,7 +61,10 @@
   "fleet_customer_code",
   "fleet_customer_province_state",
   "fleet_customer_country",
-  "amended_from"
+  "amended_from",
+  "documents_tab",
+  "documents_section",
+  "mandatory_documents"
  ],
  "fields": [
   {
@@ -451,12 +454,28 @@
    "fieldtype": "Link",
    "label": "Vehicle Microdot",
    "options": "Vehicles Microdots"
+  },
+  {
+   "fieldname": "documents_tab",
+   "fieldtype": "Tab Break",
+   "label": "Documents"
+  },
+  {
+   "fieldname": "documents_section",
+   "fieldtype": "Section Break",
+   "label": "Documents"
+  },
+  {
+   "fieldname": "mandatory_documents",
+   "fieldtype": "Table",
+   "label": "Mandatory Documents",
+   "options": "Order Documents"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-02-12 15:18:21.052992",
+ "modified": "2026-02-13 19:02:30.122477",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicle Retail",
