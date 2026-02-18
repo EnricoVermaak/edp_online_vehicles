@@ -125,7 +125,7 @@ frappe.ui.form.on("Vehicles Service", {
 		calculate_parts_total_combined(frm);
 		calculate_labours_total_combined(frm);
 		calculate_duration_total_combined(frm);
-		refresh_summary_totals(frm);
+		// refresh_summary_totals(frm);
 	},
 	onload(frm) {
 		frm.doc.attach_documents = [];
@@ -235,7 +235,7 @@ frappe.ui.form.on("Vehicles Service", {
 	},
 
 	refresh(frm, dt, dn) {
-		refresh_summary_totals(frm);
+		// refresh_summary_totals(frm);
 		frm.add_custom_button(__('Inspection'), function () {
 			frappe.route_options = {
 				vin_serial_no: frm.doc.vin_serial_no,
@@ -253,29 +253,31 @@ frappe.ui.form.on("Vehicles Service", {
 		}, __('Create'));
 
 
-		if (!frm.doc.job_card_no) {
-			if (!frm.doc.job_card_no) {
-				frappe.db
-					.get_doc("Vehicle Service Settings")
-					.then((setting_doc) => {
-						if (setting_doc.allow_auto_job_card_no) {
-							var lastJobNo = setting_doc.last_auto_job_card_no;
+		frappe.db
+			.get_doc("Vehicle Service Settings")
+			.then((setting_doc) => {
+				if (setting_doc.allow_auto_job_card_no) {
+					if (!frm.doc.job_card_no) {
 
-							const prefix = setting_doc.auto_job_card_no_prefix;
-							const number = lastJobNo.match(/\d+/)[0];
+						var lastJobNo = setting_doc.last_auto_job_card_no;
 
-							const incrementedNumber = (parseInt(number, 10) + 1)
-								.toString()
-								.padStart(6, "0");
+						const prefix = setting_doc.auto_job_card_no_prefix;
+						const number = lastJobNo.match(/\d+/)[0];
 
-							const nextJobNo = prefix + incrementedNumber;
-							console.log(nextJobNo);
+						const incrementedNumber = (parseInt(number, 10) + 1)
+							.toString()
+							.padStart(6, "0");
 
-							frm.set_value("job_card_no", nextJobNo);
-						}
-					});
-			}
-		}
+						const nextJobNo = prefix + incrementedNumber;
+						console.log(nextJobNo);
+
+						frm.set_value("job_card_no", nextJobNo);
+					};
+
+					frm.set_df_property("job_card_no", "read_only", 1);
+				}
+			});
+
 		if (!frm.is_new()) {
 			frm.add_custom_button("Part Order", function () {
 				frappe.model.with_doctype("Part Order", function () {
@@ -955,20 +957,20 @@ frappe.ui.form.on("Non OEM Labour Items", {
 // -----------------------------------------------------
 
 // Summary totals (Parts + Labour + Extras, combined Total Excl)
-function refresh_summary_totals(frm) {
-	if (!frm.doc.doctype) return;
-	let parts = flt(frm.doc.parts_total_excl) || 0;
-	let labour = flt(frm.doc.labours_total_excl) || 0;
-	let extras = flt(frm.doc.extra_cost_total_excl) || 0;
-	frm.set_value("summary_parts_total", parts);
-	frm.set_value("summary_labour_total", labour);
-	frm.set_value("summary_extras_total", extras);
-	frm.set_value("summary_total_excl", parts + labour + extras);
-	frm.refresh_field("summary_parts_total");
-	frm.refresh_field("summary_labour_total");
-	frm.refresh_field("summary_extras_total");
-	frm.refresh_field("summary_total_excl");
-}
+// function refresh_summary_totals(frm) {
+// 	if (!frm.doc.doctype) return;
+// 	let parts = flt(frm.doc.parts_total_excl) || 0;
+// 	let labour = flt(frm.doc.labours_total_excl) || 0;
+// 	let extras = flt(frm.doc.extra_cost_total_excl) || 0;
+// 	frm.set_value("summary_parts_total", parts);
+// 	frm.set_value("summary_labour_total", labour);
+// 	frm.set_value("summary_extras_total", extras);
+// 	frm.set_value("summary_total_excl", parts + labour + extras);
+// 	frm.refresh_field("summary_parts_total");
+// 	frm.refresh_field("summary_labour_total");
+// 	frm.refresh_field("summary_extras_total");
+// 	frm.refresh_field("summary_total_excl");
+// }
 
 frappe.ui.form.on("Extra Items", {
 	item_no(frm, cdt, cdn) {
@@ -1083,7 +1085,7 @@ function recalc_all_parts_and_labour(frm) {
 		frm.refresh_field("parts_total_excl");
 		frm.refresh_field("labours_total_excl");
 		frm.refresh_field("duration_total");
-		refresh_summary_totals(frm);
+		// refresh_summary_totals(frm);
 	});
 }
 
@@ -1117,7 +1119,7 @@ const calculate_sub_total = (frm, field_name, table_name) => {
 	}
 
 	frappe.model.set_value(frm.doc.doctype, frm.doc.name, field_name, sub_total);
-	refresh_summary_totals(frm);
+	// refresh_summary_totals(frm);
 };
 
 // Parts total = OEM parts total_excl + Non OEM parts total_excl (one combined total)
@@ -1131,7 +1133,7 @@ const calculate_parts_total_combined = (frm) => {
 		non_oem += row.total_excl || 0;
 	}
 	frappe.model.set_value(frm.doc.doctype, frm.doc.name, "parts_total_excl", oem + non_oem);
-	refresh_summary_totals(frm);
+	// refresh_summary_totals(frm);
 };
 
 // LABOUR HOURS (single table)
@@ -1156,7 +1158,7 @@ const calculate_labours_total_combined = (frm) => {
 		non_oem += row.total_excl || 0;
 	}
 	frappe.model.set_value(frm.doc.doctype, frm.doc.name, "labours_total_excl", oem + non_oem);
-	refresh_summary_totals(frm);
+	// refresh_summary_totals(frm);
 };
 
 const calculate_duration_total_combined = (frm) => {
