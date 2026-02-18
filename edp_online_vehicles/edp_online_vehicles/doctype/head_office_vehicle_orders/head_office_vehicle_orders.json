@@ -427,6 +427,7 @@
   {
    "fieldname": "section_break_ktrz",
    "fieldtype": "Section Break",
+   "hidden": 1,
    "label": "DMS"
   },
   {
@@ -476,6 +477,7 @@
   {
    "fieldname": "sap_total_amount",
    "fieldtype": "Currency",
+   "hidden": 1,
    "label": "DMS Total Amount",
    "read_only": 1
   },
@@ -488,7 +490,8 @@
   {
    "fieldname": "sap_invoice_no",
    "fieldtype": "Data",
-   "label": "DMS Invoice No"
+   "label": "DMS Invoice No",
+   "read_only": 1
   },
   {
    "fieldname": "sap_invoice",
@@ -498,7 +501,8 @@
   {
    "fieldname": "sap_integration_response",
    "fieldtype": "Small Text",
-   "label": "DMS Integration Response"
+   "label": "DMS Integration Response",
+   "read_only": 1
   },
   {
    "fieldname": "sales_order_type",
@@ -510,7 +514,8 @@
   {
    "fieldname": "invoice_amount",
    "fieldtype": "Currency",
-   "label": "Invoice Amount"
+   "label": "Invoice Amount",
+   "read_only": 1
   },
   {
    "fieldname": "invoice_date",
@@ -520,7 +525,8 @@
   {
    "fieldname": "check_invoice",
    "fieldtype": "Button",
-   "label": "Check Invoice"
+   "label": "Check Invoice",
+   "permlevel": 2
   },
   {
    "fieldname": "column_break_nzxi",
@@ -529,7 +535,8 @@
   {
    "fieldname": "credit_note_no",
    "fieldtype": "Data",
-   "label": "Credit Note No"
+   "label": "Credit Note No",
+   "read_only": 1
   },
   {
    "fieldname": "credit_note_type",
@@ -540,12 +547,14 @@
   {
    "fieldname": "credit_note_date",
    "fieldtype": "Date",
-   "label": "Credit Note Date"
+   "label": "Credit Note Date",
+   "read_only": 1
   },
   {
    "fieldname": "credit_note_comment",
    "fieldtype": "Data",
-   "label": "Credit Note Comment"
+   "label": "Credit Note Comment",
+   "read_only": 1
   },
   {
    "fieldname": "total_excl_vat",
@@ -578,7 +587,8 @@
   {
    "fieldname": "check_credit_note",
    "fieldtype": "Button",
-   "label": "Check Credit Note"
+   "label": "Check Credit Note",
+   "permlevel": 2
   },
   {
    "fieldname": "pricing_section",
@@ -599,7 +609,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-02-10 16:42:50.043479",
+ "modified": "2026-02-18 21:53:05.640586",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Head Office Vehicle Orders",
