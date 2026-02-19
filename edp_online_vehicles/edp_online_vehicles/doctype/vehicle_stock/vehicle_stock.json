@@ -842,8 +842,7 @@
    "fieldname": "odo_reading",
    "fieldtype": "Data",
    "label": "Odo Reading",
-   "non_negative": 1,
-   "read_only": 1
+   "non_negative": 1
   }
  ],
  "grid_page_length": 50,
@@ -891,7 +890,7 @@
    "link_fieldname": "vin_serial_no"
   }
  ],
- "modified": "2026-02-19 08:28:37.545649",
+ "modified": "2026-02-19 12:15:55.732207",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicle Stock",
