@@ -686,10 +686,10 @@ frappe.ui.form.on("Vehicles Service", {
 						if (frm.doc.vin_serial_no) {
 							frappe.db.get_value("Vehicle Stock", frm.doc.vin_serial_no, "odo_reading")
 								.then((r) => {
-									let biggest_reading = r.message.odo_reading;
+									let stock_reading = r.message.odo_reading;
 									if (
 										frm.doc.odo_reading_hours <
-										biggest_reading
+										stock_reading
 									) {
 										frappe.db.get_value("Vehicle Stock", frm.doc.vin_serial_no, "model")
 											.then((r) => {
@@ -702,8 +702,8 @@ frappe.ui.form.on("Vehicles Service", {
 											null,
 										);
 										frappe.throw(
-											"The entered odometer reading cannot be lower than the previous service reading of " +
-											biggest_reading +
+											"The entered odometer reading cannot be lower than the previous stock reading of " +
+											stock_reading +
 											".",
 										);
 									}
@@ -783,6 +783,14 @@ frappe.ui.form.on("Vehicles Service", {
 					frm.set_value("end_date", now);
 				}
 			});
+
+		// Save the service odometer reading back to the linked Vehicle Stock record
+		let stock = await frappe.db.get_value("Vehicle Stock", frm.doc.vin_serial_no, ["odo_reading", "model"]);
+        let stock_odo = stock.message.odo_reading || 0;
+
+		if (frm.doc.odo_reading_hours > stock_odo) {
+			frappe.db.set_value("Vehicle Stock", frm.doc.vin_serial_no, "odo_reading", frm.doc.odo_reading_hours);
+		}
 	},
 });
 // -----------------------------------------------------
