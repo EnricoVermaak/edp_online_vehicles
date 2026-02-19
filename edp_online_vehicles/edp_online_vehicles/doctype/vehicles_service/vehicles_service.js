@@ -684,32 +684,16 @@ frappe.ui.form.on("Vehicles Service", {
 					if (!allow_odo_rollback) {
 						// Improved check for falsy values
 						if (frm.doc.vin_serial_no) {
-							frappe.db
-								.get_list("Vehicles Service", {
-									filters: {
-										vin_serial_no: frm.doc.vin_serial_no,
-									},
-									fields: ["odo_reading_hours"],
-								})
-								.then((records) => {
-									let biggest_reading = 0;
-									records.forEach((reading) => {
-										if (
-											reading.odo_reading_hours >
-											biggest_reading
-										) {
-											biggest_reading =
-												reading.odo_reading_hours;
-										}
-									});
-
+							frappe.db.get_value("Vehicle Stock", frm.doc.vin_serial_no, "odo_reading")
+								.then((r) => {
+									let biggest_reading = r.message.odo_reading;
 									if (
 										frm.doc.odo_reading_hours <
 										biggest_reading
 									) {
 										frappe.db.get_value("Vehicle Stock", frm.doc.vin_serial_no, "model")
 											.then((r) => {
-												let model = r.message.model
+												let model = r.message.model;
 
 												frappe.model.set_value(dt, dn, "service_type", `SS-${model}-Other`);
 											});
