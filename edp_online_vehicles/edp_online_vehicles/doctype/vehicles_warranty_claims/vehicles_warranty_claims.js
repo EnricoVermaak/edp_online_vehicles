@@ -442,8 +442,49 @@ frappe.ui.form.on("Vehicles Warranty Claims", {
 			frm.set_value("type", "Goodwill");
 		}
 
+		// Rollback check: ODO cannot be lower than previous service (unless allowed in settings)
+		if (frm.doc.odo_reading_hours) {
+			frappe.db
+				.get_single_value(
+					"Vehicle Service Booking Settings",
+					"allow_service_odo_reading_roll_back",
+				)
+				.then((allow_odo_rollback) => {
+					if (!allow_odo_rollback) {
+						// Improved check for falsy values
+						if (frm.doc.vin_serial_no) {
+							frappe.db.get_value("Vehicle Stock", frm.doc.vin_serial_no, "odo_reading")
+								.then((r) => {
+									let stock_reading = r.message.odo_reading;
+									if (
+										frm.doc.odo_reading_hours <
+										stock_reading
+									) {
+										frm.set_value(
+											"odo_reading_hours",
+											null,
+										);
+										frappe.throw(
+											"The entered odometer reading cannot be lower than the previous stock reading of " +
+											stock_reading +
+											".",
+										);
+									}
+								});
+						} else {
+							frm.set_value("odo_reading_hours", null);
+							frappe.throw(
+								"Please enter the Vehicle VIN No/ Serial No",
+							);
+						}
+					}
+				}
+			);
+		}
+
 		// validate_odo_reading(frm);
 	},
+
 	vin_serial_no: function (frm) {
 		if (frm.doc.part_items && frm.doc.part_items.length > 0) {
 			setTimeout(() => reapply_colors(frm), 400);
@@ -549,6 +590,16 @@ frappe.ui.form.on("Vehicles Warranty Claims", {
 			}
 		})
 	},
+
+	before_save: async function (frm) {
+        // Save the service odometer reading back to the linked Vehicle Stock record
+		let stock_odo = await frappe.db.get_value("Vehicle Stock", frm.doc.vin_serial_no, "odo_reading");
+
+		if (frm.doc.odo_reading_hours > stock_odo) {
+			frappe.db.set_value("Vehicle Stock", frm.doc.vin_serial_no, "odo_reading", frm.doc.odo_reading_hours);
+		}
+    },
+
 	after_save(frm) {
 		setTimeout(() => reapply_colors(frm), 400);
 		frappe.call({

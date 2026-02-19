@@ -479,9 +479,6 @@ frappe.ui.form.on("Vehicles Service", {
 				});
 		}
 
-
-
-
 		if (!frm.doc.odo_reading_hours) {
 			frm.doc.odo_reading_hours = null;
 			frm.refresh_field("odo_reading_hours");
@@ -582,6 +579,7 @@ frappe.ui.form.on("Vehicles Service", {
 			frm.refresh_field("inspection_items");
 		}
 	},
+
 	vehicles_inspection_template(frm, dt, dn) {
 		if (frm.doc.vehicles_inspection_template) {
 			frm.doc.standard_checklist = [];
@@ -784,9 +782,8 @@ frappe.ui.form.on("Vehicles Service", {
 				}
 			});
 
-		// Save the service odometer reading back to the linked Vehicle Stock record
-		let stock = await frappe.db.get_value("Vehicle Stock", frm.doc.vin_serial_no, ["odo_reading", "model"]);
-        let stock_odo = stock.message.odo_reading || 0;
+        // Save the service odometer reading back to the linked Vehicle Stock record
+		let stock_odo = await frappe.db.get_value("Vehicle Stock", frm.doc.vin_serial_no, "odo_reading");
 
 		if (frm.doc.odo_reading_hours > stock_odo) {
 			frappe.db.set_value("Vehicle Stock", frm.doc.vin_serial_no, "odo_reading", frm.doc.odo_reading_hours);
