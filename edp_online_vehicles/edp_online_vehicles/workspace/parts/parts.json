@@ -354,7 +354,7 @@
    "type": "Link"
   }
  ],
- "modified": "2026-02-16 09:21:00.285348",
+ "modified": "2026-02-18 22:28:25.590198",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Parts",
@@ -368,16 +368,7 @@
    "role": "System Manager"
   },
   {
-   "role": "Vehicles Administrator"
-  },
-  {
    "role": "Maintenance User"
-  },
-  {
-   "role": "Parts Administrator"
-  },
-  {
-   "role": "Dealer Vehicle Administrator"
   }
  ],
  "sequence_id": 13.0,

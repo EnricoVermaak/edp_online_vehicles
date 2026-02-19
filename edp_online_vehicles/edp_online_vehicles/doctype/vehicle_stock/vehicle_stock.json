@@ -40,6 +40,7 @@
   "condition",
   "current_location",
   "mm_code",
+  "odo_reading",
   "section_break_yxlt",
   "reserve_reason",
   "shipment_information_section",
@@ -317,8 +318,7 @@
   {
    "fieldname": "ho_date_received",
    "fieldtype": "Date",
-   "label": "HO Received Date",
-   "permlevel": 1
+   "label": "HO Received Date"
   },
   {
    "fieldname": "warranty_tab",
@@ -792,14 +792,12 @@
   {
    "fieldname": "model_conversion_date",
    "fieldtype": "Date",
-   "label": "Model Conversion Date",
-   "permlevel": 1
+   "label": "Model Conversion Date"
   },
   {
    "fieldname": "in_transit_date",
    "fieldtype": "Date",
-   "label": "In Transit Date",
-   "permlevel": 1
+   "label": "In Transit Date"
   },
   {
    "fieldname": "delivery_date",
@@ -814,21 +812,18 @@
    "fieldname": "head_office_age",
    "fieldtype": "Int",
    "label": "Head Office Age",
-   "permlevel": 1,
    "read_only": 1
   },
   {
    "fieldname": "model_conversion_age",
    "fieldtype": "Int",
    "label": "Model Conversion Age",
-   "permlevel": 1,
    "read_only": 1
   },
   {
    "fieldname": "in_transit_age",
    "fieldtype": "Int",
    "label": "In Transit Age",
-   "permlevel": 1,
    "read_only": 1
   },
   {
@@ -841,7 +836,13 @@
    "fieldname": "total_age",
    "fieldtype": "Int",
    "label": "Total Age",
-   "permlevel": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "odo_reading",
+   "fieldtype": "Data",
+   "label": "Odo Reading",
+   "non_negative": 1,
    "read_only": 1
   }
  ],
@@ -890,7 +891,7 @@
    "link_fieldname": "vin_serial_no"
   }
  ],
- "modified": "2026-02-18 16:45:26.816218",
+ "modified": "2026-02-19 08:28:37.545649",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicle Stock",
