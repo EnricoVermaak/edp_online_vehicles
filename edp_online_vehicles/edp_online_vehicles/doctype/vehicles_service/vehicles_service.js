@@ -675,7 +675,7 @@ frappe.ui.form.on("Vehicles Service", {
 		if (frm.doc.odo_reading_hours) {
 			frappe.db
 				.get_single_value(
-					"Vehicle Service Settings",
+					"Vehicles Service Settings",
 					"allow_service_odo_reading_roll_back",
 				)
 				.then((allow_odo_rollback) => {
@@ -713,7 +713,8 @@ frappe.ui.form.on("Vehicles Service", {
 							);
 						}
 					}
-				});
+				}
+			);
 		}
 	},
 

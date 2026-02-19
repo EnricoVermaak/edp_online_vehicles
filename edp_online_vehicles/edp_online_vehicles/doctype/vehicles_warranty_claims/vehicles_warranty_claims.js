@@ -343,6 +343,7 @@ frappe.ui.form.on("Vehicles Warranty Claims", {
 			});
 		});
 	},
+
 	onload: function (frm) {
 
 		frm.fields_dict['part_items'].grid.get_field('part_no').get_query = function (doc, cdt, cdn) {
@@ -443,11 +444,11 @@ frappe.ui.form.on("Vehicles Warranty Claims", {
 		}
 
 		// Rollback check: ODO cannot be lower than previous service (unless allowed in settings)
-		if (frm.doc.odo_reading_hours) {
+		if (frm.doc.odo_reading) {
 			frappe.db
 				.get_single_value(
-					"Vehicle Service Booking Settings",
-					"allow_service_odo_reading_roll_back",
+					"Vehicles Warranty Claims Settings",
+					"allow_warranty_odo_reading_roll_back",
 				)
 				.then((allow_odo_rollback) => {
 					if (!allow_odo_rollback) {
@@ -457,11 +458,10 @@ frappe.ui.form.on("Vehicles Warranty Claims", {
 								.then((r) => {
 									let stock_reading = r.message.odo_reading;
 									if (
-										frm.doc.odo_reading_hours <
-										stock_reading
+										frm.doc.odo_reading < stock_reading
 									) {
 										frm.set_value(
-											"odo_reading_hours",
+											"odo_reading",
 											null,
 										);
 										frappe.throw(
@@ -472,7 +472,7 @@ frappe.ui.form.on("Vehicles Warranty Claims", {
 									}
 								});
 						} else {
-							frm.set_value("odo_reading_hours", null);
+							frm.set_value("odo_reading", null);
 							frappe.throw(
 								"Please enter the Vehicle VIN No/ Serial No",
 							);
@@ -595,8 +595,8 @@ frappe.ui.form.on("Vehicles Warranty Claims", {
         // Save the service odometer reading back to the linked Vehicle Stock record
 		let stock_odo = await frappe.db.get_value("Vehicle Stock", frm.doc.vin_serial_no, "odo_reading");
 
-		if (frm.doc.odo_reading_hours > stock_odo) {
-			frappe.db.set_value("Vehicle Stock", frm.doc.vin_serial_no, "odo_reading", frm.doc.odo_reading_hours);
+		if (frm.doc.odo_reading > stock_odo) {
+			frappe.db.set_value("Vehicle Stock", frm.doc.vin_serial_no, "odo_reading", frm.doc.odo_reading);
 		}
     },
 
@@ -680,7 +680,7 @@ function validate_odo_reading(frm) {
 
 	// Rollback check for warranty: ODO cannot be lower than previous warranty claims (unless allowed in settings)
 	frappe.db
-		.get_single_value("Vehicles Warranty Settings", "allow_warranty_odo_reading_roll_back")
+		.get_single_value("Vehicles Warranty Claims Settings", "allow_warranty_odo_reading_roll_back")
 		.then((allow_odo_rollback) => {
 			if (allow_odo_rollback) {
 				return;
