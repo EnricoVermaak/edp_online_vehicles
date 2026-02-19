@@ -234,14 +234,16 @@
    "fieldname": "service_interval",
    "fieldtype": "Int",
    "label": "Service Interval",
-   "read_only": 1
+   "read_only": 1,
+   "reqd": 1
   },
   {
    "fetch_from": "vin_serial_no.service_period_years",
    "fieldname": "service_period_months",
    "fieldtype": "Int",
    "label": "Service Period (Months)",
-   "read_only": 1
+   "read_only": 1,
+   "reqd": 1
   },
   {
    "fetch_from": "vin_serial_no.service_km_hours_limit",
@@ -282,7 +284,7 @@
  "index_web_pages_for_search": 1,
  "is_calendar_and_gantt": 1,
  "links": [],
- "modified": "2026-02-03 14:59:20.798188",
+ "modified": "2026-02-19 09:27:25.326415",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicle Service Booking",
