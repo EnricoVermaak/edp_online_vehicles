@@ -329,8 +329,8 @@ def dealer(doc=None, vinno=None, dealer=None, claim_type_code=None, docname=None
         frappe.msgprint(f"Error: {str(e)}")
         frappe.log_error(frappe.get_traceback(), "Claim Category Validation Error")
 
-    # Step 5: Send email if claim status is "Claim Submitted"
-    if doc.claim_status == "Claim Submitted":
+    # Step 5: Send email when a new claim is created
+    if doc.is_new():
         current_user = doc.owner or frappe.session.user
         user_email = frappe.db.get_value("User", current_user, "email")
 

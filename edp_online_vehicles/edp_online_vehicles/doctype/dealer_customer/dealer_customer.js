@@ -32,25 +32,17 @@ frappe.ui.form.on("Dealer Customer", {
 				},
 				callback: function (r) {
 					if (r.message) {
-						var country_data = r.message;
+						let region_options = [];
 
-						var region_options = [];
+						(r.message || []).forEach(function (row) {
+							region_options.push(row.region);
+						});
 
-						(country_data.custom_regions || []).forEach(
-							function (regions_row) {
-								region_options.push({
-									label: regions_row.region,
-									value: regions_row.region,
-								});
-							},
+						frm.set_df_property(
+							"province_state",
+							"options",
+							region_options.join("\n")
 						);
-
-						var field = frm.fields_dict.province_state;
-						field.df.options = region_options
-							.map((option) => option.value)
-							.join("\n");
-
-						field.refresh();
 					}
 				},
 			});

@@ -113,3 +113,57 @@ def check_duplicate_part(vin, part_no, current_claim=None):
         }
 
     return {"is_duplicate": False}
+
+@frappe.whitelist()
+def validate_odo_reading(vin_serial_no, odo_reading_hours):
+    """
+    Validates the odo_reading_hours.
+    Throws an error if odo_reading_hours is lower than Vehicle Stock reading
+    and rollback is not allowed.
+    """
+
+    # VIN/Serial check
+    if not vin_serial_no:
+        return {"status": "error", "message": "Please enter the Vehicle VIN No/ Serial No"}
+
+    # Check if rollback is allowed
+    # try:
+    #     allow_rollback = frappe.db.get_single_value(
+    #         "Vehicle Service Booking Settings",
+    #         "allow_service_odo_reading_roll_back"
+    #     )
+    # except Exception:
+    #     allow_rollback = False
+
+    # Handle empty / null values safely
+    if not odo_reading_hours:
+        return {"status": "empty"}
+
+    try:
+        odo_reading_hours = float(odo_reading_hours)
+    except (ValueError, TypeError):
+        return {"status": "invalid"}
+
+    # Get current odo from Vehicle Stock
+    stock_odo = frappe.get_value("Vehicle Stock", vin_serial_no, "odo_reading") or 0
+
+    # Rollback validation
+    if int(odo_reading_hours) < int(stock_odo):
+        return {
+            "status": "failed",
+            "stock_odo": stock_odo
+        }
+
+    return {
+        "status": "success",
+    }
+
+# Save the service odometer reading back to the linked Vehicle Stock record (Not implemented will do later as hook?)
+@frappe.whitelist()
+def update_vehicle_stock_odo(vin_serial_no, odo_reading_hours):
+        if vin_serial_no and odo_reading_hours:
+            stock_odo = frappe.db.get_value("Vehicle Stock", vin_serial_no, "odo_reading") or 0
+
+        if (odo_reading_hours > stock_odo):
+            frappe.db.set_value("Vehicle Stock", vin_serial_no, "odo_reading", odo_reading_hours)
+	

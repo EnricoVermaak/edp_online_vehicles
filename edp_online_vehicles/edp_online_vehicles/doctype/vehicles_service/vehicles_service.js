@@ -4,9 +4,7 @@
 
 let codeReader;
 let previous_status_value = null;
-let odo_message_shown = false;
 let odo_limit_message_shown = false;
-
 
 // Preload ZXing library and initialize the reader on page load
 $(document).ready(function () {
@@ -671,51 +669,26 @@ frappe.ui.form.on("Vehicles Service", {
 			});
 		}
 
-		// Rollback check: ODO cannot be lower than previous service (unless allowed in settings)
-		if (frm.doc.odo_reading_hours) {
-			frappe.db
-				.get_single_value(
-					"Vehicles Service Settings",
-					"allow_service_odo_reading_roll_back",
-				)
-				.then((allow_odo_rollback) => {
-					if (!allow_odo_rollback) {
-						// Improved check for falsy values
-						if (frm.doc.vin_serial_no) {
-							frappe.db.get_value("Vehicle Stock", frm.doc.vin_serial_no, "odo_reading")
-								.then((r) => {
-									let stock_reading = r.message.odo_reading;
-									if (
-										frm.doc.odo_reading_hours <
-										stock_reading
-									) {
-										frappe.db.get_value("Vehicle Stock", frm.doc.vin_serial_no, "model")
-											.then((r) => {
-												let model = r.message.model;
+        // Rollback check: ODO cannot be lower than previous service (unless allowed in settings)
+        frappe.call({
+            method: "edp_online_vehicles.events.odo.validate_odo_reading",
+            args: {
+                vin_serial_no: frm.doc.vin_serial_no,
+                odo_reading_hours: frm.doc.odo_reading_hours
+            },
+            callback: function (r) {
 
-												frappe.model.set_value(dt, dn, "service_type", `SS-${model}-Other`);
-											});
-										frm.set_value(
-											"odo_reading_hours",
-											null,
-										);
-										frappe.throw(
-											"The entered odometer reading cannot be lower than the previous stock reading of " +
-											stock_reading +
-											".",
-										);
-									}
-								});
-						} else {
-							frm.set_value("odo_reading_hours", null);
-							frappe.throw(
-								"Please enter the Vehicle VIN No/ Serial No",
-							);
-						}
-					}
-				}
-			);
-		}
+                if (r.message.status === "failed") {
+
+                    frappe.msgprint(
+                        __("Odometer cannot be lower than {0}", [r.message.stock_odo])
+                    );
+
+                    frm.set_value("odo_reading_hours", null);
+                    frm.refresh_field("odo_reading_hours");
+                }
+            }
+        });
 	},
 
 	before_save: async function (frm) {
@@ -744,19 +717,6 @@ frappe.ui.form.on("Vehicles Service", {
 				});
 		}
 
-		if (!frm.doc.service_type) {
-			frm.set_value("odo_reading_hours", 0);
-
-			if (!odo_message_shown) {
-				odo_message_shown = true;
-				// frappe.msgprint("Please select a service type before setting the Odo Reading Ahmad saeed");
-			}
-
-			frappe.validated = false;
-			return;
-		}
-
-
 		frappe.db
 			.get_value(
 				"Service Status",
@@ -782,13 +742,34 @@ frappe.ui.form.on("Vehicles Service", {
 					frm.set_value("end_date", now);
 				}
 			});
+		
+   		//Save the service odometer reading back to the linked Vehicle Stock record (Not implemented will do later as hook?)
+        if (!frm.doc.vin_serial_no || !frm.doc.odo_reading_hours) {
+            return;
+        }
 
-        // Save the service odometer reading back to the linked Vehicle Stock record
-		let stock_odo = await frappe.db.get_value("Vehicle Stock", frm.doc.vin_serial_no, "odo_reading");
+        let r = await frappe.call({
+            method: "frappe.client.get_value",
+            args: {
+                doctype: "Vehicle Stock",
+                filters: { name: frm.doc.vin_serial_no },
+                fieldname: "odo_reading"
+            }
+        });
 
-		if (frm.doc.odo_reading_hours > stock_odo) {
-			frappe.db.set_value("Vehicle Stock", frm.doc.vin_serial_no, "odo_reading", frm.doc.odo_reading_hours);
-		}
+        let stock_odo = r.message.odo_reading || 0;
+
+        if (parseFloat(frm.doc.odo_reading_hours) > parseFloat(stock_odo)) {
+            await frappe.call({
+                method: "frappe.client.set_value",
+                args: {
+                    doctype: "Vehicle Stock",
+                    name: frm.doc.vin_serial_no,
+                    fieldname: "odo_reading",
+                    value: frm.doc.odo_reading_hours
+                }
+            });
+        }
 	},
 });
 // -----------------------------------------------------

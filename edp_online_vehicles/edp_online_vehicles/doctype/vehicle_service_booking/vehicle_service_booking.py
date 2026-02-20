@@ -35,52 +35,52 @@ class VehicleServiceBooking(Document):
 
 @frappe.whitelist()
 def check_and_update_odo(vin_serial_no, odo_reading_hours):
-    """
-    Validates the odo_reading_hours.
-    Throws an error if odo_reading_hours is lower than Vehicle Stock reading
-    and rollback is not allowed.
-    """
+	"""
+	Validates the odo_reading_hours.
+	Throws an error if odo_reading_hours is lower than Vehicle Stock reading
+	and rollback is not allowed.
+	"""
 
-    # VIN/Serial check
-    if not vin_serial_no:
-        frappe.throw(_("Please enter the Vehicle VIN No/ Serial No"))
+	# VIN/Serial check
+	if not vin_serial_no:
+		frappe.throw(_("Please enter the Vehicle VIN No/ Serial No"))
 
-    # Check if rollback is allowed
-    allow_rollback = frappe.db.get_single_value(
-        "Vehicle Service Booking Settings",
-        "allow_service_odo_reading_roll_back"
-    )
+	# Check if rollback is allowed
+	allow_rollback = frappe.db.get_single_value(
+		"Vehicle Service Booking Settings",
+		"allow_service_odo_reading_roll_back"
+	)
 
-    # Get current odo from Vehicle Stock
-    stock_odo = frappe.get_value("Vehicle Stock", vin_serial_no, "odo_reading") or 0
+	# Get current odo from Vehicle Stock
+	stock_odo = frappe.get_value("Vehicle Stock", vin_serial_no, "odo_reading") or 0
 
-    # Rollback validation
-    if not allow_rollback and odo_reading_hours < stock_odo:
-        frappe.throw(
-            _("The entered odometer reading cannot be lower than the previous stock reading of {0}").format(stock_odo)
-        )
+	# Rollback validation
+	if not allow_rollback and odo_reading_hours < stock_odo:
+		frappe.throw(
+			_("The entered odometer reading cannot be lower than the previous stock reading of {0}").format(stock_odo)
+		)
 		frm.set_value("odo_reading_hours", null)  # Clear the invalid input
 
-    # Update stock if new reading is higher
-    if odo_reading_hours > stock_odo:
-        frappe.db.set_value("Vehicle Stock", vin_serial_no, "odo_reading", odo_reading_hours)
+	# Update stock if new reading is higher
+	if odo_reading_hours > stock_odo:
+		frappe.db.set_value("Vehicle Stock", vin_serial_no, "odo_reading", odo_reading_hours)
 
-    return {
-        "status": "success",
-    }
+	return {
+		"status": "success",
+	}
 
 
 @frappe.whitelist()
 def update_vehicle_stock(doc, method):
-    """
-    Update the Vehicle Stock's odo_reading if the service odo_reading_hours is higher.
-    """
-    if doc.vin_serial_no and doc.odo_reading_hours:
+	"""
+	Update the Vehicle Stock's odo_reading if the service odo_reading_hours is higher.
+	"""
+	if doc.vin_serial_no and doc.odo_reading_hours:
 
-        stock_odo = frappe.get_value("Vehicle Stock", doc.vin_serial_no, "odo_reading") or 0
+		stock_odo = frappe.get_value("Vehicle Stock", doc.vin_serial_no, "odo_reading") or 0
 
-        if doc.odo_reading_hours > stock_odo:
-            frappe.db.set_value("Vehicle Stock", doc.vin_serial_no, "odo_reading", doc.odo_reading_hours)
+		if doc.odo_reading_hours > stock_odo:
+			frappe.db.set_value("Vehicle Stock", doc.vin_serial_no, "odo_reading", doc.odo_reading_hours)
 		
 
 
