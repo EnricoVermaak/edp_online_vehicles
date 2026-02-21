@@ -9,10 +9,19 @@ frappe.ui.form.on("Vehicles Shipment", {
 	refresh(frm) {
 		frm.set_query("target_warehouse", () => {
 			return {
-				filters: {
-					is_group: 0,
-					company: frm.doc.dealer
-				},
+				filters: [
+					["is_group", "=", 0],
+					...(frm.doc.dealer ? [["company", "=", frm.doc.dealer]] : []),
+				],
+			};
+		});
+		// Child table: only leaf warehouses (group warehouses cannot receive stock)
+		frm.set_query("target_warehouse", "vehicles_shipment_items", () => {
+			return {
+				filters: [
+					["is_group", "=", 0],
+					...(frm.doc.dealer ? [["company", "=", frm.doc.dealer]] : []),
+				],
 			};
 		});
 
@@ -65,7 +74,6 @@ frappe.ui.form.on("Vehicles Shipment", {
 					return;
 				}
 
-				// Your existing create_linked_plans call
 				frappe.call({
 					method: "edp_online_vehicles.events.linked_plans.create_linked_plans",
 					args: { selected_items: JSON.stringify(selected_rows) },
@@ -91,14 +99,6 @@ frappe.ui.form.on("Vehicles Shipment", {
 						frm.save_or_update();
 						frappe.dom.unfreeze();
 
-						// Mahindra TAC integration (if applicable)
-						const host = window.location.hostname;
-						if (["msademo.edponline.co.za", "msa.edponline.co.za", "mahindra.localhost"].includes(host)) {
-							frappe.call({
-								method: "edp_api.api.TAC.tac_integration.tac_landing_outgoing",
-								args: { selected_items: JSON.stringify(selected_items) }
-							});
-						}
 					}
 				});
 			}
@@ -315,23 +315,23 @@ frappe.ui.form.on("Vehicles Shipment", {
 	},
 
 	onload: function (frm) {
-		frm.set_query("target_warehouse", function (doc, cdt, cdn) {
-			let d = locals[cdt][cdn];
+		frm.set_query("target_warehouse", function () {
 			return {
-				filters: {
-					company: frm.doc.dealer,
-				},
+				filters: [
+					["is_group", "=", 0],
+					...(frm.doc.dealer ? [["company", "=", frm.doc.dealer]] : []),
+				],
 			};
 		});
 	},
 
 	dealer: function (frm) {
-		frm.set_query("target_warehouse", function (doc, cdt, cdn) {
-			let d = locals[cdt][cdn];
+		frm.set_query("target_warehouse", function () {
 			return {
-				filters: {
-					company: frm.doc.dealer,
-				},
+				filters: [
+					["is_group", "=", 0],
+					...(frm.doc.dealer ? [["company", "=", frm.doc.dealer]] : []),
+				],
 			};
 		});
 	},

@@ -8,7 +8,7 @@ from datetime import datetime, timedelta
 
 import frappe
 
-from edp_api.api.TAC.tac_integration import tac_delivery_outgoing
+from edp_online_vehicles.edp_online_vehicles.doctype.head_office_vehicle_orders.head_office_vehicle_orders import _fire_on_vehicle_allocated
 
 
 # File paths under sites/<sitename>/public/files for write access
@@ -174,19 +174,10 @@ def _assign_vin_with_details(order_no, stock_doc):
 		rv.reserve_to_date = reserve_to
 		rv.insert(ignore_permissions=True)
 
-		head_office = frappe.get_value("Company", {"custom_head_office": 1}, "name")
-		if head_office == "Mahindra SA":
-			create_integration = frappe.get_value(
-				"Vehicles Order Status", order_doc.status, "create_integration_file"
-			)
-			if create_integration:
-				tac_delivery_outgoing(
-					vin_number,
-					order_doc.model_delivered,
-					order_doc.model_description,
-					order_doc.colour_delivered,
-					order_doc.order_placed_by,
-				)
+		_fire_on_vehicle_allocated(
+			order_doc.name, vin_number, order_doc.model_delivered,
+			order_doc.model_description, order_doc.colour_delivered, order_doc.order_placed_by,
+		)
 
 		or_order_doc = frappe.get_doc("Vehicle Order", order_doc.order_no)
 

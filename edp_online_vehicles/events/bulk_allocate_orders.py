@@ -2,7 +2,7 @@ from datetime import datetime, timedelta
 
 import frappe
 from frappe.utils import now_datetime
-from edp_api.api.TAC.tac_integration import tac_delivery_outgoing
+from edp_online_vehicles.edp_online_vehicles.doctype.head_office_vehicle_orders.head_office_vehicle_orders import _fire_on_vehicle_allocated
 
 
 
@@ -114,30 +114,20 @@ def bulk_allocate_orders(docnames):
 					reserve_doc.reserve_to_date = reserve_to
 					reserve_doc.insert(ignore_permissions=True)
 
-					# External integration for Mahindra SA
-					head_office = frappe.get_value("Company", {"custom_head_office": 1}, "name")
-					if head_office == "Mahindra SA":
-						create_integration_doc = frappe.db.get_value(
-							"Vehicles Order Status", {"name": order_doc.status}, "create_integration_file"
-						)
-						if create_integration_doc:
-							tac_delivery_outgoing(
-								order_doc.vinserial_no,
-								order_doc.model_delivered,
-								order_doc.model_description,
-								order_doc.colour_delivered,
-								order_doc.order_placed_by,
-							)
+				_fire_on_vehicle_allocated(
+					order_doc.name, order_doc.vinserial_no, order_doc.model_delivered,
+					order_doc.model_description, order_doc.colour_delivered, order_doc.order_placed_by,
+				)
 
-						# Update related Vehicle Order doc
-						vehicle_order = frappe.get_doc("Vehicle Order", order_doc.order_no)
-						row_id = int(vehicle_order.row_id)
-						for item in vehicle_order.vehicles_basket:
-							if item.idx == row_id:
-								item.status = vehicle_order.status
-								item.vin_serial_no = vehicle_order.vinserial_no or item.vin_serial_no
-								item.price_excl = vehicle_order.price_excl or item.price_excl
-						vehicle_order.save(ignore_permissions=True)
+				# Update related Vehicle Order doc
+				vehicle_order = frappe.get_doc("Vehicle Order", order_doc.order_no)
+				row_id = int(order_doc.row_id)
+				for item in vehicle_order.vehicles_basket:
+					if item.idx == row_id:
+						item.status = order_doc.status
+						item.vin_serial_no = order_doc.vinserial_no or item.vin_serial_no
+						item.price_excl = order_doc.price_excl or item.price_excl
+				vehicle_order.save(ignore_permissions=True)
 
 					# Vehicle Tracking
 					tracking_doc = frappe.new_doc("Vehicle Tracking")

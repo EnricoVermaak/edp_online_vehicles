@@ -150,6 +150,7 @@
    "fieldname": "target_warehouse",
    "fieldtype": "Link",
    "label": "Target Warehouse",
+   "link_filters": "[[\"Warehouse\", \"is_group\", \"=\", 0]]",
    "options": "Warehouse"
   },
   {
