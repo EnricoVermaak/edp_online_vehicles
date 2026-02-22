@@ -21,6 +21,18 @@
   "pending_info_age",
   "claim_updated_date",
   "updated_claim_age",
+  "claim_type_section",
+  "claim_category",
+  "column_break_qvrd",
+  "claim_description",
+  "column_break_fzmo",
+  "claim_type_code",
+  "section_break_fbqi",
+  "invoice_number",
+  "column_break_nwrl",
+  "invoice_date",
+  "section_break_xjss",
+  "claim_reason",
   "fleet_section",
   "company_registration_no",
   "search",
@@ -33,24 +45,13 @@
   "fleet_customer_address",
   "part_percentage_discount",
   "vehicle_percentage_discount",
-  "section_break_fbqi",
-  "invoice_number",
-  "column_break_nwrl",
-  "invoice_date",
-  "claim_type_section",
-  "claim_category",
-  "column_break_qvrd",
-  "claim_description",
-  "column_break_fzmo",
-  "claim_type_code",
-  "section_break_vgjk",
-  "documents",
-  "section_break_xjss",
-  "claim_reason",
   "status_ageing_section",
   "status_ageing",
-  "documents_tab",
-  "invoice_document",
+  "custom_dms_integration",
+  "sap_integration_response",
+  "custom_column_break_hkcny",
+  "sap_ap_invoice_no",
+  "sap_total_value_incl_tax",
   "tab_break_y1mo",
   "table_exgk",
   "section_break_mmsl",
@@ -63,7 +64,11 @@
   "column_break_zhxq",
   "column_break_xcej",
   "parts_total_excl",
-  "total_fleet_discount_amt_excl"
+  "total_fleet_discount_amt_excl",
+  "documents_tab",
+  "invoice_document",
+  "custom_section_break_ejmuy",
+  "documents"
  ],
  "fields": [
   {
@@ -101,6 +106,7 @@
    "depends_on": "eval: doc.claim_category",
    "fieldname": "claim_description",
    "fieldtype": "Select",
+   "in_list_view": 1,
    "in_standard_filter": 1,
    "label": "Claim Type Description",
    "reqd": 1
@@ -119,7 +125,7 @@
    "in_list_view": 1,
    "in_standard_filter": 1,
    "label": "Claim Status",
-   "options": "Pending\nClaim Submitted\nSubmitted for HOD Approval\nClaim Updated\nApproved for Remittance\nClaim Declined\nClaim Pending Info\nCancelled"
+   "options": "Pending\nClaim Submitted\nSubmitted for HOD Approval\nClaim Updated\nApproved for Remittance\nClaim Declined\nClaim Pending Info\nCancelled\nRemittance"
   },
   {
    "fieldname": "claim_age",
@@ -182,14 +188,12 @@
   {
    "fieldname": "final_status_date",
    "fieldtype": "Datetime",
-   "hidden": 1,
    "label": "Final Status Date",
    "read_only": 1
   },
   {
    "fieldname": "dealer_ref_no",
    "fieldtype": "Data",
-   "in_list_view": 1,
    "in_standard_filter": 1,
    "label": "Dealer Ref No",
    "reqd": 1
@@ -221,11 +225,6 @@
   {
    "fieldname": "column_break_fxof",
    "fieldtype": "Column Break"
-  },
-  {
-   "depends_on": "eval: doc.claim_category",
-   "fieldname": "section_break_vgjk",
-   "fieldtype": "Section Break"
   },
   {
    "depends_on": "eval: doc.claim_category",
@@ -344,6 +343,7 @@
   {
    "fieldname": "invoice_document",
    "fieldtype": "Attach",
+   "hidden": 1,
    "label": "Invoice Document"
   },
   {
@@ -391,11 +391,46 @@
    "label": "Total Fleet Discount Amt (Excl)",
    "precision": "2",
    "read_only": 1
+  },
+  {
+   "collapsible": 1,
+   "fieldname": "custom_dms_integration",
+   "fieldtype": "Section Break",
+   "label": "DMS Integration"
+  },
+  {
+   "fieldname": "custom_column_break_hkcny",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "sap_ap_invoice_no",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "DMS AP Invoice Number",
+   "read_only": 1
+  },
+  {
+   "fieldname": "sap_total_value_incl_tax",
+   "fieldtype": "Currency",
+   "label": "DMS Total Value (Incl. Tax)",
+   "read_only": 1,
+   "description": "Total value including tax returned from SAP"
+  },
+  {
+   "description": "Full response from SAP integration",
+   "fieldname": "sap_integration_response",
+   "fieldtype": "Long Text",
+   "label": "SAP Integration Response",
+   "read_only": 1
+  },
+  {
+   "fieldname": "custom_section_break_ejmuy",
+   "fieldtype": "Section Break"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-02-13 12:13:38.066824",
+ "modified": "2026-02-22 20:18:39.868749",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Dealer Claims",

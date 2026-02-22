@@ -103,7 +103,8 @@ class DealerClaims(Document):
 			)
 			st.insert(ignore_permissions=True)
 			frappe.db.commit()
-                  
+
+		_send_claim_creation_email(self)
 
 
 @frappe.whitelist()
@@ -329,17 +330,16 @@ def dealer(doc=None, vinno=None, dealer=None, claim_type_code=None, docname=None
         frappe.msgprint(f"Error: {str(e)}")
         frappe.log_error(frappe.get_traceback(), "Claim Category Validation Error")
 
-    # Step 5: Send email when a new claim is created
-    if doc.is_new():
-        current_user = doc.owner or frappe.session.user
-        user_email = frappe.db.get_value("User", current_user, "email")
 
-        if not user_email:
-            frappe.log_error(f"Email not found for user {current_user}", "Dealer Claim Email Error")
-            return
-
-        subject = f"Dealer Claim Submission Confirmation – {doc.name}"
-        message = f"""
+def _send_claim_creation_email(doc):
+	try:
+		current_user = doc.owner or frappe.session.user
+		user_email = frappe.db.get_value("User", current_user, "email")
+		if not user_email:
+			frappe.log_error(f"Email not found for user {current_user}", "Dealer Claim Email Error")
+			return
+		subject = f"Dealer Claim Submission Confirmation – {doc.name}"
+		message = f"""
 <html>
 <body style="font-family: Arial, sans-serif; color: #333; line-height: 1.6;">
     <div style="max-width:600px; margin:auto; padding:20px; border:1px solid #ddd; border-radius:8px; background-color:#f9f9f9;">
@@ -365,14 +365,14 @@ def dealer(doc=None, vinno=None, dealer=None, claim_type_code=None, docname=None
 </body>
 </html>
 """
-
-        frappe.sendmail(
-            recipients=[user_email],
-            subject=subject,
-            message=message,
-            now=True
-        )
-
+		frappe.sendmail(
+			recipients=[user_email],
+			subject=subject,
+			message=message,
+			now=True
+		)
+	except Exception as e:
+		frappe.log_error(frappe.get_traceback(), "Dealer Claim Creation Email Error")
 
 
 def update_claim_age():

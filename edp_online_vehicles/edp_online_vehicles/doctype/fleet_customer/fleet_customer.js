@@ -13,33 +13,13 @@ frappe.ui.form.on("Fleet Customer", {
 			});
 		}
 
-		if (frm.doc.country) {
+		if (frm.doc.country && frm.fields_dict.province_state) {
 			frappe.call({
 				method: "edp_online_vehicles.events.get_country_doc.get_country_doc",
-				args: {
-					country: frm.doc.country,
-				},
+				args: { country: frm.doc.country },
 				callback: function (r) {
-					if (r.message) {
-						var country_data = r.message;
-
-						var region_options = [];
-
-						(country_data.custom_regions || []).forEach(
-							function (regions_row) {
-								region_options.push({
-									label: regions_row.region,
-									value: regions_row.region,
-								});
-							},
-						);
-
-						var field = frm.fields_dict.province_state;
-						field.df.options = region_options
-							.map((option) => option.value)
-							.join("\n");
-
-						field.refresh();
+					if (r.message != null) {
+						set_province_state_options_fleet(frm, r.message);
 					}
 				},
 			});
@@ -47,33 +27,19 @@ frappe.ui.form.on("Fleet Customer", {
 	},
 
 	country(frm) {
-		if (frm.doc.country) {
+		if (frm.doc.country && frm.fields_dict.province_state) {
 			frappe.call({
 				method: "edp_online_vehicles.events.get_country_doc.get_country_doc",
-				args: {
-					country: frm.doc.country,
-				},
+				args: { country: frm.doc.country },
 				callback: function (r) {
-					if (r.message) {
-						var country_data = r.message;
-
-						var region_options = [];
-
-						(country_data.custom_regions || []).forEach(
-							function (regions_row) {
-								region_options.push({
-									label: regions_row.region,
-									value: regions_row.region,
-								});
-							},
-						);
-
-						var field = frm.fields_dict.province_state;
-						field.df.options = region_options
-							.map((option) => option.value)
-							.join("\n");
-
-						field.refresh();
+					if (r.message != null) {
+						set_province_state_options_fleet(frm, r.message);
+						var valid = (r.message || []).some(function (row) {
+							return (row.region || "") === (frm.doc.province_state || "");
+						});
+						if (!valid && frm.doc.province_state) {
+							frm.set_value("province_state", "");
+						}
 					}
 				},
 			});
@@ -89,6 +55,19 @@ frappe.ui.form.on("Fleet Customer", {
 		}
 	},
 });
+
+function set_province_state_options_fleet(frm, region_rows) {
+	var options = (region_rows || [])
+		.map(function (row) {
+			return (row.region || "").trim();
+		})
+		.filter(Boolean);
+	var field = frm.fields_dict.province_state;
+	if (field) {
+		field.df.options = options.join("\n");
+		field.refresh();
+	}
+}
 
 function validate_fleet_id_no(frm) {
 	if (!frm.doc.id_no) return;

@@ -24,25 +24,33 @@ frappe.ui.form.on("Dealer Customer", {
 			validate_email(frm);
 		});
 
-		if (frm.doc.country) {
+		if (frm.doc.country && frm.fields_dict.province_state) {
 			frappe.call({
 				method: "edp_online_vehicles.events.get_country_doc.get_country_doc",
-				args: {
-					country: frm.doc.country,
-				},
+				args: { country: frm.doc.country },
 				callback: function (r) {
-					if (r.message) {
-						let region_options = [];
+					if (r.message != null) {
+						set_province_state_options(frm, r.message);
+					}
+				},
+			});
+		}
+	},
 
-						(r.message || []).forEach(function (row) {
-							region_options.push(row.region);
+	country(frm) {
+		if (frm.doc.country && frm.fields_dict.province_state) {
+			frappe.call({
+				method: "edp_online_vehicles.events.get_country_doc.get_country_doc",
+				args: { country: frm.doc.country },
+				callback: function (r) {
+					if (r.message != null) {
+						set_province_state_options(frm, r.message);
+						var valid = (r.message || []).some(function (row) {
+							return (row.region || "") === (frm.doc.province_state || "");
 						});
-
-						frm.set_df_property(
-							"province_state",
-							"options",
-							region_options.join("\n")
-						);
+						if (!valid && frm.doc.province_state) {
+							frm.set_value("province_state", "");
+						}
 					}
 				},
 			});
@@ -127,6 +135,17 @@ frappe.ui.form.on("Dealer Customer", {
 		frm.set_value("customer_full_name", fullname);
 	},
 });
+
+function set_province_state_options(frm, region_rows) {
+	var options = (region_rows || []).map(function (row) {
+		return (row.region || "").trim();
+	}).filter(Boolean);
+	var field = frm.fields_dict.province_state;
+	if (field) {
+		field.df.options = options.join("\n");
+		field.refresh();
+	}
+}
 
 function validate_id_no(frm) {
 	if (frm.doc.id_no) {

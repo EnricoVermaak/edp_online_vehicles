@@ -185,9 +185,8 @@
   },
   {
    "fieldname": "province_state",
-   "fieldtype": "Link",
+   "fieldtype": "Select",
    "label": "Province/ State",
-   "options": "Province or State",
    "reqd": 1
   },
   {
