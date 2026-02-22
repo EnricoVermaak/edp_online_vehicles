@@ -238,16 +238,14 @@ scheduler_events = {
         "edp_online_vehicles.edp_online_vehicles.doctype.dealer_claims.dealer_claims.update_claim_age",
     ],
     "cron": {
-        "0 */6 * * *": [
+        "0 0 * * *": [
             "edp_online_vehicles.events.vehicle_aging.update_vehicle_aging",
-        ]
-    },
-    "cron": {
+        ],
         "* * * * *": [
             "edp_online_vehicles.events.check_orders.check_orders_schedule",
             "edp_online_vehicles.events.update_part_order.update_part_order_time",
             "edp_online_vehicles.events.reserved_vehicles.check_reserved_ordered_vehicles",
-        ]
+        ],
     },
 }
 # Testing
