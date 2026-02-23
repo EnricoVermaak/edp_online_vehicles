@@ -4,7 +4,6 @@
 
 let codeReader;
 let previous_status_value = null;
-let odo_limit_message_shown = false;
 
 // Preload ZXing library and initialize the reader on page load
 $(document).ready(function () {
@@ -17,7 +16,6 @@ $(document).ready(function () {
 });
 frappe.ui.form.on("Vehicles Service", {
 	service_status: function (frm) {
-
 		if (!frm.doc.service_status) {
 			frm.refresh_field('attach_documents');
 			return;
@@ -25,18 +23,15 @@ frappe.ui.form.on("Vehicles Service", {
 
 		frappe.db.get_doc('Service Status', frm.doc.service_status).then(status_doc => {
 			let mandatory_names = [];
+			let attach = frm.doc.attach_documents || [];
 
 			if (status_doc.documents) {
 				status_doc.documents.forEach(doc => {
-					if (doc.mandatory === 'Yes') {
-
-						let exists = frm.doc.attach_documents.some(
-							row => row.document_name === doc.document_name
-						);
-
-						if (!exists) {
-							let row = frm.add_child('attach_documents');
-							row.document_name = doc.document_name;
+					let exists = attach.some(row => row.document_name === doc.document_name);
+					if (!exists) {
+						let row = frm.add_child('attach_documents');
+						row.document_name = doc.document_name;
+						if (doc.mandatory === 'Yes') {
 							mandatory_names.push(doc.document_name);
 						}
 					}
@@ -126,18 +121,19 @@ frappe.ui.form.on("Vehicles Service", {
 		// refresh_summary_totals(frm);
 	},
 	onload(frm) {
-		frm.doc.attach_documents = [];
-
-		// Fetch settings and populate child tables
-		frappe.db.get_doc("Vehicle Service Settings").then((doc) => {
-			for (let man_row of doc.mandatory_documents) {
-				frm.add_child("attach_documents", {
-					document_name: man_row.document_name,
-				});
+		frappe.db.get_doc("Vehicle Service Settings").then((settings) => {
+			let attach = frm.doc.attach_documents || [];
+			let existing_names = new Set(attach.map(row => row.document_name));
+			if (settings.mandatory_documents) {
+				for (let man_row of settings.mandatory_documents) {
+					if (man_row.document_name && !existing_names.has(man_row.document_name)) {
+						frm.add_child("attach_documents", { document_name: man_row.document_name });
+						existing_names.add(man_row.document_name);
+					}
+				}
 			}
 			frm.refresh_field("attach_documents");
 		});
-		odo_limit_message_shown = false;
 		if (frm.doc.vehicles_incidents) {
 			frappe.db
 				.get_doc("Vehicles Incidents", frm.doc.vehicles_incidents)
@@ -609,10 +605,7 @@ frappe.ui.form.on("Vehicles Service", {
 			frm.set_value("odo_reading_hours", 0);
 			// Reset system_status if we cannot evaluate the range
 			frappe.model.set_value(dt, dn, "system_status", null);
-			if (!odo_limit_message_shown) {
-				odo_limit_message_shown = true;
-				frappe.msgprint("Please select a Service Type and VIN/Serial No before setting the Odo Reading");
-			}
+			frappe.msgprint("Please select a Service Type and VIN/Serial No before setting the Odo Reading");
 			return;
 		}
 
@@ -645,25 +638,19 @@ frappe.ui.form.on("Vehicles Service", {
 					}
 
 					if (odo < min_odo_value) {
-						if (!odo_limit_message_shown) {
-							odo_limit_message_shown = true;
-							if (!frm.doc.vin_serial_no) {
-								frappe.msgprint("Please select VIN/Serial No first before entering odo reading.");
-								return;
+						if (!frm.doc.vin_serial_no) {
+							frappe.msgprint("Please select VIN/Serial No first before entering odo reading.");
+							return;
+						}
+						frappe.db.get_value("Vehicle Stock", frm.doc.vin_serial_no, "model").then((res) => {
+							if (res && res.message && res.message.model) {
+								frappe.model.set_value(dt, dn, "service_type", `SS-${res.message.model}-Other`);
+								frm.refresh_field("service_type");
 							}
-							frappe.db.get_value("Vehicle Stock", frm.doc.vin_serial_no, "model").then((res) => {
-								if (res && res.message && res.message.model) {
-									frappe.model.set_value(dt, dn, "service_type", `SS-${res.message.model}-Other`);
-									frm.refresh_field("service_type");
-								}
-							}).catch(() => frappe.msgprint("Could not fetch model for the selected VIN."));
-							frappe.msgprint("Your vehicle hasn't reached its service threshold yet. Please check back when it meets the minimum mileage requirement.");
-						}
+						}).catch(() => frappe.msgprint("Could not fetch model for the selected VIN."));
+						frappe.msgprint("Your vehicle hasn't reached its service threshold yet. Please check back when it meets the minimum mileage requirement.");
 					} else if (odo > max_odo_value) {
-						if (!odo_limit_message_shown) {
-							odo_limit_message_shown = true;
-							frappe.msgprint("Your vehicle's mileage has exceeded the current service range. Please select the upcoming service schedule.");
-						}
+						frappe.msgprint("Your vehicle's mileage has exceeded the current service range. Please select the upcoming service schedule.");
 					}
 				});
 			});
