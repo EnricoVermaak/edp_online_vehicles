@@ -191,6 +191,56 @@ frappe.ui.form.on("Vehicle Retail", {
 			});
 		}
 	},
+    onload(frm) {
+
+        let data = localStorage.getItem("vehicle_retail_data");
+
+        if (data) {
+
+            let vehicles = JSON.parse(data);
+
+            vehicles.forEach(vehicle => {
+
+                let row = frm.add_child("vehicles_sale_items");
+
+                row.vin_serial_no = vehicle.vin_serial_no;
+                row.model = vehicle.model;
+                row.colour = vehicle.colour;
+                row.retail_amount = vehicle.retail_amount;
+
+            });
+
+            frm.refresh_field("vehicles_sale_items");
+
+            localStorage.removeItem("vehicle_retail_data");
+        }
+
+        // 🔥 Dealer toggle logic (always run)
+        let has_items = frm.doc.vehicles_sale_items 
+            && frm.doc.vehicles_sale_items.length > 0;
+
+        frm.set_df_property("dealer", "read_only", has_items ? 1 : 0);
+        frm.refresh_field("dealer");
+    },
+
+    vehicles_sale_items_add(frm) {
+
+        let has_items = frm.doc.vehicles_sale_items 
+            && frm.doc.vehicles_sale_items.length > 0;
+
+        frm.set_df_property("dealer", "read_only", has_items ? 1 : 0);
+        frm.refresh_field("dealer");
+    },
+
+    vehicles_sale_items_remove(frm) {
+
+        let has_items = frm.doc.vehicles_sale_items 
+            && frm.doc.vehicles_sale_items.length > 0;
+
+        frm.set_df_property("dealer", "read_only", has_items ? 1 : 0);
+        frm.refresh_field("dealer");
+    },
+
 	onload_post_render: function (frm) {
 		$("p.help-box.small.text-muted").hide();
 

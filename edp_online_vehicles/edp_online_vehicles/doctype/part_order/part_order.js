@@ -156,7 +156,7 @@ frappe.ui.form.on("Part Order", {
 					}
 				},
 			});
-
+			
 			frappe.call({
 				method: "edp_online_vehicles.events.get_default.get_default",
 				args: {

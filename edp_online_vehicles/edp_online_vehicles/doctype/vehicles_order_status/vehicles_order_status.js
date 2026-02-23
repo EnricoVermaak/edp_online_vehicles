@@ -6,6 +6,21 @@ let active = null;
 frappe.ui.form.on("Vehicles Order Status", {
 	refresh(frm) {
 		active = frm.doc.active;
+		frappe.ui.form.on("Vehicles Order Status", {
+    
+    auto_move_stock: function(frm) {
+        if (frm.doc.auto_move_stock) {
+            frm.set_value("in_transit_warehouse", 0);
+        }
+    },
+
+    in_transit_warehouse: function(frm) {
+        if (frm.doc.in_transit_warehouse) {
+            frm.set_value("auto_move_stock", 0);
+        }
+    }
+
+});
 	},
 	after_save(frm) {
 		if (frm.doc.default === 1) {
