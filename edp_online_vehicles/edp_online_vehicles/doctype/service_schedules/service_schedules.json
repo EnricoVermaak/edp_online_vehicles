@@ -44,7 +44,7 @@
   {
    "fieldname": "interval",
    "fieldtype": "Data",
-   "label": "Interval  (KM/ Hours)"
+   "label": "Interval  (km)"
   },
   {
    "fieldname": "parts_tab",
@@ -97,11 +97,11 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-12-26 09:09:25.234755",
+ "modified": "2026-02-23 10:48:00.161071",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Service Schedules",
- "naming_rule": "Expression",
+ "naming_rule": "Expression (old style)",
  "owner": "Administrator",
  "permissions": [
   {
