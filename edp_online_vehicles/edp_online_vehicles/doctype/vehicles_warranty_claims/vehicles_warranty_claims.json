@@ -170,7 +170,7 @@
    "fetch_from": "vin_serial_no.warranty_period_years",
    "fieldname": "warranty_period_years",
    "fieldtype": "Int",
-   "label": "Warranty Period (Years)",
+   "label": "Warranty Period (Months)",
    "read_only": 1
   },
   {
@@ -218,6 +218,7 @@
    "fieldtype": "Int",
    "in_list_view": 1,
    "label": "Odo Reading",
+   "non_negative": 1,
    "reqd": 1
   },
   {
@@ -461,7 +462,7 @@
   {
    "fieldname": "extended_warranty_period",
    "fieldtype": "Int",
-   "label": "Extended Warranty Period (Years)",
+   "label": "Extended Warranty Period (Months)",
    "read_only": 1
   },
   {
@@ -720,11 +721,11 @@
    "link_fieldname": "warranty"
   }
  ],
- "modified": "2026-02-06 08:20:19.468795",
+ "modified": "2026-02-23 14:24:35.845861",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicles Warranty Claims",
- "naming_rule": "Expression",
+ "naming_rule": "Expression (old style)",
  "owner": "Administrator",
  "permissions": [
   {

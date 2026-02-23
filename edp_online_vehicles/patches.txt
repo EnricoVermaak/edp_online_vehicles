@@ -8,3 +8,4 @@ edp_online_vehicles.patches.add_serial_no_index_to_stock_entry_detail
 # edp_online_vehicles.patches.copy_certificate_number_to_control_no
 # edp_online_vehicles.patches.copy_series_to_range
 edp_online_vehicles.patches.update_evaluation_rate
+edp_online_vehicles.patches.vehicle_stock_odo_update
