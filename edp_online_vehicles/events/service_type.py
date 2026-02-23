@@ -31,24 +31,31 @@ def service_type_query(doctype, txt, searchfield, start, page_len, filters):
     )
 
     # Get Vehicle Stock odo reading first
-    odo_reading = 0
-
     if vin_serial_no:
         vehicle_stock = frappe.get_doc("Vehicle Stock", vin_serial_no)
-        odo_reading = vehicle_stock.odo_reading or 0
+        try:
+            odo_reading = int(vehicle_stock.odo_reading or 0)
+        except (ValueError, TypeError):
+            odo_reading = 0  # Default to 0 if odo_reading is not a valid integer
 
-    # Filter out the used service types from all service types
+
+    # Display the available service types from all service types
     available_service_types = []
 
     for service_type in all_service_types:
         # Include only service types that are within the odo reading interval and not already used
         service_schedule = frappe.get_doc("Service Schedules", service_type)
+       
         try:
             service_interval = int(service_schedule.interval)
         except (ValueError, TypeError):
-            service_interval = 0
-            if odo_reading >= service_interval and service_type not in used_service_type_names:
-                    available_service_types.append([service_type.name])
+            if service_interval is None:
+                service_interval = 0  # Default to 0 if interval is None
+
+        # Check if the service type should be included based on odo reading and whether it's already used
+        if service_type.name not in used_service_type_names:
+            if odo_reading <= service_interval or isinstance(service_interval, str):
+                available_service_types.append([service_type.name])
 
     return available_service_types
 
