@@ -254,7 +254,6 @@
    "in_standard_filter": 1,
    "label": "Dealer",
    "options": "Company",
-   "read_only_depends_on": "eval: doc.vehicles_sale_items.lenght>0",
    "reqd": 1
   },
   {
@@ -476,7 +475,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-02-23 13:57:07.109221",
+ "modified": "2026-02-23 15:24:35.801216",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicle Retail",
