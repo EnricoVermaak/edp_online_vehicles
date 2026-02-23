@@ -43,8 +43,12 @@ def service_type_query(doctype, txt, searchfield, start, page_len, filters):
     for service_type in all_service_types:
         # Include only service types that are within the odo reading interval and not already used
         service_schedule = frappe.get_doc("Service Schedules", service_type)
-        if odo_reading >= service_schedule.interval and service_type not in used_service_type_names:
-            available_service_types.append([service_type.name])
+        try:
+            service_interval = int(service_schedule.interval)
+        except (ValueError, TypeError):
+            service_interval = 0
+            if odo_reading >= service_interval and service_type not in used_service_type_names:
+                    available_service_types.append([service_type.name])
 
     return available_service_types
 
