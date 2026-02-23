@@ -215,34 +215,27 @@ frappe.ui.form.on("Vehicle Stock", {
 			};
 		});
 
+		// Create Linked Warranty Plan
+        frm.add_custom_button(__('Create Linked Warranty Plan'), function() {
 
-		frm.add_custom_button('Create Linked Warranty Plan', () => {
-
-			frappe.model.with_doc('Vehicle Stock', frm.doc.name, () => {
-				const source = frappe.model.get_doc('Vehicle Stock', frm.doc.name);
-
-				frappe.new_doc('Vehicle Linked Warranty Plan', {
-					vin_serial_no: frm.doc.name,
-					model_description: source.description,
-					model_code: source.model,
-				});
-			});
-
-		}, 'Action');
-
-             frm.add_custom_button('Create Linked Service Plan', () => {
-
-            frappe.model.with_doc('Vehicle Stock', frm.doc.name, () => {
-                const source = frappe.model.get_doc('Vehicle Stock', frm.doc.name);
-
-                frappe.new_doc('Vehicle Linked Service Plan', {
-                    vin__serial_no: frm.doc.name,  // double underscore field
-                    model_description: source.description,
-                    model_code: source.model,
-                });
+            frappe.new_doc('Vehicle Linked Warranty Plan', {
+                vin_serial_no: frm.doc.name,
+                model_description: frm.doc.description,
+                model_code: frm.doc.model
             });
 
-        }, 'Action');
+        }, __('Action'));
+
+        // Create Linked Service Plan
+        frm.add_custom_button(__('Create Linked Service Plan'), function() {
+
+            frappe.new_doc('Vehicle Linked Service Plan', {
+                vin_serial_no: frm.doc.name,
+                model_description: frm.doc.description,
+                model_code: frm.doc.model
+                });
+
+        }, __('Action'));
 	},
 
 
@@ -585,5 +578,4 @@ frappe.ui.form.on("Vehicle Stock", {
 		frm.toggle_enable("interior_colour", !!frm.doc.model);
 	}
 });
-
 

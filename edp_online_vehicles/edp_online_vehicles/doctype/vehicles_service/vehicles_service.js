@@ -681,7 +681,7 @@ frappe.ui.form.on("Vehicles Service", {
                 if (r.message.status === "failed") {
 
                     frappe.msgprint(
-                        __("Odometer cannot be lower than {0}", [r.message.stock_odo])
+                        __("Odometer cannot be lower than stock {0}km", [r.message.stock_odo])
                     );
 
                     frm.set_value("odo_reading_hours", null);

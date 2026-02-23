@@ -257,7 +257,6 @@ class VehiclesService(Document):
                     "incident_description": doc.incident_description,
                 },
             )
-    
 
 @frappe.whitelist()
 def create_internal_docs_notes(source_name, target_doc=None):

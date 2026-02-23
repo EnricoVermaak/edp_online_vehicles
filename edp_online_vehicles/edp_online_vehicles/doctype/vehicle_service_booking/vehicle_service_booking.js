@@ -128,7 +128,7 @@ frappe.ui.form.on("Vehicle Service Booking", {
             frm.refresh_field("system_status");
         }
 
-        // Rollback check: ODO cannot be lower than previous service (unless allowed in settings)
+        // OdoS input cannot be lower than stock
         frappe.call({
             method: "edp_online_vehicles.events.odo.validate_odo_reading",
             args: {
@@ -140,7 +140,7 @@ frappe.ui.form.on("Vehicle Service Booking", {
                 if (r.message.status === "failed") {
 
                     frappe.msgprint(
-                        __("Odometer cannot be lower than {0}", [r.message.stock_odo])
+                        __("Odometer cannot be lower than {0}km", [r.message.stock_odo])
                     );
 
                     frm.set_value("odo_reading_hours", null);

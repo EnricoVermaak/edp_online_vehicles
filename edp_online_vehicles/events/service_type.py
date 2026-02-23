@@ -1,6 +1,7 @@
 import frappe
 import json
 from frappe.utils import nowdate, getdate
+
 @frappe.whitelist()
 def service_type_query(doctype, txt, searchfield, start, page_len, filters):
     # Initialize filters for Service Schedules
@@ -22,28 +23,30 @@ def service_type_query(doctype, txt, searchfield, start, page_len, filters):
             [d["service_type"] for d in used_service_types_data] if used_service_types_data else []
         )
     else:
-        used_service_type_names = []
+        used_service_type_names = []    
 
     # Get all service types from Service Schedules based on filters
     all_service_types = frappe.get_all(
-        "Service Schedules", fields=["name"], filters=service_schedule_filters
+        "Service Schedules", fields=["name", "interval"], filters=service_schedule_filters
     )
-    all_service_type_names = [d["name"] for d in all_service_types] if all_service_types else []
+
+    # Get Vehicle Stock odo reading first
+    odo_reading = 0
+
+    if vin_serial_no:
+        vehicle_stock = frappe.get_doc("Vehicle Stock", vin_serial_no)
+        odo_reading = vehicle_stock.odo_reading or 0
 
     # Filter out the used service types from all service types
     available_service_types = []
 
-    for service_type in all_service_type_names:
-        if service_type not in used_service_type_names:
-            available_service_types.append([service_type])
+    for service_type in all_service_types:
+        # Include only service types that are within the odo reading interval and not already used
+        service_schedule = frappe.get_doc("Service Schedules", service_type)
+        if odo_reading >= service_schedule.interval and service_type not in used_service_type_names:
+            available_service_types.append([service_type.name])
 
     return available_service_types
-
-
-
-
-
-
 
 # @frappe.whitelist()
 # def check_service_date(vin):
