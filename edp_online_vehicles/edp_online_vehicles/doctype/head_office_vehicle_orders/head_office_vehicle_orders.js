@@ -294,6 +294,7 @@ frappe.ui.form.on("Head Office Vehicle Orders", {
 					model: frm.doc.model || "",
 					availability_status: "Available",
 					dealer: frm.doc.order_placed_to || "",
+					colour: frm.doc.colour_delivered || "",
 				},
 			};
 		});
@@ -355,6 +356,7 @@ frappe.ui.form.on("Head Office Vehicle Orders", {
 										vinno: frm.doc.vinserial_no,
 										hq: frm.doc.order_placed_by,
 										dealer: frm.doc.order_placed_to,
+										colour: frm.doc.colour_delivered,
 										model: frm.doc.model,
 										rate: frm.doc.price_excl,
 										hq_comment: hq_comment,
@@ -407,6 +409,7 @@ frappe.ui.form.on("Head Office Vehicle Orders", {
 				model: frm.doc.model || "",
 				availability_status: "Available",
 				dealer: frm.doc.order_placed_to,
+				colour: frm.doc.colour_delivered || "",
 			},
 			callback: function (response) {
 				let vin_stock = response.message || [];
@@ -597,6 +600,7 @@ frappe.ui.form.on("Head Office Vehicle Orders", {
 							model: frm.doc.model || "",
 							availability_status: "Reserved",
 							dealer: frm.doc.order_placed_to,
+							colour: frm.doc.colour_delivered || "",
 						},
 						callback: function (r) {
 							vin_reserved = r.message || [];
@@ -635,6 +639,7 @@ frappe.ui.form.on("Head Office Vehicle Orders", {
 							model: frm.doc.model || "",
 							availability_status: "Available",
 							dealer: frm.doc.order_placed_to,
+							colour: frm.doc.colour_delivered || "",
 						},
 						callback: function (sh) {
 							shipment_stock_data = sh.message || [];

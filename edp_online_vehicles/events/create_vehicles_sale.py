@@ -6,9 +6,20 @@ from datetime import datetime
 
 @frappe.whitelist()
 def create_vehicles_sale(
-	vehicles_data, dealer, status, sale_type, finance_method, sales_person, customer, finance_by
+	vehicles_data,
+	dealer=None,
+	status=None,
+	sale_type=None,
+	finance_method=None,
+	sales_person=None,
+	customer=None,
+	finance_by=None
 ):
 	vehicles_data = frappe.parse_json(vehicles_data)
+
+	dealer = dealer or frappe.defaults.get_user_default("Company")
+	status = status or "Pending"
+	sales_person = sales_person or frappe.session.user
 
 	new_doc = frappe.new_doc("Vehicle Retail")
 	new_doc.dealer = dealer
@@ -20,14 +31,14 @@ def create_vehicles_sale(
 
 	if finance_by:
 		new_doc.financed_by = finance_by
-
+		
 	for vehicle in vehicles_data:
 		vinno = vehicle.get("vin_serial_no")
-
+		
 		stock_doc = frappe.get_doc("Vehicle Stock", vinno)
-
+		
 		ho_invoice_amount = stock_doc.ho_invoice_amt
-
+		
 		if vehicle.get("retail_amount"):
 			retail_amount = vehicle.get("retail_amount")
 			profit_amount = retail_amount - ho_invoice_amount
@@ -36,7 +47,7 @@ def create_vehicles_sale(
 			retail_amount = 0
 			profit_amount = retail_amount - ho_invoice_amount
 			profit_percentage = -100
-
+			
 		new_doc.append(
 			"vehicles_sale_items",
 			{
@@ -48,13 +59,15 @@ def create_vehicles_sale(
 				"profit_loss_": profit_percentage,
 			},
 		)
-
-		change_vehicles_stock_availability_status("Pending Sale", vinno)
-
+		
+		
 	new_doc.insert(ignore_permissions=True)
 	new_doc.save(ignore_permissions=True)
-
+	change_vehicles_stock_availability_status("Pending Sale", vinno)
+	
+	frappe.msgprint(f"Created doc: {new_doc.name}")
 	return new_doc.name
+
 
 
 @frappe.whitelist()
@@ -310,3 +323,4 @@ def return_to_stock_on_sale(docname):
 		stock_doc.vin_serial_no
 
 		frappe.db.commit()
+

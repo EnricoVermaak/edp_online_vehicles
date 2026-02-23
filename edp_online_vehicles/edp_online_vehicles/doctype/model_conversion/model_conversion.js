@@ -40,13 +40,21 @@ frappe.ui.form.on("Model Conversion", {
 									model_row.brand;
 							},
 						);
+						
+						//taking the array of labels and filtering 
+						const label_list = model_options.map(d => d.label).filter(Boolean);;
+						if (frm.doc.model) {
+							frm.set_query("convert_to_model", function () {
+								return {
+									filters: {
+										name : ["in", label_list],
+										
+					},
 
-						var field = frm.fields_dict.convert_to_model;
-						field.df.options = model_options
-							.map((option) => option.value)
-							.join("\n");
+				}
+			})
+				};
 
-						field.refresh();
 					}
 				},
 			});

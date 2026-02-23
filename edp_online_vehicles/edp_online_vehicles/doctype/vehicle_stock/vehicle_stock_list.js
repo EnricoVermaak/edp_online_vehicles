@@ -321,7 +321,7 @@ frappe.listview_settings["Vehicle Stock"] = {
 									__(
 										"Vehicles (VIN " +
 										vinno +
-										") is not available for sale.",
+										") is not for sale.",
 									),
 								);
 								resolve(false);
@@ -333,6 +333,38 @@ frappe.listview_settings["Vehicle Stock"] = {
 				});
 				checks.push(check);
 			});
+
+				let checkDealer = new Promise((resolve) => {
+
+					frappe.call({
+						method: "edp_online_vehicles.events.check_stock_dealer.check_stock_dealer",
+						args: { vins: vin },  // pass full array
+						callback: function (r) {
+
+							if (!r.message.valid) {
+								frappe.msgprint(
+									__("Vehicles must share a common dealer.")
+								);
+								resolve(false);
+							} else {
+								resolve(true);
+							}
+						}
+					});
+
+				});
+
+				Promise.all(checks).then(results => {
+
+					if (results.includes(false)) {
+						return;
+					}
+
+					console.log("All validations passed. Continue process here.");
+
+				});
+
+				checks.push(checkDealer);
 
 			frappe.call({
 				method: "edp_online_vehicles.events.set_filters.get_dealers",
@@ -348,213 +380,15 @@ frappe.listview_settings["Vehicle Stock"] = {
 
 			Promise.all(checks).then((results) => {
 				if (results.every((status) => status)) {
-					Promise.all(dataPromises).then((VehicleData) => {
-						const dialog = new frappe.ui.Dialog({
-							title: __("Sell Vehicles"),
-							size: "extra-large",
-							fields: [
-								{
-									label: __("Dealer"),
-									fieldname: "dealer",
-									fieldtype: "Link",
-									options: "Company",
-									default:
-										frappe.defaults.get_default("company"),
-									reqd: 1,
-									get_query: function () {
-										return {
-											filters: {
-												name: ["in", dealers],
-											},
-										};
-									},
-									onchange: function () {
-										const dealer =
-											dialog.get_value("dealer");
-										if (dealer) {
-											frappe.call({
-												method: "edp_online_vehicles.events.set_filters.get_users",
-												args: { dealer: dealer },
-												callback: function (r) {
-													if (r.message) {
-														users = r.message;
-													}
-												},
-											});
-										}
-									},
-								},
-								{
-									label: __("Sale Type"),
-									fieldname: "sale_type",
-									fieldtype: "Link",
-									options: "Vehicle Sale Type",
-									reqd: 1,
-								},
-								{
-									label: __("Finance Method"),
-									fieldname: "finance_method",
-									fieldtype: "Select",
-									options: ["", "Bank", "Cash"],
-									reqd: 1,
-								},
-								{
-									label: __("Financed By"),
-									fieldname: "finance_by",
-									fieldtype: "Link",
-									options: "Financed By",
-									hidden: 1,
-								},
-								{
-									fieldtype: "Column Break",
-									hide_border: 1,
-								},
-								{
-									label: __("Status"),
-									fieldname: "status",
-									fieldtype: "Select",
-									default: "Pending",
-									reqd: 1,
-									read_only: 1,
-								},
-								{
-									label: __("Sales Person"),
-									fieldname: "sales_person",
-									fieldtype: "Link",
-									options: "User",
-									reqd: 1,
-									get_query: function () {
-										return {
-											filters: {
-												name: ["in", users],
-											},
-										};
-									},
-								},
-								{
-									label: __("Customer"),
-									fieldname: "customer",
-									fieldtype: "Link",
-									options: "Dealer Customer",
-									reqd: 1,
-								},
-								{
-									fieldtype: "Section Break",
-									hide_border: 1,
-								},
-								{
-									label: __("Vehicle Sale Items"),
-									fieldname: "vehicles_sale_items",
-									fieldtype: "Table",
-									options: "Vehicle Sale Items",
-									in_place_edit: false,
-									cannot_add_rows: true,
-									data: VehicleData,
-									fields: [
-										{
-											fieldname: "vin_serial_no",
-											fieldtype: "Link",
-											in_list_view: 1,
-											label: "VIN/ Serial No",
-											read_only: 1,
-											columns: 2,
-										},
-										{
-											fieldname: "brand",
-											fieldtype: "Data",
-											in_list_view: 1,
-											label: "Brand",
-											read_only: 1,
-											columns: 2,
-										},
-										{
-											fieldname: "model",
-											fieldtype: "Data",
-											in_list_view: 1,
-											label: "Model",
-											read_only: 1,
-											columns: 2,
-										},
-										{
-											fieldname: "description",
-											fieldtype: "Data",
-											in_list_view: 1,
-											label: "Description",
-											read_only: 1,
-											columns: 2,
-										},
-										{
-											fieldname: "colour",
-											fieldtype: "Data",
-											in_list_view: 1,
-											label: "Colour",
-											read_only: 1,
-											columns: 1,
-										},
-										{
-											fieldname: "retail_amount",
-											fieldtype: "Currency",
-											precision: 2,
-											in_list_view: 1,
-											label: "Customer Retail Amount",
-											reqd: 1,
-											columns: 1,
-											read_only: 0,
-										},
-									],
-								},
-							],
-							primary_action_label: __("Sell"),
-							primary_action(values) {
-								if (values.finance_method === "Cash") {
-									values.finance_by = null;
-								}
-								frappe.call({
-									method: "edp_online_vehicles.events.create_vehicles_sale.create_vehicles_sale",
-									args: {
-										vehicles_data: VehicleData,
-										dealer: values.dealer,
-										status: values.status,
-										sale_type: values.sale_type,
-										finance_method: values.finance_method,
-										sales_person: values.sales_person,
-										customer: values.customer,
-										finance_by: values.finance_by,
-									},
-									callback: function (r) {
-										frappe.set_route(
-											"Form",
-											"Vehicle Retail",
-											r.message,
-										);
-										dialog.hide();
-									},
-								});
-							},
-						});
+				Promise.all(dataPromises).then((VehicleData) => {
 
-						dialog.fields_dict.finance_method.$input.on(
-							"change",
-							function () {
-								const financeMethod =
-									dialog.get_value("finance_method");
-								const financeByField =
-									dialog.fields_dict.finance_by;
+					localStorage.setItem(
+						"vehicle_retail_data",
+						JSON.stringify(VehicleData)
+					);
 
-								if (financeMethod === "Bank") {
-									financeByField.df.reqd = 1;
-									financeByField.df.hidden = 0;
-									financeByField.refresh();
-								} else {
-									financeByField.df.reqd = 0;
-									financeByField.df.hidden = 1;
-									financeByField.refresh();
-								}
-							},
-						);
-
-						dialog.show();
-					});
+					frappe.set_route("Form", "Vehicle Retail", "new-vehicle-retail");
+				});
 				}
 			});
 		});
