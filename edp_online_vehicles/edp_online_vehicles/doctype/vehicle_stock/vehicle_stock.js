@@ -230,7 +230,7 @@ frappe.ui.form.on("Vehicle Stock", {
         frm.add_custom_button(__('Create Linked Service Plan'), function() {
 
             frappe.new_doc('Vehicle Linked Service Plan', {
-                vin_serial_no: frm.doc.name,
+                vin__serial_no: frm.doc.name,
                 model_description: frm.doc.description,
                 model_code: frm.doc.model
                 });
