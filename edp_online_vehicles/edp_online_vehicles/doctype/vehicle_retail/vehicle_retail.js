@@ -7,9 +7,32 @@ let customer_phone = false;
 let customer_mobile = false;
 let customer_address = false;
 
+		function toggle_readonly(frm) {
+			frm.set_df_property(
+				"dealer",
+				"read_only",
+				(frm.doc.vehicles_sale_items || []).length > 0
+			);
+		}
+
 frappe.ui.form.on("Vehicle Retail", {
+
+	    vehicles_sale_items_add(frm) {
+        toggle_readonly(frm);
+    },
+
+    vehicles_sale_items_remove(frm) {
+        toggle_readonly(frm);
+    },
+
 	refresh(frm) {
 	
+				if ((frm.doc.vehicles_sale_items || []).length > 0) {
+            frm.set_df_property("dealer", "read_only", 1);
+        } else {
+            frm.set_df_property("dealer", "read_only", 0);
+        }
+
 		if (frm.doc.docstatus == 1) {
 			frm.toggle_enable(["status"], false);
 			frm.toggle_enable(["retail_date"], false);
@@ -95,7 +118,7 @@ frappe.ui.form.on("Vehicle Retail", {
 
 		set_vin_query(frm);
 	},
-	
+
 	onload: function (frm) {
 			frm.doc.mandatory_documents = [];
 
@@ -214,31 +237,6 @@ frappe.ui.form.on("Vehicle Retail", {
 
             localStorage.removeItem("vehicle_retail_data");
         }
-
-        // 🔥 Dealer toggle logic (always run)
-        let has_items = frm.doc.vehicles_sale_items 
-            && frm.doc.vehicles_sale_items.length > 0;
-
-        frm.set_df_property("dealer", "read_only", has_items ? 1 : 0);
-        frm.refresh_field("dealer");
-    },
-
-    vehicles_sale_items_add(frm) {
-
-        let has_items = frm.doc.vehicles_sale_items 
-            && frm.doc.vehicles_sale_items.length > 0;
-
-        frm.set_df_property("dealer", "read_only", has_items ? 1 : 0);
-        frm.refresh_field("dealer");
-    },
-
-    vehicles_sale_items_remove(frm) {
-
-        let has_items = frm.doc.vehicles_sale_items 
-            && frm.doc.vehicles_sale_items.length > 0;
-
-        frm.set_df_property("dealer", "read_only", has_items ? 1 : 0);
-        frm.refresh_field("dealer");
     },
 
 	onload_post_render: function (frm) {
@@ -533,7 +531,14 @@ frappe.ui.form.on("Vehicle Retail", {
 });
 
 frappe.ui.form.on("Vehicles Sale Items", {
+	vehicles_sale_items_remove(frm) {
+        toggle_readonly(frm);
+    },
+		vehicles_sale_items_add(frm) {
+        toggle_readonly(frm);
+    },
 	vin_serial_no(frm, cdt, cdn) {
+
 		let row = locals[cdt][cdn];
 
 		if (row.vin_serial_no) {
