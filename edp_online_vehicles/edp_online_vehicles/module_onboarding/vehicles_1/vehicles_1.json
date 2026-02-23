@@ -1,0 +1,26 @@
+{
+ "allow_roles": [
+  {
+   "role": "Vehicles Administrator"
+  }
+ ],
+ "creation": "2026-02-23 09:34:32.552371",
+ "docstatus": 0,
+ "doctype": "Module Onboarding",
+ "documentation_url": "https://www.tecwise.co.za/",
+ "idx": 0,
+ "is_complete": 0,
+ "modified": "2026-02-23 09:34:32.552371",
+ "modified_by": "Administrator",
+ "module": "Edp Online Vehicles",
+ "name": "Vehicles 1",
+ "owner": "Administrator",
+ "steps": [
+  {
+   "step": "Vehicle Order"
+  }
+ ],
+ "subtitle": "Vehicles 3",
+ "success_message": "test",
+ "title": "Vehicles 2"
+}

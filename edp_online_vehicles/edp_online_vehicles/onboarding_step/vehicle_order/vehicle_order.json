@@ -1,0 +1,20 @@
+{
+ "action": "Create Entry",
+ "creation": "2026-02-23 09:29:11.661879",
+ "docstatus": 0,
+ "doctype": "Onboarding Step",
+ "form_tour": "Create a Vehicle Order",
+ "idx": 0,
+ "is_complete": 0,
+ "is_single": 0,
+ "is_skipped": 0,
+ "modified": "2026-02-23 09:32:51.549781",
+ "modified_by": "Administrator",
+ "name": "Vehicle Order",
+ "owner": "Administrator",
+ "reference_document": "Vehicle Order",
+ "show_form_tour": 1,
+ "show_full_form": 1,
+ "title": "Place a vehicle order",
+ "validate_action": 1
+}
