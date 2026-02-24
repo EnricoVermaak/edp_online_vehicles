@@ -439,7 +439,7 @@ function handle_custom_buttons(frm) {
 				download_button.className = "btn btn-primary btn-sm";
 				download_button.innerText = "Download";
 				download_button.onclick = function () {
-					let title = "Vehicle Shipment Items";
+					let title = "Vehicles Shipment Items";
 					let data = [];
 					let docfields = [];
 
@@ -449,52 +449,46 @@ function handle_custom_buttons(frm) {
 					data.push([]);
 					data.push([]);
 					data.push([__("The CSV format is case sensitive")]);
-					data.push([
-						__(
-							"Do not edit headers which are preset in the template",
-						),
-					]);
+					data.push([__("Do not edit headers which are preset in the template",)]);
 					data.push(["------"]);
 
-					// Define metadata for child table fields
-					$.each(
-						frappe.get_meta("Vehicles Shipment Items").fields,
-						(i, df) => {
-							if (frappe.model.is_value_type(df.fieldtype)) {
-								data[1].push(df.label); // Add field label to the header row
-								data[2].push(df.fieldname); // Add fieldname for mapping
-								let description = (df.description || "") + " ";
-								if (df.fieldtype === "Date") {
-									description +=
-										frappe.boot.sysdefaults.date_format; // Add date format for Date fields
-								}
-								data[3].push(description); // Add description row
-								docfields.push(df); // Store metadata
-							}
-						},
+					// Get child and visible columns
+					const child_doctype = "Vehicles Shipment Items";
+
+					// Add if field is In List View, not hidden
+					const visible_fields = frappe.get_meta(child_doctype).fields.filter(df =>
+						frappe.model.is_value_type(df.fieldtype) && 
+						df.in_list_view && 
+						!df.hidden &&
+						df.fieldname !== "model_description" // Exclude model_description
 					);
+
+					// Add visible fields
+					visible_fields.forEach((field) => {
+						data[1].push(field.label);     // Label row
+						data[2].push(field.fieldname); // Fieldname row
+						docfields.push(field);         // Store metadata for formatting
+					});
 
 					// Add existing data from the child table
-					$.each(
-						cur_frm.doc.vehicles_shipment_items || [],
-						(i, d) => {
-							let row = [];
-							$.each(data[2], (i, fieldname) => {
-								let value = d[fieldname];
+					(cur_frm.doc.vehicles_shipment_items || []).forEach((d) => {
+						let row = [];
+						data[2].forEach((fieldname, i) => {
+							let value = d[fieldname];
 
-								// Format date fields
-								if (
-									docfields[i].fieldtype === "Date" &&
-									value
-								) {
-									value = frappe.datetime.str_to_user(value); // Format to user-readable date
-								}
+							// If this is the colour field
+							if (fieldname === "colour" && value) {
+								value = value.split(" - ")[0];  // Keep only "Blue"
+							}
 
-								row.push(value || ""); // Add value or empty string
-							});
-							data.push(row); // Append row to the data
-						},
-					);
+
+							if (docfields[i].fieldtype === "Date" && value) {
+								value = frappe.datetime.str_to_user(value);
+							}
+							row.push(value || "");
+						});
+						data.push(row);
+					});
 
 					// Trigger download
 					frappe.tools.downloadify(data, null, title);
@@ -551,9 +545,10 @@ function handle_custom_buttons(frm) {
 
 									if (!blank_row) {
 										count_row++
+
 										// Get model and colour
 										const model = row[0];
-										const colour = row[11];
+										const colour = row[3];
 
 										// Create the formatted Model Colour name
 										const model_colour_name =
@@ -571,6 +566,7 @@ function handle_custom_buttons(frm) {
 													const d = cur_frm.add_child(
 														"vehicles_shipment_items",
 													);
+
 													$.each(row, (ci, value) => {
 														const fieldname =
 															fieldnames[ci];
@@ -590,19 +586,35 @@ function handle_custom_buttons(frm) {
 																	](value)
 																	: value;
 														}
+
+														// Make field empty if value is not present in the CSV to avoid validation issues
+														if (!value) {
+															d[fieldname] = "undefined";
+														}
 													});
 
-													// Set the colour field to the model_colour_name (link to Model Colour)
-													d.colour =
-														model_colour_name;
+													// Set the colour field to the colour
+													d.colour = colour;
+
+													// Fetch model_description using model
+													if (model) {
+														frappe.db.get_value(
+															"Model Administration",
+															model,
+															"model_description"
+														).then(res => {
+															if (res.message) {
+																d.model_description = res.message.model_description;
+																cur_frm.refresh_field("vehicles_shipment_items");
+															}
+														});
+													}
 
 													// Refresh the child table to reflect changes
 													cur_frm.refresh_field(
 														"vehicles_shipment_items",
 													);
 
-													// Move to the next row after adding the current one
-													processRow(rowIndex + 1);
 												} else {
 													// If the colour does not exist, create the color first
 													frappe.call({
@@ -618,59 +630,40 @@ function handle_custom_buttons(frm) {
 														callback: function (r) {
 															if (r.message) {
 																// After color is created, add the row to the child table
-																const d =
-																	cur_frm.add_child(
-																		"vehicles_shipment_items",
-																	);
-																$.each(
-																	row,
-																	(
-																		ci,
-																		value,
-																	) => {
-																		const fieldname =
-																			fieldnames[
-																			ci
-																			];
-																		const df =
-																			frappe.meta.get_docfield(
-																				"Vehicles Shipment Items",
-																				fieldname,
-																			);
-																		if (
-																			df
-																		) {
-																			d[
-																				fieldname
-																			] =
-																				value_formatter_map[
-																					df
-																						.fieldtype
-																				]
-																					? value_formatter_map[
-																						df
-																							.fieldtype
-																					](
-																						value,
-																					)
+																const d = cur_frm.add_child("vehicles_shipment_items");
+
+																$.each(row, (ci, value) =>{
+																		const fieldname = fieldnames[ci];
+																		const df = frappe.meta.get_docfield("Vehicles Shipment Items",fieldname);
+
+																		if (df) {
+																			d[fieldname] = value_formatter_map[df.fieldtype]
+																					? value_formatter_map[df.fieldtype](value)
 																					: value;
 																		}
 																	},
 																);
 
-																// Set the colour field to the model_colour_name (link to Model Colour)
-																d.colour =
-																	model_colour_name;
+																// Set the colour field to the colour
+																d.colour = colour;
+
+																// Fetch model_description using model
+																if (model) {
+																	frappe.db.get_value(
+																		"Model Administration",
+																		model,
+																		"model_description"
+																	).then(res => {
+																		if (res.message) {
+																			d.model_description = res.message.model_description;
+																			cur_frm.refresh_field("vehicles_shipment_items");
+																		}
+																	});
+																}
 
 																// Refresh the child table to reflect changes
 																cur_frm.refresh_field(
 																	"vehicles_shipment_items",
-																);
-
-																// Move to the next row after the current one is done
-																processRow(
-																	rowIndex +
-																	1,
 																);
 															} else {
 																// Notify user of failure to create color
@@ -689,17 +682,18 @@ function handle_custom_buttons(frm) {
 																			"red",
 																	},
 																);
-
-																// Move to the next row if color creation fails
-																processRow(
-																	rowIndex +
-																	1,
-																);
 															}
 														},
 													});
 												}
 											});
+											
+											// Move to the next row after the current one is done
+											processRow(
+												rowIndex +
+												1,
+											);
+
 									} else {
 										// If the row is blank, skip it and move to the next one
 										processRow(rowIndex + 1);
