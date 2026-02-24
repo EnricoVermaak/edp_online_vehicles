@@ -1,5 +1,5 @@
 frappe.listview_settings["Vehicle Stock"] = {
-	add_fields: ["availability_status", "status"],
+	add_fields: ["availability_status", "status", "model"],
 	hide_name_column: true,
 	hide_name_filter: true,
 	has_indicator_for_draft: true,
@@ -25,6 +25,7 @@ frappe.listview_settings["Vehicle Stock"] = {
 	onload: function (listview) {
 		// Hide the default "New" button
 		$('[data-label="Add Vehicle Stock"]').hide();
+
 		listview.page.add_actions_menu_item(__('Transfer to New Warehouse'), function () {
 			frappe.db.get_value("Company", { custom_active: 1 }, "name").then((r) => {
 				hq_company = r?.message?.name;
@@ -100,6 +101,117 @@ frappe.listview_settings["Vehicle Stock"] = {
 			});
 
 		});
+
+		listview.page.add_actions_menu_item(__("Convert TO Model"), function () {
+			const selected_docs = listview.get_checked_items();
+			if (selected_docs.length === 0) {
+				frappe.msgprint(__("Please select at least one Vehicle Stock record."));
+				return;
+			}
+
+			const models = [...new Set(selected_docs.map((d) => d.model).filter(Boolean))];
+			if (models.length > 1) {
+				frappe.msgprint({
+					title: __("Mixed Models"),
+					message: __("All selected vehicles must be the same model. Please select vehicles of one model only.<br><br>Models found: <b>{0}</b>", [models.join(", ")]),
+					indicator: "red",
+				});
+				return;
+			}
+			if (models.length === 0) {
+				frappe.msgprint(__("Could not determine the model of the selected vehicles. Please try again."));
+				return;
+			}
+
+			const convert_from_model = models[0];
+			const docnames = selected_docs.map((d) => d.name);
+
+			frappe.call({
+				method: "frappe.client.get",
+				args: {
+					doctype: "Model Administration",
+					name: convert_from_model,
+				},
+				callback: function (r) {
+					let allowed_models = [];
+					if (r.message && (r.message.table_fqry || []).length) {
+						r.message.table_fqry.forEach(function (row) {
+							if (row.model) allowed_models.push(row.model);
+						});
+					}
+
+					const dialog = new frappe.ui.Dialog({
+						title: __("Model Conversion"),
+						fields: [
+							{
+								label: __("Convert From Model"),
+								fieldname: "convert_from_model",
+								fieldtype: "Data",
+								read_only: 1,
+								default: convert_from_model,
+							},
+							{
+								label: __("Convert To Model"),
+								fieldname: "convert_to_model",
+								fieldtype: "Link",
+								options: "Model Administration",
+								reqd: 1,
+								get_query: function () {
+									let filters = { name: ["!=", convert_from_model] };
+									if (allowed_models.length) {
+										filters = { name: ["in", allowed_models] };
+									}
+									return { filters: filters };
+								},
+							},
+					{
+						label: __("Vehicles"),
+						fieldname: "vehicles_table",
+						fieldtype: "Table",
+						read_only: 1,
+						cannot_add_rows: true,
+						in_place_edit: false,
+						fields: [
+							{
+								fieldname: "vin_serial_no",
+								fieldtype: "Link",
+								in_list_view: 1,
+								label: __("VIN/ Serial No"),
+								options: "Vehicle Stock",
+								read_only: 1,
+							},
+						],
+						data: docnames.map((v) => ({ vin_serial_no: v })),
+					},
+				],
+				primary_action_label: __("Create Model Conversion"),
+				primary_action(values) {
+					if (!values.convert_to_model) {
+						frappe.msgprint(__("Please select a Convert To Model."));
+						return;
+					}
+					dialog.hide();
+					frappe.call({
+						method: "edp_online_vehicles.events.create_model_conversion_from_stock.create_model_conversion_from_stock",
+						args: {
+							convert_from_model: convert_from_model,
+							convert_to_model: values.convert_to_model,
+							docnames: docnames,
+						},
+						callback: function (r) {
+							if (r.message) {
+								frappe.show_alert({ message: __("Model Conversion created."), indicator: "green" }, 5);
+								frappe.set_route("Form", "Model Conversion", r.message);
+							}
+						},
+					});
+				},
+			});
+			dialog.show();
+				},
+			});
+		});
+
 		const default_dealer = frappe.defaults.get_default("company");
 		let dealers = "";
 
