@@ -8,23 +8,19 @@ def create_reserve_doc(
 	docnames = frappe.parse_json(docnames)
 
 	for docname in docnames:
-		new_doc = frappe.new_doc("Reserved Vehicles")
-
-		new_doc.vin_serial_no = docname
-		new_doc.dealer = dealer
-
-		if customer:
-			new_doc.customer = customer
-
-		new_doc.status = status
-		new_doc.reserve_reason = reserve_reason
-		new_doc.reserve_from_date = reserve_from_date
-
-		if reserve_to_date:
-			new_doc.reserve_to_date = reserve_to_date
-
-		new_doc.insert(ignore_permissions=True)
-		new_doc.save(ignore_permissions=True)
+		if not frappe.db.exists("Reserved Vehicles", docname):
+			new_doc = frappe.new_doc("Reserved Vehicles")
+			new_doc.vin_serial_no = docname
+			new_doc.dealer = dealer
+			if customer:
+				new_doc.customer = customer
+			new_doc.status = status
+			new_doc.reserve_reason = reserve_reason
+			new_doc.reserve_from_date = reserve_from_date
+			if reserve_to_date:
+				new_doc.reserve_to_date = reserve_to_date
+			new_doc.insert(ignore_permissions=True)
+			new_doc.save(ignore_permissions=True)
 
 		stock_doc = frappe.get_doc("Vehicle Stock", docname)
 
