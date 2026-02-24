@@ -343,25 +343,6 @@
   {
    "hidden": 0,
    "is_query_report": 0,
-   "label": "Integrations",
-   "link_count": 1,
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Card Break"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "TAC Integration Dashboard",
-   "link_count": 0,
-   "link_to": "tac-integration-dashboard",
-   "link_type": "Page",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
    "label": "General",
    "link_count": 6,
    "link_type": "DocType",
@@ -429,7 +410,7 @@
    "type": "Link"
   }
  ],
- "modified": "2026-01-23 08:49:56.933379",
+ "modified": "2026-02-24 09:48:18.777012",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Administration",

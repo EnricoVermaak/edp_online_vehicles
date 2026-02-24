@@ -1366,8 +1366,6 @@ edp_online_vehicles.edp_online_vehicles.StockAvailability = class StockAvailabil
 			true,
 		);
 
-		console.log(context);
-
 		frappe.call({
 			method: "edp_online_vehicles.edp_online_vehicles.dashboard.get_headers.get_context",
 			args: { context },
