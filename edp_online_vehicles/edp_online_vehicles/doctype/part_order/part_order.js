@@ -21,7 +21,7 @@ frappe.ui.form.on("Part Order", {
 			if (row.qty > row.soh) {
 				let target_qty = row.soh;
 				messages.push(__('Row #{0}: Quantity ({1}) adjusted to Stock on Hand ({2}).', [row.idx, row.qty, row.soh]));
-				row.qty = target_qty;
+				// row.qty = target_qty;
 				changed = true;
 			}
 		});
