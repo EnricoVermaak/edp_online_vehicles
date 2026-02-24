@@ -2,7 +2,7 @@ import frappe
 
 @frappe.whitelist(allow_guest=True)
 def service_plans(vehicle_id):
-	v=frappe.db.get_all("Vehicle Linked Service Plan",filters={"vin__serial_no":vehicle_id},fields=["name","service_km_hours_limit","service_period_limit_months","service_plan","status"])
+	v=frappe.db.get_all("Vehicle Linked Service Plan",filters={"vin_serial_no":vehicle_id},fields=["name","service_km_hours_limit","service_period_limit_months","service_plan","status"])
 	return [{"name": i.name, "service_km_hours_limit": i.service_km_hours_limit, "service_period_limit_months": i.service_period_limit_months, "service_plan": i.service_plan, "status": i.status}  for i in v]
       
       

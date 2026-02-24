@@ -12,7 +12,7 @@
   "column_break_kfqh",
   "status",
   "section_break_eriy",
-  "vin__serial_no",
+  "vin_serial_no",
   "model_description",
   "model_code",
   "column_break_doyv",
@@ -41,7 +41,7 @@
    "options": "Pending Activation\nActive\nExpired\nCancelled"
   },
   {
-   "fetch_from": "vin__serial_no.description",
+   "fetch_from": "vin_serial_no.description",
    "fieldname": "model_description",
    "fieldtype": "Data",
    "in_list_view": 1,
@@ -50,7 +50,7 @@
    "read_only": 1
   },
   {
-   "fetch_from": "vin__serial_no.model",
+   "fetch_from": "vin_serial_no.model",
    "fieldname": "model_code",
    "fieldtype": "Data",
    "label": "Model Code",
@@ -102,7 +102,7 @@
    "fieldtype": "Column Break"
   },
   {
-   "fieldname": "vin__serial_no",
+   "fieldname": "vin_serial_no",
    "fieldtype": "Link",
    "in_list_view": 1,
    "in_standard_filter": 1,

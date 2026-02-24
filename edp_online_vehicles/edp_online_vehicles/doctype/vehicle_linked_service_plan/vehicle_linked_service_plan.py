@@ -20,8 +20,8 @@ class VehicleLinkedServicePlan(Document):
 
     def on_update(self):
         if self.status == "Active":
-            if frappe.db.exists("Vehicle Stock", self.vin__serial_no):
-                vehicle_stock = frappe.get_doc("Vehicle Stock", self.vin__serial_no)
+            if frappe.db.exists("Vehicle Stock", self.vin_serial_no):
+                vehicle_stock = frappe.get_doc("Vehicle Stock", self.vin_serial_no)
                 vehicle_stock.append("table_gtny", {
                     "service_plan_no": self.name,
                     "period_months": self.service_period_limit_months,
@@ -33,11 +33,11 @@ class VehicleLinkedServicePlan(Document):
 			# active_plans = frappe.get_all(
 			# 	"Vehicle Linked Service Plan",
 			# 	filters={"status": "Active"},
-			# 	fields=["name", "vin__serial_no"]
+			# 	fields=["name", "vin_serial_no"]
 			# )
 
 			# for plan in active_plans:
-			# 	if plan.vin__serial_no:
+			# 	if plan.vin_serial_no:
 
 			# 			new_row = vehicle_stock.append("table_gtny", {})
 			# 			new_row.service_plan_description = plan.name

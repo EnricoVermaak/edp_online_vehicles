@@ -50,7 +50,7 @@ class VehicleRetail(Document):
             if row.vin_serial_no:
                 linked_docs = frappe.get_all(
                     "Vehicle Linked Service Plan",
-                    filters={"vin__serial_no": row.vin_serial_no},  
+                    filters={"vin_serial_no": row.vin_serial_no},  
                     fields=["name", "service_period_limit_months"]
                 )
                 for record in linked_docs:
