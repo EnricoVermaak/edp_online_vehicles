@@ -1111,7 +1111,6 @@ edp_online_vehicles.PartOrder.Controller = class {
 
 	async save_and_checkout() {
 		frappe.model.sync(this.frm.doc);
-		console.log(this.frm.doc);
 		frappe.set_route("Form", this.frm.doc.doctype, this.frm.doc.name);
 	}
 };

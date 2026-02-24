@@ -1,0 +1,165 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2026-02-24 20:32:51.797651",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "vin_serial_no",
+  "action_summary",
+  "column_break_hmho",
+  "status",
+  "type",
+  "section_break_ztxx",
+  "request_datetime",
+  "request",
+  "section_break_nlso",
+  "response_datetime",
+  "response_status",
+  "response",
+  "section_break_rkjy",
+  "soap_method",
+  "integration_end_point",
+  "column_break_gatq",
+  "hq_order_no",
+  "floorplan"
+ ],
+ "fields": [
+  {
+   "fieldname": "vin_serial_no",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "VIN/ Serial No",
+   "options": "Vehicle Stock",
+   "reqd": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "action_summary",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Action Summary",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_hmho",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "Pending",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Status",
+   "options": "Pending\nProcessed\nSuccessful\nFailed\nError"
+  },
+  {
+   "fieldname": "type",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Type",
+   "options": "Integration\nEDP Online"
+  },
+  {
+   "fieldname": "section_break_ztxx",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "request_datetime",
+   "fieldtype": "Datetime",
+   "in_list_view": 1,
+   "label": "Request Date/Time"
+  },
+  {
+   "fieldname": "request",
+   "fieldtype": "Code",
+   "in_list_view": 1,
+   "label": "Request"
+  },
+  {
+   "fieldname": "section_break_nlso",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "response_datetime",
+   "fieldtype": "Datetime",
+   "in_list_view": 1,
+   "label": "Response Date/Time"
+  },
+  {
+   "fieldname": "response_status",
+   "fieldtype": "Small Text",
+   "label": "Response Status"
+  },
+  {
+   "fieldname": "response",
+   "fieldtype": "Code",
+   "in_list_view": 1,
+   "label": "Response"
+  },
+  {
+   "fieldname": "section_break_rkjy",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "soap_method",
+   "fieldtype": "Data",
+   "label": "Soap Method"
+  },
+  {
+   "fieldname": "integration_end_point",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Integration End Point ",
+   "options": "Integration End Point"
+  },
+  {
+   "fieldname": "column_break_gatq",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "hq_order_no",
+   "fieldtype": "Link",
+   "label": "HQ Order No",
+   "options": "Head Office Vehicle Orders"
+  },
+  {
+   "fieldname": "floorplan",
+   "fieldtype": "Data",
+   "in_standard_filter": 1,
+   "label": "Floorplan"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2026-02-24 20:32:51.797651",
+ "modified_by": "Administrator",
+ "module": "Edp Online Vehicles",
+ "name": "Part Tracking",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "search_fields": "vin_serial_no",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

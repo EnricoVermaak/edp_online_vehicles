@@ -3,7 +3,7 @@
 
 frappe.ui.form.on("HQ Part Order", {
 	refresh(frm) {
-		if(!frm.is_new()){
+		if((!frm.is_new()) && (frappe.user.has_role("Parts Adminstrator"))){
 			frm.add_custom_button("Create Part Picking Slip", function () {
 				frappe.model.with_doctype("Part Picking Slip", function () {
 					var doc = frappe.model.get_new_doc("Part Picking Slip");
