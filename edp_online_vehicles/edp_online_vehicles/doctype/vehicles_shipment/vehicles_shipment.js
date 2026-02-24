@@ -548,7 +548,11 @@ function handle_custom_buttons(frm) {
 
 										// Get model and colour
 										const model = row[0];
-										const colour = row[3];
+										let colour = row[3];
+
+										if (colour == null || colour == undefined || colour == "") {
+											colour = "undefined";
+										}
 
 										// Create the formatted Model Colour name
 										const model_colour_name =
