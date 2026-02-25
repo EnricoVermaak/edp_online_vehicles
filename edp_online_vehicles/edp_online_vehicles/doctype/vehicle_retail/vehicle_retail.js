@@ -7,31 +7,31 @@ let customer_phone = false;
 let customer_mobile = false;
 let customer_address = false;
 
-		function toggle_readonly(frm) {
-			frm.set_df_property(
-				"dealer",
-				"read_only",
-				(frm.doc.vehicles_sale_items || []).length > 0
-			);
-		}
+function toggle_readonly(frm) {
+	frm.set_df_property(
+		"dealer",
+		"read_only",
+		(frm.doc.vehicles_sale_items || []).length > 0
+	);
+}
 
 frappe.ui.form.on("Vehicle Retail", {
 
-	    vehicles_sale_items_add(frm) {
-        toggle_readonly(frm);
-    },
+	vehicles_sale_items_add(frm) {
+		toggle_readonly(frm);
+	},
 
-    vehicles_sale_items_remove(frm) {
-        toggle_readonly(frm);
-    },
+	vehicles_sale_items_remove(frm) {
+		toggle_readonly(frm);
+	},
 
 	refresh(frm) {
-	
-				if ((frm.doc.vehicles_sale_items || []).length > 0) {
-            frm.set_df_property("dealer", "read_only", 1);
-        } else {
-            frm.set_df_property("dealer", "read_only", 0);
-        }
+
+		if ((frm.doc.vehicles_sale_items || []).length > 0) {
+			frm.set_df_property("dealer", "read_only", 1);
+		} else {
+			frm.set_df_property("dealer", "read_only", 0);
+		}
 
 		if (frm.doc.docstatus == 1) {
 			frm.toggle_enable(["status"], false);
@@ -120,39 +120,39 @@ frappe.ui.form.on("Vehicle Retail", {
 	},
 
 	onload: function (frm) {
-			frm.doc.mandatory_documents = [];
+		frm.doc.mandatory_documents = [];
 
-			// Fetch settings and populate child tables
-			frappe.db.get_doc("Vehicle Stock Settings").then((doc) => {
-				for (let man_row of doc.mandetory_documents) {
-					frm.add_child("mandatory_documents", {
-						document_name: man_row.document_name,
-					});
-				}
-				frm.refresh_field("mandatory_documents");
-			});
-			frappe.db.get_single_value(
-				"Vehicle Stock Settings",
-				"allow_microdot_allocation_on_retail"
-			).then(enabled => {				
+		// Fetch settings and populate child tables
+		frappe.db.get_doc("Vehicle Stock Settings").then((doc) => {
+			for (let man_row of doc.mandetory_documents) {
+				frm.add_child("mandatory_documents", {
+					document_name: man_row.document_name,
+				});
+			}
+			frm.refresh_field("mandatory_documents");
+		});
+		frappe.db.get_single_value(
+			"Vehicle Stock Settings",
+			"allow_microdot_allocation_on_retail"
+		).then(enabled => {
 
-				frm.set_df_property("vehicle_microdot", "hidden", !enabled);
-				frm.refresh_field("vehicle_microdot");
+			frm.set_df_property("vehicle_microdot", "hidden", !enabled);
+			frm.refresh_field("vehicle_microdot");
 
-			});
+		});
 		// Reset the field to its previous status if no new value is selected
 		$(document).on("blur", '[data-fieldname="status"]', function () {
 			if (!frm.doc.status || frm.doc.status === "") {
 				frm.set_value("status", previous_status_value);
 			}
 		});
-			frm.set_query("vehicle_microdot", function() {
-            return {
-                filters: {
-                    "status": "Received",
-                }
-            };
-        });
+		frm.set_query("vehicle_microdot", function () {
+			return {
+				filters: {
+					"status": "Received",
+				}
+			};
+		});
 
 		frappe.call({
 			method: "edp_online_vehicles.events.get_settings.get_retail_settings",
@@ -214,30 +214,36 @@ frappe.ui.form.on("Vehicle Retail", {
 			});
 		}
 	},
-    onload(frm) {
+	onload(frm) {
 
-        let data = localStorage.getItem("vehicle_retail_data");
+		let data = localStorage.getItem("vehicle_retail_data");
 
-        if (data) {
+		if (data) {
 
-            let vehicles = JSON.parse(data);
+			let vehicles = JSON.parse(data);
 
-            vehicles.forEach(vehicle => {
+			vehicles.forEach(vehicle => {
 
-                let row = frm.add_child("vehicles_sale_items");
+				let row = frm.add_child("vehicles_sale_items");
 
-                row.vin_serial_no = vehicle.vin_serial_no;
-                row.model = vehicle.model;
-                row.colour = vehicle.colour;
-                row.retail_amount = vehicle.retail_amount;
+				row.vin_serial_no = vehicle.vin_serial_no;
+				row.model = vehicle.model;
+				row.colour = vehicle.colour;
+				row.retail_amount = vehicle.retail_amount;
 
-            });
+				dealer = vehicle.dealer
 
-            frm.refresh_field("vehicles_sale_items");
+			});
 
-            localStorage.removeItem("vehicle_retail_data");
-        }
-    },
+			frm.set_value('dealer', dealer)
+			
+
+			frm.refresh_field("vehicles_sale_items");
+			frm.refresh_field("dealer");
+
+			localStorage.removeItem("vehicle_retail_data");
+		}
+	},
 
 	onload_post_render: function (frm) {
 		$("p.help-box.small.text-muted").hide();
@@ -532,11 +538,11 @@ frappe.ui.form.on("Vehicle Retail", {
 
 frappe.ui.form.on("Vehicles Sale Items", {
 	vehicles_sale_items_remove(frm) {
-        toggle_readonly(frm);
-    },
-		vehicles_sale_items_add(frm) {
-        toggle_readonly(frm);
-    },
+		toggle_readonly(frm);
+	},
+	vehicles_sale_items_add(frm) {
+		toggle_readonly(frm);
+	},
 	vin_serial_no(frm, cdt, cdn) {
 
 		let row = locals[cdt][cdn];

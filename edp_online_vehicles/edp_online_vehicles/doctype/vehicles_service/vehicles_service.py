@@ -258,6 +258,10 @@ class VehiclesService(Document):
                 },
             )
 
+    def after_insert(self):
+        if self.job_card_no:
+            frappe.db.set_single_value("Vehicle Service Settings","last_auto_job_card_no",self.job_card_no)
+
 @frappe.whitelist()
 def create_internal_docs_notes(source_name, target_doc=None):
     doc = get_mapped_doc(

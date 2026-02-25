@@ -4,6 +4,7 @@
 frappe.ui.form.on("Model Conversion", {
 	refresh(frm) {},
 	model: function (frm) {
+		frm.set_value("convert_to_model",null)
 		if (frm.doc.model) {
 			frm.set_query("vin_serial_no", "table_fgif", function () {
 				return {
