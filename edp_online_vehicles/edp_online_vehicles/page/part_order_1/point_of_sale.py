@@ -147,7 +147,7 @@ def get_items(start, page_length, price_list, item_group, search_term=""):
 		for wh in warehouse:
 			
 		bin_join_condition = (
-			"AND bin.warehouse in (%(warehouse)s) AND bin.item_code = item.name AND bin.actual_qty > 0"
+			"AND bin.warehouse in (%(warehouses)s) AND bin.item_code = item.name AND bin.actual_qty > 0"
 		)
 
 	items_data = frappe.db.sql(
