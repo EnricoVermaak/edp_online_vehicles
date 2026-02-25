@@ -7,31 +7,23 @@ from frappe.utils import add_months, now_datetime
 
 
 class VehicleRetail(Document):
-    def after_insert(self):
-        doc = frappe.get_single("Vehicle Stock Settings")
-
-        if not doc.allow_microdot_allocation_on_retail:
-            return
-        if not self.vehicle_microdot:
-            return
-        microdot = frappe.get_doc("Vehicles Microdots", self.vehicle_microdot)
-
-        microdot.status = "Used"
-        microdot.date_applied=now_datetime()
-        microdot.save(ignore_permissions=True)
-
-        newdoc = frappe.new_doc("Apply Vehicles Microdot")
-        newdoc.microdot = microdot.name
-        newdoc.dealer = microdot.dealer
-        newdoc.microdot_fitted_by = frappe.session.user
-        newdoc.status = microdot.status
-        newdoc.date_applied = microdot.date_applied
-        newdoc.vin_serial_no = microdot.vin_serial_no  # safer from current doc
-        newdoc.insert(ignore_permissions=True)
-
     def on_submit(self):
-        self.update_linked_service_plan()
-        self.update_linked_warranty_plan()
+        # self.update_linked_service_plan()
+        # self.update_linked_warranty_plan()
+
+        for vin in self.vehicles_sale_items:
+            if vin.microdot_no and not frappe.db.exists("Apply Vehicles Microdot",vin.microdot_no):
+                apply_microdot_doc = frappe.new_doc("Apply Vehicles Microdot")
+                
+                apply_microdot_doc.dealer = self.dealer
+                apply_microdot_doc.microdot = vin.microdot_no
+                apply_microdot_doc.microdot_fitted_by = vin.microdot_fitted_by
+                apply_microdot_doc.status = "Used"
+                apply_microdot_doc.date_applied = now_datetime()
+                apply_microdot_doc.vin_serial_no = vin.vin_serial_no
+
+                apply_microdot_doc.insert(ignore_permissions=True)
+                apply_microdot_doc.save()
 
     @frappe.whitelist()
     def update_dealer_customer(self):

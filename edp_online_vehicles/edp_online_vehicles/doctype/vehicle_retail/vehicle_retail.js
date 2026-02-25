@@ -25,6 +25,15 @@ frappe.ui.form.on("Vehicle Retail", {
 		toggle_readonly(frm);
 	},
 
+	setup: function (frm) {
+		frm.set_query("microdot_no", "vehicles_sale_items", function (doc, cdt, cdn) {
+			return {
+				filters: {
+					status: "Received",
+				},
+			};
+		});
+	},
 	refresh(frm) {
 
 		if ((frm.doc.vehicles_sale_items || []).length > 0) {
@@ -131,28 +140,13 @@ frappe.ui.form.on("Vehicle Retail", {
 			}
 			frm.refresh_field("mandatory_documents");
 		});
-		frappe.db.get_single_value(
-			"Vehicle Stock Settings",
-			"allow_microdot_allocation_on_retail"
-		).then(enabled => {
-
-			frm.set_df_property("vehicle_microdot", "hidden", !enabled);
-			frm.refresh_field("vehicle_microdot");
-
-		});
 		// Reset the field to its previous status if no new value is selected
 		$(document).on("blur", '[data-fieldname="status"]', function () {
 			if (!frm.doc.status || frm.doc.status === "") {
 				frm.set_value("status", previous_status_value);
 			}
 		});
-		frm.set_query("vehicle_microdot", function () {
-			return {
-				filters: {
-					"status": "Received",
-				}
-			};
-		});
+
 
 		frappe.call({
 			method: "edp_online_vehicles.events.get_settings.get_retail_settings",
@@ -201,6 +195,7 @@ frappe.ui.form.on("Vehicle Retail", {
 						},
 					};
 				});
+
 			},
 		});
 
@@ -236,7 +231,7 @@ frappe.ui.form.on("Vehicle Retail", {
 			});
 
 			frm.set_value('dealer', dealer)
-			
+
 
 			frm.refresh_field("vehicles_sale_items");
 			frm.refresh_field("dealer");
