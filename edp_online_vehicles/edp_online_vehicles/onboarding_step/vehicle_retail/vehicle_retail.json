@@ -1,0 +1,20 @@
+{
+ "action": "Create Entry",
+ "creation": "2026-02-24 13:46:17.433398",
+ "docstatus": 0,
+ "doctype": "Onboarding Step",
+ "form_tour": "New vehicle Retail",
+ "idx": 0,
+ "is_complete": 0,
+ "is_single": 0,
+ "is_skipped": 0,
+ "modified": "2026-02-24 13:50:19.695783",
+ "modified_by": "Administrator",
+ "name": "Vehicle Retail",
+ "owner": "Administrator",
+ "reference_document": "Vehicle Retail",
+ "show_form_tour": 1,
+ "show_full_form": 1,
+ "title": "Retail a Vehicle ",
+ "validate_action": 1
+}

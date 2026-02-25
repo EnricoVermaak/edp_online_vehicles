@@ -9,7 +9,7 @@
    "label": "Retail"
   }
  ],
- "content": "[{\"id\":\"tHb3yxthkR\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Vehicle</b></span>\",\"col\":12}},{\"id\":\"wZV_n1J-c8\",\"type\":\"onboarding\",\"data\":{\"onboarding_name\":\"Vehicles 1\",\"col\":12}},{\"id\":\"6qNkMdpHs6\",\"type\":\"chart\",\"data\":{\"chart_name\":\"Wholesale\",\"col\":6}},{\"id\":\"ST7WR6P7hN\",\"type\":\"chart\",\"data\":{\"chart_name\":\"Retail\",\"col\":6}},{\"id\":\"4V_t6SXQ18\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Available HQ Stock\",\"col\":3}},{\"id\":\"cmaJvLnY2v\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Available Dealer Stock\",\"col\":3}},{\"id\":\"sNIPQeHiGJ\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Reserved Dealer Stock\",\"col\":3}},{\"id\":\"yP5m7SSPJ4\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Natis Errors\",\"col\":3}},{\"id\":\"Nf0YyueLA7\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"HQ Reserved Stock\",\"col\":3}},{\"id\":\"lbM7_eocmg\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"(D2D)Orders Approved Not Delivered\",\"col\":3}},{\"id\":\"w9HsEGF3Un\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"OoCiQSZSM5\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Vehicle Overview Dashboard\",\"col\":3}},{\"id\":\"gkhgZ8k0HI\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"DnNtsmxpty\",\"type\":\"card\",\"data\":{\"card_name\":\"Vehicles\",\"col\":4}},{\"id\":\"3OlauwmyJu\",\"type\":\"card\",\"data\":{\"card_name\":\"Orders\",\"col\":4}},{\"id\":\"R0YEkQccLv\",\"type\":\"card\",\"data\":{\"card_name\":\"Reports\",\"col\":4}}]",
+ "content": "[{\"id\":\"tHb3yxthkR\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Vehicle</b></span>\",\"col\":12}},{\"id\":\"wZV_n1J-c8\",\"type\":\"onboarding\",\"data\":{\"onboarding_name\":\"Vehicles\",\"col\":12}},{\"id\":\"6qNkMdpHs6\",\"type\":\"chart\",\"data\":{\"chart_name\":\"Wholesale\",\"col\":6}},{\"id\":\"ST7WR6P7hN\",\"type\":\"chart\",\"data\":{\"chart_name\":\"Retail\",\"col\":6}},{\"id\":\"4V_t6SXQ18\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Available HQ Stock\",\"col\":3}},{\"id\":\"cmaJvLnY2v\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Available Dealer Stock\",\"col\":3}},{\"id\":\"sNIPQeHiGJ\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Reserved Dealer Stock\",\"col\":3}},{\"id\":\"yP5m7SSPJ4\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Natis Errors\",\"col\":3}},{\"id\":\"Nf0YyueLA7\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"HQ Reserved Stock\",\"col\":3}},{\"id\":\"lbM7_eocmg\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"(D2D)Orders Approved Not Delivered\",\"col\":3}},{\"id\":\"w9HsEGF3Un\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"OoCiQSZSM5\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Vehicle Overview Dashboard\",\"col\":3}},{\"id\":\"gkhgZ8k0HI\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"DnNtsmxpty\",\"type\":\"card\",\"data\":{\"card_name\":\"Vehicles\",\"col\":4}},{\"id\":\"3OlauwmyJu\",\"type\":\"card\",\"data\":{\"card_name\":\"Orders\",\"col\":4}},{\"id\":\"R0YEkQccLv\",\"type\":\"card\",\"data\":{\"card_name\":\"Reports\",\"col\":4}}]",
  "creation": "2025-01-06 16:01:14.796867",
  "custom_blocks": [],
  "docstatus": 0,
@@ -359,7 +359,7 @@
    "type": "Link"
   }
  ],
- "modified": "2026-02-23 09:35:19.936079",
+ "modified": "2026-02-24 13:49:52.416005",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicles",
@@ -377,7 +377,7 @@
    "role": "Vehicles Administrator"
   }
  ],
- "sequence_id": 6.0,
+ "sequence_id": 8.0,
  "shortcuts": [
   {
    "color": "Green",

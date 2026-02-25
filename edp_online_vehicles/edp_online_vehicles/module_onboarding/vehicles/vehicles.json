@@ -1,0 +1,26 @@
+{
+ "allow_roles": [
+  {
+   "role": "System Administrator"
+  }
+ ],
+ "creation": "2026-02-24 13:49:16.413832",
+ "docstatus": 0,
+ "doctype": "Module Onboarding",
+ "documentation_url": "https://www.tecwise.co.za/",
+ "idx": 0,
+ "is_complete": 0,
+ "modified": "2026-02-24 13:50:30.453590",
+ "modified_by": "Administrator",
+ "module": "Edp Online Vehicles",
+ "name": "Vehicles",
+ "owner": "Administrator",
+ "steps": [
+  {
+   "step": "Vehicle Retail"
+  }
+ ],
+ "subtitle": "Master Stock, Order Bank, Vehciel Retail and more",
+ "success_message": "Congratulations on winning a million",
+ "title": "Learn To Manage Stock And Place Orders"
+}
