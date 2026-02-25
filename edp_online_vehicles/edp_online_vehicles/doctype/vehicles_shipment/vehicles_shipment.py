@@ -85,7 +85,7 @@ class VehiclesShipment(Document):
 		if default_plan:
 			service_plan = frappe.get_doc({
 				"doctype": "Vehicle Linked Service Plan",
-				"vin__serial_no": vin_serial_no,
+				"vin_serial_no": vin_serial_no,
 				"service_plan": default_plan,
 				"status": "Pending Activation",
 			})

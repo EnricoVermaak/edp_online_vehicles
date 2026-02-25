@@ -51,10 +51,16 @@ def service_type_query(doctype, txt, searchfield, start, page_len, filters):
         except (ValueError, TypeError):
             if service_interval is None:
                 service_interval = 0  # Default to 0 if interval is None
+            else:
+                service_interval = service_schedule.interval  # Keep as string if not a valid integer
 
         # Check if the service type should be included based on odo reading and whether it's already used
         if service_type.name not in used_service_type_names:
-            if odo_reading <= service_interval or isinstance(service_interval, str):
+            try:
+                if odo_reading <= service_interval:
+                    available_service_types.append([service_type.name])
+            except (TypeError):
+                # Service interval is a string display automatically 
                 available_service_types.append([service_type.name])
 
     return available_service_types

@@ -1366,8 +1366,6 @@ edp_online_vehicles.edp_online_vehicles.StockAvailability = class StockAvailabil
 			true,
 		);
 
-		console.log(context);
-
 		frappe.call({
 			method: "edp_online_vehicles.edp_online_vehicles.dashboard.get_headers.get_context",
 			args: { context },
@@ -1494,12 +1492,6 @@ edp_online_vehicles.edp_online_vehicles.StockAvailability = class StockAvailabil
 					}
 				} else {
 					// In numeric mode: calculate the total as the sum
-					if (hide_dealer_stock) {
-						model.dealers = 0
-					} 
-					if (hide_unconfirmed_shipments) {
-						model.unconfirmed_shipments = 0
-					} 
 					model.total =
 						model.hq_company +
 						model.dealers +

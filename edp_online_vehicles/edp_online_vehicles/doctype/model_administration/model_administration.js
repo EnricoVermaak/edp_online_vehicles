@@ -68,23 +68,30 @@ frappe.ui.form.on("Model Administration", {
             ],
             primary_action_label: "Create",
             primary_action(values) {
-                frappe.call({
-                    method: "frappe.client.insert",
-                    args: {
-                        doc: {
-                            doctype: "Model Colour",
-                            model: values.model,
-                            colour: values.colour
+                function do_insert() {
+                    frappe.call({
+                        method: "frappe.client.insert",
+                        args: {
+                            doc: {
+                                doctype: "Model Colour",
+                                model: values.model,
+                                colour: values.colour
+                            }
+                        },
+                        callback: function(r) {
+                            if (!r.exc) {
+                                frappe.msgprint(`New Model Colour <b>${r.message.name}</b> created`);
+                                frm.reload_doc();
+                                d.hide();
+                            }
                         }
-                    },
-                    callback: function(r) {
-                        if (!r.exc) {
-                            frappe.msgprint(`New Model Colour <b>${r.message.name}</b> created`);
-                            frm.reload_doc();
-                            d.hide();
-                        }
-                    }
-                });
+                    });
+                }
+                if (frm.is_dirty()) {
+                    frm.save().then(() => do_insert());
+                } else {
+                    do_insert();
+                }
             }
         });
 
@@ -130,23 +137,30 @@ frappe.ui.form.on("Model Administration", {
             ],
             primary_action_label: "Create",
             primary_action(values) {
-                frappe.call({
-                    method: "frappe.client.insert",
-                    args: {
-                        doc: {
-                            doctype: "Interior Model Colour",
-                            model: values.model,
-                            colour: values.colour
+                function do_insert() {
+                    frappe.call({
+                        method: "frappe.client.insert",
+                        args: {
+                            doc: {
+                                doctype: "Interior Model Colour",
+                                model: values.model,
+                                colour: values.colour
+                            }
+                        },
+                        callback: function(r) {
+                            if (!r.exc) {
+                                frappe.msgprint(`New Interior Model Colour <b>${r.message.name}</b> created`);
+                                frm.reload_doc();
+                                d.hide();
+                            }
                         }
-                    },
-                    callback: function(r) {
-                        if (!r.exc) {
-                            frappe.msgprint(`New Interior Model Colour <b>${r.message.name}</b> created`);
-                            frm.reload_doc();
-                            d.hide();
-                        }
-                    }
-                });
+                    });
+                }
+                if (frm.is_dirty()) {
+                    frm.save().then(() => do_insert());
+                } else {
+                    do_insert();
+                }
             }
         });
 
