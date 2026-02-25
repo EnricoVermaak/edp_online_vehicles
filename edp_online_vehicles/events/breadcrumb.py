@@ -4,7 +4,7 @@ import frappe
 @frappe.whitelist()
 def get_workspace(doctype):
 	workspaces = frappe.get_all(
-		"Workspace", filters={"module": "Edp Online Vehicles"}, fields=["title", "name"]
+		"Workspace", fields=["title", "name"]
 	)
 
 	for ws in workspaces:
