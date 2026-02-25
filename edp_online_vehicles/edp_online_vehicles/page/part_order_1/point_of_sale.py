@@ -144,6 +144,7 @@ def get_items(start, page_length, price_list, item_group, search_term=""):
 	bin_join_selection, bin_join_condition = "", ""
 	if hide_unavailable_items:
 		bin_join_selection = ", `tabBin` bin"
+		warehouses = ""
 		for wh in warehouse:
 			
 		bin_join_condition = (
