@@ -49,7 +49,7 @@ def service_type_query(doctype, txt, searchfield, start, page_len, filters):
         try:
             service_interval = int(service_schedule.interval)
         except (ValueError, TypeError):
-            if service_interval is None:
+            if service_schedule.interval is None:
                 service_interval = 0  # Default to 0 if interval is None
             else:
                 service_interval = service_schedule.interval  # Keep as string if not a valid integer

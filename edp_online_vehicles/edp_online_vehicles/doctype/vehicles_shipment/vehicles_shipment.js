@@ -547,8 +547,8 @@ function handle_custom_buttons(frm) {
 										count_row++
 
 										// Get model and colour
-										const model = row[0];
-										let colour = row[3];
+										const model = row[fieldnames.indexOf("model_code")];
+										let colour = row[fieldnames.indexOf("colour")];
 
 										if (colour == null || colour == undefined || colour == "") {
 											colour = "undefined";
@@ -704,7 +704,17 @@ function handle_custom_buttons(frm) {
 									}
 								} else {
 									// Once all rows have been processed, notify the user
-									frm.set_value("total_vehicles",count_row)
+									// Refresh child table first
+									frm.refresh_field("vehicles_shipment_items");
+
+									frm.set_value("total_vehicles", count_row);
+									frm.toggle_display("total_vehicles", count_row > 0);
+
+									frappe.msgprint({
+										message: __("Table updated successfully"),
+										title: __("Success"),
+										indicator: "green",
+									});
 									
 									frappe.msgprint({
 										message: __(
@@ -762,9 +772,8 @@ frappe.ui.form.on("Vehicles Shipment", {
 		const total = (frm.doc.vehicles_shipment_items || []).filter(
 			row => row.model_code || row.vin_serial_no
 		).length;
-
-		frm.set_value("total_vehicles", total);
 		frm.refresh_field("total_vehicles");
+		frm.set_value("total_vehicles", total);
 		frm.toggle_display("total_vehicles", total > 0);
 	}
 });
@@ -777,6 +786,11 @@ frappe.ui.form.on("Vehicles Shipment Items", {
 	vehicles_shipment_items_remove(frm, cdt, cdn) {
 		frm.trigger("calculate_total_vehicles");
 	},
+
+	
+	vehicles_shipment_items_change(frm, cdt, cdn) {
+        frm.trigger("calculate_total_vehicles");
+    },
 
 	model_code(frm) { frm.trigger("calculate_total_vehicles"); },
 	vin_serial_no(frm) { frm.trigger("calculate_total_vehicles"); },
