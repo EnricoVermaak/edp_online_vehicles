@@ -1,9 +1,9 @@
 import frappe
 from frappe.utils import now_datetime, nowdate
+import traceback
 
 @frappe.whitelist()
 def check_orders_schedule():
-    # logger = frappe.logger("vehicle_order_schedule")
 
     order_docs = frappe.get_all(
         "Vehicle Order",
@@ -33,11 +33,15 @@ def check_orders_schedule():
             order_doc.submit()
 
         except Exception:
-            logger.exception(f"Failed processing Vehicle Order {row['name']}")
+            frappe.log_error(
+    		    title=f"Vehicle Order Processing Failed: {row['name']}",
+    		    message=traceback.format_exc()
+  			)
 
     frappe.db.commit()
     return {"ok": True, "processed": len(order_docs)}
 		
+
 
 
 @frappe.whitelist()
