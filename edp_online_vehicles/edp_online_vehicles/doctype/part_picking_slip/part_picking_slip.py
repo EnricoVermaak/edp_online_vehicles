@@ -8,18 +8,17 @@ from frappe.model.document import Document
 class PartPickingSlip(Document):
 	def autoname(self):
 		# Check if there are existing orders with the same part_order_no
-		if frappe.db.exists("Parts Delivery Note", {"part_order_no": self.part_order_no}):
-			docs = frappe.get_all("Parts Delivery Note", filters={"part_order_no": self.part_order_no})
-
+		if frappe.db.exists("Part Picking Slip", {"part_order_no": self.part_order_no}):
+			docs = frappe.get_all("Part Picking Slip", filters={"part_order_no": self.part_order_no})
 			index = 1
 
 			if len(docs) > 0:
 				index = (
 					max(
 						[
-							int(doc.get("name").split("-")[3])
+							int(doc.get("name").split("-")[-1])
 							for doc in docs
-							if doc.get("name").split("-")[3].isdigit()
+							if doc.get("name").split("-")[-1].isdigit()
 						],
 						default=0,
 					)

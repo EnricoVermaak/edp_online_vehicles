@@ -41,12 +41,12 @@ frappe.listview_settings["Vehicle Stock"] = {
 							fieldtype: 'Link',
 							options: 'Warehouse',
 							get_query: function () {
-										return {
-											filters: {
-												company: hq_company,
-											},
-										};
+								return {
+									filters: {
+										company: hq_company,
 									},
+								};
+							},
 						},
 
 						{
@@ -94,7 +94,7 @@ frappe.listview_settings["Vehicle Stock"] = {
 						})
 					}
 
-					
+
 				})
 				dialog.show();
 			});
@@ -288,109 +288,71 @@ frappe.listview_settings["Vehicle Stock"] = {
 
 		listview.page.add_actions_menu_item(__("Retail"), function () {
 			const selected_docs = listview.get_checked_items();
-			let vin = selected_docs.map((doc) => doc.name);
+			let vin_list = selected_docs.map((doc) => doc.name);
 			let checks = [];
-			let dataPromises = vin.map((vinno) => {
+
+			function validateAndFetchVin(vinno) {
+				dealer = null
 				return frappe.db
 					.get_value("Vehicle Stock", { vin_serial_no: vinno }, [
 						"model",
 						"brand",
 						"colour",
 						"description",
+						"dealer",
+						"availability_status",
 					])
 					.then((response) => {
-						if (response) {
-							return {
-								vin_serial_no: vinno,
-								model: response.message.model || "",
-								brand: response.message.brand || "",
-								colour: response.message.colour || "",
-								description: response.message.description || "",
-							};
+						if (!response || !response.message) {
+							frappe.msgprint({
+								title: __("Invalid VIN"),
+								message: __("VIN <b>{0}</b> was not found in Vehicle Stock.", [vinno]),
+								indicator: "red",
+							});
+							return Promise.reject(new Error(`Invalid VIN: ${vinno}`));
+						} else if (response.message.availability_status !== "Available") {
+							frappe.msgprint({
+								title: __("Invalid VIN"),
+								message: __("VIN {0} is not available for sale based on its current availability status.", [vinno]),
+								indicator: "red",
+							});
+							return Promise.reject(new Error(`VIN not available: ${vinno}`));
+
+						} else if (!dealer) {
+							dealer = response.message.dealer
+						} else if (dealer !== response.message.dealer) {
+							frappe.msgprint({
+								title: __("Dealer Mismatch"),
+								message: __("All selected vehicles must belong to the same dealer."),
+								indicator: "red",
+							});
+							return Promise.reject(new Error(`Multiple dealers: ${vinno}`));
+
 						}
+
+						return {
+							vin_serial_no: vinno,
+							model: response.message.model || "",
+							brand: response.message.brand || "",
+							colour: response.message.colour || "",
+							description: response.message.description || "",
+							dealer: response.message.dealer || "",
+							availability_status: response.message.availability_status || "",
+						};
 					});
-			});
-			vin.forEach((vinno) => {
-				let check = new Promise((resolve, reject) => {
-					frappe.call({
-						method: "edp_online_vehicles.events.check_stock_availability.check_stock_availability",
-						args: { vinno: vinno },
-						callback: function (r) {
-							if (r.message) {
-								frappe.msgprint(
-									__(
-										"Vehicles (VIN " +
-										vinno +
-										") is not for sale.",
-									),
-								);
-								resolve(false);
-							} else {
-								resolve(true);
-							}
-						},
-					});
-				});
-				checks.push(check);
-			});
+			}
 
-				let checkDealer = new Promise((resolve) => {
+			const vehiclePromises = vin_list.map((vinno) => validateAndFetchVin(vinno));
 
-					frappe.call({
-						method: "edp_online_vehicles.events.check_stock_dealer.check_stock_dealer",
-						args: { vins: vin },  // pass full array
-						callback: function (r) {
-
-							if (!r.message.valid) {
-								frappe.msgprint(
-									__("Vehicles must share a common dealer.")
-								);
-								resolve(false);
-							} else {
-								resolve(true);
-							}
-						}
-					});
-
-				});
-
-				Promise.all(checks).then(results => {
-
-					if (results.includes(false)) {
-						return;
-					}
-
-					console.log("All validations passed. Continue process here.");
-
-				});
-
-				checks.push(checkDealer);
-
-			frappe.call({
-				method: "edp_online_vehicles.events.set_filters.get_dealers",
-				args: {
-					user: frappe.user.name,
-				},
-				callback: function (r) {
-					dealers = r.message;
-				},
-			});
-
-			let users = [];
-
-			Promise.all(checks).then((results) => {
-				if (results.every((status) => status)) {
-				Promise.all(dataPromises).then((VehicleData) => {
-
-					localStorage.setItem(
-						"vehicle_retail_data",
-						JSON.stringify(VehicleData)
-					);
-
+			Promise.all(vehiclePromises)
+				.then((VehicleData) => {
+					localStorage.setItem("vehicle_retail_data", JSON.stringify(VehicleData));
 					frappe.set_route("Form", "Vehicle Retail", "new-vehicle-retail");
+				})
+				.catch((err) => {
+					console.warn(err);
 				});
-				}
-			});
+			
 		});
 
 		listview.page.add_actions_menu_item(__("Apply Microdot"), function () {

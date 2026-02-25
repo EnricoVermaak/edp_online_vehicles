@@ -67,6 +67,8 @@
   "sap_token",
   "sap_token_expires_at",
   "sap_token_fetched_at",
+  "evolve_section",
+  "interface_code",
   "servers_section",
   "integration_servers"
  ],
@@ -452,13 +454,23 @@
    "fieldname": "create_other_service_schedule",
    "fieldtype": "Check",
    "label": "Create Other Service Schedule"
+  },
+  {
+   "fieldname": "evolve_section",
+   "fieldtype": "Section Break",
+   "label": "Evolve"
+  },
+  {
+   "fieldname": "interface_code",
+   "fieldtype": "Data",
+   "label": "Interface Code"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2026-02-17 08:30:53.355365",
+ "modified": "2026-02-24 09:42:37.582398",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicle Stock Settings",

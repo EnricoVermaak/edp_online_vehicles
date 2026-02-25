@@ -18,7 +18,7 @@ class PartOrder(Document):
         now = now_datetime()
         mm = now.strftime("%m")
         yy = now.strftime("%y")
-        series = f"{prefix}{mm}{yy}-.#####"	
+        series = f"{prefix}-{mm}{yy}-.#####"	
         self.name = make_autoname(series)
 
     def before_insert(self):
