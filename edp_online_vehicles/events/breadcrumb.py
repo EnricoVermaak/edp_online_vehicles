@@ -11,8 +11,6 @@ def get_workspace(doctype):
 		doc = frappe.get_doc("Workspace", ws.name)
 		for field in ["shortcuts", "links"]:
 			for link in doc.get(field) or []:
-				if (getattr(link, "link_type", "") == "DocType" and link.link_to == doctype) or (
-					getattr(link, "type", "") == "DocType" and link.link_to == doctype
-				):
+				if (link.link_to == doctype) :
 					return ws.name
 	return "None"
