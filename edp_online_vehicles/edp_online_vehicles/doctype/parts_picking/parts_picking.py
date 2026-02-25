@@ -7,17 +7,17 @@ from frappe.model.naming import make_autoname
 
 
 class PartsPicking(Document):
-def autoname(self):
-   self.name = frappe.model.naming.make_autoname("PP-.YYYY.-.#####")
+    def autoname(self):
+        self.name = frappe.model.naming.make_autoname("PP-.YYYY.-.#####")
 
 
-@frappe.whitelist()
-def check_item(part_no):
-    if frappe.db.exists("Item", {"name": part_no, "item_group": "Parts"}):
-        item_doc = frappe.get_doc("Item", part_no)
+    @frappe.whitelist()
+    def check_item(part_no):
+        if frappe.db.exists("Item", {"name": part_no, "item_group": "Parts"}):
+            item_doc = frappe.get_doc("Item", part_no)
 
-        if item_doc:
-            bin_location = item_doc.custom_bin_location
-            return bin_location
-    else:
-        return False
+            if item_doc:
+                bin_location = item_doc.custom_bin_location
+                return bin_location
+        else:
+            return False
