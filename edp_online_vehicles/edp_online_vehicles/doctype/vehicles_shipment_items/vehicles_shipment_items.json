@@ -46,7 +46,6 @@
    "columns": 1,
    "fieldname": "status",
    "fieldtype": "Select",
-   "in_list_view": 1,
    "label": "Status",
    "options": "Not Received\nReceived",
    "read_only": 1
@@ -232,7 +231,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2026-02-24 11:46:19.282819",
+ "modified": "2026-02-25 09:02:05.882859",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicles Shipment Items",
