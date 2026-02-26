@@ -554,9 +554,14 @@ function handle_custom_buttons(frm) {
 											colour = "undefined";
 										}
 
-										// Create the formatted Model Colour name
-										const model_colour_name =
-											colour + " - " + model;
+										// Check if colour already contains the model (user uploaded "Colour - Model")
+										let model_colour_name;
+										if (colour.includes(model)) {
+											model_colour_name = colour;
+											colour = colour.split(" - ")[0]; // Extract just the colour part
+										} else {
+											model_colour_name = colour + " - " + model; // Standard format
+										}
 
 										// Check if the colour exists for the model
 										frappe.db
