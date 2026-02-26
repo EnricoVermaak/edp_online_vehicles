@@ -179,6 +179,8 @@ class PartOrder(Document):
             newdoc.transaction_date = today()
             newdoc.delivery_date = self.delivery_date
 
+            dealer_warehouse = frappe.db.get_value("Warehouse", {"company": self.dealer, "disabled": 0}, "name")
+
             for part in warehouse_items:
                 newdoc.append(
                     "items",
@@ -190,6 +192,7 @@ class PartOrder(Document):
                         "conversion_factor": 1,
                         "base_amount": part.total_excl,
                         "base_rate": part.dealer_billing_excl,
+                        "warehouse": dealer_warehouse,
                     },
                 )
 
@@ -245,6 +248,8 @@ class PartOrder(Document):
                 newdoc.transaction_date = today()
                 newdoc.delivery_date = self.delivery_date
 
+                dealer_warehouse = frappe.db.get_value("Warehouse", {"company": self.dealer, "disabled": 0}, "name")
+
                 for part in items:
                     newdoc.append(
                         "items",
@@ -256,6 +261,7 @@ class PartOrder(Document):
                             "conversion_factor": 1,
                             "base_amount": part.total_excl,
                             "base_rate": part.dealer_billing_excl,
+                            "warehouse": dealer_warehouse,
                         },
                     )
 
