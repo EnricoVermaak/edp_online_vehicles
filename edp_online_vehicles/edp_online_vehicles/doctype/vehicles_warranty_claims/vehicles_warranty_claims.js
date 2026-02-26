@@ -456,7 +456,7 @@ frappe.ui.form.on("Vehicles Warranty Claims", {
                 if (r.message.status === "failed") {
 
                     frappe.msgprint(
-                        __("Odometer cannot be lower than {0}km", [r.message.stock_odo])
+                        __("Odometer cannot be lower than stock {0}km", [r.message.stock_odo])
                     );
 
                     frm.set_value("odo_reading", null);
@@ -576,7 +576,7 @@ frappe.ui.form.on("Vehicles Warranty Claims", {
 
 
     before_save: async function(frm) {
-   		//Save the service odometer reading back to the linked Vehicle Stock record (Not implemented will do later as hook?)
+		//Save the service odometer reading back to the linked Vehicle Stock record 
         if (!frm.doc.vin_serial_no || !frm.doc.odo_reading) {
             return;
         }

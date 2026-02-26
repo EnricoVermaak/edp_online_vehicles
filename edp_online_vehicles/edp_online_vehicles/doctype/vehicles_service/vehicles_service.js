@@ -263,7 +263,6 @@ frappe.ui.form.on("Vehicles Service", {
 							.padStart(6, "0");
 
 						const nextJobNo = prefix + incrementedNumber;
-						console.log(nextJobNo);
 
 						frm.set_value("job_card_no", nextJobNo);
 					};
@@ -729,8 +728,7 @@ frappe.ui.form.on("Vehicles Service", {
 					frm.set_value("end_date", now);
 				}
 			});
-		
-   		//Save the service odometer reading back to the linked Vehicle Stock record (Not implemented will do later as hook?)
+
         if (!frm.doc.vin_serial_no || !frm.doc.odo_reading_hours) {
             return;
         }
@@ -758,6 +756,39 @@ frappe.ui.form.on("Vehicles Service", {
             });
         }
 	},
+
+	dealer: async function (frm) {
+
+		if (!frm.doc.dealer) return;
+
+		// Get new company labour rate
+		let r = await frappe.db.get_value(
+			"Company",
+			frm.doc.dealer,
+			"custom_service_labour_rate"
+		);
+
+		let new_rate = flt(r?.message?.custom_service_labour_rate || 0);
+
+		// Update OEM Labour
+		(frm.doc.service_labour_items || []).forEach(row => {
+			row.rate_hour = new_rate;
+			row.total_excl = new_rate * (row.duration_hours || 0);
+		});
+
+		// Update Non OEM Labour
+		(frm.doc.non_oem_labour_items || []).forEach(row => {
+			row.rate_hour = new_rate;
+			row.total_excl = new_rate * (row.duration_hours || 0);
+		});
+
+		frm.refresh_field("service_labour_items");
+		frm.refresh_field("non_oem_labour_items");
+
+		// Recalculate totals
+		calculate_labours_total_combined(frm);
+		calculate_duration_total_combined(frm);
+	}
 });
 // -----------------------------------------------------
 // -----------------------------------------------------
@@ -976,8 +1007,7 @@ function vehicle_service_part_price(frm, cdt, cdn) {
 			let msg = price_res && price_res.message;
 			let standard_rate = (msg != null && typeof msg === "object") ? (msg.price_list_rate || 0) : (msg != null ? msg : 0);
 			return frappe.db.get_doc("Item", row.item).then(item_doc => {
-				let gp_pct = item_doc.custom_service_gp || 0;
-				let price_excl = standard_rate + (standard_rate * (gp_pct / 100));
+				let price_excl = standard_rate
 				let total_excl = price_excl * (row.qty || 0);
 				frappe.model.set_value(cdt, cdn, "price_excl", price_excl);
 				frappe.model.set_value(cdt, cdn, "total_excl", total_excl);
@@ -998,8 +1028,7 @@ function vehicle_service_labour_rate(frm, cdt, cdn, item_field) {
 			let msg = company_res && company_res.message;
 			let base_rate = (msg != null && typeof msg === "object") ? (msg.custom_service_labour_rate || 0) : (msg != null ? msg : 0);
 			return frappe.db.get_doc("Item", item_code).then(item_doc => {
-				let gp_pct = item_doc.custom_service_gp || 0;
-				let rate_hour = base_rate + (base_rate * (gp_pct / 100));
+				let rate_hour = base_rate
 				let total_excl = rate_hour * (row.duration_hours || 0);
 				frappe.model.set_value(cdt, cdn, "rate_hour", rate_hour);
 				frappe.model.set_value(cdt, cdn, "total_excl", total_excl);
