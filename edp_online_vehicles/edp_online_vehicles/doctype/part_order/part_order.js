@@ -13,17 +13,6 @@ frappe.ui.form.on("Part Order", {
 			});
 		}
 	},
-	onload_post_render: function (frm) {
-		let messages = [];
-
-		if (messages.length > 0) {
-			frappe.msgprint({
-				title: __('Stock Adjustment'),
-				indicator: 'orange',
-				message: messages.join('<br>')
-			});
-		}
-	},
 	search(frm) {
 		if (frm.doc.company_reg_no) {
 			frappe.call({
