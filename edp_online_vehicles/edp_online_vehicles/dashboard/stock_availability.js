@@ -1355,186 +1355,112 @@ edp_online_vehicles.edp_online_vehicles.StockAvailability = class StockAvailabil
 	render(data) {
 		const me = this;
 
-		// Always reset at the start of a fresh fetch
 		if (this.start === 0) {
 			this.max_count = 0;
 		}
 
-		const context = this.get_stock_availability_dashboard_data(
-			data,
-			this.max_count,
-			true,
-		);
+		Promise.all([
+			frappe.db.get_single_value("Vehicle Stock Settings", "hide_dealer_stock_availability"),
+			frappe.db.get_single_value("Vehicle Stock Settings", "hide_unconfirmed_shipments"),
+		]).then(([hideDealerStock, hideUnconfirmedShipments]) => {
 
-		frappe.call({
-			method: "edp_online_vehicles.edp_online_vehicles.dashboard.get_headers.get_context",
-			args: { context },
-			callback: function (r) {
-				if (!r.message) return;
+			const context = this.get_stock_availability_dashboard_data(
+				data,
+				this.max_count,
+				true,
+				hideDealerStock,
+				hideUnconfirmedShipments
+			);
 
-				context.headers = r.message.headers || [];
-				context.hide_dealer_stock = 0;
-				context.hide_unconfirmed_shipments = 0;
+			// IMPORTANT: carry max_count forward
+			this.max_count = context.max_count || this.max_count;
 
-				// Chain your settings lookups
-				frappe.db
-					.get_single_value(
-						"Vehicle Stock Settings",
-						"hide_dealer_stock_availability",
-					)
-					.then((hide_dealer) => {
-						context.hide_dealer_stock = hide_dealer || 0;
-						return frappe.db.get_single_value(
-							"Vehicle Stock Settings",
-							"hide_unconfirmed_shipments",
+			frappe.call({
+				method: "edp_online_vehicles.edp_online_vehicles.dashboard.get_headers.get_context",
+				args: { context },
+				callback: function (r) {
+					if (!r.message) return;
+
+					context.headers = r.message.headers || [];
+					context.hide_dealer_stock = hideDealerStock || 0;
+					context.hide_unconfirmed_shipments = hideUnconfirmedShipments || 0;
+
+					if (context.data.length > 0) {
+						me.content.find(".result").css("text-align", "unset");
+						me.result.html(
+							`<div class="dashboard-template-wrapper">
+							${frappe.render_template(me.template, context)}
+						</div>`
 						);
-					})
-					.then((hide_unconfirmed) => {
-						context.hide_unconfirmed_shipments =
-							hide_unconfirmed || 0;
-
-						// When there's data, replace the entire container's contents
-						if (context.data.length > 0) {
-							me.content
-								.find(".result")
-								.css("text-align", "unset");
-							// **Here** we clear and then insert in one step:
-							me.result.html(
-								`<div class="dashboard-template-wrapper">
-								${frappe.render_template(me.template, context)}
-							 </div>`,
-							);
-						} else {
-							const msg = __("No Stock Available Currently");
-							me.content
-								.find(".result")
-								.css("text-align", "center");
-							me.result.html(
-								`<div class='text-muted' style='margin:20px 5px;'>${msg}</div>`,
-							);
-						}
-					});
-			},
+					} else {
+						const msg = __("No Stock Available Currently");
+						me.content.find(".result").css("text-align", "center");
+						me.result.html(
+							`<div class='text-muted' style='margin:20px 5px;'>${msg}</div>`
+						);
+					}
+				},
+			});
 		});
 	}
 
-	get_stock_availability_dashboard_data(data, max_count, show_item) {
+	get_stock_availability_dashboard_data(data, max_count, show_item, hideDealerStock, hideUnconfirmedShipments) {
 		if (!max_count) max_count = 0;
 		if (!data) data = [];
 
 		data.forEach(function (model_range) {
-			// Determine whether the counts are in "Yes" mode by checking the type of one count field.
-			// (This assumes that when hide_vehicle_amount_in_stock is enabled, individual model count values are strings.)
-			var useYes = false;
-			if (
-				model_range.models &&
-				model_range.models.length > 0 &&
-				typeof model_range.models[0].hq_company === "string"
-			) {
-				useYes = true;
+			let models = model_range.models || [];
+
+			let useYes =
+				models.length > 0 &&
+				typeof models[0].hq_company === "string";
+
+			model_range.hq_company_total = useYes ? "" : 0;
+			model_range.dealers_total = useYes ? "" : 0;
+			model_range.pipeline_total = useYes ? "" : 0;
+			model_range.unconfirmed_shipments_total = useYes ? "" : 0;
+			model_range.models_total = useYes ? "" : 0;
+
+			for (let i = 1; i <= 12; i++) {
+				model_range["date_" + i + "_total"] = 0;
 			}
 
-			// Initialize totals. For monthly totals we always use numbers.
-			if (!useYes) {
-				model_range.hq_company_total = 0;
-				model_range.dealers_total = 0;
-				model_range.pipeline_total = 0;
-				model_range.unconfirmed_shipments_total = 0;
-				model_range.models_total = 0;
-			} else {
-				model_range.hq_company_total = "";
-				model_range.dealers_total = "";
-				model_range.pipeline_total = "";
-				model_range.unconfirmed_shipments_total = "";
-				model_range.models_total = "";
-			}
-			model_range.date_1_total = 0;
-			model_range.date_2_total = 0;
-			model_range.date_3_total = 0;
-			model_range.date_4_total = 0;
-			model_range.date_5_total = 0;
-			model_range.date_6_total = 0;
-			model_range.date_7_total = 0;
-			model_range.date_8_total = 0;
-			model_range.date_9_total = 0;
-			model_range.date_10_total = 0;
-			model_range.date_11_total = 0;
-			model_range.date_12_total = 0;
+			models.forEach(function (model) {
+				if (!useYes) {
+					let hq = Number(model.hq_company || 0);
+					let dealers = hideDealerStock ? 0 : Number(model.dealers || 0);
+					let pipeline = Number(model.pipeline || 0);
+					let unconfirmed = hideUnconfirmedShipments ? 0 : Number(model.unconfirmed_shipments || 0);
 
-			// Iterate over the models in each model_range
-			model_range.models.forEach(function (model) {
-				if (useYes) {
-					// In "Yes mode": if any count field is "Yes", then the model's total is "Yes"
-					var total =
-						model.hq_company === "Yes" ||
-							model.dealers === "Yes" ||
-							model.pipeline === "Yes" ||
-							model.unconfirmed_shipments === "Yes"
-							? "Yes"
-							: "";
-					model.total = total;
+					model.total = hq + dealers + pipeline + unconfirmed;
 
-					// At the group level, set each field to "Yes" if any model has "Yes" for that field.
-					if (model.hq_company === "Yes") {
-						model_range.hq_company_total = "Yes";
-					}
-					if (model.dealers === "Yes") {
-						model_range.dealers_total = "Yes";
-					}
-					if (model.pipeline === "Yes") {
-						model_range.pipeline_total = "Yes";
-					}
-					if (model.unconfirmed_shipments === "Yes") {
-						model_range.unconfirmed_shipments_total = "Yes";
-					}
-					if (total === "Yes") {
-						model_range.models_total = "Yes";
-					}
-				} else {
-					// In numeric mode: calculate the total as the sum
-					model.total =
-						model.hq_company +
-						model.dealers +
-						model.pipeline +
-						model.unconfirmed_shipments;
-					model_range.hq_company_total += model.hq_company;
-					model_range.dealers_total += model.dealers;
-					model_range.pipeline_total += model.pipeline;
-					model_range.unconfirmed_shipments_total +=
-						model.unconfirmed_shipments;
+					model_range.hq_company_total += hq;
+					model_range.dealers_total += dealers;
+					model_range.pipeline_total += pipeline;
+					model_range.unconfirmed_shipments_total += unconfirmed;
 					model_range.models_total += model.total;
+
 					max_count = Math.max(model.total, max_count);
+
+					for (let i = 1; i <= 12; i++) {
+						model_range["date_" + i + "_total"] += Number(model["date_" + i] || 0);
+					}
 				}
-				// Sum the monthly shipment counts (these are always numeric)
-				model_range.date_1_total += model.date_1;
-				model_range.date_2_total += model.date_2;
-				model_range.date_3_total += model.date_3;
-				model_range.date_4_total += model.date_4;
-				model_range.date_5_total += model.date_5;
-				model_range.date_6_total += model.date_6;
-				model_range.date_7_total += model.date_7;
-				model_range.date_8_total += model.date_8;
-				model_range.date_9_total += model.date_9;
-				model_range.date_10_total += model.date_10;
-				model_range.date_11_total += model.date_11;
-				model_range.date_12_total += model.date_12;
 			});
 
-			// If in Yes mode, convert the monthly shipment totals as well:
 			if (useYes) {
-				for (var i = 1; i <= 12; i++) {
-					var dateField = "date_" + i + "_total";
-					model_range[dateField] =
-						model_range[dateField] > 0 ? "Yes" : "";
+				for (let i = 1; i <= 12; i++) {
+					let field = "date_" + i + "_total";
+					model_range[field] = model_range[field] > 0 ? "Yes" : "";
 				}
 			}
 		});
 
 		return {
-			data: data,
-			max_count: max_count,
+			data,
+			max_count,
 			can_write: 1,
 			show_item: show_item || false,
 		};
 	}
-};
+}
