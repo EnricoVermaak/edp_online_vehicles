@@ -117,7 +117,7 @@ def get_items(start, page_length, price_list, item_group, search_term=""):
 
 	hq_company = frappe.db.get_value("Company", {"custom_is_head_office": 1}, "name")
 
-	abbr = frappe.db.get_value("Company", hq_company, pluck="abbr")
+	abbr = frappe.db.get_value("Company", hq_company, "abbr")
 	warehouse = "Stores - " + abbr
 
 	result = []
