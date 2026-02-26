@@ -115,18 +115,10 @@ def get_items(start, page_length, price_list, item_group, search_term=""):
 	hide_unavailable_items = 0
 	item_group = "Parts"
 
-	warehouse = frappe.db.get_value(
-		"Company", frappe.defaults.get_user_default("Company"), ["custom_default_vehicles_stock_warehouse"]
-	)
+	hq_company = frappe.db.get_value("Company", {"custom_is_head_office": 1}, "name")
 
-	if not warehouse:
-		abbr = frappe.db.get_value("Company", frappe.defaults.get_user_default("Company"), ["abbr"])
-		warehouse = "Stores - " + abbr
-
-		# Query all dealer warehouses based on company filtering if needed
-		# But for dealer_qty we will sum across bins for non-HQ companies.
-		# First, get the HQ company (assume only one Company has custom_head_office checked)
-	hq_company = frappe.db.get_value("Company", {"custom_head_office": 1}, "name")
+	abbr = frappe.db.get_value("Company", hq_company, pluck="abbr")
+	warehouse = "Stores - " + abbr
 
 	result = []
 
