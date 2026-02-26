@@ -791,7 +791,7 @@ edp_online_vehicles.PartOrder.ItemCart = class {
 						<div class="flex-column gap-1 align-flex-end">
 							<div class="item-pill">
 								<span class="indicator-pill whitespace-nowrap blue">
-									<span>${item_data.dealer}</span>
+									<span>${item_data.dealer.toString().substring(0,13)}</span>
 								</span>
 							</div>
 
@@ -813,7 +813,7 @@ edp_online_vehicles.PartOrder.ItemCart = class {
 						<div class="flex-column gap-1 align-flex-end">
 							<div class="item-pill">
 								<span class="indicator-pill whitespace-nowrap blue">
-									<span>${item_data.dealer}</span>
+									<span>${item_data.dealer.toString().substring(0,13)}</span>
 								</span>
 							</div>
 
@@ -855,7 +855,7 @@ edp_online_vehicles.PartOrder.ItemCart = class {
 						<div class="flex-column gap-1 align-flex-end">
 							<div class="item-pill">
 								<span class="indicator-pill whitespace-nowrap blue">
-									<span>${item_data.dealer}</span>
+									<span>${item_data.dealer.toString().substring(0,13)}</span>
 								</span>
 							</div>
 
@@ -877,7 +877,7 @@ edp_online_vehicles.PartOrder.ItemCart = class {
 						<div class="flex-column gap-1 align-flex-end">
 							<div class="item-pill">
 								<span class="indicator-pill whitespace-nowrap blue">
-									<span>${item_data.dealer}</span>
+									<span>${item_data.dealer.toString().substring(0,13)}</span>
 								</span>
 							</div>
 
