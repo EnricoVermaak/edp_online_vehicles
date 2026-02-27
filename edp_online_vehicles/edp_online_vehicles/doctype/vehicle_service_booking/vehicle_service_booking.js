@@ -154,7 +154,7 @@ frappe.ui.form.on("Vehicle Service Booking", {
                 if (r.message.status === "failed") {
 
                     frappe.msgprint(
-                        __("Odometer cannot be lower than stock {0}km", [r.message.stock_odo])
+                        __("Odometer reading cannot be lower than the previous odometer reading")
                     );
 
                     frm.set_value("odo_reading_hours", null);
@@ -219,13 +219,36 @@ frappe.ui.form.on("Vehicle Service Booking", {
 
         calculate_labours_total_combined(frm);
 		calculate_duration_total_combined(frm);
-		frm.refresh_field("service_labour_items");
-
         frm.refresh_field("table_ottr");
     },
 });
 
 frappe.ui.form.on("Service Labour Items", {
+    item(frm, cdt, cdn) {
+        let row = locals[cdt][cdn];
+        if (!row.item || !frm.doc.dealer) return;
+        frappe.db.get_value("Company", frm.doc.dealer, "custom_service_labour_rate")
+            .then(r => {
+                let rate = flt(r?.message?.custom_service_labour_rate || 0);
+                frappe.model.set_value(cdt, cdn, "rate_hour", rate);
+                frappe.model.set_value(cdt, cdn, "total_excl", rate * flt(row.duration_hours || 0));
+            })
+            .then(() => {
+                calculate_labours_total_combined(frm);
+                calculate_duration_total_combined(frm);
+                frm.refresh_field("table_ottr");
+            });
+    },
+
+    service_labour_items_remove(frm) {
+        calculate_labours_total_combined(frm);
+        calculate_duration_total_combined(frm);
+    },
+
+    total_excl(frm) {
+        calculate_labours_total_combined(frm);
+    },
+
     duration_hours(frm, cdt, cdn) {
         calculate_labour_total(frm, cdt, cdn);
         calculate_labours_total_combined(frm);

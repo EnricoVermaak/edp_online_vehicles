@@ -456,7 +456,7 @@ frappe.ui.form.on("Vehicles Warranty Claims", {
                 if (r.message.status === "failed") {
 
                     frappe.msgprint(
-                        __("Odometer cannot be lower than stock {0}km", [r.message.stock_odo])
+                        __("Odometer reading cannot be lower than the previous odometer reading")
                     );
 
                     frm.set_value("odo_reading", null);
@@ -466,6 +466,23 @@ frappe.ui.form.on("Vehicles Warranty Claims", {
         });
 
 		// validate_odo_reading(frm);
+	},
+
+	dealer: async function (frm) {
+		if (!frm.doc.dealer || !frm.doc.labour_items || !frm.doc.labour_items.length) return;
+		let r = await frappe.db.get_value("Company", frm.doc.dealer, "custom_warranty_labour_rate");
+		let base_rate = flt(r?.message?.custom_warranty_labour_rate || 0);
+		for (let row of frm.doc.labour_items) {
+			if (!row.labour_code) continue;
+			let gp_res = await frappe.db.get_value("Item", row.labour_code, "custom_warranty_gp");
+			let gp_pct = flt(gp_res?.message?.custom_warranty_gp || 0);
+			let price = base_rate + (base_rate * (gp_pct / 100));
+			let total_excl = price * (row.duration || 0);
+			frappe.model.set_value(row.doctype, row.name, "price", price);
+			frappe.model.set_value(row.doctype, row.name, "total_excl", total_excl);
+		}
+		frm.refresh_field("labour_items");
+		update_labour_totals(frm);
 	},
 
 	vin_serial_no: function (frm) {

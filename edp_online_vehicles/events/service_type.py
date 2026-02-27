@@ -30,38 +30,39 @@ def service_type_query(doctype, txt, searchfield, start, page_len, filters):
         "Service Schedules", fields=["name", "interval"], filters=service_schedule_filters
     )
 
-    # Get Vehicle Stock odo reading first
+    odo_reading = 0
     if vin_serial_no:
-        vehicle_stock = frappe.get_doc("Vehicle Stock", vin_serial_no)
         try:
+            vehicle_stock = frappe.get_doc("Vehicle Stock", vin_serial_no)
             odo_reading = int(vehicle_stock.odo_reading or 0)
         except (ValueError, TypeError):
             odo_reading = 0  # Default to 0 if odo_reading is not a valid integer
 
-
     # Display the available service types from all service types
     available_service_types = []
 
-    for service_type in all_service_types:
-        # Include only service types that are within the odo reading interval and not already used
-        service_schedule = frappe.get_doc("Service Schedules", service_type)
-       
-        try:
-            service_interval = int(service_schedule.interval)
-        except (ValueError, TypeError):
-            if service_schedule.interval is None:
-                service_interval = 0  # Default to 0 if interval is None
-            else:
-                service_interval = service_schedule.interval  # Keep as string if not a valid integer
+    for row in all_service_types:
+        schedule_name = row.get("name")
+        interval_val = row.get("interval")
 
-        # Check if the service type should be included based on odo reading and whether it's already used
-        if service_type.name not in used_service_type_names:
+        if interval_val is None:
+            is_numeric_interval = False
+            service_interval = None
+        else:
             try:
-                if odo_reading <= service_interval:
-                    available_service_types.append([service_type.name])
-            except (TypeError):
-                # Service interval is a string display automatically 
-                available_service_types.append([service_type.name])
+                service_interval = int(interval_val)
+                is_numeric_interval = True
+            except (ValueError, TypeError):
+                service_interval = interval_val
+                is_numeric_interval = False
+
+        if is_numeric_interval:
+            if schedule_name in used_service_type_names:
+                continue
+            if odo_reading <= service_interval:
+                available_service_types.append([schedule_name])
+        else:
+            available_service_types.append([schedule_name])
 
     return available_service_types
 

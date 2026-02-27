@@ -477,73 +477,38 @@ frappe.ui.form.on("Vehicles Service", {
 			frm.refresh_field("odo_reading_hours");
 		}
 
-		// Service Date Check
 		if (frm.doc.vin_serial_no) {
 			frappe.call({
 				method: "edp_online_vehicles.events.service_type.check_service_date",
-				args: {
-					vin: frm.doc.vin_serial_no,
-				},
-				callback(r) {
-					if (!r.message) return;
+				args: { vin: frm.doc.vin_serial_no },
+				callback: function (service_res) {
+					frappe.call({
+						method: "edp_online_vehicles.events.service_type.check_warranty_date",
+						args: { vin: frm.doc.vin_serial_no },
+						callback: function (warranty_res) {
+							const service_invalid = service_res.message && !service_res.message.is_valid;
+							const warranty_invalid = warranty_res.message && !warranty_res.message.is_valid;
+							if (!service_invalid && !warranty_invalid) return;
 
-					if (!r.message.is_valid) {
-						// Skip if already set to Other by previous logic
-						if (frm.doc.service_type && frm.doc.service_type.endsWith("-Other")) {
-							console.log("Already Other type from previous logic... skipping (service date).");
-							return;
-						}
+							if (frm.doc.service_type && frm.doc.service_type.endsWith("-Other")) {
+								return;
+							}
 
-						frappe.msgprint(
-							"Please note the selected vehicle falls outside the allocated service period parameters. Please contact Head Office for more information."
-						);
+							const parts = [];
+							if (service_invalid) parts.push("service period");
+							if (warranty_invalid) parts.push("warranty period");
+							const message = "Please note the selected vehicle falls outside the allocated " +
+								parts.join(" and ") + " parameters. Please contact Head Office for more information.";
+							frappe.msgprint(message);
 
-						// ← FIXED: Using local dt/dn instead of undefined parameters
-						frappe.db.get_value("Vehicle Stock", frm.doc.vin_serial_no, "model")
-							.then((res) => {
+							frappe.db.get_value("Vehicle Stock", frm.doc.vin_serial_no, "model").then((res) => {
 								let model = res.message.model;
 								let service_value = `SS-${model}-Other`;
-
 								frappe.model.set_value(dt, dn, "service_type", service_value);
-								frm.refresh_field("service_type");  // ← ADDED: Immediate UI refresh
+								frm.refresh_field("service_type");
 							});
-					}
-				},
-			});
-		}
-
-		// Warranty Date Check
-		if (frm.doc.vin_serial_no) {
-			frappe.call({
-				method: "edp_online_vehicles.events.service_type.check_warranty_date",
-				args: {
-					vin: frm.doc.vin_serial_no,
-				},
-				callback(r) {
-					if (!r.message) return;
-
-					if (!r.message.is_valid) {
-						// Skip if already set to Other
-						if (frm.doc.service_type && frm.doc.service_type.endsWith("-Other")) {
-							console.log("Already Other type... skipping update.");
-							return;
-						}
-
-						frappe.msgprint(
-							"Please note the selected vehicle falls outside the allocated warranty period. Please contact Head Office for more information."
-						);
-
-						// ← FIXED: Using local dt/dn
-						frappe.db
-							.get_value("Vehicle Stock", frm.doc.vin_serial_no, "model")
-							.then((res) => {
-								let model = res.message.model;
-								let service_value = `SS-${model}-Other`;
-
-								frappe.model.set_value(dt, dn, "service_type", service_value);
-								frm.refresh_field("service_type");  // ← ADDED: Immediate UI refresh
-							});
-					}
+						},
+					});
 				},
 			});
 		}
@@ -601,10 +566,10 @@ frappe.ui.form.on("Vehicles Service", {
 
 		// Range check: require service_type first
 		if (!frm.doc.service_type) {
-			frm.set_value("odo_reading_hours", 0);
-			// Reset system_status if we cannot evaluate the range
 			frappe.model.set_value(dt, dn, "system_status", null);
 			frappe.msgprint("Please select a Service Type and VIN/Serial No before setting the Odo Reading");
+			frm.doc.odo_reading_hours = null;
+			frm.refresh_field("odo_reading_hours");
 			return;
 		}
 
@@ -667,7 +632,7 @@ frappe.ui.form.on("Vehicles Service", {
                 if (r.message.status === "failed") {
 
                     frappe.msgprint(
-                        __("Odometer cannot be lower than stock {0}km", [r.message.stock_odo])
+                        __("Odometer reading cannot be lower than the previous odometer reading")
                     );
 
                     frm.set_value("odo_reading_hours", null);
@@ -1015,24 +980,17 @@ function vehicle_service_part_price(frm, cdt, cdn) {
 		});
 }
 
-// Labour: dealer Company Service Labour Rate + (that × Item custom_service_gp / 100)
-// item_field: "item" for Service Labour Items
-function vehicle_service_labour_rate(frm, cdt, cdn, item_field) {
-	item_field = item_field || "item";
+function vehicle_service_labour_rate(frm, cdt, cdn) {
 	let row = locals[cdt][cdn];
-	let item_code = row[item_field];
-	if (!item_code || !frm.doc.dealer) return Promise.resolve();
+	if (!frm.doc.dealer) return Promise.resolve();
 
 	return frappe.db.get_value("Company", frm.doc.dealer, "custom_service_labour_rate")
 		.then(company_res => {
 			let msg = company_res && company_res.message;
-			let base_rate = (msg != null && typeof msg === "object") ? (msg.custom_service_labour_rate || 0) : (msg != null ? msg : 0);
-			return frappe.db.get_doc("Item", item_code).then(item_doc => {
-				let rate_hour = base_rate
-				let total_excl = rate_hour * (row.duration_hours || 0);
-				frappe.model.set_value(cdt, cdn, "rate_hour", rate_hour);
-				frappe.model.set_value(cdt, cdn, "total_excl", total_excl);
-			});
+			let rate_hour = (msg != null && typeof msg === "object") ? (msg.custom_service_labour_rate || 0) : (msg != null ? msg : 0);
+			let total_excl = rate_hour * (row.duration_hours || 0);
+			frappe.model.set_value(cdt, cdn, "rate_hour", rate_hour);
+			frappe.model.set_value(cdt, cdn, "total_excl", total_excl);
 		});
 }
 
