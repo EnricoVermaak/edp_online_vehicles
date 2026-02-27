@@ -413,14 +413,12 @@
    "fieldname": "sap_total_value_incl_tax",
    "fieldtype": "Currency",
    "label": "DMS Total Value (Incl. Tax)",
-   "read_only": 1,
-   "description": "Total value including tax returned from SAP"
+   "read_only": 1
   },
   {
-   "description": "Full response from SAP integration",
    "fieldname": "sap_integration_response",
-   "fieldtype": "Long Text",
-   "label": "SAP Integration Response",
+   "fieldtype": "Small Text",
+   "label": "DMS Integration Response",
    "read_only": 1
   },
   {
@@ -430,7 +428,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-02-22 20:18:39.868749",
+ "modified": "2026-02-27 14:44:01.673636",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Dealer Claims",
