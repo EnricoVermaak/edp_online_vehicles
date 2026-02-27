@@ -31,7 +31,8 @@ frappe.listview_settings["Natis Errors"] = {
         //     });
         // }
 
-        // Optional: remove primary action
+        // Users should not create new error records manually
         listview.page.clear_primary_action();
+        listview.can_create = false;
     }
 };
