@@ -477,7 +477,6 @@
   {
    "fieldname": "sap_total_amount",
    "fieldtype": "Currency",
-   "hidden": 1,
    "label": "DMS Total Amount",
    "read_only": 1
   },
@@ -502,6 +501,7 @@
    "fieldname": "sap_integration_response",
    "fieldtype": "Small Text",
    "label": "DMS Integration Response",
+   "max_height": "320px",
    "read_only": 1
   },
   {
@@ -514,8 +514,7 @@
   {
    "fieldname": "invoice_amount",
    "fieldtype": "Currency",
-   "label": "Invoice Amount",
-   "read_only": 1
+   "label": "Invoice Amount"
   },
   {
    "fieldname": "invoice_date",
@@ -609,7 +608,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-02-18 21:53:05.640586",
+ "modified": "2026-02-26 11:46:22.105739",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Head Office Vehicle Orders",

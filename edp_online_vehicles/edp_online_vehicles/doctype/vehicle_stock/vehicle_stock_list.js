@@ -27,7 +27,7 @@ frappe.listview_settings["Vehicle Stock"] = {
 		$('[data-label="Add Vehicle Stock"]').hide();
 
 		listview.page.add_actions_menu_item(__('Transfer to New Warehouse'), function () {
-			frappe.db.get_value("Company", { custom_active: 1 }, "name").then((r) => {
+			frappe.db.get_value("Company", { custom_head_office: 1 }, "name").then((r) => {
 				hq_company = r?.message?.name;
 
 				const selected_docs = listview.get_checked_items();

@@ -66,8 +66,8 @@ edp_online_vehicles.PartOrder.ItemSelector = class {
 		const price_list = (doc && doc.selling_price_list) || this.price_list;
 		let item_group = "Parts";
 
-		console.log(this);
-		console.log(price_list);
+		// console.log(this);
+		// console.log(price_list);
 
 		// !item_group && (item_group = this.parent_item_group);
 
@@ -81,7 +81,7 @@ edp_online_vehicles.PartOrder.ItemSelector = class {
 	render_item_list(items) {
 		this.$items_container.html("");
 
-		console.log(items);
+		// console.log(items);
 
 		items.forEach((item) => {
 			const item_html = this.get_item_html(item);
@@ -171,7 +171,7 @@ edp_online_vehicles.PartOrder.ItemSelector = class {
 						</div>`;
 			} else {
 				return `<div class="item-qty-pill">
-							<span class="indicator-pill whitespace-nowrap green">HQ</span>
+							<span class="indicator-pill whitespace-nowrap green">HQ - ${actual_qty}</span>
 						</div>
 						<div class="item-display abbr">${frappe.get_abbr(item.item_name)}</div>`;
 			}

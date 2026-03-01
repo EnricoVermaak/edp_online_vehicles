@@ -110,8 +110,8 @@ class PartOrder(Document):
                 hq_doc.customer = self.customer
                 hq_doc.adress = self.address
 
-            # picking_doc = frappe.new_doc("Parts Picking")
-            # dispatch_doc = frappe.new_doc("Part Dispatch")
+            picking_doc = frappe.new_doc("Parts Picking")
+            dispatch_doc = frappe.new_doc("Part Dispatch")
 
             # Get the meta for the child doctype (both tables use the same child doctype)
             child_meta = frappe.get_meta("Part Order Item")
@@ -120,30 +120,30 @@ class PartOrder(Document):
                 # Append a new child row to hq_doc.table_ugma
                 new_child = hq_doc.append("table_ugma", {})
 
-                # item_doc = frappe.get_doc("Item", item.get("part_no"))
+                item_doc = frappe.get_doc("Item", item.get("part_no"))
 
-                # if item_doc:
-                #     bin_location = item_doc.custom_bin_location
+                if item_doc:
+                    bin_location = item_doc.custom_bin_location
 
-                # picking_doc.append(
-                #     "parts_ordered",
-                #     {
-                #         "bin_location": bin_location or "",
-                #         "part_no": item.get("part_no"),
-                #         "description": item.get("description"),
-                #         "qty": item.get("qty"),
-                #     },
-                # )
+                picking_doc.append(
+                    "parts_ordered",
+                    {
+                        "bin_location": bin_location or "",
+                        "part_no": item.get("part_no"),
+                        "description": item.get("description"),
+                        "qty": item.get("qty"),
+                    },
+                )
 
-                # dispatch_doc.append(
-                #     "parts_ordered",
-                #     {
-                #         "bin_location": bin_location or "",
-                #         "part_no": item.get("part_no"),
-                #         "description": item.get("description"),
-                #         "qty": item.get("qty"),
-                #     },
-                # )
+                dispatch_doc.append(
+                    "parts_ordered",
+                    {
+                        "bin_location": bin_location or "",
+                        "part_no": item.get("part_no"),
+                        "description": item.get("description"),
+                        "qty": item.get("qty"),
+                    },
+                )
 
                 # Convert the item to a dictionary
                 item_dict = item.as_dict()
@@ -160,8 +160,8 @@ class PartOrder(Document):
 
             # Insert the new HQ Part Order document
             hq_doc.insert(ignore_permissions=True)
-            # picking_doc.insert(ignore_permissions=True)
-            # dispatch_doc.insert(ignore_permissions=True)
+            picking_doc.insert(ignore_permissions=True)
+            dispatch_doc.insert(ignore_permissions=True)
 
             newdoc = frappe.new_doc("Sales Order")
             newdoc.customer = self.dealer
@@ -179,7 +179,7 @@ class PartOrder(Document):
             newdoc.transaction_date = today()
             newdoc.delivery_date = self.delivery_date
 
-            dealer_warehouse = frappe.db.get_value("Warehouse", {"company": self.dealer, "disabled": 0}, "name")
+            dealer_warehouse = frappe.db.get_value("Warehouse", {"company": hq_company, "disabled": 0}, "name")
 
             for part in warehouse_items:
                 newdoc.append(
@@ -196,8 +196,8 @@ class PartOrder(Document):
                     },
                 )
 
-            # newdoc.insert(ignore_permissions=True)
-            # newdoc.submit()
+            newdoc.insert(ignore_permissions=True)
+            newdoc.submit()
 
 
         if dealer_items:
@@ -248,7 +248,7 @@ class PartOrder(Document):
                 newdoc.transaction_date = today()
                 newdoc.delivery_date = self.delivery_date
 
-                dealer_warehouse = frappe.db.get_value("Warehouse", {"company": self.dealer, "disabled": 0}, "name")
+                dealer_warehouse = frappe.db.get_value("Warehouse", {"company": hq_company, "disabled": 0}, "name")
 
                 for part in items:
                     newdoc.append(
