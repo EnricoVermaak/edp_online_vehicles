@@ -4,7 +4,6 @@ from typing import Optional, Any, Dict
 
 
 class VehicleTrackingLogger:
-    """Utility class for logging to Vehicle Tracking doctype."""
     STATUS_PENDING = "Pending"
     STATUS_PROCESSED = "Processed"
     STATUS_SUCCESSFUL = "Successful"
@@ -35,10 +34,7 @@ class VehicleTrackingLogger:
         response_datetime: Optional[Any] = None,
         submit: bool = False,
     ) -> Optional[str]:
-        """Create a Vehicle Tracking entry.
         
-        Returns the document name, or None if creation failed.
-        """
         try:
             integration_end_point = self._ensure_integration_endpoint(integration_end_point)
             
@@ -113,7 +109,6 @@ class VehicleTrackingLogger:
         integration_end_point: Optional[str] = None,
         **kwargs
     ) -> Optional[str]:
-        """Log API call with type=Integration."""
         return self.log(
             action_summary=action_summary,
             vin_serial_no=vin_serial_no,
@@ -134,7 +129,6 @@ class VehicleTrackingLogger:
         integration_end_point: Optional[str] = None,
         **kwargs
     ) -> Optional[str]:
-        """Log successful operation with status=Successful."""
         return self.log(
             action_summary=action_summary,
             vin_serial_no=vin_serial_no,
@@ -155,7 +149,6 @@ class VehicleTrackingLogger:
         integration_end_point: Optional[str] = None,
         **kwargs
     ) -> Optional[str]:
-        """Log error with status=Error. Error message is merged into response if provided."""
         final_response = response
         if error_message:
             if final_response:
@@ -187,7 +180,6 @@ class VehicleTrackingLogger:
         integration_end_point: Optional[str] = None,
         **kwargs
     ) -> Optional[str]:
-        """Log failed operation with status=Failed."""
         return self.log(
             action_summary=action_summary,
             vin_serial_no=vin_serial_no,
@@ -206,10 +198,7 @@ class VehicleTrackingLogger:
         response_status: Optional[str] = None,
         response_datetime: Optional[Any] = None,
     ) -> Optional[str]:
-        """Update an existing Vehicle Tracking document.
-        
-        Returns the document name, or None if update failed.
-        """
+
         try:
             if not frappe.db.exists("Vehicle Tracking", tracking_doc_name):
                 frappe.log_error(
@@ -245,7 +234,6 @@ class VehicleTrackingLogger:
             return None
     
     def _format_as_json(self, value: Any) -> Optional[str]:
-        """Format value as JSON string, or return as-is if already a string."""
         if value in (None, ""):
             return None
         
@@ -261,7 +249,6 @@ class VehicleTrackingLogger:
                 return str(value)
     
     def _truncate_summary(self, summary: str) -> str:
-        """Truncate action summary to 140 chars."""
         if not summary:
             return ""
         if len(summary) <= self.MAX_ACTION_SUMMARY_LENGTH:
@@ -269,7 +256,6 @@ class VehicleTrackingLogger:
         return summary[:self.MAX_ACTION_SUMMARY_LENGTH]
     
     def _ensure_integration_endpoint(self, name: Optional[str]) -> Optional[str]:
-        """Ensure integration endpoint exists, auto-create if missing."""
         if not name:
             return None
         
