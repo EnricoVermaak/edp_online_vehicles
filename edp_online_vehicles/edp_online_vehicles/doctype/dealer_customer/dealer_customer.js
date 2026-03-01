@@ -74,7 +74,7 @@ frappe.ui.form.on("Dealer Customer", {
 									description: vehicle.description,
 									colour: vehicle.colour,
 									warranty_end_date:
-										vehicle.warranty_end_date,
+									vehicle.warranty_end_date,
 									service_end_date: vehicle.service_end_date,
 									retail_date: vehicle.retail_date,
 								}),

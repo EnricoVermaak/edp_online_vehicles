@@ -413,11 +413,12 @@
    "fieldtype": "Currency",
    "label": "DMS Total Value (Incl. Tax)",
    "read_only": 1
+   "read_only": 1
   },
   {
    "fieldname": "sap_integration_response",
-   "fieldtype": "Long Text",
-   "label": "SAP Integration Response",
+   "fieldtype": "Small Text",
+   "label": "DMS Integration Response",
    "read_only": 1
   },
   {

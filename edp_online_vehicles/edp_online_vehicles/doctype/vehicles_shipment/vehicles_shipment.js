@@ -461,7 +461,8 @@ function handle_custom_buttons(frm) {
 						frappe.model.is_value_type(df.fieldtype) && 
 						df.in_list_view && 
 						!df.hidden &&
-						df.fieldname !== "model_description" // Exclude model_description
+						df.fieldname !== "model_description" && // Exclude model_descriptions
+						df.fieldname !== "status" // Exclude status
 					);
 
 					// Add visible fields
