@@ -33,13 +33,11 @@
   "sap_sales_order_no",
   "sap_net_price",
   "sap_tax",
-  "sap_total_amount",
+  "invoice_amount",
+  "sap_invoice_no",
+  "invoice_date",
   "sap_bank_approval_date",
   "sales_order_type",
-  "sap_invoice_no",
-  "invoice_amount",
-  "invoice_date",
-  "sap_invoice",
   "check_invoice",
   "column_break_nzxi",
   "credit_note_no",
@@ -47,7 +45,6 @@
   "credit_note_date",
   "credit_note_comment",
   "total_excl_vat",
-  "credit_note",
   "check_credit_note",
   "epuipment_basket_section",
   "ordered_column",
@@ -475,12 +472,6 @@
    "read_only": 1
   },
   {
-   "fieldname": "sap_total_amount",
-   "fieldtype": "Currency",
-   "label": "DMS Total Amount",
-   "read_only": 1
-  },
-  {
    "fieldname": "sap_bank_approval_date",
    "fieldtype": "Date",
    "label": "DMS Bank Approval Date",
@@ -491,11 +482,6 @@
    "fieldtype": "Data",
    "label": "DMS Invoice No",
    "read_only": 1
-  },
-  {
-   "fieldname": "sap_invoice",
-   "fieldtype": "Attach",
-   "label": "DMS Invoice"
   },
   {
    "fieldname": "sap_integration_response",
@@ -561,11 +547,6 @@
    "label": "Total (Excl. VAT)"
   },
   {
-   "fieldname": "credit_note",
-   "fieldtype": "Attach",
-   "label": "Credit Note"
-  },
-  {
    "fieldname": "integration_retry_count",
    "fieldtype": "Int",
    "label": "Integration Retry Count",
@@ -608,7 +589,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-02-26 11:46:22.105739",
+ "modified": "2026-03-01 13:08:09.175662",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Head Office Vehicle Orders",
