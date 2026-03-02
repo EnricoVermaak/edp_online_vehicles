@@ -62,7 +62,7 @@ def head_office_orders_vin_filter(doctype, txt, searchfield, start, page_len, fi
 
 @frappe.whitelist()
 def head_office_orders_vin_dialog_filter(model, availability_status, dealer, colour):
-    colour = f"{colour} - {model}"
+    # colour = f"{colour} - {model}"
 
     return frappe.db.sql(
 		"""
@@ -83,7 +83,6 @@ def head_office_orders_vin_dialog_filter(model, availability_status, dealer, col
             se.stock_entry_type = 'Material Receipt'
             AND es.model = %(model)s
             AND es.availability_status = %(availability_status)s
-            AND es.colour = %(colour)s
             AND es.dealer = %(dealer)s
             -- only earliest receipt per serial
             AND se.name IN (
@@ -105,7 +104,7 @@ def head_office_orders_vin_dialog_filter(model, availability_status, dealer, col
             se.posting_date ASC,
             se.posting_time ASC
     """,
-		{"model": model, "availability_status": availability_status, "dealer": dealer, "colour": colour},
+		{"model": model, "availability_status": availability_status, "dealer": dealer},
 	)
 
 

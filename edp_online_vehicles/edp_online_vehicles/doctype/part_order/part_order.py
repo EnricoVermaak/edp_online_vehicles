@@ -179,7 +179,7 @@ class PartOrder(Document):
             newdoc.transaction_date = today()
             newdoc.delivery_date = self.delivery_date
 
-            dealer_warehouse = frappe.db.get_value("Warehouse", {"company": self.dealer, "disabled": 0}, "name")
+            dealer_warehouse = frappe.db.get_value("Warehouse", {"company": hq_company, "disabled": 0}, "name")
 
             for part in warehouse_items:
                 newdoc.append(
@@ -196,7 +196,7 @@ class PartOrder(Document):
                     },
                 )
 
-            newdoc.insert()
+            newdoc.insert(ignore_permissions=True)
             newdoc.submit()
 
 
@@ -248,7 +248,7 @@ class PartOrder(Document):
                 newdoc.transaction_date = today()
                 newdoc.delivery_date = self.delivery_date
 
-                dealer_warehouse = frappe.db.get_value("Warehouse", {"company": self.dealer, "disabled": 0}, "name")
+                dealer_warehouse = frappe.db.get_value("Warehouse", {"company": hq_company, "disabled": 0}, "name")
 
                 for part in items:
                     newdoc.append(
