@@ -8,7 +8,7 @@ $(".navbar-brand navbar-home").html(
 );
 
 frappe.router.on("change", () => {
-	setTimeout(() => {
+	// setTimeout(() => {
 		// Get the current route
 		let route = frappe.get_route();
 
@@ -54,7 +54,10 @@ frappe.router.on("change", () => {
 				fetchBreadcrumbFromServer(doctype); // Fallback if nothing in localStorage
 			}
 		}
-	}, 200);
+		else {
+			fetchBreadcrumbFromServer(route[0])
+		}
+	// }, 50);
 });
 
 function fetchBreadcrumbFromServer(doctype) {

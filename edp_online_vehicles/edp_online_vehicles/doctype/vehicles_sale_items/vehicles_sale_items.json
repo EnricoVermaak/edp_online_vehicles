@@ -109,6 +109,7 @@
    "fieldname": "microdot_fitted_by",
    "fieldtype": "Link",
    "label": "Microdot Fitted By",
+   "mandatory_depends_on": "eval: doc.microdot_no",
    "options": "User"
   },
   {
@@ -166,7 +167,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2026-02-13 11:20:23.448697",
+ "modified": "2026-02-25 11:58:38.688574",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicles Sale Items",

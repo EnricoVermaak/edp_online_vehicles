@@ -1,21 +1,47 @@
 import frappe
-from frappe.utils import now_datetime
-
+from frappe.utils import now_datetime, nowdate
+import traceback
 
 @frappe.whitelist()
 def check_orders_schedule():
-	order_docs = frappe.get_all("Vehicle Order", filters={"docstatus": 0}, fields=["name"])
 
-	current_time = now_datetime()
+    order_docs = frappe.get_all(
+        "Vehicle Order",
+        filters={"docstatus": 0},
+        fields=["name", "order_date_time", "requested_delivery_date"]
+    )
 
-	for order in order_docs:
-		order_doc = frappe.get_doc("Vehicle Order", order.name)
+    current_time = now_datetime()
 
-		if order_doc and order_doc.order_date_time:
-			if order_doc.order_date_time <= current_time:
-				if len(order_doc.vehicles_basket) > 0:
-					order_doc.submit()
-					frappe.db.commit()
+    for row in order_docs:
+        try:
+            order_doc = frappe.get_doc("Vehicle Order", row["name"])
+
+            if not order_doc.order_date_time:
+                continue
+
+            if order_doc.order_date_time > current_time:
+                continue
+
+            if not order_doc.vehicles_basket or len(order_doc.vehicles_basket) == 0:
+                continue
+
+            if not order_doc.requested_delivery_date or order_doc.requested_delivery_date < order_doc.order_date_time.date():
+                order_doc.requested_delivery_date = nowdate()
+
+            order_doc.save()
+            order_doc.submit()
+
+        except Exception:
+            frappe.log_error(
+    		    title=f"Vehicle Order Processing Failed: {row['name']}",
+    		    message=traceback.format_exc()
+  			)
+
+    frappe.db.commit()
+    return {"ok": True, "processed": len(order_docs)}
+		
+
 
 
 @frappe.whitelist()

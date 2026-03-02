@@ -5,7 +5,7 @@
    "label": "Vehicle Services"
   }
  ],
- "content": "[{\"id\":\"wOBlJiE209\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Service</span>\",\"col\":12}},{\"id\":\"6JRmdWrSgP\",\"type\":\"chart\",\"data\":{\"chart_name\":\"Vehicle Services\",\"col\":12}},{\"id\":\"JXqDXcWO23\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"cR26910rtF\",\"type\":\"card\",\"data\":{\"card_name\":\"Services\",\"col\":4}},{\"id\":\"kohPeqO32z\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Items\",\"col\":3}},{\"id\":\"yNYs1vOR7d\",\"type\":\"card\",\"data\":{\"card_name\":\"Vehicle\",\"col\":4}},{\"id\":\"2T4pSI-0B_\",\"type\":\"card\",\"data\":{\"card_name\":\"Reports\",\"col\":4}}]",
+ "content": "[{\"id\":\"wOBlJiE209\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Service</span>\",\"col\":12}},{\"id\":\"6JRmdWrSgP\",\"type\":\"chart\",\"data\":{\"chart_name\":\"Vehicle Services\",\"col\":12}},{\"id\":\"JXqDXcWO23\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"cR26910rtF\",\"type\":\"card\",\"data\":{\"card_name\":\"Services\",\"col\":4}},{\"id\":\"yNYs1vOR7d\",\"type\":\"card\",\"data\":{\"card_name\":\"Vehicle\",\"col\":4}},{\"id\":\"2T4pSI-0B_\",\"type\":\"card\",\"data\":{\"card_name\":\"Reports\",\"col\":4}}]",
  "creation": "2024-11-27 11:21:47.279910",
  "custom_blocks": [],
  "docstatus": 0,
@@ -146,7 +146,7 @@
    "type": "Link"
   }
  ],
- "modified": "2026-02-17 13:12:40.493974",
+ "modified": "2026-02-25 12:29:33.136749",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Service",
@@ -164,15 +164,6 @@
   }
  ],
  "sequence_id": 16.0,
- "shortcuts": [
-  {
-   "color": "Grey",
-   "doc_view": "List",
-   "label": "Items",
-   "link_to": "Item",
-   "stats_filter": "[[\"Item\",\"item_group\",\"=\",\"Service Labour\",false]]",
-   "type": "DocType"
-  }
- ],
+ "shortcuts": [],
  "title": "Service"
 }

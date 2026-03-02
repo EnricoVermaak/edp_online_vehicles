@@ -47,11 +47,16 @@ class HQPartOrder(Document):
 			self.total_delivered_parts_qty = 0
 			self.total_delivered_parts_dealer_billing_excl = 0
 
+		if self.total_qty_parts_ordered == None: self.total_qty_parts_ordered = 0 
+		if self.total_qty_parts_delivered == None: self.total_qty_parts_delivered = 0 
+
 		if self.total_qty_parts_ordered > 0:
 			self.total_qty_parts_delivered = self.total_qty_parts_ordered - self.total_undelivered_parts_qty
 
-		if self.total_qty_parts_delivered > 0:
+		if self.total_qty_parts_delivered > 0 and self.total_qty_parts_ordered > 0:
 			self._order_delivered = (self.total_qty_parts_delivered / self.total_qty_parts_ordered) * 100
+		else:
+			self._order_delivered = 0
 
 		if not self.part_order_status:
 			default_status = frappe.db.get_value("Part Order Status", {"is_default": 1}, "name")

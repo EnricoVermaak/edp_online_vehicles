@@ -61,7 +61,7 @@ frappe.ui.form.on("Vehicle Service Booking", {
                 doctype: "Service Schedules"
                 , name: frm.doc.service_type
             }
-            , callback: function (r) {
+            , callback: async function (r) {
                 if (!r.message) return;
                 
                 let doc = r.message;
@@ -80,20 +80,34 @@ frappe.ui.form.on("Vehicle Service Booking", {
                     child.price_excl = row.price_excl;
                     child.total_excl = row.total_excl;
                 });
+
+                // Get company rate for labour
+                let company_rate = 0;
+
+                if (frm.doc.dealer) {
+                    let company_data = await frappe.db.get_value(
+                        "Company",
+                        frm.doc.dealer,
+                        "custom_service_labour_rate"
+                    );
+                    company_rate = flt(company_data?.message?.custom_service_labour_rate || 0);
+                }
                 
                 // Labour
-                (doc.service_labour_items || [])
-                .forEach(row => {
+                (doc.service_labour_items || []).forEach(row => {
                     let child = frm.add_child("table_ottr");
                     child.item = row.item;
                     child.description = row.description;
-                    child.duration_hours = row.duration_hours;
-                    child.rate_hour = row.rate_hour;
-                    child.total_excl = row.total_excl;
+                    child.duration_hours = row.duration_hours || 1;
+                    child.rate_hour = company_rate;
+                    child.total_excl = company_rate * child.duration_hours;
                 });
                 
-                frm.refresh_field("table_jwkk");
+                // Refresh the labour table UI and recalculate totals
                 frm.refresh_field("table_ottr");
+                calculate_labours_total_combined(frm);
+                calculate_duration_total_combined(frm);
+                try { frm.refresh_field("labours_total_excl"); frm.refresh_field("duration_total"); } catch (e) {}
             }
         });
     }, 
@@ -140,7 +154,7 @@ frappe.ui.form.on("Vehicle Service Booking", {
                 if (r.message.status === "failed") {
 
                     frappe.msgprint(
-                        __("Odometer cannot be lower than {0}km", [r.message.stock_odo])
+                        __("Odometer reading cannot be lower than the previous odometer reading")
                     );
 
                     frm.set_value("odo_reading_hours", null);
@@ -184,4 +198,160 @@ frappe.ui.form.on("Vehicle Service Booking", {
             });
         }
     },
+
+    dealer: async function (frm) {
+
+        if (!frm.doc.dealer) return;
+
+        let r = await frappe.db.get_value(
+            "Company",
+            frm.doc.dealer,
+            "custom_service_labour_rate"
+        );
+
+        let new_rate = flt(r?.message?.custom_service_labour_rate || 0);
+
+        // IMPORTANT: Booking labour table is table_ottr
+        (frm.doc.table_ottr || []).forEach(row => {
+            row.rate_hour = new_rate;
+            row.total_excl = new_rate * (row.duration_hours || 0);
+        });
+
+        calculate_labours_total_combined(frm);
+		calculate_duration_total_combined(frm);
+        frm.refresh_field("table_ottr");
+    },
 });
+
+frappe.ui.form.on("Service Labour Items", {
+    item(frm, cdt, cdn) {
+        let row = locals[cdt][cdn];
+        if (!row.item || !frm.doc.dealer) return;
+        frappe.db.get_value("Company", frm.doc.dealer, "custom_service_labour_rate")
+            .then(r => {
+                let rate = flt(r?.message?.custom_service_labour_rate || 0);
+                frappe.model.set_value(cdt, cdn, "rate_hour", rate);
+                frappe.model.set_value(cdt, cdn, "total_excl", rate * flt(row.duration_hours || 0));
+            })
+            .then(() => {
+                calculate_labours_total_combined(frm);
+                calculate_duration_total_combined(frm);
+                frm.refresh_field("table_ottr");
+            });
+    },
+
+    service_labour_items_remove(frm) {
+        calculate_labours_total_combined(frm);
+        calculate_duration_total_combined(frm);
+    },
+
+    total_excl(frm) {
+        calculate_labours_total_combined(frm);
+    },
+
+    duration_hours(frm, cdt, cdn) {
+        calculate_labour_total(frm, cdt, cdn);
+        calculate_labours_total_combined(frm);
+		calculate_duration_total_combined(frm);
+    },
+    
+    rate_hour(frm, cdt, cdn) {
+        calculate_labour_total(frm, cdt, cdn);
+        calculate_labours_total_combined(frm);
+		calculate_duration_total_combined(frm);
+    },
+
+    duration_hours_change(frm, cdt, cdn) {
+        calculate_labour_total(frm, cdt, cdn);
+        calculate_labours_total_combined(frm);
+		calculate_duration_total_combined(frm);
+    },
+
+    rate_hour_change(frm, cdt, cdn) {
+        calculate_labour_total(frm, cdt, cdn);
+        calculate_labours_total_combined(frm);
+        calculate_duration_total_combined(frm);
+    },
+});
+
+// PARTS TOTAL
+const calculate_total = (frm, cdt, cdn) => {
+	let row = locals[cdt][cdn];
+	let total = (row.price_excl || 0) * (row.qty || 0);
+	frappe.model.set_value(cdt, cdn, "total_excl", total);
+};
+
+// LABOUR TOTAL
+const calculate_labour_total = (frm, cdt, cdn) => {
+	let row = locals[cdt][cdn];
+	let total = (row.rate_hour || 0) * (row.duration_hours || 0);
+	frappe.model.set_value(cdt, cdn, "total_excl", total);
+};
+
+// EXTRA TOTAL
+const calculate_extra_total = (frm, cdt, cdn) => {
+	let row = locals[cdt][cdn];
+	let total = (row.price_per_item_excl || 0) * (row.qty || 0);
+	frappe.model.set_value(cdt, cdn, "total_excl", total);
+};
+
+// SUB TOTAL
+const calculate_sub_total = (frm, field_name, table_name) => {
+	let sub_total = 0;
+
+	for (const row of frm.doc[table_name] || []) {
+		sub_total += row.total_excl || 0;
+	}
+
+	frappe.model.set_value(frm.doc.doctype, frm.doc.name, field_name, sub_total);
+	// refresh_summary_totals(frm);
+};
+
+// Parts total = OEM parts total_excl + Non OEM parts total_excl (one combined total)
+// Booking uses `table_jwkk` for parts rows
+const calculate_parts_total_combined = (frm) => {
+    let oem = 0;
+    for (const row of frm.doc.table_jwkk || []) {
+        oem += row.total_excl || 0;
+    }
+    let non_oem = 0;
+    for (const row of frm.doc.non_oem_parts_items || []) {
+        non_oem += row.total_excl || 0;
+    }
+    frappe.model.set_value(frm.doc.doctype, frm.doc.name, "parts_total_excl", oem + non_oem);
+    try { frm.refresh_field("parts_total_excl"); } catch (e) {}
+    // refresh_summary_totals(frm);
+};
+
+// LABOUR HOURS (single table)
+const calculate_labour_hours = (frm, field_name, table_name) => {
+	let hours_total = 0;
+
+	for (const row of frm.doc[table_name] || []) {
+		hours_total += row.duration_hours || 0;
+	}
+
+	frappe.model.set_value(frm.doc.doctype, frm.doc.name, field_name, hours_total);
+};
+
+// Labour total = OEM labour total_excl + Non OEM labour total_excl; duration_total = sum of both tables' duration_hours
+const calculate_labours_total_combined = (frm) => {
+    // Booking labour table is `table_ottr`
+    let total = 0;
+    for (const row of frm.doc.table_ottr || []) {
+        total += row.total_excl || 0;
+    }
+    console.log("Total after booking labour items: " + total);
+    frappe.model.set_value(frm.doc.doctype, frm.doc.name, "labours_total_excl", total);
+    try { frm.refresh_field("labours_total_excl"); } catch (e) {}
+    // refresh_summary_totals(frm);
+};
+
+const calculate_duration_total_combined = (frm) => {
+    let hours = 0;
+    for (const row of frm.doc.table_ottr || []) {
+        hours += row.duration_hours || 0;
+    }
+    frappe.model.set_value(frm.doc.doctype, frm.doc.name, "duration_total", hours);
+    try { frm.refresh_field("duration_total"); } catch (e) {}
+};

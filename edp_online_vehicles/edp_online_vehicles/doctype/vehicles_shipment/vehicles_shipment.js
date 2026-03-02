@@ -7,15 +7,16 @@ frappe.ui.form.on("Vehicles Shipment", {
 
 
 	refresh(frm) {
+		
 		frm.set_query("target_warehouse", () => {
 			return {
-				filters: [
-					["is_group", "=", 0],
-					...(frm.doc.dealer ? [["company", "=", frm.doc.dealer]] : []),
-				],
+				filters: {
+					is_group: 0,
+					company: frm.doc.dealer
+				}
 			};
 		});
-		// Child table: only leaf warehouses (group warehouses cannot receive stock)
+		
 		frm.set_query("target_warehouse", "vehicles_shipment_items", () => {
 			return {
 				filters: [
@@ -460,7 +461,8 @@ function handle_custom_buttons(frm) {
 						frappe.model.is_value_type(df.fieldtype) && 
 						df.in_list_view && 
 						!df.hidden &&
-						df.fieldname !== "model_description" // Exclude model_description
+						df.fieldname !== "model_description" && // Exclude model_descriptions
+						df.fieldname !== "status" // Exclude status
 					);
 
 					// Add visible fields
@@ -547,16 +549,21 @@ function handle_custom_buttons(frm) {
 										count_row++
 
 										// Get model and colour
-										const model = row[0];
-										let colour = row[3];
+										const model = row[fieldnames.indexOf("model_code")];
+										let colour = row[fieldnames.indexOf("colour")];
 
 										if (colour == null || colour == undefined || colour == "") {
 											colour = "undefined";
 										}
 
-										// Create the formatted Model Colour name
-										const model_colour_name =
-											colour + " - " + model;
+										// Check if colour already contains the model (user uploaded "Colour - Model")
+										let model_colour_name;
+										if (colour.includes(model)) {
+											model_colour_name = colour;
+											colour = colour.split(" - ")[0]; // Extract just the colour part
+										} else {
+											model_colour_name = colour + " - " + model; // Standard format
+										}
 
 										// Check if the colour exists for the model
 										frappe.db
@@ -704,7 +711,17 @@ function handle_custom_buttons(frm) {
 									}
 								} else {
 									// Once all rows have been processed, notify the user
-									frm.set_value("total_vehicles",count_row)
+									// Refresh child table first
+									frm.refresh_field("vehicles_shipment_items");
+
+									frm.set_value("total_vehicles", count_row);
+									frm.toggle_display("total_vehicles", count_row > 0);
+
+									// frappe.msgprint({
+									// 	message: __("Table updated successfully"),
+									// 	title: __("Success"),
+									// 	indicator: "green",
+									// });
 									
 									frappe.msgprint({
 										message: __(
@@ -762,9 +779,8 @@ frappe.ui.form.on("Vehicles Shipment", {
 		const total = (frm.doc.vehicles_shipment_items || []).filter(
 			row => row.model_code || row.vin_serial_no
 		).length;
-
-		frm.set_value("total_vehicles", total);
 		frm.refresh_field("total_vehicles");
+		frm.set_value("total_vehicles", total);
 		frm.toggle_display("total_vehicles", total > 0);
 	}
 });
@@ -777,6 +793,11 @@ frappe.ui.form.on("Vehicles Shipment Items", {
 	vehicles_shipment_items_remove(frm, cdt, cdn) {
 		frm.trigger("calculate_total_vehicles");
 	},
+
+	
+	vehicles_shipment_items_change(frm, cdt, cdn) {
+        frm.trigger("calculate_total_vehicles");
+    },
 
 	model_code(frm) { frm.trigger("calculate_total_vehicles"); },
 	vin_serial_no(frm) { frm.trigger("calculate_total_vehicles"); },

@@ -41,7 +41,12 @@
   "table_jwkk",
   "part_schedule_date",
   "labour_tab",
-  "table_ottr"
+  "table_ottr",
+  "section_break_qwip",
+  "column_break_bsjh",
+  "column_break_ktxy",
+  "duration_total",
+  "labours_total_excl"
  ],
  "fields": [
   {
@@ -279,12 +284,36 @@
    "fieldtype": "Int",
    "label": "Warranty KM/ Hours Limit",
    "read_only": 1
+  },
+  {
+   "fieldname": "section_break_qwip",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_bsjh",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_ktxy",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "duration_total",
+   "fieldtype": "Int",
+   "label": "Duration Total",
+   "read_only": 1
+  },
+  {
+   "fieldname": "labours_total_excl",
+   "fieldtype": "Currency",
+   "label": "Labours Total (Excl)",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_calendar_and_gantt": 1,
  "links": [],
- "modified": "2026-02-19 09:27:25.326415",
+ "modified": "2026-02-26 11:32:31.698206",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicle Service Booking",

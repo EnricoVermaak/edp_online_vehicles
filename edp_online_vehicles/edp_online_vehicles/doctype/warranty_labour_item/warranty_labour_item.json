@@ -40,6 +40,7 @@
    "fieldtype": "Int",
    "in_list_view": 1,
    "label": "Duration",
+   "read_only": 1,
    "reqd": 1
   },
   {
@@ -61,7 +62,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2026-02-02 21:24:46.033113",
+ "modified": "2026-02-25 16:22:01.240208",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Warranty Labour Item",

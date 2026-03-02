@@ -339,6 +339,7 @@ class PartsDeliveryNote(Document):
 							"qty": row.qty_delivered,
 							"uom": "Unit",
 							"allow_zero_valuation_rate": 1,
+							"t_warehouse": self.dealer,
 						},
 					)
 
@@ -400,11 +401,14 @@ class PartsDeliveryNote(Document):
 			dn.posting_date = dt.date()
 			dn.posting_time = dt.time()
 
+		dealer_warehouse = frappe.db.get_value("Warehouse", {"company": self.dealer, "disabled": 0}, "name")
+
 		for row in self.delivery_note_item:
 			dn.append("items", {
 				"item_code": row.part_no,
 				"qty": row.qty_ordered,
     			"custom_qty_delivered": row.qty_delivered,
+				"warehouse": dealer_warehouse,
 			})
 		total_custom_qty_delivered = sum(row.qty_delivered for row in self.delivery_note_item)
 		dn.custom_total_quantity_delivered = total_custom_qty_delivered

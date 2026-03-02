@@ -45,6 +45,9 @@ def get_dealers(model=None, colour=None):
         all_dealers = list(set(all_dealers))
 
         return all_dealers
+
+    else:
+        return frappe.db.get_value("Company", {"custom_head_office": 1}, "name")
     
     
 # /home/ahmad/bench-15/apps/edp_online_vehicles/edp_online_vehicles/events/add_comment.py
