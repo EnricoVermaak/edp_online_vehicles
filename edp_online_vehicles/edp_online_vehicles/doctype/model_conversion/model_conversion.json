@@ -127,12 +127,13 @@
   }
  ],
  "index_web_pages_for_search": 1,
+ "is_submittable": 1,
  "links": [],
- "modified": "2026-01-26 11:33:20.606956",
+ "modified": "2026-03-02 10:14:08.452355",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Model Conversion",
- "naming_rule": "Expression",
+ "naming_rule": "Expression (old style)",
  "owner": "Administrator",
  "permissions": [
   {

@@ -3,7 +3,20 @@
 
 frappe.ui.form.on("Model Conversion", {
 	refresh(frm) {},
+		before_model(frm) {
+		if (frm.doc.table_fgif?.length) {
+			frm.doc.table_fgif = [];
+			frm.refresh_field("table_fgif");
+		}
+
+		frm.set_value("convert_to_model", null);
+		frm.set_value("convert_to_description", null);
+		frm.set_value("convert_to_brand", null);
+	},
 	model: function (frm) {
+	// Clear grid properly
+	frm.doc.table_fgif = [];
+	frm.refresh_field("table_fgif");
 		frm.set_value("convert_to_model",null)
 		if (frm.doc.model) {
 			frm.set_query("vin_serial_no", "table_fgif", function () {
@@ -50,12 +63,12 @@ frappe.ui.form.on("Model Conversion", {
 									filters: {
 										name : ["in", label_list],
 										
-					},
-
-				}
-			})
-				};
-
+									},
+									
+								}
+							})
+						};
+						
 					}
 				},
 			});
@@ -104,3 +117,32 @@ frappe.ui.form.on("Model Conversion", {
 		}
 	},
 });
+	// frappe.ui.form.on('Model Conversion', {
+
+	// 	status: function(frm) {
+	// 		update_primary_button(frm);
+	// 	},
+
+	// 	refresh: function(frm) {
+	// 		update_primary_button(frm);
+	// 	}
+
+	// });
+
+	// function update_primary_button(frm) {
+
+	// 	// Only allow submit when document is still draft
+	// 	if (frm.doc.docstatus === 0 &&
+	// 		(frm.doc.status === "Approved" || frm.doc.status === "Declined")) {
+
+	// 		frm.page.set_primary_action(__('Submit'), function() {
+	// 			frm.submit();
+	// 		});
+
+	// 	} else if (frm.doc.docstatus === 0) {
+
+	// 		frm.page.set_primary_action(__('Save'), function() {
+	// 			frm.save();
+	// 		});
+	// 	}
+	// }

@@ -7,8 +7,8 @@ from frappe.model.naming import make_autoname
 
 
 class PartsPicking(Document):
-def autoname(self):
-   self.name = frappe.model.naming.make_autoname("PP-.YYYY.-.#####")
+    def autoname(self):
+        self.name = frappe.model.naming.make_autoname("PP-.YYYY.-.#####")
 
 
 @frappe.whitelist()

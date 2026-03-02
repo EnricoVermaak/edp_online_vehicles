@@ -23,7 +23,8 @@ frappe.ui.form.on("Dealer Customer", {
 		$(frm.fields_dict["email"].input).on("blur", function () {
 			validate_email(frm);
 		});
-
+			console.log("Country value:", frm.doc.country);
+			console.log("Province field exists:", frm.fields_dict.province_state);
 		if (frm.doc.country && frm.fields_dict.province_state) {
 			frappe.call({
 				method: "edp_online_vehicles.events.get_country_doc.get_country_doc",
