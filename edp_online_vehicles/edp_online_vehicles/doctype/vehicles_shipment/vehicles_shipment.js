@@ -285,11 +285,11 @@ frappe.ui.form.on("Vehicles Shipment", {
 			frappe.throw(errorMessage);
 		}
 	},
-
+	
 	after_save(frm) {
 		if (frm.doc.status == "Completed") {
 			console.log(frm.doc.name);
-
+			
 			frappe.call({
 				method: "edp_online_vehicles.events.submit_document.submit_shipment_document",
 				args: {
@@ -303,18 +303,27 @@ frappe.ui.form.on("Vehicles Shipment", {
 							},
 							5,
 						);
-
+						
 						frm.refresh();
 					}
 				},
 			});
 		}
 	},
-
+	
+	before_submit: function(frm) {
+		frm.doc.vehicles.forEach(row => {
+			if (row.status !== "Received") {
+				frappe.throw(
+					`All vehicles must be in 'Received' status before submitting.`
+				);
+			}
+		});
+	},
 	onload_post_render: function (frm) {
 		handle_custom_buttons(frm);
 	},
-
+	
 	onload: function (frm) {
 		frm.set_query("target_warehouse", function () {
 			return {
@@ -796,8 +805,8 @@ frappe.ui.form.on("Vehicles Shipment Items", {
 
 	
 	vehicles_shipment_items_change(frm, cdt, cdn) {
-        frm.trigger("calculate_total_vehicles");
-    },
+		frm.trigger("calculate_total_vehicles");
+	},
 
 	model_code(frm) { frm.trigger("calculate_total_vehicles"); },
 	vin_serial_no(frm) { frm.trigger("calculate_total_vehicles"); },
