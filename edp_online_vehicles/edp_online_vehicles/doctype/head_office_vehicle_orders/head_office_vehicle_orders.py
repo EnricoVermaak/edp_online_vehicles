@@ -79,14 +79,9 @@ class HeadOfficeVehicleOrders(Document):
 			)
 
 	def after_insert(self):
-		
-		if self.order_no and self.row_id:
-			order_doc = frappe.get_doc("Vehicle Order", self.order_no)
+		if self.order_type == "Back Order":
+			return
 
-			for item in order_doc.vehicles_basket:
-				if item.idx == int(self.row_id) and item.order_from == "Back Order":
-					return
-				
 		stock_fifo_orders = frappe.db.get_single_value(
 			"Vehicle Stock Settings", "apply_fifo_rule_on_vehicles_orders"
 		)
