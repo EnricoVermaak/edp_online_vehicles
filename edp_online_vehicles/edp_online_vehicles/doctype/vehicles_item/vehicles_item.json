@@ -1,123 +1,122 @@
 {
- "actions": [],
- "allow_rename": 1,
- "creation": "2024-09-19 12:12:07.452540",
- "doctype": "DocType",
- "editable_grid": 1,
- "engine": "InnoDB",
- "field_order": [
-  "vin_serial_no",
-  "stock_no",
-  "model",
-  "model_series",
-  "engine_no",
-  "colour",
-  "vehicle_type",
-  "column_break_ccfi",
-  "retailed_date",
-  "microdot",
-  "microdot_fitted_by"
- ],
- "fields": [
-  {
-   "fieldname": "vin_serial_no",
-   "fieldtype": "Link",
-   "in_list_view": 1,
-   "label": "VIN/ Serial No",
-   "options": "Vehicle Stock",
-   "reqd": 1
-  },
-  {
-   "fetch_from": "vin_serial_no.model",
-   "fieldname": "model",
-   "fieldtype": "Link",
-   "in_list_view": 1,
-   "label": "Model",
-   "options": "Model Administration",
-   "read_only": 1
-  },
-  {
-   "fetch_from": "model.series_code",
-   "fieldname": "model_series",
-   "fieldtype": "Data",
-   "label": "Model Series",
-   "read_only": 1
-  },
-  {
-   "fetch_from": "vin_serial_no.colour",
-   "fetch_if_empty": 1,
-   "fieldname": "colour",
-   "fieldtype": "Link",
-   "in_list_view": 1,
-   "label": "Colour",
-   "options": "Model Colour",
-   "read_only": 1,
-   "reqd": 1
-  },
-  {
-   "fetch_from": "vin_serial_no.stock_no",
-   "fieldname": "stock_no",
-   "fieldtype": "Data",
-   "label": "Stock No",
-   "read_only": 1
-  },
-  {
-   "fetch_from": "vin_serial_no.engine_no",
-   "fieldname": "engine_no",
-   "fieldtype": "Data",
-   "label": "Engine No",
-   "read_only": 1
-  },
-  {
-   "fieldname": "column_break_ccfi",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fetch_from": "vin_serial_no.microdot",
-   "fieldname": "microdot",
-   "fieldtype": "Link",
-   "label": "Microdot",
-   "link_filters": "[[\"Vehicles Microdots\",\"status\",\"=\",\"Received\"]]",
-   "options": "Vehicles Microdots",
-   "read_only": 1
-  },
-  {
-   "fetch_from": "vin_serial_no.microdot_fitted_by",
-   "fieldname": "microdot_fitted_by",
-   "fieldtype": "Link",
-   "label": "Microdot Fitted By",
-   "options": "User",
-   "read_only": 1
-  },
-  {
-   "fetch_from": "vin_serial_no.type",
-   "fieldname": "vehicle_type",
-   "fieldtype": "Data",
-   "label": "Vehicles Type",
-   "read_only": 1
-  },
-  {
-   "fetch_from": "vin_serial_no.retail_date",
-   "fieldname": "retailed_date",
-   "fieldtype": "Data",
-   "in_list_view": 1,
-   "label": "Retailed Date",
-   "read_only": 1
-  }
- ],
- "grid_page_length": 50,
- "index_web_pages_for_search": 1,
- "istable": 1,
- "links": [],
- "modified": "2026-03-02 13:20:49.603334",
- "modified_by": "Administrator",
- "module": "Edp Online Vehicles",
- "name": "Vehicles Item",
- "owner": "Administrator",
- "permissions": [],
- "row_format": "Dynamic",
- "rows_threshold_for_grid_search": 20,
- "sort_field": "modified",
- "sort_order": "DESC",
- "states": []
+   "actions": [],
+   "allow_rename": 1,
+   "creation": "2024-09-19 12:12:07.452540",
+   "doctype": "DocType",
+   "editable_grid": 1,
+   "engine": "InnoDB",
+   "field_order": [
+      "vin_serial_no",
+      "stock_no",
+      "model",
+      "model_series",
+      "engine_no",
+      "colour",
+      "vehicle_type",
+      "column_break_ccfi",
+      "retailed_date",
+      "microdot",
+      "microdot_fitted_by"
+   ],
+   "fields": [
+      {
+         "fieldname": "vin_serial_no",
+         "fieldtype": "Link",
+         "in_list_view": 1,
+         "label": "VIN/ Serial No",
+         "options": "Vehicle Stock",
+         "reqd": 1
+      },
+      {
+         "fetch_from": "vin_serial_no.model",
+         "fieldname": "model",
+         "fieldtype": "Link",
+         "in_list_view": 1,
+         "label": "Model",
+         "options": "Model Administration",
+         "read_only": 1
+      },
+      {
+         "fetch_from": "vin_serial_no.series",
+         "fieldname": "model_series",
+         "fieldtype": "Data",
+         "label": "Model Series"
+      },
+      {
+         "fetch_from": "vin_serial_no.colour",
+         "fetch_if_empty": 1,
+         "fieldname": "colour",
+         "fieldtype": "Link",
+         "in_list_view": 1,
+         "label": "Colour",
+         "options": "Model Colour",
+         "read_only": 1,
+         "reqd": 1
+      },
+      {
+         "fetch_from": "vin_serial_no.stock_no",
+         "fieldname": "stock_no",
+         "fieldtype": "Data",
+         "label": "Stock No",
+         "read_only": 1
+      },
+      {
+         "fetch_from": "vin_serial_no.engine_no",
+         "fieldname": "engine_no",
+         "fieldtype": "Data",
+         "label": "Engine No",
+         "read_only": 1
+      },
+      {
+         "fieldname": "column_break_ccfi",
+         "fieldtype": "Column Break"
+      },
+      {
+         "fetch_from": "vin_serial_no.microdot",
+         "fieldname": "microdot",
+         "fieldtype": "Link",
+         "label": "Microdot",
+         "link_filters": "[[\"Vehicles Microdots\",\"status\",\"=\",\"Received\"]]",
+         "options": "Vehicles Microdots",
+         "read_only": 1
+      },
+      {
+         "fetch_from": "vin_serial_no.microdot_fitted_by",
+         "fieldname": "microdot_fitted_by",
+         "fieldtype": "Link",
+         "label": "Microdot Fitted By",
+         "options": "User",
+         "read_only": 1
+      },
+      {
+         "fetch_from": "vin_serial_no.type",
+         "fieldname": "vehicle_type",
+         "fieldtype": "Data",
+         "label": "Vehicles Type",
+         "read_only": 1
+      },
+      {
+         "fetch_from": "vin_serial_no.retail_date",
+         "fieldname": "retailed_date",
+         "fieldtype": "Data",
+         "in_list_view": 1,
+         "label": "Retailed Date",
+         "read_only": 1
+      }
+   ],
+   "grid_page_length": 50,
+   "index_web_pages_for_search": 1,
+   "istable": 1,
+   "links": [],
+   "modified": "2026-03-02 14:42:59.474308",
+   "modified_by": "Administrator",
+   "module": "Edp Online Vehicles",
+   "name": "Vehicles Item",
+   "owner": "Administrator",
+   "permissions": [],
+   "row_format": "Dynamic",
+   "rows_threshold_for_grid_search": 20,
+   "sort_field": "modified",
+   "sort_order": "DESC",
+   "states": []
 }
