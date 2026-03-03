@@ -670,15 +670,15 @@ frappe.ui.form.on("Vehicles Shipment", {
 		}
 	},
 	
-	before_submit: function(frm) {
-		frm.doc.vehicles.forEach(row => {
-			if (row.status !== "Received") {
-				frappe.throw(
-					`All vehicles must be in 'Received' status before submitting.`
-				);
+		before_submit: function(frm) {
+			for (let row of frm.doc.vehicles_shipment_items || []) {
+				if (row.status !== "Received") {
+					frappe.throw(
+						__("All Vehicles must be in 'Received' status before submitting.")
+					);
+				}
 			}
-		});
-	},
+		},
 	onload_post_render: function (frm) {
 		handle_custom_buttons(frm);
 	},

@@ -13,6 +13,26 @@ frappe.ui.form.on("Part Order", {
 			});
 		}
 	},
+	// refresh(frm) {
+	// 			if (frm.is_new() && !frm.doc.estimated_delivery_date) {
+
+	// 		frappe.db.get_single_value(
+	// 			"Parts Settings",
+	// 			"order_turn_around_time_hours"
+	// 		).then((hours) => {
+
+	// 			if (hours && hours > 0) {
+
+	// 				let delivery_date = frappe.datetime.add_days(
+	// 					frappe.datetime.get_today(),
+	// 					hours / 24
+	// 				);
+
+	// 				frm.set_value("estimated_delivery_date", delivery_date);
+	// 			}
+	// 		});
+	// 	}
+	// },
 	search(frm) {
 		if (frm.doc.company_reg_no) {
 			frappe.call({
@@ -87,13 +107,23 @@ frappe.ui.form.on("Part Order", {
 			frm.set_value("order_date_time", frappe.datetime.now_datetime());
 		}
 
+		let qty_ordered = 0;
+		let qty_delivered = 0;
+
+		(frm.doc.table_eaco || []).forEach(row => {
+			qty_ordered += row.qty_ordered || 0;
+			qty_delivered += row.qty_delivered || 0;
+		});
+
 		if (frm.is_new()) {
 			frm.set_value("order_delivery_time", "00:00:00");
 			frm.set_value("_order_delivered", "0");
 			frm.set_value("total_parts_delivered", "0");
 		} else {
+			 if (qty_ordered > 0 && qty_ordered === qty_delivered) {
 			frm.set_value("order_delivery_time", formatTimeDifference(frm));
 		}
+
 		let total_ordered = 0;
 		for (let row of frm.doc.table_avsu) {
 			total_ordered += row.qty;
@@ -108,7 +138,8 @@ frappe.ui.form.on("Part Order", {
 			"total_undelivered_parts_dealer_billing",
 			total_undelivered_parts_dealer_billing,
 		);
-	},
+	}
+},
 
 	total_excl(frm) {
 		let total_excl = frm.doc.total_excl;
@@ -259,16 +290,29 @@ frappe.ui.form.on("Part Order Item", {
 	},
 });
 
+
 const calculate_total = (frm, cdt, cdn) => {
 	let row = locals[cdt][cdn];
 
-	if (!row.dealer_billing_excl || !row.qty) return;
+	let dealer = row.dealer_billing_excl || 0;
+	let qty = row.qty || 0;
+	let disc = row.disc_amount || 0;
+	let air = row.air_freight_cost_excl || 0;
 
-	// air_freight_cost_excl is stored as (per-unit airfreight * qty), so add it to (dealer_billing - disc) * qty
-	let total =
-		(row.dealer_billing_excl - (row.disc_amount || 0)) * row.qty +
-		(row.air_freight_cost_excl || 0);
-	return frappe.model.set_value(cdt, cdn, "total_excl", total);
+	let total = (dealer - disc) * qty + air;
+
+	return frappe.model
+		.set_value(cdt, cdn, "total_excl", total)
+		.then(() => {
+
+			let vat = total * 0.15;
+			let total_incl = total + vat;
+
+			return Promise.all([
+				frappe.model.set_value(cdt, cdn, "vat", vat),
+				frappe.model.set_value(cdt, cdn, "total_incl", total_incl)
+			]);
+		});
 };
 
 const calculate_sub_total = (frm, field_name, table_name) => {
