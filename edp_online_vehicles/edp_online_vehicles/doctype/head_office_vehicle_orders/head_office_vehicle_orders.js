@@ -850,50 +850,100 @@ frappe.ui.form.on("Head Office Vehicle Orders", {
 	},
 
 	change_model: function (frm) {
-		if (frm.doc.vinserial_no) {
-			frappe.msgprint(
-				"A Vin/Serial No is already allocated to this order. Please un-allocate the Vin/Serial No before changing the model.",
-			);
-			return;
-		}
+        if (frm.doc.vinserial_no) {
+            frappe.msgprint(
+                "A Vin/Serial No is already allocated to this order. Please un-allocate the Vin/Serial No before changing the model.",
+            );
+            return;
+        }
 
-		const dialog = new frappe.ui.Dialog({
-			title: __("Reason"),
-			fields: [
-				{
-					label: "New Model",
-					fieldname: "new_model",
-					fieldtype: "Link",
-					options: "Model Administration",
-				},
-				{
-					label: "Please provide a reason for changing the model.",
-					fieldname: "comment",
-					fieldtype: "Small Text",
-					reqd: 1,
-				},
-			],
-			primary_action_label: "Submit",
-			primary_action(values) {
-				if (values.comment) {
-					let comment = values.comment;
-					let model = values.new_model;
+        const dialog = new frappe.ui.Dialog({
+            title: __("Reason"),
+            fields: [
+                {
+                    label: "New Model",
+                    fieldname: "new_model",
+                    fieldtype: "Link",
+                    options: "Model Administration",
+                    reqd: 1,
+                    change: function () {
+                        let model = dialog.get_value("new_model");
 
-					frm.set_value("model", model).then(() => {
-						frm.call("post_comment", { comment });
-					});
+                        if (model) {
+                            dialog.set_df_property("new_colour", "filters", { model: model });
 
-					dialog.hide();
-				} else {
-					frappe.msgprint(
-						__("Comment is required to change the model."),
-					);
-				}
-			},
-		});
+                            frappe.db
+                                .get_value(
+                                    "Model Colour",
+                                    { model: model, default: 1 },
+                                    "name",
+                                )
+                                .then((r) => {
+                                    if (r && r.message && r.message.name) {
+                                        dialog.set_value("new_colour", r.message.name);
+                                    } else {
+                                        dialog.set_value("new_colour", "");
+                                    }
+                                });
+                        } else {
+                            dialog.set_value("new_colour", "");
+                        }
+                    },
+                },
+                {
+                    label: "Available Colour",
+                    fieldname: "new_colour",
+                    fieldtype: "Link",
+                    options: "Model Colour",
+                    reqd: 1,
+                },
+                {
+                    label: "Please provide a reason for changing the model.",
+                    fieldname: "comment",
+                    fieldtype: "Small Text",
+                    reqd: 1,
+                },
+            ],
 
-		dialog.show();
-	},
+            primary_action_label: "Submit",
+            primary_action(values) {
+                if (values.comment && values.new_model && values.new_colour) {
+                    
+                    // Fetch both colour and description in parallel, then apply all at once
+                    Promise.all([
+                        frappe.db.get_value("Model Colour", values.new_colour, "colour"),
+                        frappe.db.get_value("Model Administration", values.new_model, "model_description"),
+                    ]).then(([colourResult, descResult]) => {
+                        const colour = colourResult?.message?.colour || "";
+                        const description = descResult?.message?.model_description || "";
+
+                        frm.set_value("model", values.new_model);
+                        frm.set_value("colour", colour);
+                        frm.set_value("description", description);
+
+                        frm.refresh_field("model");
+                        frm.refresh_field("colour");
+                        frm.refresh_field("description");
+
+                        frm.call("post_comment", { comment: values.comment });
+
+                        frm.save().then(() => {
+                            frappe.show_alert({
+                                message: __("Model updated successfully."),
+                                indicator: "green",
+                            }, 5);
+                        });
+
+                        dialog.hide();
+                    });
+
+                } else {
+                    frappe.msgprint(__("All fields are required."));
+                }
+            },
+        });
+        dialog.show();
+    },
 
 	status(frm) {
 		toggle_vin_serial_requirement(frm);
