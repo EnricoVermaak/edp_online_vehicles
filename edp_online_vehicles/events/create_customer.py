@@ -1,18 +1,11 @@
 import frappe
 
-
 @frappe.whitelist()
-def create_customer_if_checked(doc, method=None):
-	if doc.custom_create_customer_and_supplier and doc.custom_customer_code:
-		create_customer(doc)
-
-
-@frappe.whitelist()
-def create_customer(doc):
+def create_customer(doc, method=None):
 	cust_doc = frappe.new_doc("Customer")
 	cust_doc.customer_name = doc.company_name
-	cust_doc.custom_customer_code = doc.custom_customer_code
-	cust_doc.customer_group = "Dealer Network"
+	cust_doc.custom_customer_code = doc.company_name
+	cust_doc.customer_type = "Company"
 
 	cust_doc.insert(ignore_permissions=True)
 	cust_doc.submit()

@@ -17,6 +17,26 @@ from edp_online_vehicles.edp_online_vehicles.doctype.head_office_vehicle_orders.
 
 class VehiclesShipment(Document):
 	def validate(self):
+		for row in self.vehicles_shipment_items:
+			if row.reserve_to_order:
+				order = frappe.get_doc("Head Office Vehicle Orders", row.reserve_to_order)
+
+				if order:
+					order.shipment_stock = row.vin_serial_no
+					order.shipment_no = self.name
+					order.shipment_target_warehouse = row.target_warehouse
+					order.model_delivered = row.model_code
+					order.colour_delivered = row.colour
+					order.engine_no = row.engine_no
+					order.save(ignore_permissions=True)
+
+		if not self.eta_warehouse:
+			sla_days = frappe.db.get_single_value("Vehicle Stock Settings", "sla_days") or 0
+
+			if sla_days > 0:
+				base_date = self.eta_harbour or nowdate()
+				self.eta_harbour = add_days(base_date, sla_days)
+				
 		self._apply_auto_stock_numbers()
 		self._sync_reserve_to_order()
 		self._set_eta_warehouse_from_sla()

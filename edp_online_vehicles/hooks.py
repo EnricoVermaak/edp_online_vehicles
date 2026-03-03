@@ -186,7 +186,7 @@ doc_events = {
 	},
 	"Company": {
 		"before_insert": "edp_online_vehicles.events.adjust_company_name.adjust_company_name",
-		"after_insert": "edp_online_vehicles.events.create_customer.create_customer_if_checked",
+		"after_insert": "edp_online_vehicles.events.create_customer.create_customer",
 	},
 	"Sales Invoice": {
 		"autoname": "edp_online_vehicles.events.create_si.sales_invoice_name",
