@@ -3,12 +3,23 @@ import json
 import frappe
 
 
+def _vehicle_stock_colour_condition(include_colour):
+	if not include_colour:
+		return "", {}
+	return " AND (es.colour = %(colour)s OR es.colour LIKE %(colour_like)s)", {
+		"colour": include_colour,
+		"colour_like": (include_colour or "") + " - %",
+	}
+
+
 @frappe.whitelist()
 @frappe.validate_and_sanitize_search_inputs
 def head_office_orders_vin_filter(doctype, txt, searchfield, start, page_len, filters):
 	model = filters.get("model")
 	availability_status = filters.get("availability_status")
 	dealer = filters.get("dealer")
+	colour = filters.get("colour")
+	colour_sql, colour_params = _vehicle_stock_colour_condition(colour)
 
 	return frappe.db.sql(
 		"""
@@ -31,6 +42,7 @@ def head_office_orders_vin_filter(doctype, txt, searchfield, start, page_len, fi
             AND es.model = %(model)s
             AND es.availability_status = %(availability_status)s
             AND es.dealer = %(dealer)s
+            {colour_cond}
             AND se.name IN (
                 SELECT MIN(se2.name)
                 FROM `tabStock Entry` se2
@@ -45,9 +57,8 @@ def head_office_orders_vin_filter(doctype, txt, searchfield, start, page_len, fi
         LIMIT
             %(page_len)s OFFSET %(start)s
     """.format(
-			**{
-				"key": searchfield,
-			}
+			key=searchfield,
+			colour_cond=colour_sql,
 		),
 		{
 			"txt": f"%{txt}%",
@@ -56,15 +67,15 @@ def head_office_orders_vin_filter(doctype, txt, searchfield, start, page_len, fi
 			"model": model,
 			"availability_status": availability_status,
 			"dealer": dealer,
+			**colour_params,
 		},
 	)
 
 
 @frappe.whitelist()
-def head_office_orders_vin_dialog_filter(model, availability_status, dealer, colour):
-    # colour = f"{colour} - {model}"
-
-    return frappe.db.sql(
+def head_office_orders_vin_dialog_filter(model, availability_status, dealer, colour=None):
+	colour_sql, colour_params = _vehicle_stock_colour_condition(colour)
+	return frappe.db.sql(
 		"""
         SELECT
             es.name,
@@ -84,7 +95,7 @@ def head_office_orders_vin_dialog_filter(model, availability_status, dealer, col
             AND es.model = %(model)s
             AND es.availability_status = %(availability_status)s
             AND es.dealer = %(dealer)s
-            -- only earliest receipt per serial
+            {colour_cond}
             AND se.name IN (
                 SELECT MIN(se2.name)
                 FROM `tabStock Entry` se2
@@ -93,7 +104,6 @@ def head_office_orders_vin_dialog_filter(model, availability_status, dealer, col
                   AND sed2.serial_no = es.vin_serial_no
                 GROUP BY sed2.serial_no
             )
-            -- exclude VINs currently assigned to any non-cancelled Head Office Vehicle Orders
             AND NOT EXISTS (
                 SELECT 1
                 FROM `tabHead Office Vehicle Orders` hov
@@ -103,19 +113,27 @@ def head_office_orders_vin_dialog_filter(model, availability_status, dealer, col
         ORDER BY
             se.posting_date ASC,
             se.posting_time ASC
-    """,
-		{"model": model, "availability_status": availability_status, "dealer": dealer},
+    """.format(colour_cond=colour_sql),
+		{
+			"model": model,
+			"availability_status": availability_status,
+			"dealer": dealer,
+			**colour_params,
+		},
 	)
 
 
 @frappe.whitelist()
-def head_office_orders_shipment_dialog_filter(model, availability_status, dealer):
-	model = model
-	availability_status = availability_status
-	dealer = dealer
-
+def head_office_orders_shipment_dialog_filter(model, availability_status, dealer, colour=None):
+	conds = ["esi.vin_serial_no <> ''", "esi.model_code = %(model)s", "esi.status = 'Not Received'"]
+	params = {"model": model, "availability_status": availability_status, "dealer": dealer}
+	if colour:
+		conds.append("(esi.colour = %(colour)s OR esi.colour LIKE %(colour_like)s)")
+		params["colour"] = colour
+		params["colour_like"] = (colour or "") + " - %"
+	where_sql = " AND ".join(conds)
 	return frappe.db.sql(
-		"""
+		f"""
          SELECT
             esi.vin_serial_no,
             esi.model_code,
@@ -129,23 +147,18 @@ def head_office_orders_shipment_dialog_filter(model, availability_status, dealer
          LEFT JOIN
             `tabVehicles Shipment Items` esi ON esi.parent = es.name
          WHERE
-            esi.vin_serial_no <> ''
-            AND esi.model_code = %(model)s
-            AND esi.status = 'Not Received'
-            AND (esi.reserve_to_order is null OR esi.reserve_to_order = '')
+            {where_sql}
+            AND (esi.reserve_to_order IS NULL OR esi.reserve_to_order = '')
          ORDER BY
             es.eta_warehouse ASC
       """,
-		{"model": model, "availability_status": availability_status, "dealer": dealer},
+		params,
 	)
 
 
 @frappe.whitelist()
-def head_office_orders_fifo(model, availability_status, dealer):
-	model = model
-	availability_status = availability_status
-	dealer = dealer
-
+def head_office_orders_fifo(model, availability_status, dealer, colour=None):
+	colour_sql, colour_params = _vehicle_stock_colour_condition(colour)
 	return frappe.db.sql(
 		"""
          SELECT
@@ -166,6 +179,7 @@ def head_office_orders_fifo(model, availability_status, dealer):
             AND es.model = %(model)s
             AND es.availability_status = %(availability_status)s
             AND es.dealer = %(dealer)s
+            {colour_cond}
             AND NOT EXISTS (
                 SELECT 1
                 FROM `tabHead Office Vehicle Orders` ho
@@ -183,8 +197,13 @@ def head_office_orders_fifo(model, availability_status, dealer):
             se.posting_date ASC,
             se.posting_time ASC
          LIMIT 1
-      """,
-		{"model": model, "availability_status": availability_status, "dealer": dealer},
+      """.format(colour_cond=colour_sql),
+		{
+			"model": model,
+			"availability_status": availability_status,
+			"dealer": dealer,
+			**colour_params,
+		},
 	)
 
 

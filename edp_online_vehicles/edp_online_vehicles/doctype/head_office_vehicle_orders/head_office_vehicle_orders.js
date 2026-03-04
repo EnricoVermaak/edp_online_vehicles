@@ -294,7 +294,7 @@ frappe.ui.form.on("Head Office Vehicle Orders", {
 					model: frm.doc.model || "",
 					availability_status: "Available",
 					dealer: frm.doc.order_placed_to || "",
-					colour: frm.doc.colour_delivered || "",
+					colour: frm.doc.colour || "",
 				},
 			};
 		});
@@ -409,7 +409,7 @@ frappe.ui.form.on("Head Office Vehicle Orders", {
 				model: frm.doc.model || "",
 				availability_status: "Available",
 				dealer: frm.doc.order_placed_to,
-				colour: frm.doc.colour_delivered || "",
+				colour: frm.doc.colour || "",
 			},
 			callback: function (response) {
 				let vin_stock = response.message || [];
@@ -489,7 +489,6 @@ frappe.ui.form.on("Head Office Vehicle Orders", {
                         <!-- Stock -->
                         <div class="tab-pane show active" data-content="stock">
                             <input type="text" id="search-vin-stock" class="form-control" placeholder="Search VIN/Serial No" style="margin-bottom:10px;" />
-                            <input type="text" id="search-colour-stock" class="form-control" placeholder="Search Colour" style="margin-bottom:10px;" />
                             <table class="table table-bordered">
                                 <thead>
                                     <tr>
@@ -507,7 +506,6 @@ frappe.ui.form.on("Head Office Vehicle Orders", {
                         <!-- Reserved -->
                         <div class="tab-pane fade" data-content="reserved">
                             <input type="text" id="search-vin-reserved" class="form-control" placeholder="Search VIN/Serial No" style="margin-bottom:10px;" />
-                            <input type="text" id="search-colour-reserved" class="form-control" placeholder="Search Colour" style="margin-bottom:10px;" />
                             <table class="table table-bordered">
                                 <thead>
                                     <tr>
@@ -525,7 +523,6 @@ frappe.ui.form.on("Head Office Vehicle Orders", {
                         <!-- Shipment -->
                         <div class="tab-pane fade" data-content="shipment">
                             <input type="text" id="search-vin-shipment" class="form-control" placeholder="Search VIN/Serial No" style="margin-bottom:10px;" />
-                            <input type="text" id="search-colour-shipment" class="form-control" placeholder="Search Colour" style="margin-bottom:10px;" />
                             <table class="table table-bordered">
                                 <thead>
                                     <tr>
@@ -568,6 +565,7 @@ frappe.ui.form.on("Head Office Vehicle Orders", {
 
 				// Render functions
 				function renderStockList() {
+					console.log("[Allocate Dialog] Stock tab records:", vin_stock.length);
 					const $body = dialog.$wrapper
 						.find("#vin-list-stock")
 						.empty();
@@ -600,10 +598,11 @@ frappe.ui.form.on("Head Office Vehicle Orders", {
 							model: frm.doc.model || "",
 							availability_status: "Reserved",
 							dealer: frm.doc.order_placed_to,
-							colour: frm.doc.colour_delivered || "",
+							colour: frm.doc.colour || "",
 						},
 						callback: function (r) {
 							vin_reserved = r.message || [];
+							console.log("[Allocate Dialog] Reserved tab records:", vin_reserved.length);
 							const $body = dialog.$wrapper
 								.find("#vin-list-reserved")
 								.empty();
@@ -639,10 +638,11 @@ frappe.ui.form.on("Head Office Vehicle Orders", {
 							model: frm.doc.model || "",
 							availability_status: "Available",
 							dealer: frm.doc.order_placed_to,
-							colour: frm.doc.colour_delivered || "",
+							colour: frm.doc.colour || "",
 						},
 						callback: function (sh) {
 							shipment_stock_data = sh.message || [];
+							console.log("[Allocate Dialog] Shipment tab records:", shipment_stock_data.length);
 							const $body = dialog.$wrapper
 								.find("#shipment-stock-list")
 								.empty();
@@ -678,98 +678,29 @@ frappe.ui.form.on("Head Office Vehicle Orders", {
 					});
 				}
 
-				// Filter handlers (VIN + colour) – identical logic for each tab
+				// Filter by VIN search only (colour is filtered by backend from order's colour)
 				function setupFilters() {
-					dialog.$wrapper.on(
-						"input",
-						"#search-vin-stock, #search-colour-stock",
-						() => {
-							const vinTxt = $("#search-vin-stock")
-								.val()
-								.toUpperCase();
-							const colTxt = $("#search-colour-stock")
-								.val()
-								.toUpperCase();
-							dialog.$wrapper
-								.find("#vin-list-stock tr")
-								.each(function () {
-									const vin = $(this)
-										.find("td")
-										.eq(0)
-										.text()
-										.toUpperCase();
-									const col = $(this)
-										.find("td")
-										.eq(2)
-										.text()
-										.toUpperCase();
-									$(this).toggle(
-										vin.includes(vinTxt) &&
-										col.includes(colTxt),
-									);
-								});
-						},
-					);
-					dialog.$wrapper.on(
-						"input",
-						"#search-vin-reserved, #search-colour-reserved",
-						() => {
-							const vinTxt = $("#search-vin-reserved")
-								.val()
-								.toUpperCase();
-							const colTxt = $("#search-colour-reserved")
-								.val()
-								.toUpperCase();
-							dialog.$wrapper
-								.find("#vin-list-reserved tr")
-								.each(function () {
-									const vin = $(this)
-										.find("td")
-										.eq(0)
-										.text()
-										.toUpperCase();
-									const col = $(this)
-										.find("td")
-										.eq(2)
-										.text()
-										.toUpperCase();
-									$(this).toggle(
-										vin.includes(vinTxt) &&
-										col.includes(colTxt),
-									);
-								});
-						},
-					);
-					dialog.$wrapper.on(
-						"input",
-						"#search-vin-shipment, #search-colour-shipment",
-						() => {
-							const vinTxt = $("#search-vin-shipment")
-								.val()
-								.toUpperCase();
-							const colTxt = $("#search-colour-shipment")
-								.val()
-								.toUpperCase();
-							dialog.$wrapper
-								.find("#shipment-stock-list tr")
-								.each(function () {
-									const vin = $(this)
-										.find("td")
-										.eq(0)
-										.text()
-										.toUpperCase();
-									const col = $(this)
-										.find("td")
-										.eq(2)
-										.text()
-										.toUpperCase();
-									$(this).toggle(
-										vin.includes(vinTxt) &&
-										col.includes(colTxt),
-									);
-								});
-						},
-					);
+					dialog.$wrapper.on("input", "#search-vin-stock", () => {
+						const vinTxt = $("#search-vin-stock").val().toUpperCase();
+						dialog.$wrapper.find("#vin-list-stock tr").each(function () {
+							const vin = $(this).find("td").eq(0).text().toUpperCase();
+							$(this).toggle(vin.includes(vinTxt));
+						});
+					});
+					dialog.$wrapper.on("input", "#search-vin-reserved", () => {
+						const vinTxt = $("#search-vin-reserved").val().toUpperCase();
+						dialog.$wrapper.find("#vin-list-reserved tr").each(function () {
+							const vin = $(this).find("td").eq(0).text().toUpperCase();
+							$(this).toggle(vin.includes(vinTxt));
+						});
+					});
+					dialog.$wrapper.on("input", "#search-vin-shipment", () => {
+						const vinTxt = $("#search-vin-shipment").val().toUpperCase();
+						dialog.$wrapper.find("#shipment-stock-list tr").each(function () {
+							const vin = $(this).find("td").eq(0).text().toUpperCase();
+							$(this).toggle(vin.includes(vinTxt));
+						});
+					});
 				}
 
 				// Initial render
@@ -871,7 +802,9 @@ frappe.ui.form.on("Head Office Vehicle Orders", {
 
                         if (model) {
                             dialog.set_df_property("new_colour", "filters", { model: model });
+                            dialog.set_value("new_colour", "");
 
+                            // Auto-select the default colour for this model if one is set
                             frappe.db
                                 .get_value(
                                     "Model Colour",
@@ -879,10 +812,10 @@ frappe.ui.form.on("Head Office Vehicle Orders", {
                                     "name",
                                 )
                                 .then((r) => {
-                                    if (r && r.message && r.message.name) {
-                                        dialog.set_value("new_colour", r.message.name);
-                                    } else {
-                                        dialog.set_value("new_colour", "");
+                                    const msg = r && r.message;
+                                    const default_name = msg && (msg.name || (typeof msg === "string" ? msg : null));
+                                    if (default_name) {
+                                        dialog.set_value("new_colour", default_name);
                                     }
                                 });
                         } else {
@@ -906,39 +839,44 @@ frappe.ui.form.on("Head Office Vehicle Orders", {
             ],
 
             primary_action_label: "Submit",
-            primary_action(values) {
-                if (values.comment && values.new_model && values.new_colour) {
-                    
-                    // Fetch both colour and description in parallel, then apply all at once
-                    Promise.all([
+            async primary_action(values) {
+                if (!values.comment || !values.new_model || !values.new_colour) {
+                    frappe.msgprint(__("All fields are required."));
+                    return;
+                }
+
+                try {
+                    const [colour_res, desc_res] = await Promise.all([
                         frappe.db.get_value("Model Colour", values.new_colour, "colour"),
                         frappe.db.get_value("Model Administration", values.new_model, "model_description"),
-                    ]).then(([colourResult, descResult]) => {
-                        const colour = colourResult?.message?.colour || "";
-                        const description = descResult?.message?.model_description || "";
+                    ]);
+                    const msg = (r) => (r && r.message ? r.message : {});
+                    const colour = msg(colour_res).colour || "";
+                    const description = msg(desc_res).model_description || "";
 
-                        frm.set_value("model", values.new_model);
-                        frm.set_value("colour", colour);
-                        frm.set_value("description", description);
+                    await Promise.all([
+                        frm.set_value("model", values.new_model),
+                        frm.set_value("colour", colour),
+                        frm.set_value("description", description),
+                    ]);
 
-                        frm.refresh_field("model");
-                        frm.refresh_field("colour");
-                        frm.refresh_field("description");
+                    frm.refresh_field("model");
+                    frm.refresh_field("colour");
+                    frm.refresh_field("description");
 
-                        frm.call("post_comment", { comment: values.comment });
+                    await frm.call("post_comment", { comment: values.comment });
+                    await frm.save();
 
-                        frm.save().then(() => {
-                            frappe.show_alert({
-                                message: __("Model updated successfully."),
-                                indicator: "green",
-                            }, 5);
-                        });
-
-                        dialog.hide();
-                    });
-
-                } else {
-                    frappe.msgprint(__("All fields are required."));
+                    frappe.show_alert({
+                        message: __("Model updated successfully."),
+                        indicator: "green",
+                    }, 5);
+                    dialog.hide();
+                } catch (err) {
+                    frappe.show_alert({
+                        message: (err && err.message) || __("Failed to update model."),
+                        indicator: "red",
+                    }, 5);
                 }
             },
         });
@@ -947,58 +885,6 @@ frappe.ui.form.on("Head Office Vehicle Orders", {
 
 	status(frm) {
 		toggle_vin_serial_requirement(frm);
-	},
-
-	check_invoice(frm) {
-		frappe.call({
-			method: "edp_online_vehicles_mahindrasa.integrations.sap_integration.request_sap_invoice",
-			args: {
-				docname: frm.doc.name,
-			},
-			freeze: true,
-			freeze_message: __("Checking Invoice..."),
-			callback: function (r) {
-				if (r.message) {
-					frappe.show_alert({
-						message: r.message,
-						indicator: "green"
-					}, 5);
-				}
-				frm.reload_doc();
-			},
-			error: function (r) {
-				frappe.show_alert({
-					message: r.message || __("Failed to check invoice"),
-					indicator: "red"
-				}, 5);
-			}
-		});
-	},
-
-	check_credit_note(frm) {
-		frappe.call({
-			method: "edp_online_vehicles_mahindrasa.integrations.sap_integration.request_sap_credit_note",
-			args: {
-				docname: frm.doc.name,
-			},
-			freeze: true,
-			freeze_message: __("Requesting Credit Note..."),
-			callback: function (r) {
-				if (r.message) {
-					frappe.show_alert({
-						message: r.message,
-						indicator: "green"
-					}, 5);
-				}
-				frm.reload_doc();
-			},
-			error: function (r) {
-				frappe.show_alert({
-					message: r.message || __("Failed to request credit note"),
-					indicator: "red"
-				}, 5);
-			}
-		});
 	}
 });
 
