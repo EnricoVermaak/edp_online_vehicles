@@ -89,6 +89,7 @@
    "label": "Dealer",
    "link_filters": "[[\"Company\",\"custom_active\",\"=\",1]]",
    "options": "Company",
+   "read_only": 1,
    "reqd": 1
   },
   {
@@ -433,7 +434,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-03-04 08:34:32.893796",
+ "modified": "2026-03-04 13:53:21.787007",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Part Order",

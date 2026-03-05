@@ -45,6 +45,7 @@ frappe.listview_settings["Vehicle Stock"] = {
 								return {
 									filters: {
 										company: hq_company,
+										is_group: 0
 									},
 								};
 							},
@@ -663,6 +664,13 @@ frappe.listview_settings["Vehicle Stock"] = {
 			});
 		}
 	},
+	// 	frm.set_query("warehouse", function() {
+	// return {
+	// 	filters: {
+	// 		is_grouped: 0
+	// 	}
+	// };
+	// });
 };
 
 // Listen for the final allocation result

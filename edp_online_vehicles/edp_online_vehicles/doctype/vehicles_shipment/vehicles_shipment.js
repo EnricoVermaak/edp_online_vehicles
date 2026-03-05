@@ -4,12 +4,24 @@
 let stockNo = "";
 
 frappe.ui.form.on("Vehicles Shipment", {
+
+
 	refresh(frm) {
 		frm.set_query("target_warehouse", () => {
 			return {
 				filters: {
 					is_group: 0,
+					company: frm.doc.dealer
 				},
+			};
+		});
+		// Child table: only leaf warehouses (group warehouses cannot receive stock)
+		frm.set_query("target_warehouse", "vehicles_shipment_items", () => {
+			return {
+				filters: [
+					["is_group", "=", 0],
+					...(frm.doc.dealer ? [["company", "=", frm.doc.dealer]] : []),
+				],
 			};
 		});
 
@@ -513,13 +525,13 @@ frappe.ui.form.on("Vehicles Shipment", {
 		//     }
 		// };
 
-		frappe.db.get_doc("Vehicle Stock Settings").then((setting_doc) => {
-			if (setting_doc.automatically_create_stock_number) {
-				stockNo = setting_doc.last_automated_stock_no;
+		// frappe.db.get_doc("Vehicle Stock Settings").then((setting_doc) => {
+		// 	if (setting_doc.automatically_create_stock_number) {
+		// 		stockNo = setting_doc.last_automated_stock_no;
 
-				console.log(stockNo);
-			}
-		});
+		// 		console.log(stockNo);
+		// 	}
+		// });
 	},
 	before_save: async function (frm) {
 		let received_qty = 0;
@@ -644,11 +656,11 @@ frappe.ui.form.on("Vehicles Shipment", {
 			frappe.throw(errorMessage);
 		}
 	},
-	
+
 	after_save(frm) {
 		if (frm.doc.status == "Completed") {
 			console.log(frm.doc.name);
-			
+
 			frappe.call({
 				method: "edp_online_vehicles.events.submit_document.submit_shipment_document",
 				args: {
@@ -662,45 +674,36 @@ frappe.ui.form.on("Vehicles Shipment", {
 							},
 							5,
 						);
-						
+
 						frm.refresh();
 					}
 				},
 			});
 		}
 	},
-	
-		before_submit: function(frm) {
-			for (let row of frm.doc.vehicles_shipment_items || []) {
-				if (row.status !== "Received") {
-					frappe.throw(
-						__("All Vehicles must be in 'Received' status before submitting.")
-					);
-				}
-			}
-		},
+
 	onload_post_render: function (frm) {
 		handle_custom_buttons(frm);
 	},
-	
+
 	onload: function (frm) {
-		frm.set_query("target_warehouse", function (doc, cdt, cdn) {
-			let d = locals[cdt][cdn];
+		frm.set_query("target_warehouse", function () {
 			return {
-				filters: {
-					company: frm.doc.dealer,
-				},
+				filters: [
+					["is_group", "=", 0],
+					...(frm.doc.dealer ? [["company", "=", frm.doc.dealer]] : []),
+				],
 			};
 		});
 	},
 
 	dealer: function (frm) {
-		frm.set_query("target_warehouse", function (doc, cdt, cdn) {
-			let d = locals[cdt][cdn];
+		frm.set_query("target_warehouse", function () {
 			return {
-				filters: {
-					company: frm.doc.dealer,
-				},
+				filters: [
+					["is_group", "=", 0],
+					...(frm.doc.dealer ? [["company", "=", frm.doc.dealer]] : []),
+				],
 			};
 		});
 	},
@@ -808,7 +811,7 @@ function handle_custom_buttons(frm) {
 				download_button.className = "btn btn-primary btn-sm";
 				download_button.innerText = "Download";
 				download_button.onclick = function () {
-					let title = "Vehicle Shipment Items";
+					let title = "Vehicles Shipment Items";
 					let data = [];
 					let docfields = [];
 
@@ -818,52 +821,47 @@ function handle_custom_buttons(frm) {
 					data.push([]);
 					data.push([]);
 					data.push([__("The CSV format is case sensitive")]);
-					data.push([
-						__(
-							"Do not edit headers which are preset in the template",
-						),
-					]);
+					data.push([__("Do not edit headers which are preset in the template",)]);
 					data.push(["------"]);
 
-					// Define metadata for child table fields
-					$.each(
-						frappe.get_meta("Vehicles Shipment Items").fields,
-						(i, df) => {
-							if (frappe.model.is_value_type(df.fieldtype)) {
-								data[1].push(df.label); // Add field label to the header row
-								data[2].push(df.fieldname); // Add fieldname for mapping
-								let description = (df.description || "") + " ";
-								if (df.fieldtype === "Date") {
-									description +=
-										frappe.boot.sysdefaults.date_format; // Add date format for Date fields
-								}
-								data[3].push(description); // Add description row
-								docfields.push(df); // Store metadata
-							}
-						},
+					// Get child and visible columns
+					const child_doctype = "Vehicles Shipment Items";
+
+					// Add if field is In List View, not hidden
+					const visible_fields = frappe.get_meta(child_doctype).fields.filter(df =>
+						frappe.model.is_value_type(df.fieldtype) && 
+						df.in_list_view && 
+						!df.hidden &&
+						df.fieldname !== "model_description" && // Exclude model_descriptions
+						df.fieldname !== "status" // Exclude status
 					);
+
+					// Add visible fields
+					visible_fields.forEach((field) => {
+						data[1].push(field.label);     // Label row
+						data[2].push(field.fieldname); // Fieldname row
+						docfields.push(field);         // Store metadata for formatting
+					});
 
 					// Add existing data from the child table
-					$.each(
-						cur_frm.doc.vehicles_shipment_items || [],
-						(i, d) => {
-							let row = [];
-							$.each(data[2], (i, fieldname) => {
-								let value = d[fieldname];
+					(cur_frm.doc.vehicles_shipment_items || []).forEach((d) => {
+						let row = [];
+						data[2].forEach((fieldname, i) => {
+							let value = d[fieldname];
 
-								// Format date fields
-								if (
-									docfields[i].fieldtype === "Date" &&
-									value
-								) {
-									value = frappe.datetime.str_to_user(value); // Format to user-readable date
-								}
+							// If this is the colour field
+							if (fieldname === "colour" && value) {
+								value = value.split(" - ")[0];  // Keep only "Blue"
+							}
 
-								row.push(value || ""); // Add value or empty string
-							});
-							data.push(row); // Append row to the data
-						},
-					);
+
+							if (docfields[i].fieldtype === "Date" && value) {
+								value = frappe.datetime.str_to_user(value);
+							}
+							row.push(value || "");
+						});
+						data.push(row);
+					});
 
 					// Trigger download
 					frappe.tools.downloadify(data, null, title);
@@ -903,6 +901,7 @@ function handle_custom_buttons(frm) {
 
 							// Process rows from the uploaded file
 							let rowIndex = 7; // Start after the metadata/header rows
+							count_row = 0
 
 							function processRow(rowIndex) {
 								if (rowIndex < data.length) {
@@ -918,13 +917,24 @@ function handle_custom_buttons(frm) {
 									});
 
 									if (!blank_row) {
-										// Get model and colour
-										const model = row[0];
-										const colour = row[11];
+										count_row++
 
-										// Create the formatted Model Colour name
-										const model_colour_name =
-											colour + " - " + model;
+										// Get model and colour
+										const model = row[fieldnames.indexOf("model_code")];
+										let colour = row[fieldnames.indexOf("colour")];
+
+										if (colour == null || colour == undefined || colour == "") {
+											colour = "undefined";
+										}
+
+										// Check if colour already contains the model (user uploaded "Colour - Model")
+										let model_colour_name;
+										if (colour.includes(model)) {
+											model_colour_name = colour;
+											colour = colour.split(" - ")[0]; // Extract just the colour part
+										} else {
+											model_colour_name = colour + " - " + model; // Standard format
+										}
 
 										// Check if the colour exists for the model
 										frappe.db
@@ -938,6 +948,7 @@ function handle_custom_buttons(frm) {
 													const d = cur_frm.add_child(
 														"vehicles_shipment_items",
 													);
+
 													$.each(row, (ci, value) => {
 														const fieldname =
 															fieldnames[ci];
@@ -957,19 +968,35 @@ function handle_custom_buttons(frm) {
 																	](value)
 																	: value;
 														}
+
+														// Make field empty if value is not present in the CSV to avoid validation issues
+														if (!value) {
+															d[fieldname] = "undefined";
+														}
 													});
 
-													// Set the colour field to the model_colour_name (link to Model Colour)
-													d.colour =
-														model_colour_name;
+													// Set the colour field to the colour
+													d.colour = colour;
+
+													// Fetch model_description using model
+													if (model) {
+														frappe.db.get_value(
+															"Model Administration",
+															model,
+															"model_description"
+														).then(res => {
+															if (res.message) {
+																d.model_description = res.message.model_description;
+																cur_frm.refresh_field("vehicles_shipment_items");
+															}
+														});
+													}
 
 													// Refresh the child table to reflect changes
 													cur_frm.refresh_field(
 														"vehicles_shipment_items",
 													);
 
-													// Move to the next row after adding the current one
-													processRow(rowIndex + 1);
 												} else {
 													// If the colour does not exist, create the color first
 													frappe.call({
@@ -985,59 +1012,40 @@ function handle_custom_buttons(frm) {
 														callback: function (r) {
 															if (r.message) {
 																// After color is created, add the row to the child table
-																const d =
-																	cur_frm.add_child(
-																		"vehicles_shipment_items",
-																	);
-																$.each(
-																	row,
-																	(
-																		ci,
-																		value,
-																	) => {
-																		const fieldname =
-																			fieldnames[
-																			ci
-																			];
-																		const df =
-																			frappe.meta.get_docfield(
-																				"Vehicles Shipment Items",
-																				fieldname,
-																			);
-																		if (
-																			df
-																		) {
-																			d[
-																				fieldname
-																			] =
-																				value_formatter_map[
-																					df
-																						.fieldtype
-																				]
-																					? value_formatter_map[
-																						df
-																							.fieldtype
-																					](
-																						value,
-																					)
+																const d = cur_frm.add_child("vehicles_shipment_items");
+
+																$.each(row, (ci, value) =>{
+																		const fieldname = fieldnames[ci];
+																		const df = frappe.meta.get_docfield("Vehicles Shipment Items",fieldname);
+
+																		if (df) {
+																			d[fieldname] = value_formatter_map[df.fieldtype]
+																					? value_formatter_map[df.fieldtype](value)
 																					: value;
 																		}
 																	},
 																);
 
-																// Set the colour field to the model_colour_name (link to Model Colour)
-																d.colour =
-																	model_colour_name;
+																// Set the colour field to the colour
+																d.colour = colour;
+
+																// Fetch model_description using model
+																if (model) {
+																	frappe.db.get_value(
+																		"Model Administration",
+																		model,
+																		"model_description"
+																	).then(res => {
+																		if (res.message) {
+																			d.model_description = res.message.model_description;
+																			cur_frm.refresh_field("vehicles_shipment_items");
+																		}
+																	});
+																}
 
 																// Refresh the child table to reflect changes
 																cur_frm.refresh_field(
 																	"vehicles_shipment_items",
-																);
-
-																// Move to the next row after the current one is done
-																processRow(
-																	rowIndex +
-																	1,
 																);
 															} else {
 																// Notify user of failure to create color
@@ -1056,23 +1064,36 @@ function handle_custom_buttons(frm) {
 																			"red",
 																	},
 																);
-
-																// Move to the next row if color creation fails
-																processRow(
-																	rowIndex +
-																	1,
-																);
 															}
 														},
 													});
 												}
 											});
+											
+											// Move to the next row after the current one is done
+											processRow(
+												rowIndex +
+												1,
+											);
+
 									} else {
 										// If the row is blank, skip it and move to the next one
 										processRow(rowIndex + 1);
 									}
 								} else {
 									// Once all rows have been processed, notify the user
+									// Refresh child table first
+									frm.refresh_field("vehicles_shipment_items");
+
+									frm.set_value("total_vehicles", count_row);
+									frm.toggle_display("total_vehicles", count_row > 0);
+
+									frappe.msgprint({
+										message: __("Table updated successfully"),
+										title: __("Success"),
+										indicator: "green",
+									});
+									
 									frappe.msgprint({
 										message: __(
 											"Table updated successfully",
@@ -1102,19 +1123,19 @@ function handle_custom_buttons(frm) {
 	}
 }
 
-function incrementStockNumber(stockNumber) {
-	// Split the prefix and number part
-	const prefix = stockNumber.match(/[A-Za-z]+/)[0];
-	const number = stockNumber.match(/\d+/)[0];
+// function incrementStockNumber(stockNumber) {
+// 	// Split the prefix and number part
+// 	const prefix = stockNumber.match(/[A-Za-z]+/)[0];
+// 	const number = stockNumber.match(/\d+/)[0];
 
-	// Increment the numeric part
-	const incrementedNumber = (parseInt(number, 10) + 1)
-		.toString()
-		.padStart(6, "0");
+// 	// Increment the numeric part
+// 	const incrementedNumber = (parseInt(number, 10) + 1)
+// 		.toString()
+// 		.padStart(6, "0");
 
-	// Combine prefix and incremented number
-	return prefix + incrementedNumber;
-}
+// 	// Combine prefix and incremented number
+// 	return prefix + incrementedNumber;
+// }
 
 
 
@@ -1129,9 +1150,8 @@ frappe.ui.form.on("Vehicles Shipment", {
 		const total = (frm.doc.vehicles_shipment_items || []).filter(
 			row => row.model_code || row.vin_serial_no
 		).length;
-
-		frm.set_value("total_vehicles", total);
 		frm.refresh_field("total_vehicles");
+		frm.set_value("total_vehicles", total);
 		frm.toggle_display("total_vehicles", total > 0);
 	}
 });
@@ -1147,8 +1167,8 @@ frappe.ui.form.on("Vehicles Shipment Items", {
 
 	
 	vehicles_shipment_items_change(frm, cdt, cdn) {
-		frm.trigger("calculate_total_vehicles");
-	},
+        frm.trigger("calculate_total_vehicles");
+    },
 
 	model_code(frm) { frm.trigger("calculate_total_vehicles"); },
 	vin_serial_no(frm) { frm.trigger("calculate_total_vehicles"); },
@@ -1183,5 +1203,6 @@ frappe.ui.form.on("Vehicles Shipment", {
 		});
 	}
 });
+
 
 
