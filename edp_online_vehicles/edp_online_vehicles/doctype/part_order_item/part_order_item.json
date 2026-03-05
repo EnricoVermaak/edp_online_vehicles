@@ -29,8 +29,9 @@
   "airfreight",
   "section_break_vgax",
   "total_excl",
-  "column_break_cajy",
+  "vat",
   "total_incl",
+  "column_break_cajy",
   "image_section",
   "image",
   "item_image",
@@ -169,8 +170,7 @@
   {
    "fieldname": "qty_delivered",
    "fieldtype": "Int",
-   "label": "Qty Delivered",
-   "read_only": 1
+   "label": "Qty Delivered"
   },
   {
    "fieldname": "image_section",
@@ -233,13 +233,19 @@
    "default": "0",
    "fieldname": "airfreight",
    "fieldtype": "Check",
+   "hidden": 1,
    "label": "Airfreight"
+  },
+  {
+   "fieldname": "vat",
+   "fieldtype": "Currency",
+   "label": "VAT"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2026-02-11 13:59:19.426777",
+ "modified": "2026-03-04 13:13:13.767351",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Part Order Item",

@@ -13,6 +13,7 @@ from frappe.utils import now_datetime
 
 class HeadOfficeVehicleOrders(Document):
 	def validate(self):
+
 		move_stock = frappe.db.get_value("Vehicles Order Status", {"name": self.status}, "auto_move_stock")
 		in_transit = frappe.db.get_value(
 			"Vehicles Order Status", {"name": self.status}, "in_transit_warehouse"
@@ -78,6 +79,9 @@ class HeadOfficeVehicleOrders(Document):
 			)
 
 	def after_insert(self):
+		if self.order_type == "Back Order":
+			return
+
 		stock_fifo_orders = frappe.db.get_single_value(
 			"Vehicle Stock Settings", "apply_fifo_rule_on_vehicles_orders"
 		)

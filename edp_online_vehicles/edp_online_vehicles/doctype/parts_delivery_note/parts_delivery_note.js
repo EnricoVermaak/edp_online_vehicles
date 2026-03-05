@@ -24,6 +24,9 @@ frappe.ui.form.on("Parts Delivery Note", {
 	},
 
 	refresh(frm) {
+
+		calculate_total_qty(frm);
+
 		if (frm.doc.delivery_note_item.length == 0) {
 			if (frm.doc.part_order_no) {
 				frappe.db
@@ -161,3 +164,24 @@ frappe.ui.form.on("Parts Delivery Note Items", {
 		}
 	},
 });
+	// Trigger when a child table row is added, removed, or qty_ordered changes
+	frappe.ui.form.on("Delivery Note Item", {
+		qty_ordered: function(frm, cdt, cdn) {
+			calculate_total_qty(frm);
+		},
+		delivery_note_item_add: function(frm, cdt, cdn) {
+			calculate_total_qty(frm);
+		},
+		delivery_note_item_remove: function(frm, cdt, cdn) {
+			calculate_total_qty(frm);
+		}
+	});
+
+	// Utility function to sum qty_ordered in the child table
+	function calculate_total_qty(frm) {
+		let total = 0;
+		frm.doc.delivery_note_item.forEach(row => {
+			total += row.qty_ordered || 0;
+		});
+		frm.set_value("total_qty_ordered", total);
+	}
