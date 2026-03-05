@@ -26,6 +26,110 @@ frappe.listview_settings["Vehicle Stock"] = {
 		// Hide the default "New" button
 		$('[data-label="Add Vehicle Stock"]').hide();
 
+		listview.page.add_actions_menu_item(__('Move to Dealer'), function () {
+			// frappe.db.get_value("Company", { custom_head_office: 1 }, "name").then((r) => {
+			// hq_company = r?.message?.name;
+
+			const selected_docs = listview.get_checked_items();
+			const vin = selected_docs.map(d => d.name);
+
+			const dialog = new frappe.ui.Dialog({
+				title: __('Move to Dealer'),
+				fields: [
+					{
+						label: __('To Dealer'),
+						fieldname: 'to_dealer',
+						fieldtype: 'Link',
+						options: 'Company',
+						// get_query: function () {
+						// 	return {
+						// 		filters: {
+						// 			company: hq_company,
+						// 			is_group: 0
+						// 		},
+						// 	};
+						// },
+					},
+
+					{
+						label: __('Vehicles'),
+						fieldname: 'selected_Vehicles',
+						fieldtype: 'Table',
+						read_only: 1,
+						cannot_add_rows: true,
+						in_place_edit: false,
+						fields: [
+							{
+								fieldname: 'vin_serial_no',
+								fieldtype: 'Link',
+								in_list_view: 1,
+								label: 'VIN/ Serial No',
+								options: 'Vehicle Stock',
+								read_only: 1
+							}
+						],
+						data: vin.map(v => ({ vin_serial_no: v }))
+					}
+				],
+				primary_action_label: __('Move'),
+				primary_action(values) {
+					dialog.hide();
+
+					frappe.dom.freeze();
+
+					frappe.db
+						.get_value(
+							"Company",
+							values.dealer,
+							"custom_default_vehicles_stock_warehouse"
+						)
+						.then((res) => {
+							const default_wh =
+								res?.message?.custom_default_vehicles_stock_warehouse;
+
+							const to_wh = default_wh;
+
+							if (!to_wh) {
+								frappe.dom.unfreeze();
+								frappe.msgprint(__("No target warehouse found (no selection and no Company default)."));
+								return;
+							}
+
+							return frappe.call({
+								method: "edp_online_vehicles.events.move_vin_to_new_warehouse.move_vin_to_new_warehouse",
+								args: {
+									docnames: selected_docs.map((doc) => doc.name),
+									to_warehouse: to_wh,
+								},
+							});
+						})
+						.then((r) => {
+							frappe.dom.unfreeze();
+
+							if (r?.message === "Success") {
+								frappe.show_alert(
+									{
+										message: __("Vehicle/s successfully transferred to warehouse " + (values.to_warehouse || "")),
+										indicator: "green",
+									},
+									10
+								);
+							} else if (r) {
+								frappe.msgprint(__("Transfer did not return Success."));
+							}
+						})
+						.catch((err) => {
+							frappe.dom.unfreeze();
+							console.error(err);
+							frappe.msgprint(__("Something went wrong while transferring vehicles."));
+						});
+				}
+
+
+			})
+			dialog.show();
+		});
+
 		listview.page.add_actions_menu_item(__('Transfer to New Warehouse'), function () {
 			frappe.db.get_value("Company", { custom_head_office: 1 }, "name").then((r) => {
 				hq_company = r?.message?.name;
@@ -165,50 +269,50 @@ frappe.listview_settings["Vehicle Stock"] = {
 									return { filters: filters };
 								},
 							},
-					{
-						label: __("Vehicles"),
-						fieldname: "vehicles_table",
-						fieldtype: "Table",
-						read_only: 1,
-						cannot_add_rows: true,
-						in_place_edit: false,
-						fields: [
 							{
-								fieldname: "vin_serial_no",
-								fieldtype: "Link",
-								in_list_view: 1,
-								label: __("VIN/ Serial No"),
-								options: "Vehicle Stock",
+								label: __("Vehicles"),
+								fieldname: "vehicles_table",
+								fieldtype: "Table",
 								read_only: 1,
+								cannot_add_rows: true,
+								in_place_edit: false,
+								fields: [
+									{
+										fieldname: "vin_serial_no",
+										fieldtype: "Link",
+										in_list_view: 1,
+										label: __("VIN/ Serial No"),
+										options: "Vehicle Stock",
+										read_only: 1,
+									},
+								],
+								data: docnames.map((v) => ({ vin_serial_no: v })),
 							},
 						],
-						data: docnames.map((v) => ({ vin_serial_no: v })),
-					},
-				],
-				primary_action_label: __("Create Model Conversion"),
-				primary_action(values) {
-					if (!values.convert_to_model) {
-						frappe.msgprint(__("Please select a Convert To Model."));
-						return;
-					}
-					dialog.hide();
-					frappe.call({
-						method: "edp_online_vehicles.events.create_model_conversion_from_stock.create_model_conversion_from_stock",
-						args: {
-							convert_from_model: convert_from_model,
-							convert_to_model: values.convert_to_model,
-							docnames: docnames,
-						},
-						callback: function (r) {
-							if (r.message) {
-								frappe.show_alert({ message: __("Model Conversion created."), indicator: "green" }, 5);
-								frappe.set_route("Form", "Model Conversion", r.message);
+						primary_action_label: __("Create Model Conversion"),
+						primary_action(values) {
+							if (!values.convert_to_model) {
+								frappe.msgprint(__("Please select a Convert To Model."));
+								return;
 							}
+							dialog.hide();
+							frappe.call({
+								method: "edp_online_vehicles.events.create_model_conversion_from_stock.create_model_conversion_from_stock",
+								args: {
+									convert_from_model: convert_from_model,
+									convert_to_model: values.convert_to_model,
+									docnames: docnames,
+								},
+								callback: function (r) {
+									if (r.message) {
+										frappe.show_alert({ message: __("Model Conversion created."), indicator: "green" }, 5);
+										frappe.set_route("Form", "Model Conversion", r.message);
+									}
+								},
+							});
 						},
 					});
-				},
-			});
-			dialog.show();
+					dialog.show();
 				},
 			});
 		});
@@ -465,7 +569,7 @@ frappe.listview_settings["Vehicle Stock"] = {
 				.catch((err) => {
 					console.warn(err);
 				});
-			
+
 		});
 
 		listview.page.add_actions_menu_item(__("Apply Microdot"), function () {
