@@ -9,10 +9,10 @@ frappe.ui.form.on("Vehicles Shipment", {
 	refresh(frm) {
 		frm.set_query("target_warehouse", () => {
 			return {
-				filters: [
-					["is_group", "=", 0],
-					...(frm.doc.dealer ? [["company", "=", frm.doc.dealer]] : []),
-				],
+				filters: {
+					is_group: 0,
+					company: frm.doc.dealer
+				},
 			};
 		});
 		// Child table: only leaf warehouses (group warehouses cannot receive stock)
