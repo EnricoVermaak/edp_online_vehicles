@@ -187,13 +187,20 @@ frappe.ui.form.on("Vehicles Service", {
 				});
 		}
 
-		frm.set_query("item", "service_labour_items", () => {
-			return {
-				filters: {
-					item_group: "Service Labour",
-				},
-			};
-		});
+		// Set filters on item queries
+		frappe.db.get_value("Vehicle Service Settings", "Vehicle Service Settings", "labour_code_filter")
+			.then(r => {
+				let labour_code_filter = r.message?.labour_code_filter || "Service Labour";
+
+				frm.set_query("item", "service_labour_items", () => {
+					return {
+						filters: {
+							item_group: labour_code_filter
+						}
+					};
+				});
+			});
+
 		frm.set_query("item", "service_parts_items", () => {
 			return {
 				filters: {

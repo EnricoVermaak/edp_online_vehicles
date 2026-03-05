@@ -8,6 +8,7 @@
   "general_settings_section",
   "allow_goodwill_for_out_of_warranty_claims",
   "allow_warranty_odo_reading_roll_back",
+  "labour_code_filter",
   "mandatory_documents_section",
   "mandatory_documents"
  ],
@@ -40,12 +41,19 @@
    "fieldtype": "Table",
    "label": "Mandatory Documents",
    "options": "DocType Documents"
+  },
+  {
+   "default": "Warranty Labour",
+   "fieldname": "labour_code_filter",
+   "fieldtype": "Select",
+   "label": "Labour Code Filter",
+   "options": "Warranty Labour\nService Warranty Labour"
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2026-02-13 10:52:58.727799",
+ "modified": "2026-03-05 10:07:13.820521",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicles Warranty Settings",

@@ -7,6 +7,22 @@ frappe.ui.form.on("Vehicles Shipment", {
 
 
 	refresh(frm) {
+
+		let grid = frm.fields_dict["vehicles_shipment_items"].grid;
+
+		if (!grid.wrapper.find(".add-multiple-btn").length) {
+
+			let btn = $(`<button class="btn btn-secondary btn-sm add-multiple-btn">
+				Add Multiple
+			</button>`);
+
+			btn.click(() => {
+				open_add_multiple_dialog(frm);
+			});
+
+			grid.wrapper.find(".grid-buttons").append(btn);
+		}
+
 		frm.set_query("target_warehouse", () => {
 			return {
 				filters: {
@@ -971,7 +987,7 @@ function handle_custom_buttons(frm) {
 
 														// Make field empty if value is not present in the CSV to avoid validation issues
 														if (!value) {
-															d[fieldname] = "undefined";
+															d[fieldname] = "";
 														}
 													});
 
@@ -1204,5 +1220,130 @@ frappe.ui.form.on("Vehicles Shipment", {
 	}
 });
 
+// Function to open the dialog box
+function open_add_multiple_dialog(frm) {
 
+	let dialog = new frappe.ui.Dialog({
+		title: "Add Multiple Vehicles",
+		fields: [
 
+			{
+				label: "Model",
+				fieldname: "model",
+				fieldtype: "Link",
+				options: "Model Administration",
+				reqd: 1,
+				get_query: () => {
+					return {
+						filters: {
+							mark_as_discontinued: 0
+						}
+					};
+				},
+				onchange: function () {
+
+					let model = dialog.get_value("model");
+
+					if (!model) return;
+
+					frappe.db.get_doc("Model Administration", model)
+						.then(doc => {
+							dialog.set_value("description", doc.model_description || "");
+							dialog.set_value("model_year", doc.model_year || "");
+						});
+
+				}
+			},
+
+			{
+				label: "Description",
+				fieldname: "description",
+				fieldtype: "Data",
+				read_only: 1
+			},
+
+			{
+				label: "Model Year",
+				fieldname: "model_year",
+				fieldtype: "Data",
+				read_only: 1
+			},
+
+			{
+				label: "Colour",
+				fieldname: "colour",
+				fieldtype: "Link",
+				options: "Model Colour",
+				reqd: 1,
+				get_query: function () {
+
+					let model = dialog.get_value("model");
+
+					if (!model) {
+						frappe.msgprint("Please select a model first");
+						return;
+					}
+
+					return {
+						filters: {
+							model: model,
+							discontinued: 0
+						}
+					};
+				}
+			},
+
+			{
+				label: "Quantity",
+				fieldname: "qty",
+				fieldtype: "Int",
+				reqd: 1
+			}
+
+		],
+
+		primary_action_label: "Add Vehicles",
+
+		primary_action(values) {
+
+			if (!values.model || !values.colour || !values.qty) {
+				frappe.msgprint("Please fill all fields");
+				return;
+			}
+
+			if (values.qty <= 0) {
+				frappe.msgprint("Quantity must be greater than zero");
+				return;
+			}
+
+			dialog.hide();
+
+			for (let i = 0; i < values.qty; i++) {
+
+				let row = frm.add_child("vehicles_shipment_items");
+
+				row.model_code = values.model;
+				row.model_description = values.description;
+				row.colour = values.colour;
+				row.cost_price_excl = values.price_excl;
+
+				if (frm.doc.target_warehouse) {
+					row.target_warehouse = frm.doc.target_warehouse;
+				}
+
+			}
+
+			frm.refresh_field("vehicles_shipment_items");
+
+			frm.trigger("calculate_total_vehicles");
+
+			frappe.show_alert({
+				message: `${values.qty} vehicles added`,
+				indicator: "green"
+			});
+
+		}
+	});
+
+	dialog.show();
+}

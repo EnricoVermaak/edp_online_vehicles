@@ -15,6 +15,7 @@
   "allow_auto_job_card_no",
   "auto_job_card_no_prefix",
   "last_auto_job_card_no",
+  "labour_code_filter",
   "section_break_status_sync",
   "status_sync_mappings",
   "section_break_oeab",
@@ -99,12 +100,19 @@
    "fieldtype": "Table",
    "label": "Mandatory Documents",
    "options": "DocType Documents"
+  },
+  {
+   "default": "Service Labour",
+   "fieldname": "labour_code_filter",
+   "fieldtype": "Select",
+   "label": "Labour Code Filter",
+   "options": "Service Labour\nService Warranty Labour"
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2026-02-10 15:06:31.483160",
+ "modified": "2026-03-05 09:52:30.235464",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicle Service Settings",

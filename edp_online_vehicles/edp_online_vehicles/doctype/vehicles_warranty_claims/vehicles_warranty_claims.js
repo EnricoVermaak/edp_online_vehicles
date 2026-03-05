@@ -63,9 +63,21 @@ frappe.ui.form.on("Vehicles Warranty Claims", {
 			frm.fields_dict.mandatory_documents.grid.cannot_add_rows = true;
 			frm.refresh_field("mandatory_documents");
 		}
-		frm.set_query("labour_code", "labour_items", () => ({
-			filters: { item_group: "Warranty Claim Labour" }
-		}));
+
+		// Set filters for item queries
+		frappe.db.get_value("Vehicles Warranty Settings", "Vehicles Warranty Settings", "labour_code_filter")
+			.then(r => {
+				let labour_code_filter = r.message?.labour_code_filter || "Warranty Labour";
+
+				frm.set_query("labour_code", "labour_items", () => {
+					return {
+						filters: {
+							item_group: labour_code_filter
+						}
+					};
+				});
+			});
+
 		frm.add_custom_button(
 			__("Sales Order"),
 			() => {
