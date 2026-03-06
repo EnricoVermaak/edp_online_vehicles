@@ -207,7 +207,7 @@ frappe.listview_settings["Vehicle Stock"] = {
 
 		});
 
-		listview.page.add_actions_menu_item(__("Convert TO Model"), function () {
+		listview.page.add_actions_menu_item(__("Convert to Model"), function () {
 			const selected_docs = listview.get_checked_items();
 			if (selected_docs.length === 0) {
 				frappe.msgprint(__("Please select at least one Vehicle Stock record."));
@@ -256,7 +256,7 @@ frappe.listview_settings["Vehicle Stock"] = {
 								default: convert_from_model,
 							},
 							{
-								label: __("Convert To Model"),
+								label: __("Convert to Model"),
 								fieldname: "convert_to_model",
 								fieldtype: "Link",
 								options: "Model Administration",
@@ -292,7 +292,7 @@ frappe.listview_settings["Vehicle Stock"] = {
 						primary_action_label: __("Create Model Conversion"),
 						primary_action(values) {
 							if (!values.convert_to_model) {
-								frappe.msgprint(__("Please select a Convert To Model."));
+								frappe.msgprint(__("Please select a Convert to Model."));
 								return;
 							}
 							dialog.hide();
