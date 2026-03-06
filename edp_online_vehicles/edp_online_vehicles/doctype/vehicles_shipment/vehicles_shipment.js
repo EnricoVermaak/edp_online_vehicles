@@ -1252,6 +1252,15 @@ function open_add_multiple_dialog(frm) {
 							dialog.set_value("model_year", doc.model_year || "");
 						});
 
+					frappe.db
+						.get_value("Model Colour", { model: model, default: 1 }, "name")
+						.then((r) => {
+							if (r && r.message && r.message.name) {
+								dialog.set_value("colour", r.message.name);
+							} else {
+								dialog.set_value("colour", "");
+							}
+						});
 				}
 			},
 
