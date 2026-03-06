@@ -285,11 +285,11 @@
    "options": "Price List"
   },
   {
+   "depends_on": "eval:doc.customer_type == 'Individual' || doc.customer_type=='Foreigner'",
    "fieldname": "gender",
    "fieldtype": "Link",
    "label": "Gender",
-   "options": "Gender",
-   "reqd": 1
+   "options": "Gender"
   }
  ],
  "index_web_pages_for_search": 1,
@@ -307,7 +307,7 @@
    "link_fieldname": "customer"
   }
  ],
- "modified": "2026-02-26 11:38:05.172939",
+ "modified": "2026-03-06 12:15:47.162989",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Dealer Customer",

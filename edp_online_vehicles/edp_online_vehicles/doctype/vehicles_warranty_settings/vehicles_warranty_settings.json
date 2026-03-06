@@ -47,13 +47,13 @@
    "fieldname": "labour_code_filter",
    "fieldtype": "Select",
    "label": "Labour Code Filter",
-   "options": "Warranty Labour\nService Warranty Labour"
+   "options": "Warranty Labour\nService and Warranty Labour"
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2026-03-05 10:07:13.820521",
+ "modified": "2026-03-06 12:04:00.425463",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicles Warranty Settings",
