@@ -397,6 +397,7 @@ frappe.ui.form.on("Vehicle Retail", {
 					return {
 						filters: {
 							email: ["in", users],
+							enabled: 1,
 						},
 					};
 				});
