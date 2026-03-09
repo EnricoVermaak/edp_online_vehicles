@@ -1,0 +1,204 @@
+{
+ "actions": [],
+ "autoname": "format:BUL-{####}",
+ "creation": "2026-03-07 00:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "subject",
+  "column_break_main",
+  "status",
+  "posting_date",
+  "section_break_message",
+  "message",
+  "section_break_attachment",
+  "attachment",
+  "section_break_distribution",
+  "target_roles",
+  "column_break_dist",
+  "distributed",
+  "distributed_on",
+  "distribution_count",
+  "section_break_actions",
+  "distribute_btn",
+  "resend_btn",
+  "view_status_btn"
+ ],
+ "fields": [
+  {
+   "fieldname": "subject",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Subject",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_main",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "Active",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Status",
+   "options": "Active\nArchived",
+   "reqd": 1
+  },
+  {
+   "default": "Today",
+   "fieldname": "posting_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Posting Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "section_break_message",
+   "fieldtype": "Section Break",
+   "label": "Message"
+  },
+  {
+   "fieldname": "message",
+   "fieldtype": "Text Editor",
+   "label": "Message",
+   "reqd": 1
+  },
+  {
+   "fieldname": "section_break_attachment",
+   "fieldtype": "Section Break",
+   "label": "Attachment"
+  },
+  {
+   "fieldname": "attachment",
+   "fieldtype": "Attach",
+   "label": "Attachment"
+  },
+  {
+   "fieldname": "section_break_distribution",
+   "fieldtype": "Section Break",
+   "label": "Distribution",
+   "depends_on": "eval: frappe.user.has_role('Vehicles Administrator') || frappe.user.has_role('System Manager')"
+  },
+  {
+   "fieldname": "target_roles",
+   "fieldtype": "Table MultiSelect",
+   "label": "Target Roles",
+   "options": "Bulletin Target Role"
+  },
+  {
+   "fieldname": "column_break_dist",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "distributed",
+   "fieldtype": "Check",
+   "label": "Distributed",
+   "read_only": 1
+  },
+  {
+   "fieldname": "distributed_on",
+   "fieldtype": "Datetime",
+   "label": "Distributed On",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "distribution_count",
+   "fieldtype": "Int",
+   "label": "Recipients",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_actions",
+   "fieldtype": "Section Break",
+   "label": "Actions",
+   "depends_on": "eval: frappe.user.has_role('Vehicles Administrator') || frappe.user.has_role('System Manager')"
+  },
+  {
+   "fieldname": "distribute_btn",
+   "fieldtype": "Button",
+   "label": "Distribute"
+  },
+  {
+   "fieldname": "resend_btn",
+   "fieldtype": "Button",
+   "label": "Resend"
+  },
+  {
+   "fieldname": "view_status_btn",
+   "fieldtype": "Button",
+   "label": "View Distribution Status"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2026-03-07 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Edp Online Vehicles",
+ "name": "Bulletin",
+ "naming_rule": "Expression (old style)",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Vehicles Administrator",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Dealer Vehicle Administrator",
+   "share": 1
+  },
+  {
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Aftersales Manager",
+   "share": 1
+  },
+  {
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Desk User",
+   "share": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "subject",
+ "show_title_field_in_link": 1,
+ "track_changes": 1
+}
