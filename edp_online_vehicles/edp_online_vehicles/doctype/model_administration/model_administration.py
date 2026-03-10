@@ -30,15 +30,17 @@ class ModelAdministration(Document):
                     new_colour.natis_colour_code = colour.natis_colour_code
                     new_colour.insert(ignore_permissions=True)
 
-        # doc = frappe.db.get_single_value("Vehicle Stock Settings", "create_other_service_schedule")
-        # if doc:
-        #     new_doc = frappe.get_doc({
-        #         "doctype": "Service Schedules",
-        #         "model_code": self.model_code,
-        #         "interval": "Other",
-        #         "period_months": 0,
-        #     })
-        #     new_doc.insert(ignore_permissions=True)
+        create_other = frappe.db.get_single_value(
+            "Vehicle Service Settings", "create_other_service_schedule"
+        )
+        if create_other:
+            new_doc = frappe.get_doc({
+                "doctype": "Service Schedules",
+                "model_code": self.model_code,
+                "interval": "Other",
+                "period_months": 0,
+            })
+            new_doc.insert(ignore_permissions=True)
 
         frappe.db.commit()
         

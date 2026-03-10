@@ -1,7 +1,7 @@
 frappe.ui.form.on("Vehicle Service Booking", {
     refresh(frm) {
         if (!frm.is_new()) {
-            frm.add_custom_button("Open Job", function () {
+            frm.add_custom_button("Create Service", function () {
                 frappe.call({
                     method: "edp_online_vehicles.events.create_vehicle_service.create_service_from_booking",
                     args: { booking_name: frm.doc.name },

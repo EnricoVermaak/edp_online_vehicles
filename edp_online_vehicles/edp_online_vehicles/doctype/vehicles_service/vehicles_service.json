@@ -9,7 +9,7 @@
   "vehicles_tab",
   "section_break_mdlp",
   "vin_serial_no",
-  "model_description",
+  "model",
   "service_type",
   "odo_reading_hours",
   "column_break_mvt2",
@@ -19,8 +19,8 @@
   "dealer",
   "dms_approval_no",
   "vehicles_information_section",
+  "model_description",
   "engine_no",
-  "model",
   "brand",
   "licence_no",
   "licence_expiry_date",
@@ -126,7 +126,8 @@
   "booking_name",
   "show_prices_for_vehicles_service",
   "attach_document_tab",
-  "attach_documents"
+  "attach_documents",
+  "connections_tab"
  ],
  "fields": [
   {
@@ -599,6 +600,12 @@
    "options": "Attached Documents"
   },
   {
+   "fieldname": "connections_tab",
+   "fieldtype": "Tab Break",
+   "label": "Connections",
+   "show_dashboard": 1
+  },
+  {
    "default": "0",
    "fieldname": "summary_parts_total",
    "fieldtype": "Currency",
@@ -805,7 +812,7 @@
    "label": "ETA Date"
   },
   {
-   "depends_on": "eval: frappe.user.has_role('Service Administrator');",
+   "depends_on": "eval: frappe.user.has_role('Service Administrator') || frappe.session.user === \"Administrator\"",
    "fieldname": "submitted_to_dms",
    "fieldtype": "Datetime",
    "label": "Submitted To DMS"
@@ -867,7 +874,7 @@
    "link_fieldname": "services"
   }
  ],
- "modified": "2026-03-10 16:29:33.192472",
+ "modified": "2026-03-10 16:15:19.599671",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicles Service",

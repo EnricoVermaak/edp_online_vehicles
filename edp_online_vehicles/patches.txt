@@ -6,4 +6,3 @@
 # Patches added in this section will be executed after doctypes are migrated
 edp_online_vehicles.patches.add_serial_no_index_to_stock_entry_detail
 edp_online_vehicles.patches.update_evaluation_rate
-edp_online_vehicles.patches.setup_bulletin_permissions
