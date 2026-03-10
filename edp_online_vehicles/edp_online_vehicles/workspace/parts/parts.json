@@ -5,7 +5,7 @@
    "label": "Part Orders (Dealer Billing)"
   }
  ],
- "content": "[{\"id\":\"C4qQJ44QQC\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Parts</span>\",\"col\":12}},{\"id\":\"MjWNcwKZCo\",\"type\":\"chart\",\"data\":{\"chart_name\":\"Part Orders (Dealer Billing)\",\"col\":12}},{\"id\":\"ppdbKzRLaB\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"-V3l2iKCOp\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Order Parts\",\"col\":3}},{\"id\":\"1IGPdxYElf\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Parts Overview Dashboard\",\"col\":3}},{\"id\":\"_OnI4qA_TM\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"HjV_1p7RkN\",\"type\":\"paragraph\",\"data\":{\"text\":\"Reports\",\"col\":12}},{\"id\":\"u1cbO7P5Xx\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Outstanding Parts Orders\",\"col\":3}},{\"id\":\"cT7j3x7Cx7\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Dealer Parts Orders\",\"col\":3}},{\"id\":\"d1QHbuUqHW\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"HQ Parts Orders\",\"col\":3}},{\"id\":\"nrqK76eM5N\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"mCEYtj8C9E\",\"type\":\"card\",\"data\":{\"card_name\":\"Part Order\",\"col\":4}},{\"id\":\"JbrYm3tFOK\",\"type\":\"card\",\"data\":{\"card_name\":\"Picking & Delivery\",\"col\":4}},{\"id\":\"1aYNYeSfjW\",\"type\":\"card\",\"data\":{\"card_name\":\"Reports\",\"col\":4}}]",
+ "content": "[{\"id\":\"C4qQJ44QQC\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Parts</span>\",\"col\":12}},{\"id\":\"MjWNcwKZCo\",\"type\":\"chart\",\"data\":{\"chart_name\":\"Part Orders (Dealer Billing)\",\"col\":12}},{\"id\":\"ppdbKzRLaB\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"-V3l2iKCOp\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Order Parts\",\"col\":3}},{\"id\":\"1IGPdxYElf\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Parts Overview Dashboard\",\"col\":3}},{\"id\":\"_OnI4qA_TM\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"HjV_1p7RkN\",\"type\":\"paragraph\",\"data\":{\"text\":\"Reports\",\"col\":12}},{\"id\":\"u1cbO7P5Xx\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Outstanding Parts Orders\",\"col\":3}},{\"id\":\"cT7j3x7Cx7\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Dealer Parts Orders\",\"col\":3}},{\"id\":\"d1QHbuUqHW\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"HQ Parts Orders\",\"col\":3}},{\"id\":\"nrqK76eM5N\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"mCEYtj8C9E\",\"type\":\"card\",\"data\":{\"card_name\":\"Part Order\",\"col\":4}},{\"id\":\"JbrYm3tFOK\",\"type\":\"card\",\"data\":{\"card_name\":\"Picking & Delivery\",\"col\":4}}]",
  "creation": "2025-06-24 15:23:52.600877",
  "custom_blocks": [],
  "docstatus": 0,
@@ -342,7 +342,7 @@
    "type": "Link"
   }
  ],
- "modified": "2026-03-09 15:18:51.073668",
+ "modified": "2026-03-10 10:27:47.444062",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Parts",

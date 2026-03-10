@@ -164,7 +164,7 @@
    "reqd": 1
   },
   {
-   "fetch_from": "vinserial_no.customer",
+   "fetch_from": "vin_serial_no.customer",
    "fetch_if_empty": 1,
    "fieldname": "customer",
    "fieldtype": "Link",
@@ -280,13 +280,13 @@
    "label": "Service Plan Period"
   },
   {
-   "fetch_from": "vinserial_no.service_start_date",
+   "fetch_from": "vin_serial_no.service_start_date",
    "fieldname": "service_start_date",
    "fieldtype": "Date",
    "label": "Service Plan Start Date"
   },
   {
-   "fetch_from": "vinserial_no.service_end_date",
+   "fetch_from": "vin_serial_no.service_end_date",
    "fieldname": "service_end_date",
    "fieldtype": "Date",
    "label": "Service Plan End Date"

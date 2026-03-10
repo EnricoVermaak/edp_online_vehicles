@@ -16,6 +16,7 @@
   "vin_serial_no",
   "model",
   "model_description",
+  "engine_no",
   "service_type",
   "odo_reading_hours",
   "customer_column",
@@ -182,6 +183,13 @@
    "fieldname": "model_description",
    "fieldtype": "Data",
    "label": "Model Description",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "vin_serial_no.engine_no",
+   "fieldname": "engine_no",
+   "fieldtype": "Data",
+   "label": "Engine No",
    "read_only": 1
   },
   {
