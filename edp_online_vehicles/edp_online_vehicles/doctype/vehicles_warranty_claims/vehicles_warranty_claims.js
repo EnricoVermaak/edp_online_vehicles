@@ -461,7 +461,9 @@ frappe.ui.form.on("Vehicles Warranty Claims", {
             method: "edp_online_vehicles.events.odo.validate_odo_reading",
             args: {
                 vin_serial_no: frm.doc.vin_serial_no,
-                odo_reading_hours: frm.doc.odo_reading
+                odo_reading_hours: frm.doc.odo_reading,
+				doctype: frm.doctype,
+                docname: frm.doc.name,
             },
             callback: function (r) {
 
@@ -621,17 +623,17 @@ frappe.ui.form.on("Vehicles Warranty Claims", {
 
         let stock_odo = r.message.odo_reading || 0;
 
-        if (parseFloat(frm.doc.odo_reading) > parseFloat(stock_odo)) {
-            await frappe.call({
-                method: "frappe.client.set_value",
-                args: {
-                    doctype: "Vehicle Stock",
-                    name: frm.doc.vin_serial_no,
-                    fieldname: "odo_reading",
-                    value: frm.doc.odo_reading
-                }
-            });
-        }
+
+        await frappe.call({
+            method: "frappe.client.set_value",
+            args: {
+                doctype: "Vehicle Stock",
+                name: frm.doc.vin_serial_no,
+                fieldname: "odo_reading",
+                value: frm.doc.odo_reading
+            }
+        });
+
     },
 
 	after_save(frm) {
