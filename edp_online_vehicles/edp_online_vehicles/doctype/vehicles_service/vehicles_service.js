@@ -627,6 +627,10 @@ frappe.ui.form.on("Vehicles Service", {
 			});
 		}
 
+		if (!frm.doc.vin_serial_no || !frm.doc.odo_reading_hours) {
+            return;
+        }
+
         // Rollback check: ODO cannot be lower than previous service (unless allowed in settings)
         frappe.call({
             method: "edp_online_vehicles.events.odo.validate_odo_reading",

@@ -113,6 +113,15 @@ frappe.ui.form.on("Vehicle Service Booking", {
     }, 
     
     odo_reading_hours: function (frm, dt, dn) {
+
+        if (!frm.doc.service_type) {
+			frappe.model.set_value(dt, dn, "system_status", null);
+			frappe.msgprint("Please select a Service Type and VIN/Serial No before setting the Odo Reading");
+			frm.doc.odo_reading_hours = null;
+			frm.refresh_field("odo_reading_hours");
+			return;
+		}
+
         if (frm.doc.odo_reading_hours > 0 && frm.doc.service_type && frm.doc.model) {
             frappe.db.get_value("Service Schedules", frm.doc.service_type, "interval")
                 .then(r => {
@@ -140,6 +149,10 @@ frappe.ui.form.on("Vehicle Service Booking", {
         } else {
             frappe.model.set_value(frm.doctype, frm.docname, "system_status", null);
             frm.refresh_field("system_status");
+        }
+
+        if (!frm.doc.vin_serial_no || !frm.doc.odo_reading_hours) {
+            return;
         }
 
         // OdoS input cannot be lower than stock
