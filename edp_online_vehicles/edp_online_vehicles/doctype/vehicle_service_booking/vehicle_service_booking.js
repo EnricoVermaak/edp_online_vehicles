@@ -185,9 +185,17 @@ frappe.ui.form.on("Vehicle Service Booking", {
 
 
     before_save: async function(frm) {
-    //Save the service odometer reading back to the linked Vehicle Stock record (Not implemented will do later as hook?)
-        if (!frm.doc.vin_serial_no || !frm.doc.odo_reading_hours) {
-            return;
+
+        if (frm.doc.hasOwnProperty("vehicle_registration_number") && frm.doc.vehicle_registration_number) {
+			await frappe.call({
+				method: "frappe.client.set_value",
+				args: {
+					doctype: "Vehicle Stock",
+					name: frm.doc.vin_serial_no,
+					fieldname: "register_no",
+					value: frm.doc.vehicle_registration_number
+				}
+			});
         }
 
         let r = await frappe.call({

@@ -608,11 +608,7 @@ frappe.ui.form.on("Vehicles Warranty Claims", {
 
 
     before_save: async function(frm) {
-		//Save the service odometer reading back to the linked Vehicle Stock record 
-        if (!frm.doc.vin_serial_no || !frm.doc.odo_reading) {
-            return;
-        }
-
+ 
         let r = await frappe.call({
             method: "frappe.client.get_value",
             args: {
@@ -621,9 +617,6 @@ frappe.ui.form.on("Vehicles Warranty Claims", {
                 fieldname: "odo_reading"
             }
         });
-
-        let stock_odo = r.message.odo_reading || 0;
-
 
         await frappe.call({
             method: "frappe.client.set_value",

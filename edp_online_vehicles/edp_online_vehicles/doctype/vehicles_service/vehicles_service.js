@@ -707,8 +707,17 @@ frappe.ui.form.on("Vehicles Service", {
 				}
 			});
 
-        if (!frm.doc.vin_serial_no || !frm.doc.odo_reading_hours) {
-            return;
+
+        if (frm.doc.hasOwnProperty("vehicle_registration_number") && frm.doc.vehicle_registration_number) {
+			await frappe.call({
+				method: "frappe.client.set_value",
+				args: {
+					doctype: "Vehicle Stock",
+					name: frm.doc.vin_serial_no,
+					fieldname: "register_no",
+					value: frm.doc.vehicle_registration_number
+				}
+			});
         }
 
         let r = await frappe.call({
@@ -719,8 +728,6 @@ frappe.ui.form.on("Vehicles Service", {
                 fieldname: "odo_reading"
             }
         });
-
-        let stock_odo = r.message.odo_reading || 0;
 
         await frappe.call({
             method: "frappe.client.set_value",
