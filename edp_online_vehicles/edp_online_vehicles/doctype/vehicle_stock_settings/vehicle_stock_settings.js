@@ -60,63 +60,7 @@ frappe.ui.form.on("Vehicle Stock Settings", {
 				}
 			},
 		});
-	},
-	download_csv_template(frm) {
-		const mappings = frm.doc.vehicle_stock_import_column_mappings || [];
-		const layout_titles = [...new Set(
-			mappings
-				.map((r) => (r.import_layout_title || "").toString().trim())
-				.filter((t) => t !== "")
-		)];
-		if (layout_titles.length === 0) {
-			frappe.msgprint({
-				message: __(
-					"Add at least one Import Column Mapping with an Import Layout Title to generate a template."
-				),
-				title: __("No Layouts"),
-				indicator: "orange",
-			});
-			return;
-		}
-		const d = new frappe.ui.Dialog({
-			title: __("Download CSV Template"),
-			fields: [
-				{
-					fieldname: "layout_title",
-					fieldtype: "Select",
-					label: __("Import Layout"),
-					options: layout_titles.join("\n"),
-					reqd: 1,
-				},
-			],
-			primary_action_label: __("Download"),
-			primary_action(values) {
-				const chosen = (values.layout_title || "").trim();
-				const with_header = mappings.filter(
-					(r) =>
-						(r.import_layout_title || "").toString().trim() === chosen &&
-						(r.csv_column_name || "").toString().trim() !== ""
-				);
-				const headers = with_header.map((r) => (r.csv_column_name || "").toString().trim());
-				if (headers.length === 0) {
-					frappe.msgprint({
-						message: __("No CSV columns defined for layout \"{0}\".", [chosen]),
-						indicator: "orange",
-					});
-					return;
-				}
-				const data = [headers];
-				const filename = "shipment_import_template_" + (chosen.replace(/\s+/g, "_"));
-				frappe.tools.downloadify(data, null, filename);
-				d.hide();
-				frappe.show_alert({
-					message: __("Template for \"{0}\" downloaded.", [chosen]),
-					indicator: "green",
-				});
-			},
-		});
-		d.show();
-	},
+	}
 });
 
 function validate_last_stock_no(frm) {

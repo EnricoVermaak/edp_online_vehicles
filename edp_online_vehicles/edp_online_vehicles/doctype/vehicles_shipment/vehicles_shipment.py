@@ -184,7 +184,6 @@ class VehiclesShipment(Document):
 				"vin_serial_no": vin,
 				"engine_no": item.get("engine_no"),
 				"colour": item.get("colour"),
-				"interior_colour": item.get("interior_colour"),
 				"model": item.get("model_code"),
 				"stock_no": item.get("stock_no"),
 				"description": item.get("model_description"),
@@ -407,31 +406,3 @@ def _fire_on_vehicle_shipment_received(selected_items):
 				frappe.get_traceback(),
 				f"on_vehicle_shipment_received hook failed: {method}",
 			)
-
-
-@frappe.whitelist()
-def get_import_layout_titles():
-	settings = frappe.get_single("Vehicle Stock Settings")
-	seen = set()
-	out = []
-	for row in settings.get("vehicle_stock_import_column_mappings") or []:
-		title = (row.get("import_layout_title") or "").strip()
-		if title and title not in seen:
-			seen.add(title)
-			out.append(title)
-	return out
-
-
-@frappe.whitelist()
-def get_import_layout_mappings(layout_title):
-	if not layout_title:
-		return []
-	settings = frappe.get_single("Vehicle Stock Settings")
-	out = []
-	for row in settings.get("vehicle_stock_import_column_mappings") or []:
-		if (row.get("import_layout_title") or "").strip() == (layout_title or "").strip():
-			out.append({
-				"csv_column_name": (row.get("csv_column_name") or "").strip(),
-				"vehicle_stock_field": (row.get("vehicle_stock_field") or "").strip(),
-			})
-	return out

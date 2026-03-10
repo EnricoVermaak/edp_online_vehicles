@@ -10,8 +10,7 @@
   "oem_colour_code",
   "naamsa_colour_code",
   "natis_colour_code",
-  "discontinued",
-  "default"
+  "discontinued"
  ],
  "fields": [
   {
@@ -49,12 +48,6 @@
    "fieldname": "discontinued",
    "fieldtype": "Check",
    "label": "Discontinued"
-  },
-  {
-   "default": "0",
-   "fieldname": "default",
-   "fieldtype": "Check",
-   "label": "Default Interior Colour"
   }
  ],
  "grid_page_length": 50,

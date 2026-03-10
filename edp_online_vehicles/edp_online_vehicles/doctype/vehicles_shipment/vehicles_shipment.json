@@ -34,9 +34,9 @@
   "section_break_vsgr",
   "column_break_rhrs",
   "total_vehicles",
+  "total_excl",
   "column_break_dvnm",
-  "amended_from",
-  "total_excl"
+  "amended_from"
  ],
  "fields": [
   {
@@ -225,7 +225,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-03-10 07:50:55.963451",
+ "modified": "2026-03-09 13:26:38.859215",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicles Shipment",

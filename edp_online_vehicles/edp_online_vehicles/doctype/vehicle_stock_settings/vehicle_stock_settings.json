@@ -24,10 +24,6 @@
   "automatically_create_stock_number",
   "stock_no_prefix",
   "last_automated_stock_no",
-  "shipment_import_section",
-  "enable_upload_import",
-  "vehicle_stock_import_column_mappings",
-  "download_csv_template",
   "vehicles_stock_availability_tab",
   "vehicles_stock_availability_section",
   "only_show_models_in_stock_at_hq",
@@ -468,38 +464,13 @@
    "fieldname": "interface_code",
    "fieldtype": "Data",
    "label": "Interface Code"
-  },
-  {
-   "fieldname": "shipment_import_section",
-   "fieldtype": "Section Break",
-   "label": "Shipment CSV Import Layouts"
-  },
-  {
-   "default": "0",
-   "description": "When enabled, the Upload Import action button is shown on Vehicles Shipment to import items from CSV.",
-   "fieldname": "enable_upload_import",
-   "fieldtype": "Check",
-   "label": "Enable Upload Import"
-  },
-  {
-   "description": "Map CSV column headers to Shipment Item fields. Import Layout Title is the label of each sub-button under Upload Import.",
-   "fieldname": "vehicle_stock_import_column_mappings",
-   "fieldtype": "Table",
-   "label": "Import Column Mappings",
-   "options": "Vehicle Stock Import Column Mapping"
-  },
-  {
-   "description": "Download a CSV file with column headers matching the import mappings above.",
-   "fieldname": "download_csv_template",
-   "fieldtype": "Button",
-   "label": "Download CSV Template"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2026-03-10 08:54:43.814463",
+ "modified": "2026-02-24 09:42:37.582398",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicle Stock Settings",
