@@ -115,7 +115,7 @@ def get_items(start, page_length, price_list, item_group, search_term=""):
 	hide_unavailable_items = 0
 	item_group = "Parts"
 
-	hq_company = frappe.db.get_value("Company", {"custom_head_office": 1}, "name")
+	hq_company = frappe.db.get_value("Company", {"custom_is_head_office": 1}, "name")
 
 	abbr = frappe.db.get_value("Company", hq_company, "abbr")
 	warehouse = "Stores - " + abbr
