@@ -84,7 +84,6 @@ def create_service_from_booking(booking_name):
             return service.name
         
         # No existing service - create new one
-
         service = frappe.get_doc({
             "doctype": "Vehicles Service",
             "requested_booking_date_time": booking.requested_booking_date_time,
@@ -94,7 +93,7 @@ def create_service_from_booking(booking_name):
             "system_status": getattr(booking, "system_status", None),
             "vin_serial_no": booking.vin_serial_no,
             "model": booking.model,
-            "engine_no": booking.engine_no,
+            "engine_no": getattr(booking, "engine_no", None),
             "odo_reading_hours": getattr(booking, "odo_reading_hours", None),
             "customer": booking.customer,
             "customer_name": booking.customer_full_name,
