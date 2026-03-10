@@ -851,6 +851,11 @@
  "links": [
   {
    "group": "Warranty and Service",
+   "link_doctype": "Vehicle Linked Service Plan",
+   "link_fieldname": "vin_serial_no"
+  },
+  {
+   "group": "Warranty and Service",
    "link_doctype": "Vehicles Service",
    "link_fieldname": "vin_serial_no"
   },

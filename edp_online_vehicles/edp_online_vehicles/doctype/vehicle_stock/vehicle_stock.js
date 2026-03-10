@@ -159,6 +159,71 @@ frappe.ui.form.on("Vehicle Stock", {
 			},
 			"Action",
 		);
+
+		frm.add_custom_button(
+			"Transfer to New Warehouse",
+			function () {
+				frappe.db
+					.get_value("Company", { custom_head_office: 1 }, "name")
+					.then((r) => {
+						const hq_company = r?.message?.name;
+
+						const dialog = new frappe.ui.Dialog({
+							title: __("Transfer to New Warehouse"),
+							fields: [
+								{
+									label: __("To Warehouse"),
+									fieldname: "to_warehouse",
+									fieldtype: "Link",
+									options: "Warehouse",
+									reqd: 1,
+									get_query: function () {
+										return {
+											filters: {
+												company: hq_company,
+												is_group: 0,
+											},
+										};
+									},
+								},
+							],
+							primary_action_label: __("Move"),
+							primary_action(values) {
+								dialog.hide();
+
+								frappe.dom.freeze();
+
+								frappe.call({
+									method: "edp_online_vehicles.events.move_vin_to_new_warehouse.move_vin_to_new_warehouse",
+									args: {
+										docnames: [frm.doc.name],
+										to_warehouse: values.to_warehouse,
+									},
+									callback: function (r) {
+										frappe.dom.unfreeze();
+										if (r.message == "Success") {
+											frappe.show_alert(
+												{
+													message: __(
+														"Vehicle successfully transferred to warehouse {0}",
+														[values.to_warehouse],
+													),
+													indicator: "green",
+												},
+												10,
+											);
+											frm.reload_doc();
+										}
+									},
+								});
+							},
+						});
+
+						dialog.show();
+					});
+			},
+			"Action",
+		);
 		frm.add_custom_button(
 			"NATIS Release",
 			function () {

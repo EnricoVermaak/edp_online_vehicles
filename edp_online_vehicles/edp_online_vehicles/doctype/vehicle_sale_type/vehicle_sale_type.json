@@ -9,6 +9,7 @@
   "section_break_1wzx",
   "sale_type",
   "status",
+  "set_auto_customer",
   "description"
  ],
  "fields": [
@@ -25,20 +26,27 @@
    "unique": 1
   },
   {
-   "fieldname": "description",
-   "fieldtype": "Small Text",
-   "label": "Description"
-  },
-  {
    "fieldname": "status",
    "fieldtype": "Select",
    "label": "Status",
    "options": "Active\nInactive"
+  },
+  {
+   "default": "0",
+   "description": "When selected, Vehicle Retail will auto-set Customer to the dealer's own Dealer Customer when this sale type is chosen.",
+   "fieldname": "set_auto_customer",
+   "fieldtype": "Check",
+   "label": "Set Auto Customer"
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Small Text",
+   "label": "Description"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-06-09 12:11:46.829874",
+ "modified": "2026-03-10 10:08:14.973921",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicle Sale Type",
@@ -58,6 +66,7 @@
    "write": 1
   }
  ],
+ "row_format": "Dynamic",
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": []

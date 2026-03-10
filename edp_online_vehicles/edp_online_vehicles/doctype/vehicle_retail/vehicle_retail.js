@@ -15,6 +15,15 @@ function toggle_readonly(frm) {
 	);
 }
 
+function clear_customer_details(frm) {
+	frm.set_value("customer", null);
+	frm.set_value("customer_name", null);
+	frm.set_value("customer_mobile", null);
+	frm.set_value("customer_phone", null);
+	frm.set_value("customer_email", null);
+	frm.set_value("customer_address", null);
+}
+
 frappe.ui.form.on("Vehicle Retail", {
 
 	vehicles_sale_items_add(frm) {
@@ -427,6 +436,44 @@ frappe.ui.form.on("Vehicle Retail", {
 				frm.set_value("customer_phone", phone || "");
 			});
 	},
+	apply_auto_customer_if_sale_type: function (frm) {
+		if (!frm.doc.sale_type) {
+			clear_customer_details(frm);
+			return;
+		}
+		frappe.call({
+			method: "edp_online_vehicles.edp_online_vehicles.doctype.vehicle_retail.vehicle_retail.get_sale_type_set_auto_customer",
+			args: { sale_type: frm.doc.sale_type },
+			callback: function (r) {
+				if (r.message === 1 && frm.doc.dealer) {
+					frappe.call({
+						method: "edp_online_vehicles.edp_online_vehicles.doctype.vehicle_retail.vehicle_retail.get_dealer_customer_for_company",
+						args: { company: frm.doc.dealer },
+						callback: function (r2) {
+							if (r2.message && r2.message.dealer_customer) {
+								const m = r2.message;
+								frm.set_value("customer", m.dealer_customer);
+								frm.set_value("customer_name", m.customer_name || "");
+								frm.set_value("customer_mobile", m.customer_mobile || "");
+								frm.set_value("customer_phone", m.customer_phone || "");
+								frm.set_value("customer_email", m.customer_email || "");
+								frm.set_value("customer_address", m.customer_address || "");
+							} else {
+								clear_customer_details(frm);
+							}
+						},
+					});
+				} else {
+					clear_customer_details(frm);
+				}
+			},
+		});
+	},
+
+	dealer: function (frm) {
+		frm.events.apply_auto_customer_if_sale_type(frm);
+	},
+
 	sale_type: function (frm) {
 		if (frm.doc.sale_type === "Fleet") {
 			frm.set_value("customer", null);
@@ -439,6 +486,7 @@ frappe.ui.form.on("Vehicle Retail", {
 			frm.set_value("fleet_customer", null);
 			frm.set_value("fleet_customer_name", null);
 		}
+		frm.events.apply_auto_customer_if_sale_type(frm);
 	},
 	company_reg_no: function (frm) {
 		// if (frm.doc.company_reg_no) {

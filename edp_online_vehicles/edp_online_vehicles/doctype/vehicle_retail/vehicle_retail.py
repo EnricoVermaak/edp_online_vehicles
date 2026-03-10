@@ -34,31 +34,28 @@ class VehicleRetail(Document):
             dealer_cust_doc.phone = self.customer_phone
             dealer_cust_doc.address = self.customer_address
             dealer_cust_doc.save(ignore_permissions=True)
-            frappe.db.commit()  
+            frappe.db.commit()
 
-    # ---- Update Linked Service Plan ----
     def update_linked_service_plan(self):
         for row in self.get("vehicles_sale_items"):
             if row.vin_serial_no:
                 linked_docs = frappe.get_all(
                     "Vehicle Linked Service Plan",
-                    filters={"vin_serial_no": row.vin_serial_no},  
-                    fields=["name", "service_period_limit_months"]
+                    filters={"vin_serial_no": row.vin_serial_no},
+                    fields=["name", "service_period_limit_months"],
                 )
                 for record in linked_docs:
                     linked_doc = frappe.get_doc("Vehicle Linked Service Plan", record.name)
                     linked_doc.status = "Active"
                     linked_doc.save(ignore_permissions=True)
 
-    # ---- Update Linked Warranty Plan ----
     def update_linked_warranty_plan(self):
-        activation_date = now_datetime()
         for row in self.get("vehicles_sale_items"):
             if row.vin_serial_no:
                 linked_docs = frappe.get_all(
                     "Vehicle Linked Warranty Plan",
                     filters={"vin_serial_no": row.vin_serial_no},
-                    fields=["name", "warranty_period_months"]
+                    fields=["name", "warranty_period_months"],
                 )
                 for record in linked_docs:
                     linked_doc = frappe.get_doc("Vehicle Linked Warranty Plan", record.name)
@@ -66,4 +63,33 @@ class VehicleRetail(Document):
                     linked_doc.save(ignore_permissions=True)
 
 
-       
+@frappe.whitelist()
+def get_sale_type_set_auto_customer(sale_type):
+	if not sale_type:
+		return 0
+	val = frappe.db.get_value("Vehicle Sale Type", sale_type, "set_auto_customer")
+	return 1 if val else 0
+
+
+@frappe.whitelist()
+def get_dealer_customer_for_company(company):
+	if not company:
+		return None
+	company_name = frappe.db.get_value("Company", company, "company_name") or company
+	existing = frappe.db.get_all(
+		"Dealer Customer",
+		filters={"company": company, "company_name": company_name},
+		fields=["name", "customer_name", "customer_surname", "mobile", "phone", "email", "address"],
+		limit=1,
+	)
+	if existing:
+		d = existing[0]
+		full_name = ((d.customer_name or "") + " " + (d.customer_surname or "")).strip()
+		return {
+			"dealer_customer": d.name,
+			"customer_name": full_name,
+			"customer_mobile": d.mobile or "",
+			"customer_phone": d.phone or "",
+			"customer_email": d.email or "",
+			"customer_address": d.address or "",
+		}
