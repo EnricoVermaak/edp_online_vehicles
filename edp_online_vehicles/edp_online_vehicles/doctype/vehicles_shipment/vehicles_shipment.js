@@ -8,9 +8,39 @@ frappe.ui.form.on("Vehicles Shipment", {
 
 	refresh(frm) {
 
+		if (frm.doc.docstatus === 0) {
+			frappe.db.get_single_value("Vehicle Stock Settings", "enable_upload_import").then((enabled) => {
+				if (enabled) {
+					frappe.call({
+						method: "edp_online_vehicles.edp_online_vehicles.doctype.vehicles_shipment.vehicles_shipment.get_import_layout_titles",
+						args: {},
+						callback: function (r) {
+							const titles = (r && r.message) || [];
+							if (titles.length === 0) {
+								frm.add_custom_button(__("Upload Import"), () => {
+									frappe.msgprint({
+										message: __("No import layouts defined. Add rows with Import Layout Title in Vehicle Stock Settings > Shipment."),
+										indicator: "orange",
+									});
+								}, __("Actions"));
+								return;
+							}
+							titles.forEach((layout_title) => {
+								frm.add_custom_button(
+									layout_title,
+									() => open_dms_import_upload(frm, layout_title),
+									__("Upload Import")
+								);
+							});
+						},
+					});
+				}
+			});
+		}
+
 		let grid = frm.fields_dict["vehicles_shipment_items"].grid;
 
-		if (!grid.wrapper.find(".add-multiple-btn").length) {
+		if (grid && !grid.wrapper.find(".add-multiple-btn").length) {
 
 			let btn = $(`<button class="btn btn-secondary btn-sm add-multiple-btn">
 				Add Multiple
@@ -772,9 +802,201 @@ frappe.ui.form.on("Vehicles Shipment Items", {
 						frappe.model.set_value(cdt, cdn, "colour", "");
 					}
 				});
+
+			frappe.db
+				.get_value("Interior Model Colour", { model: row.model_code, default: 1 }, "name")
+				.then((r) => {
+					if (r && r.message && r.message.name) {
+						frappe.model.set_value(cdt, cdn, "interior_colour", r.message.name);
+					} else {
+						frappe.model.set_value(cdt, cdn, "interior_colour", "");
+					}
+				});
 		}
 	},
+
+	vehicles_shipment_items_remove(frm) {
+		calculate_sub_total(frm, "total_excl", "vehicles_shipment_items");
+	},
+
+	cost_price_excl(frm) {
+		calculate_sub_total(frm, "total_excl", "vehicles_shipment_items");
+	},
+
 });
+
+const calculate_sub_total = (frm, field_name, table_name) => {
+	let sub_total = 0;
+	for (const row of frm.doc[table_name]) {
+		sub_total += row.cost_price_excl;
+	}
+
+	frappe.model.set_value(
+		frm.doc.doctype,
+		frm.doc.name,
+		field_name,
+		sub_total,
+	);
+};
+
+
+function open_dms_import_upload(frm, layout_title) {
+	frappe.call({
+		method: "edp_online_vehicles.edp_online_vehicles.doctype.vehicles_shipment.vehicles_shipment.get_import_layout_mappings",
+		args: { layout_title: layout_title || "" },
+		callback: function (r) {
+			const mappings = (r && r.message) || [];
+			if (mappings.length === 0) {
+				frappe.msgprint({
+					message: __(
+						"No column mappings found for layout \"{0}\". Add mappings with this Import Layout Title in Vehicle Stock Settings > Shipment.",
+						[layout_title || ""]
+					),
+					title: __("Import Layout"),
+					indicator: "orange",
+				});
+				return;
+			}
+			const csv_column_to_field = {};
+			mappings.forEach((m) => {
+				const col = (m.csv_column_name || "").trim();
+				const field = (m.vehicle_stock_field || "").trim();
+				if (col && field) csv_column_to_field[col] = field;
+			});
+
+			new frappe.ui.FileUploader({
+				as_dataurl: true,
+				allow_multiple: false,
+				restrictions: { allowed_file_types: [".csv"] },
+				on_success(file) {
+					const raw = frappe.utils.get_decoded_string(file.dataurl);
+					const rows = frappe.utils.csv_to_array(raw);
+					if (!rows || rows.length < 2) {
+						frappe.msgprint({ message: __("CSV must have a header row and at least one data row."), indicator: "red" });
+						return;
+					}
+					const headers = rows[0].map((h) => (h || "").trim());
+					const child_meta = frappe.get_meta("Vehicles Shipment Items");
+					const field_type_map = {};
+					const allowed_fields = new Set();
+					child_meta.fields.forEach((df) => {
+						if (frappe.model.is_value_type(df.fieldtype)) {
+							allowed_fields.add(df.fieldname);
+							field_type_map[df.fieldname] = df.fieldtype;
+						}
+					});
+
+					const unmapped_cols = headers.filter((h) => h && !csv_column_to_field[h]);
+					const numeric_types = new Set(["Currency", "Float", "Int"]);
+
+					const mapped_headers = headers.filter((h) => h && csv_column_to_field[h]);
+					if (mapped_headers.length === 0) {
+						frappe.msgprint({
+							message: __("None of the CSV column headers matched the configured mappings. Please check the column names match exactly."),
+							indicator: "red",
+						});
+						return;
+					}
+
+					let added = 0;
+					const duplicate_vins = [];
+					const existing_vins = new Set(
+						(frm.doc.vehicles_shipment_items || [])
+							.map((r) => (r.vin_serial_no || "").toUpperCase())
+							.filter((v) => v)
+					);
+					const promises = [];
+
+					for (let i = 1; i < rows.length; i++) {
+						const row = rows[i];
+						const is_blank = row.every((c) => !(c || "").toString().trim());
+						if (is_blank) continue;
+
+						const d = frm.add_child("vehicles_shipment_items");
+						for (let c = 0; c < headers.length; c++) {
+							const csv_col = headers[c];
+							const fieldname = csv_column_to_field[csv_col];
+							if (!fieldname || !allowed_fields.has(fieldname)) continue;
+							let value = (row[c] != null ? row[c] : "").toString().trim();
+							if (!value) continue;
+							if (numeric_types.has(field_type_map[fieldname])) {
+								d[fieldname] = flt(value);
+							} else if (field_type_map[fieldname] === "Check") {
+								d[fieldname] = cint(value);
+							} else {
+								d[fieldname] = value;
+							}
+						}
+						if (frm.doc.target_warehouse && !d.target_warehouse) {
+							d.target_warehouse = frm.doc.target_warehouse;
+						}
+						if (d.vin_serial_no) {
+							const vin_upper = d.vin_serial_no.toUpperCase();
+							if (existing_vins.has(vin_upper)) {
+								duplicate_vins.push(vin_upper);
+							}
+							existing_vins.add(vin_upper);
+						}
+						// When colour column is filled: resolve to full link name if needed (e.g. "White" -> "White - T8PRO4WD")
+						if (d.colour && d.model_code && d.colour.indexOf(" - ") === -1) {
+							const full = d.colour + " - " + d.model_code;
+							promises.push(frappe.db.exists("Model Colour", full).then((exists) => { if (exists) d.colour = full; }));
+						}
+						if (d.model_code && !(d.colour || "").toString().trim()) {
+							promises.push(frappe.db.get_value("Model Colour", { model: d.model_code, default: 1 }, "name").then((r) => {
+								if (r && r.message && r.message.name) d.colour = r.message.name;
+							}));
+						}
+						if (d.interior_colour && d.model_code && d.interior_colour.indexOf(" - ") === -1) {
+							const fullInterior = d.interior_colour + " - " + d.model_code;
+							promises.push(frappe.db.exists("Interior Model Colour", fullInterior).then((exists) => { if (exists) d.interior_colour = fullInterior; }));
+						}
+						if (d.model_code && !(d.interior_colour || "").toString().trim()) {
+							promises.push(frappe.db.get_value("Interior Model Colour", { model: d.model_code, default: 1 }, "name").then((r) => {
+								if (r && r.message && r.message.name) d.interior_colour = r.message.name;
+							}));
+						}
+						if (d.model_code) {
+							promises.push(frappe.db.get_value("Model Administration", d.model_code, "model_description").then((res) => {
+								if (res && res.message && res.message.model_description) d.model_description = res.message.model_description;
+							}));
+						}
+						added++;
+					}
+
+					if (added === 0) {
+						frappe.msgprint({
+							message: __("No data rows found in the CSV file. All rows were blank."),
+							indicator: "orange",
+						});
+						return;
+					}
+
+					Promise.all(promises).then(() => {
+						frm.refresh_field("vehicles_shipment_items");
+						frm.trigger("calculate_total_vehicles");
+						let parts = [__("Successfully imported {0} row(s).", [added])];
+						if (duplicate_vins.length > 0) {
+							parts.push("<br><b>" + __("Duplicate VINs detected:") + "</b> " + [...new Set(duplicate_vins)].join(", "));
+						}
+						if (unmapped_cols.length > 0) {
+							parts.push("<br><b>" + __("Unmapped columns skipped:") + "</b> " + unmapped_cols.join(", "));
+						}
+						frappe.msgprint({ message: parts.join("<br>"), indicator: duplicate_vins.length > 0 ? "orange" : "green" });
+					}).catch((err) => {
+						frm.refresh_field("vehicles_shipment_items");
+						frm.trigger("calculate_total_vehicles");
+						frappe.msgprint({
+							message: __("Imported {0} row(s), but some lookups failed. Please review the imported data.", [added]),
+							indicator: "orange",
+						});
+						console.error("Upload Import lookup error:", err);
+					});
+				},
+			});
+		},
+	});
+}
 
 function handle_custom_buttons(frm) {
 	const grid_wrapper =
@@ -814,7 +1036,7 @@ function handle_custom_buttons(frm) {
 					data.push([]);
 					data.push([]);
 					data.push([__("The CSV format is case sensitive")]);
-					data.push([__("Do not edit headers which are preset in the template",)]);
+					data.push([__("Do not edit headers which are preset in the template")]);
 					data.push(["------"]);
 
 					// Get child and visible columns
@@ -846,7 +1068,9 @@ function handle_custom_buttons(frm) {
 							if (fieldname === "colour" && value) {
 								value = value.split(" - ")[0];  // Keep only "Blue"
 							}
-
+							if (fieldname === "interior_colour" && value) {
+								value = value.split(" - ")[0];
+							}
 
 							if (docfields[i].fieldtype === "Date" && value) {
 								value = frappe.datetime.str_to_user(value);
@@ -912,9 +1136,10 @@ function handle_custom_buttons(frm) {
 									if (!blank_row) {
 										count_row++
 
-										// Get model and colour
 										const model = row[fieldnames.indexOf("model_code")];
 										let colour = row[fieldnames.indexOf("colour")];
+										const interior_colour_idx = fieldnames.indexOf("interior_colour");
+										let interior_raw = (interior_colour_idx >= 0 && row[interior_colour_idx]) ? String(row[interior_colour_idx]).trim() : "";
 
 										if (colour == null || colour == undefined || colour == "") {
 											colour = "undefined";
@@ -927,6 +1152,53 @@ function handle_custom_buttons(frm) {
 											colour = colour.split(" - ")[0]; // Extract just the colour part
 										} else {
 											model_colour_name = colour + " - " + model; // Standard format
+										}
+
+										let interior_model_colour_name = "";
+										if (interior_raw && model) {
+											interior_model_colour_name = interior_raw.includes(model)
+												? interior_raw
+												: interior_raw.split(" - ")[0] + " - " + model;
+										}
+
+										function setInteriorAndFinish(d, model, interior_name, raw, next) {
+											function done() {
+												if (model) {
+													frappe.db.get_value("Model Administration", model, "model_description").then(res => {
+														if (res.message) d.model_description = res.message.model_description;
+														cur_frm.refresh_field("vehicles_shipment_items");
+														processRow(next);
+													});
+												} else {
+													cur_frm.refresh_field("vehicles_shipment_items");
+													processRow(next);
+												}
+											}
+											if (!raw || !interior_name) {
+												done();
+												return;
+											}
+											frappe.db.exists("Interior Model Colour", interior_name).then(function (iexists) {
+												if (iexists) {
+													d.interior_colour = interior_name;
+													done();
+												} else {
+													frappe.call({
+														method: "frappe.client.insert",
+														args: {
+															doc: {
+																doctype: "Interior Model Colour",
+																colour: raw.split(" - ")[0],
+																model: model,
+															},
+														},
+														callback: function (r) {
+															if (r.message) d.interior_colour = r.message.name;
+															done();
+														},
+													});
+												}
+											});
 										}
 
 										// Check if the colour exists for the model
@@ -968,27 +1240,9 @@ function handle_custom_buttons(frm) {
 														}
 													});
 
-													// Set the colour field to the colour
-													d.colour = colour;
+													d.colour = model_colour_name;
 
-													// Fetch model_description using model
-													if (model) {
-														frappe.db.get_value(
-															"Model Administration",
-															model,
-															"model_description"
-														).then(res => {
-															if (res.message) {
-																d.model_description = res.message.model_description;
-																cur_frm.refresh_field("vehicles_shipment_items");
-															}
-														});
-													}
-
-													// Refresh the child table to reflect changes
-													cur_frm.refresh_field(
-														"vehicles_shipment_items",
-													);
+													setInteriorAndFinish(d, model, interior_model_colour_name, interior_raw, rowIndex + 1);
 
 												} else {
 													// If the colour does not exist, create the color first
@@ -1019,27 +1273,9 @@ function handle_custom_buttons(frm) {
 																	},
 																);
 
-																// Set the colour field to the colour
-																d.colour = colour;
+																d.colour = model_colour_name;
 
-																// Fetch model_description using model
-																if (model) {
-																	frappe.db.get_value(
-																		"Model Administration",
-																		model,
-																		"model_description"
-																	).then(res => {
-																		if (res.message) {
-																			d.model_description = res.message.model_description;
-																			cur_frm.refresh_field("vehicles_shipment_items");
-																		}
-																	});
-																}
-
-																// Refresh the child table to reflect changes
-																cur_frm.refresh_field(
-																	"vehicles_shipment_items",
-																);
+																setInteriorAndFinish(d, model, interior_model_colour_name, interior_raw, rowIndex + 1);
 															} else {
 																// Notify user of failure to create color
 																frappe.msgprint(
@@ -1057,17 +1293,12 @@ function handle_custom_buttons(frm) {
 																			"red",
 																	},
 																);
+																processRow(rowIndex + 1);
 															}
 														},
 													});
 												}
 											});
-											
-											// Move to the next row after the current one is done
-											processRow(
-												rowIndex +
-												1,
-											);
 
 									} else {
 										// If the row is blank, skip it and move to the next one
@@ -1246,6 +1477,16 @@ function open_add_multiple_dialog(frm) {
 								dialog.set_value("colour", "");
 							}
 						});
+
+					frappe.db
+						.get_value("Interior Model Colour", { model: model, default: 1 }, "name")
+						.then((r) => {
+							if (r && r.message && r.message.name) {
+								dialog.set_value("interior_colour", r.message.name);
+							} else {
+								dialog.set_value("interior_colour", "");
+							}
+						});
 				}
 			},
 
@@ -1276,6 +1517,28 @@ function open_add_multiple_dialog(frm) {
 					if (!model) {
 						frappe.msgprint("Please select a model first");
 						return;
+					}
+
+					return {
+						filters: {
+							model: model,
+							discontinued: 0
+						}
+					};
+				}
+			},
+
+			{
+				label: "Interior Colour",
+				fieldname: "interior_colour",
+				fieldtype: "Link",
+				options: "Interior Model Colour",
+				get_query: function () {
+
+					let model = dialog.get_value("model");
+
+					if (!model) {
+						return { filters: {} };
 					}
 
 					return {
@@ -1321,6 +1584,8 @@ function open_add_multiple_dialog(frm) {
 				row.model_code = values.model;
 				row.model_description = values.description;
 				row.colour = values.colour;
+				row.interior_colour = values.interior_colour || "";
+				row.cost_price_excl = values.price_excl;
 
 				if (frm.doc.target_warehouse) {
 					row.target_warehouse = frm.doc.target_warehouse;

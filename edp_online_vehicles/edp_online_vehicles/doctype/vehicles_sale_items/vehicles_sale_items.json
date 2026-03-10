@@ -15,6 +15,7 @@
   "engine_no",
   "microdot_no",
   "microdot_fitted_by",
+  "registration_year",
   "section_break_wfhz",
   "column_break_cikj",
   "ho_invoice_no",
@@ -162,12 +163,18 @@
    "fieldtype": "Data",
    "label": "Interior Colour",
    "read_only": 1
+  },
+  {
+   "fetch_from": "model.model_year",
+   "fieldname": "registration_year",
+   "fieldtype": "Data",
+   "label": "Registration Year"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2026-02-25 11:58:38.688574",
+ "modified": "2026-03-10 08:06:30.458081",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicles Sale Items",
