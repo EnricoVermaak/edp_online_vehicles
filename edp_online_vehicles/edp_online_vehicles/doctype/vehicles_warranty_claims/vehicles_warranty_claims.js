@@ -779,6 +779,7 @@ frappe.ui.form.on('Warranty Part Item', {
 
 				frappe.model.set_value(cdt, cdn, 'price', price);
 				frappe.model.set_value(cdt, cdn, 'total_excl', total_excl);
+				frappe.model.set_value(cdt, cdn, "item_warranty_gp", custom_gp);
 				frm.refresh_field('part_items');
 				calculate_part_sub_total(frm, "total_excl", "part_items");
 			});
@@ -942,8 +943,13 @@ frappe.ui.form.on("Extra Items", {
 // -------------------------------------------------
 const calculate_part_sub_total = (frm, field_name, table_name) => {
 	let total = 0;
-	frm.doc[table_name].forEach(row => total += (row.price || 0) * (row.qty || 0));
+	let total_qty = 0;
+	frm.doc[table_name].forEach(row => {
+		total += (row.price || 0) * (row.qty || 0);
+		total_qty += flt(row.qty || 0);
+	});
 	frm.set_value(field_name, total);
+	frm.set_value("total_items", total_qty);
 	frm.refresh_field(field_name);
 	refresh_summary_totals(frm);
 };

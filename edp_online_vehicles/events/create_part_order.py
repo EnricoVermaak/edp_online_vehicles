@@ -10,7 +10,7 @@ from frappe.utils.data import get_link_to_form
 def create_part_order_from_booking(docname):
 	doc = frappe.get_doc("Vehicle Service Booking", docname)
 
-	if not doc.table_jwkk or len(doc.table_jwkk) == 0:
+	if not doc.service_parts_items or len(doc.service_parts_items) == 0:
 		frappe.throw("No parts added to the parts table, please add parts to perform this action")
 	if not doc.part_schedule_date:
 		frappe.throw("Please select a Scheduled Delivery Date under Parts Table")
@@ -30,7 +30,7 @@ def create_part_order_from_booking(docname):
 	newdoc.dealer_order_no = docname
 	newdoc.customer = doc.customer
 
-	for part in doc.table_jwkk:
+	for part in doc.service_parts_items:
 		newdoc.append(
 			"table_avsu",
 			{

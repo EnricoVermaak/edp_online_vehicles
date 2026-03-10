@@ -15,6 +15,7 @@
   "approved",
   "declined",
   "uom",
+  "item_warranty_gp",
   "column_break_gzmq",
   "returned",
   "is_duplicate",
@@ -140,12 +141,17 @@
    "hidden": 1,
    "label": "Is Dublicate",
    "read_only": 1
+  },
+  {
+   "fieldname": "item_warranty_gp",
+   "fieldtype": "Float",
+   "label": "Item GP%"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2026-02-02 21:24:44.553890",
+ "modified": "2026-03-10 16:09:06.243818",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Warranty Part Item",

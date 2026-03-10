@@ -123,7 +123,7 @@ def create_service_from_booking(booking_name):
         else:
             service.job_card_no = booking_job_card_no
 
-        for row in booking.table_jwkk:
+        for row in booking.service_parts_items:
             service.append("service_parts_items", {
                 "item": row.item,
                 "description": row.description,
@@ -132,7 +132,7 @@ def create_service_from_booking(booking_name):
                 "total_excl": row.total_excl,
             })
 
-        for row in booking.table_ottr:
+        for row in booking.service_labour_items:
             service.append("service_labour_items", {
                 "item": row.item,
                 "description": row.description,

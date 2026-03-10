@@ -38,10 +38,15 @@
   "section_break_lsyk",
   "service_notes",
   "parts_tab",
-  "table_jwkk",
+  "service_parts_items",
   "part_schedule_date",
+  "section_break_izrz",
+  "column_break_vzoi",
+  "column_break_tnqs",
+  "total_items",
+  "parts_total_excl",
   "labour_tab",
-  "table_ottr",
+  "service_labour_items",
   "section_break_qwip",
   "column_break_bsjh",
   "column_break_ktxy",
@@ -185,8 +190,9 @@
    "label": "Parts"
   },
   {
-   "fieldname": "table_jwkk",
+   "fieldname": "service_parts_items",
    "fieldtype": "Table",
+   "label": "Service Parts Items",
    "options": "Service Parts Items"
   },
   {
@@ -198,11 +204,6 @@
    "fieldname": "labour_tab",
    "fieldtype": "Tab Break",
    "label": "Labour"
-  },
-  {
-   "fieldname": "table_ottr",
-   "fieldtype": "Table",
-   "options": "Service Labour Items"
   },
   {
    "collapsible": 1,
@@ -308,12 +309,40 @@
    "fieldtype": "Currency",
    "label": "Labours Total (Excl)",
    "read_only": 1
+  },
+  {
+   "fieldname": "section_break_izrz",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_vzoi",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_tnqs",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "parts_total_excl",
+   "fieldtype": "Currency",
+   "label": "Parts Total (Excl)"
+  },
+  {
+   "fieldname": "service_labour_items",
+   "fieldtype": "Table",
+   "label": "Service Labour Items",
+   "options": "Service Labour Items"
+  },
+  {
+   "fieldname": "total_items",
+   "fieldtype": "Data",
+   "label": "Total Items"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_calendar_and_gantt": 1,
  "links": [],
- "modified": "2026-02-26 11:32:31.698206",
+ "modified": "2026-03-10 16:28:40.855863",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicle Service Booking",

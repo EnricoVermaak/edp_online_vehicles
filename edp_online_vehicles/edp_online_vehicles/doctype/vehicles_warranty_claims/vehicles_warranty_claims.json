@@ -65,6 +65,7 @@
   "section_break_yezc",
   "column_break_fiij",
   "column_break_pfgu",
+  "total_items",
   "total_excl",
   "labour_tab",
   "labour_items",
@@ -709,6 +710,11 @@
    "fieldtype": "Select",
    "label": "Type",
    "options": "Normal\nGoodwill"
+  },
+  {
+   "fieldname": "total_items",
+   "fieldtype": "Data",
+   "label": "Total Items"
   }
  ],
  "index_web_pages_for_search": 1,
@@ -722,7 +728,7 @@
    "link_fieldname": "warranty"
   }
  ],
- "modified": "2026-03-10 12:06:06.466698",
+ "modified": "2026-03-10 16:28:54.121007",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicles Warranty Claims",

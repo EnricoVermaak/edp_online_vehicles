@@ -74,6 +74,7 @@
   "column_break_evat",
   "edit_parts",
   "column_break_tcqf",
+  "total_items",
   "parts_total_excl",
   "labour_tab",
   "section_break_oem_labour",
@@ -842,6 +843,11 @@
    "fieldtype": "Data",
    "hidden": 1,
    "label": "Booking Name"
+  },
+  {
+   "fieldname": "total_items",
+   "fieldtype": "Data",
+   "label": "Total Items"
   }
  ],
  "index_web_pages_for_search": 1,
@@ -861,7 +867,7 @@
    "link_fieldname": "services"
   }
  ],
- "modified": "2026-03-10 08:56:43.230615",
+ "modified": "2026-03-10 16:29:33.192472",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicles Service",
