@@ -225,7 +225,8 @@
    "fieldname": "reported_by",
    "fieldtype": "Link",
    "label": "Reported By",
-   "options": "User"
+   "options": "User",
+   "read_only": 1
   },
   {
    "fieldname": "technician",
@@ -721,7 +722,7 @@
    "link_fieldname": "warranty"
   }
  ],
- "modified": "2026-03-10 09:36:44.242600",
+ "modified": "2026-03-10 12:06:06.466698",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicles Warranty Claims",

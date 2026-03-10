@@ -397,6 +397,7 @@ frappe.ui.form.on("Vehicles Warranty Claims", {
 		// });
 
 		if (frm.is_new()) {
+			frm.set_value('reported_by', frappe.session.user);
 			frm.doc.dealer = frappe.defaults.get_default("company");
 
 			frappe.db
