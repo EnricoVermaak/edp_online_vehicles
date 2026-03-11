@@ -126,6 +126,7 @@ frappe.ui.form.on("Vehicles Service", {
 		calculate_duration_total_combined(frm);
 		// refresh_summary_totals(frm);
 	},
+
 	onload(frm) {
 		frappe.db.get_doc("Vehicle Service Settings").then((settings) => {
 			let attach = frm.doc.attach_documents || [];
@@ -239,10 +240,14 @@ frappe.ui.form.on("Vehicles Service", {
 			};
 		});
 		previous_status_value = frm.doc.service_status;
+		toggle_summary_fields(frm);
+		calculate_parts_total_combined(frm);
+		calculate_labours_total_combined(frm);
+		calculate_duration_total_combined(frm);
 	},
 
 	refresh(frm, dt, dn) {
-		// refresh_summary_totals(frm);
+		toggle_summary_fields(frm);
 		frm.add_custom_button(__('Inspection'), function () {
 			frappe.route_options = {
 				vin_serial_no: frm.doc.vin_serial_no,
@@ -1061,7 +1066,7 @@ const calculate_parts_total_combined = (frm) => {
 	let total_qty = 0;
 	for (const row of frm.doc.service_parts_items || []) { total_qty += flt(row.qty || 0); }
 	frappe.model.set_value(frm.doc.doctype, frm.doc.name, "total_items", total_qty);
-	// refresh_summary_totals(frm);
+	toggle_summary_fields(frm);
 };
 
 // Labour total = OEM labour total_excl + Non OEM labour total_excl; duration_total = sum of both tables' duration_hours
@@ -1075,7 +1080,7 @@ const calculate_labours_total_combined = (frm) => {
 		non_oem += row.total_excl || 0;
 	}
 	frappe.model.set_value(frm.doc.doctype, frm.doc.name, "labours_total_excl", oem + non_oem);
-	// refresh_summary_totals(frm);
+	toggle_summary_fields(frm);
 };
 
 const calculate_duration_total_combined = (frm) => {
@@ -1088,6 +1093,15 @@ const calculate_duration_total_combined = (frm) => {
 	}
 	frappe.model.set_value(frm.doc.doctype, frm.doc.name, "duration_total", hours);
 };
+
+function toggle_summary_fields(frm) {
+	let has_parts = (frm.doc.service_parts_items || []).length > 0 || (frm.doc.non_oem_parts_items || []).length > 0;
+	let has_labour = (frm.doc.service_labour_items || []).length > 0 || (frm.doc.non_oem_labour_items || []).length > 0;
+	frm.toggle_display("total_items", has_parts);
+	frm.toggle_display("parts_total_excl", has_parts);
+	frm.toggle_display("duration_total", has_labour);
+	frm.toggle_display("labours_total_excl", has_labour);
+}
 
 // STOCK NUMBER INCREMENT
 function incrementStockNumber(stockNumber) {

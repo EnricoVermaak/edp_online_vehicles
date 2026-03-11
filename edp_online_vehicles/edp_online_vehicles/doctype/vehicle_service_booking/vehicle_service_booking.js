@@ -1,5 +1,6 @@
 frappe.ui.form.on("Vehicle Service Booking", {
     refresh(frm) {
+        toggle_summary_fields(frm);
         if (!frm.is_new()) {
             frm.add_custom_button("Open Job", function () {
                 frappe.call({
@@ -70,6 +71,11 @@ frappe.ui.form.on("Vehicle Service Booking", {
 				},
 			};
 		});
+
+        toggle_summary_fields(frm);
+		calculate_parts_total_combined(frm);
+		calculate_labours_total_combined(frm);
+		calculate_duration_total_combined(frm);
     },
 
     service_type(frm) {
@@ -384,7 +390,7 @@ const calculate_parts_total_combined = (frm) => {
     for (const row of frm.doc.service_parts_items || []) { total_qty += flt(row.qty || 0); }
     frappe.model.set_value(frm.doc.doctype, frm.doc.name, "total_items", total_qty);
     try { frm.refresh_field("parts_total_excl"); } catch (e) {}
-    // refresh_summary_totals(frm);
+    toggle_summary_fields(frm);
 };
 
 // Labour total = OEM labour total_excl + Non OEM labour total_excl; duration_total = sum of both tables' duration_hours
@@ -396,7 +402,7 @@ const calculate_labours_total_combined = (frm) => {
     }
     frappe.model.set_value(frm.doc.doctype, frm.doc.name, "labours_total_excl", total);
     try { frm.refresh_field("labours_total_excl"); } catch (e) {}
-    // refresh_summary_totals(frm);
+    toggle_summary_fields(frm);
 };
 
 const calculate_duration_total_combined = (frm) => {
@@ -407,3 +413,12 @@ const calculate_duration_total_combined = (frm) => {
     frappe.model.set_value(frm.doc.doctype, frm.doc.name, "duration_total", hours);
     try { frm.refresh_field("duration_total"); } catch (e) {}
 };
+
+function toggle_summary_fields(frm) {
+    let has_parts = (frm.doc.service_parts_items || []).length > 0;
+    let has_labour = (frm.doc.service_labour_items || []).length > 0;
+    frm.toggle_display("total_items", has_parts);
+    frm.toggle_display("parts_total_excl", has_parts);
+    frm.toggle_display("duration_total", has_labour);
+    frm.toggle_display("labours_total_excl", has_labour);
+}

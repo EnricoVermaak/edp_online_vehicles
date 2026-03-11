@@ -16,7 +16,6 @@
   "vin_serial_no",
   "model",
   "model_description",
-  "engine_no",
   "service_type",
   "odo_reading_hours",
   "customer_column",
@@ -186,13 +185,6 @@
    "read_only": 1
   },
   {
-   "fetch_from": "vin_serial_no.engine_no",
-   "fieldname": "engine_no",
-   "fieldtype": "Data",
-   "label": "Engine No",
-   "read_only": 1
-  },
-  {
    "fieldname": "parts_tab",
    "fieldtype": "Tab Break",
    "label": "Parts"
@@ -344,13 +336,14 @@
   {
    "fieldname": "total_items",
    "fieldtype": "Data",
-   "label": "Total Items"
+   "label": "Total Items",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_calendar_and_gantt": 1,
  "links": [],
- "modified": "2026-03-10 16:28:40.855863",
+ "modified": "2026-03-11 08:30:36.889679",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicle Service Booking",

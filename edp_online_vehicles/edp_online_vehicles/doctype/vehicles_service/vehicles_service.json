@@ -164,7 +164,7 @@
    "reqd": 1
   },
   {
-   "fetch_from": "vin_serial_no.customer",
+   "fetch_from": "vinserial_no.customer",
    "fetch_if_empty": 1,
    "fieldname": "customer",
    "fieldtype": "Link",
@@ -280,13 +280,13 @@
    "label": "Service Plan Period"
   },
   {
-   "fetch_from": "vin_serial_no.service_start_date",
+   "fetch_from": "vinserial_no.service_start_date",
    "fieldname": "service_start_date",
    "fieldtype": "Date",
    "label": "Service Plan Start Date"
   },
   {
-   "fetch_from": "vin_serial_no.service_end_date",
+   "fetch_from": "vinserial_no.service_end_date",
    "fieldname": "service_end_date",
    "fieldtype": "Date",
    "label": "Service Plan End Date"
@@ -847,7 +847,8 @@
   {
    "fieldname": "total_items",
    "fieldtype": "Data",
-   "label": "Total Items"
+   "label": "Total Items",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
@@ -867,7 +868,7 @@
    "link_fieldname": "services"
   }
  ],
- "modified": "2026-03-10 16:29:33.192472",
+ "modified": "2026-03-11 08:30:08.378501",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicles Service",

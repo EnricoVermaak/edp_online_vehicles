@@ -16,6 +16,15 @@ $(document).ready(function () {
 	);
 });
 
+function toggle_summary_fields(frm) {
+	let has_parts = (frm.doc.part_items || []).length > 0;
+	let has_labour = (frm.doc.labour_items || []).length > 0;
+	frm.toggle_display("total_items", has_parts);
+	frm.toggle_display("total_excl", has_parts);
+	frm.toggle_display("duration_total", has_labour);
+	frm.toggle_display("labours_total_excl", has_labour);
+}
+
 function refresh_summary_totals(frm) {
 	if (!frm.doc.doctype) return;
 	let parts = flt(frm.doc.total_excl) || 0;
@@ -39,6 +48,7 @@ frappe.ui.form.on("Vehicles Warranty Claims", {
 	},
 	refresh(frm) {
 		setTimeout(() => reapply_colors(frm), 300);
+		toggle_summary_fields(frm);
 		if (frm.doc.labour_items && frm.doc.labour_items.length) {
 			update_labour_totals(frm);
 		}
@@ -414,6 +424,8 @@ frappe.ui.form.on("Vehicles Warranty Claims", {
 				});
 		}
 		previous_status_value = frm.doc.status;
+		toggle_summary_fields(frm);
+		calculate_part_sub_total(frm, "total_excl", "part_items");
 	},
 	date_of_failure: async function (frm) {
 
@@ -860,6 +872,7 @@ const update_labour_totals = (frm) => {
 	frm.set_value("labours_total_excl", labours_total_excl);
 	frm.refresh_field("duration_total");
 	frm.refresh_field("labours_total_excl");
+	toggle_summary_fields(frm);
 	refresh_summary_totals(frm);
 };
 
@@ -951,6 +964,7 @@ const calculate_part_sub_total = (frm, field_name, table_name) => {
 	frm.set_value(field_name, total);
 	frm.set_value("total_items", total_qty);
 	frm.refresh_field(field_name);
+	toggle_summary_fields(frm);
 	refresh_summary_totals(frm);
 };
 
