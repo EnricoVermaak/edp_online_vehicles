@@ -386,9 +386,9 @@ const calculate_parts_total_combined = (frm) => {
         non_oem += row.total_excl || 0;
     }
     frappe.model.set_value(frm.doc.doctype, frm.doc.name, "parts_total_excl", oem + non_oem);
-    let total_qty = 0;
-    for (const row of frm.doc.service_parts_items || []) { total_qty += flt(row.qty || 0); }
-    frappe.model.set_value(frm.doc.doctype, frm.doc.name, "total_items", total_qty);
+    // let total_qty = 0;
+    // for (const row of frm.doc.service_parts_items || []) { total_qty += flt(row.qty || 0); }
+    // frappe.model.set_value(frm.doc.doctype, frm.doc.name, "total_qty", total_qty);
     try { frm.refresh_field("parts_total_excl"); } catch (e) {}
     toggle_summary_fields(frm);
 };
@@ -417,7 +417,7 @@ const calculate_duration_total_combined = (frm) => {
 function toggle_summary_fields(frm) {
     let has_parts = (frm.doc.service_parts_items || []).length > 0;
     let has_labour = (frm.doc.service_labour_items || []).length > 0;
-    frm.toggle_display("total_items", has_parts);
+    // frm.toggle_display("total_qty", has_parts);
     frm.toggle_display("parts_total_excl", has_parts);
     frm.toggle_display("duration_total", has_labour);
     frm.toggle_display("labours_total_excl", has_labour);

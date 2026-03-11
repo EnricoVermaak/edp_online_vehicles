@@ -19,7 +19,7 @@ $(document).ready(function () {
 function toggle_summary_fields(frm) {
 	let has_parts = (frm.doc.part_items || []).length > 0;
 	let has_labour = (frm.doc.labour_items || []).length > 0;
-	frm.toggle_display("total_items", has_parts);
+	// frm.toggle_display(total_qty, has_parts);
 	frm.toggle_display("total_excl", has_parts);
 	frm.toggle_display("duration_total", has_labour);
 	frm.toggle_display("labours_total_excl", has_labour);
@@ -956,13 +956,13 @@ frappe.ui.form.on("Extra Items", {
 // -------------------------------------------------
 const calculate_part_sub_total = (frm, field_name, table_name) => {
 	let total = 0;
-	let total_qty = 0;
+	// let total_qty = 0;
 	frm.doc[table_name].forEach(row => {
 		total += (row.price || 0) * (row.qty || 0);
-		total_qty += flt(row.qty || 0);
+		// total_qty += flt(row.qty || 0);
 	});
 	frm.set_value(field_name, total);
-	frm.set_value("total_items", total_qty);
+	// frm.set_value("total_qty", total_qty);
 	frm.refresh_field(field_name);
 	toggle_summary_fields(frm);
 	refresh_summary_totals(frm);

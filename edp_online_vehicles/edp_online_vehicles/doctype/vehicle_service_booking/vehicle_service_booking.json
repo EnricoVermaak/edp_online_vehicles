@@ -43,7 +43,7 @@
   "section_break_izrz",
   "column_break_vzoi",
   "column_break_tnqs",
-  "total_items",
+  "total_qty",
   "parts_total_excl",
   "labour_tab",
   "service_labour_items",
@@ -107,6 +107,15 @@
    "label": "Vehicle"
   },
   {
+   "fieldname": "vin_serial_no",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "VIN/Serial No",
+   "options": "Vehicle Stock",
+   "reqd": 1
+  },
+  {
    "fetch_from": "vin_serial_no.model",
    "fieldname": "model",
    "fieldtype": "Link",
@@ -115,15 +124,28 @@
    "read_only": 1
   },
   {
-   "fieldname": "customer_column",
-   "fieldtype": "Column Break",
-   "label": "Customer"
+   "fetch_from": "vin_serial_no.description",
+   "fieldname": "model_description",
+   "fieldtype": "Data",
+   "label": "Model Description",
+   "read_only": 1
+  },
+  {
+   "fieldname": "service_type",
+   "fieldtype": "Link",
+   "label": "Service Type",
+   "options": "Service Schedules"
   },
   {
    "fieldname": "odo_reading_hours",
    "fieldtype": "Int",
    "label": "Odo Reading/ Hours",
    "reqd": 1
+  },
+  {
+   "fieldname": "customer_column",
+   "fieldtype": "Column Break",
+   "label": "Customer"
   },
   {
    "fieldname": "customer",
@@ -154,58 +176,6 @@
    "label": "Email"
   },
   {
-   "fieldname": "service_type",
-   "fieldtype": "Link",
-   "label": "Service Type",
-   "options": "Service Schedules"
-  },
-  {
-   "fieldname": "vin_serial_no",
-   "fieldtype": "Link",
-   "in_list_view": 1,
-   "in_standard_filter": 1,
-   "label": "VIN/Serial No",
-   "options": "Vehicle Stock",
-   "reqd": 1
-  },
-  {
-   "fieldname": "section_break_lsyk",
-   "fieldtype": "Section Break"
-  },
-  {
-   "fieldname": "service_notes",
-   "fieldtype": "Text Editor",
-   "label": "Service Notes"
-  },
-  {
-   "fetch_from": "vin_serial_no.description",
-   "fieldname": "model_description",
-   "fieldtype": "Data",
-   "label": "Model Description",
-   "read_only": 1
-  },
-  {
-   "fieldname": "parts_tab",
-   "fieldtype": "Tab Break",
-   "label": "Parts"
-  },
-  {
-   "fieldname": "service_parts_items",
-   "fieldtype": "Table",
-   "label": "Service Parts Items",
-   "options": "Service Parts Items"
-  },
-  {
-   "fieldname": "part_schedule_date",
-   "fieldtype": "Date",
-   "label": "Schedule Part Delivery Date"
-  },
-  {
-   "fieldname": "labour_tab",
-   "fieldtype": "Tab Break",
-   "label": "Labour"
-  },
-  {
    "collapsible": 1,
    "fieldname": "service_and_warranty_information_section",
    "fieldtype": "Section Break",
@@ -231,11 +201,6 @@
    "read_only": 1
   },
   {
-   "fieldname": "warranty_column",
-   "fieldtype": "Column Break",
-   "label": "Warranty"
-  },
-  {
    "fetch_from": "vin_serial_no.service_interval",
    "fieldname": "service_interval",
    "fieldtype": "Int",
@@ -257,6 +222,11 @@
    "fieldtype": "Int",
    "label": "Service KM/ Hours Limit",
    "read_only": 1
+  },
+  {
+   "fieldname": "warranty_column",
+   "fieldtype": "Column Break",
+   "label": "Warranty"
   },
   {
    "fetch_from": "vin_serial_no.warranty_start_date",
@@ -287,6 +257,65 @@
    "read_only": 1
   },
   {
+   "fieldname": "section_break_lsyk",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "service_notes",
+   "fieldtype": "Text Editor",
+   "label": "Service Notes"
+  },
+  {
+   "fieldname": "parts_tab",
+   "fieldtype": "Tab Break",
+   "label": "Parts"
+  },
+  {
+   "fieldname": "service_parts_items",
+   "fieldtype": "Table",
+   "label": "Service Parts Items",
+   "options": "Service Parts Items"
+  },
+  {
+   "fieldname": "part_schedule_date",
+   "fieldtype": "Date",
+   "label": "Schedule Part Delivery Date"
+  },
+  {
+   "fieldname": "section_break_izrz",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_vzoi",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_tnqs",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "total_qty",
+   "fieldtype": "Data",
+   "label": "Total Quantity",
+   "read_only": 1
+  },
+  {
+   "fieldname": "parts_total_excl",
+   "fieldtype": "Currency",
+   "label": "Parts Total (Excl)"
+  },
+  {
+   "fieldname": "labour_tab",
+   "fieldtype": "Tab Break",
+   "label": "Labour"
+  },
+  {
+   "fieldname": "service_labour_items",
+   "fieldtype": "Table",
+   "label": "Service Labour Items",
+   "options": "Service Labour Items"
+  },
+  {
    "fieldname": "section_break_qwip",
    "fieldtype": "Section Break"
   },
@@ -309,41 +338,12 @@
    "fieldtype": "Currency",
    "label": "Labours Total (Excl)",
    "read_only": 1
-  },
-  {
-   "fieldname": "section_break_izrz",
-   "fieldtype": "Section Break"
-  },
-  {
-   "fieldname": "column_break_vzoi",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "column_break_tnqs",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "parts_total_excl",
-   "fieldtype": "Currency",
-   "label": "Parts Total (Excl)"
-  },
-  {
-   "fieldname": "service_labour_items",
-   "fieldtype": "Table",
-   "label": "Service Labour Items",
-   "options": "Service Labour Items"
-  },
-  {
-   "fieldname": "total_items",
-   "fieldtype": "Data",
-   "label": "Total Items",
-   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_calendar_and_gantt": 1,
  "links": [],
- "modified": "2026-03-11 08:30:36.889679",
+ "modified": "2026-03-11 10:29:46.127327",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicle Service Booking",

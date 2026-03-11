@@ -140,16 +140,21 @@ function calculate_child_totals(frm) {
     });
     
     // Sum of all service_labour_items
+    let duration_total = 0;
     frm.doc.service_labour_items.forEach(row => {
         labour_total += row.total_excl || 0;
+        duration_total += row.duration_hours || 0;
     });
     
     // Set values in custom fields only
     frm.set_value('custom_parts_total_excl', parts_total);
     frm.set_value('custom_labours_total_excl', labour_total);
+    frm.set_value('custom_labour_duration', duration_total);
     
     frm.refresh_field('custom_parts_total_excl');
     frm.refresh_field('custom_labours_total_excl');
+    frm.refresh_field('custom_labour_duration');
+    
 }
 
 
