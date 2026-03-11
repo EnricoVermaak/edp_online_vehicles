@@ -252,6 +252,7 @@
    "fieldtype": "Column Break"
   },
   {
+   "fetch_from": "vin_serial_no.colour",
    "fieldname": "colour",
    "fieldtype": "Data",
    "label": "Colour"
@@ -730,7 +731,7 @@
    "link_fieldname": "warranty"
   }
  ],
- "modified": "2026-03-11 10:30:42.744951",
+ "modified": "2026-03-11 12:49:56.153439",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicles Warranty Claims",
