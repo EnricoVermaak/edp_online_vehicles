@@ -333,9 +333,9 @@ frappe.ui.form.on("Vehicles Service", {
 			);
 		}
 
-		if (edp_online_vehicles && edp_online_vehicles.vehicles_service && edp_online_vehicles.vehicles_service.add_scan_button) {
-			edp_online_vehicles.vehicles_service.add_scan_button(frm);
-		}
+		// if (edp_online_vehicles && edp_online_vehicles.vehicles_service && edp_online_vehicles.vehicles_service.add_scan_button) {
+		// 	edp_online_vehicles.vehicles_service.add_scan_button(frm);
+		// }
 	},
 
 	after_save(frm) {
