@@ -29,6 +29,7 @@ required_apps = ["hrms", "insights"]
 app_include_css = "edp_online_vehicles.bundle.css"
 app_include_js = [
     "edp_online_vehicles1.bundle.js",
+    "/assets/edp_online_vehicles/js/pricing_utils.js",
     "/assets/edp_online_vehicles/js/vehicles_service_scan.js",
     "/assets/edp_online_vehicles/js/recon_restrictions.js",
     "/assets/edp_online_vehicles/js/breadcrumb.js",
