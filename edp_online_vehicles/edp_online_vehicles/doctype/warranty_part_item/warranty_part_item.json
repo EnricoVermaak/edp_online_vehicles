@@ -73,14 +73,16 @@
    "fieldname": "approved",
    "fieldtype": "Check",
    "in_list_view": 1,
-   "label": "Approved"
+   "label": "Approved",
+   "read_only_depends_on": "eval: !(frappe.user.has_role('Warranty Administrator') || frappe.session.user === 'Administrator')"
   },
   {
    "default": "0",
    "fieldname": "declined",
    "fieldtype": "Check",
    "in_list_view": 1,
-   "label": "Declined"
+   "label": "Declined",
+   "read_only_depends_on": "eval: !(frappe.user.has_role('Warranty Administrator') || frappe.session.user === 'Administrator')"
   },
   {
    "default": "0",
@@ -92,7 +94,8 @@
   {
    "fieldname": "reason",
    "fieldtype": "Small Text",
-   "label": "Reason"
+   "label": "Reason",
+   "read_only_depends_on": "eval: !(frappe.user.has_role('Warranty Administrator') || frappe.session.user === 'Administrator')"
   },
   {
    "fetch_from": "part_no.stock_uom",
@@ -151,7 +154,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2026-03-10 16:09:06.243818",
+ "modified": "2026-03-12 09:52:45.760701",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Warranty Part Item",

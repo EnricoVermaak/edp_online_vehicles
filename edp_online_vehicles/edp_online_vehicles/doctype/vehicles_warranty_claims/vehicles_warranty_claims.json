@@ -103,15 +103,14 @@
   "approved_by",
   "authorised_by_signature",
   "authorised_by_full_names",
-  "attached_document_tab",
-  "attached_documents",
-  "summary_tab",
   "section_break_summary",
   "summary_parts_total",
   "summary_labour_total",
   "summary_extras_total",
   "column_break_summary",
-  "summary_total_excl"
+  "summary_total_excl",
+  "attached_document_tab",
+  "attached_documents"
  ],
  "fields": [
   {
@@ -666,26 +665,9 @@
    "label": "Authorised By Full Names"
   },
   {
-   "fieldname": "attached_document_tab",
-   "fieldtype": "Tab Break",
-   "hidden": 1,
-   "label": "Attached Documents"
-  },
-  {
-   "fieldname": "attached_documents",
-   "fieldtype": "Table",
-   "label": "Attached Documents",
-   "options": "Attached Documents"
-  },
-  {
-   "fieldname": "summary_tab",
-   "fieldtype": "Tab Break",
-   "label": "Summary"
-  },
-  {
    "fieldname": "section_break_summary",
    "fieldtype": "Section Break",
-   "label": "Totals"
+   "label": "Summary"
   },
   {
    "default": "0",
@@ -718,6 +700,18 @@
    "fieldtype": "Currency",
    "label": "Total (Excl)",
    "read_only": 1
+  },
+  {
+   "fieldname": "attached_document_tab",
+   "fieldtype": "Tab Break",
+   "hidden": 1,
+   "label": "Attached Documents"
+  },
+  {
+   "fieldname": "attached_documents",
+   "fieldtype": "Table",
+   "label": "Attached Documents",
+   "options": "Attached Documents"
   }
  ],
  "index_web_pages_for_search": 1,
@@ -731,7 +725,7 @@
    "link_fieldname": "warranty"
   }
  ],
- "modified": "2026-03-11 12:49:56.153439",
+ "modified": "2026-03-12 09:25:37.052147",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicles Warranty Claims",
