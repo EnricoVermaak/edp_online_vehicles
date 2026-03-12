@@ -34,6 +34,7 @@
   "bought_from_dealer",
   "more_info_section",
   "summary",
+  "reported_by",
   "column_break_nj0t",
   "return_reason",
   "references_section",
@@ -100,18 +101,22 @@
   "technician_invoice",
   "approval_letter",
   "tab_break_wcj7",
-  "reported_by",
-  "technician",
+  "terms_and_conditions",
+  "technician_and_customer_section",
   "technician_signature",
+  "technician",
   "technician_full_names",
-  "approved_by",
+  "column_break_ddxj",
+  "customer_signature",
+  "customer_full_names",
+  "authorised_section",
   "authorised_by_signature",
+  "approved_by",
   "authorised_by_full_names",
-  "section_break_summary",
+  "column_break_yqr6",
   "summary_parts_total",
   "summary_labour_total",
   "summary_extras_total",
-  "column_break_summary",
   "summary_total_excl",
   "attached_document_tab",
   "attached_documents",
@@ -647,6 +652,16 @@
    "label": "Confirmation"
   },
   {
+   "fieldname": "terms_and_conditions",
+   "fieldtype": "Text Editor",
+   "label": "Warranty Terms and Conditions"
+  },
+  {
+   "fieldname": "technician_and_customer_section",
+   "fieldtype": "Section Break",
+   "label": "Technician and Customer"
+  },
+  {
    "fieldname": "reported_by",
    "fieldtype": "Link",
    "label": "Reported By",
@@ -672,6 +687,25 @@
    "label": "Technician Full Names"
   },
   {
+   "fieldname": "column_break_ddxj",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "customer_signature",
+   "fieldtype": "Signature",
+   "label": "Customer Signature"
+  },
+  {
+   "fieldname": "customer_full_names",
+   "fieldtype": "Data",
+   "label": "Customer Full Names"
+  },
+  {
+   "fieldname": "authorised_section",
+   "fieldtype": "Section Break",
+   "label": "Authorised"
+  },
+  {
    "fieldname": "approved_by",
    "fieldtype": "Link",
    "label": "Authorised By",
@@ -689,8 +723,8 @@
    "label": "Authorised By Full Names"
   },
   {
-   "fieldname": "section_break_summary",
-   "fieldtype": "Section Break",
+   "fieldname": "column_break_yqr6",
+   "fieldtype": "Column Break",
    "label": "Summary"
   },
   {
@@ -713,10 +747,6 @@
    "fieldtype": "Currency",
    "label": "Extras Total (Excl)",
    "read_only": 1
-  },
-  {
-   "fieldname": "column_break_summary",
-   "fieldtype": "Column Break"
   },
   {
    "default": "0",
