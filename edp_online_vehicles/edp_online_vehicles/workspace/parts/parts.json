@@ -5,7 +5,7 @@
    "label": "Part Orders (Dealer Billing)"
   }
  ],
- "content": "[{\"id\":\"C4qQJ44QQC\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Parts</span>\",\"col\":12}},{\"id\":\"MjWNcwKZCo\",\"type\":\"chart\",\"data\":{\"chart_name\":\"Part Orders (Dealer Billing)\",\"col\":12}},{\"id\":\"ppdbKzRLaB\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"-V3l2iKCOp\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Order Parts\",\"col\":3}},{\"id\":\"1IGPdxYElf\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Parts Overview Dashboard\",\"col\":3}},{\"id\":\"_OnI4qA_TM\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"HjV_1p7RkN\",\"type\":\"paragraph\",\"data\":{\"text\":\"Reports\",\"col\":12}},{\"id\":\"u1cbO7P5Xx\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Outstanding Parts Orders\",\"col\":3}},{\"id\":\"cT7j3x7Cx7\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Dealer Parts Orders\",\"col\":3}},{\"id\":\"d1QHbuUqHW\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"HQ Parts Orders\",\"col\":3}},{\"id\":\"nrqK76eM5N\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"mCEYtj8C9E\",\"type\":\"card\",\"data\":{\"card_name\":\"Part Order\",\"col\":4}},{\"id\":\"JbrYm3tFOK\",\"type\":\"card\",\"data\":{\"card_name\":\"Picking & Delivery\",\"col\":4}}]",
+ "content": "[{\"id\":\"C4qQJ44QQC\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Parts</span>\",\"col\":12}},{\"id\":\"MjWNcwKZCo\",\"type\":\"chart\",\"data\":{\"chart_name\":\"Part Orders (Dealer Billing)\",\"col\":12}},{\"id\":\"ppdbKzRLaB\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"-V3l2iKCOp\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Order Parts\",\"col\":3}},{\"id\":\"1IGPdxYElf\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Parts Overview Dashboard\",\"col\":3}},{\"id\":\"nlDKYHwo0h\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Credit Limit Exceeded Orders\",\"col\":3}},{\"id\":\"_OnI4qA_TM\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"HjV_1p7RkN\",\"type\":\"paragraph\",\"data\":{\"text\":\"Reports\",\"col\":12}},{\"id\":\"u1cbO7P5Xx\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Outstanding Parts Orders\",\"col\":3}},{\"id\":\"cT7j3x7Cx7\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Dealer Parts Orders\",\"col\":3}},{\"id\":\"d1QHbuUqHW\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"HQ Parts Orders\",\"col\":3}},{\"id\":\"nrqK76eM5N\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"mCEYtj8C9E\",\"type\":\"card\",\"data\":{\"card_name\":\"Part Order\",\"col\":4}},{\"id\":\"JbrYm3tFOK\",\"type\":\"card\",\"data\":{\"card_name\":\"Picking & Delivery\",\"col\":4}}]",
  "creation": "2025-06-24 15:23:52.600877",
  "custom_blocks": [],
  "docstatus": 0,
@@ -311,38 +311,9 @@
    "link_type": "DocType",
    "onboard": 0,
    "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Reports",
-   "link_count": 2,
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Card Break"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 1,
-   "label": "Outstanding Parts Order",
-   "link_count": 0,
-   "link_to": "Outstanding Quantities on Parts Orders",
-   "link_type": "Report",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 1,
-   "label": "Dealer Parts Orders",
-   "link_count": 0,
-   "link_to": "Parts Orders",
-   "link_type": "Report",
-   "onboard": 0,
-   "type": "Link"
   }
  ],
- "modified": "2026-03-10 10:27:47.444062",
+ "modified": "2026-03-12 08:53:41.366551",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Parts",
@@ -374,6 +345,14 @@
    "link_to": "Outstanding Quantities on Parts Orders",
    "report_ref_doctype": "HQ Part Order",
    "type": "Report"
+  },
+  {
+   "color": "Red",
+   "doc_view": "List",
+   "label": "Credit Limit Exceeded Orders",
+   "link_to": "HQ Part Order",
+   "stats_filter": "[[\"HQ Part Order\",\"part_order_status\",\"=\",\"Credit Limit Exceeded\",false]]",
+   "type": "DocType"
   },
   {
    "color": "Grey",

@@ -27,6 +27,7 @@ def get_columns():
 			"fieldtype": "Datetime",
 			"width": 120,
 		},
+		{"label": _("DMS Warehouse"), "fieldname": "custom_dms_warehouse", "fieldtype": "Data", "width": 120},
 		{"label": _("Order Type"), "fieldname": "order_type", "fieldtype": "Data", "width": 120},
 		{"label": _("Delivery Method"), "fieldname": "delivery_method", "fieldtype": "Data", "width": 120},
 		{"label": _("Sales Person"), "fieldname": "sales_person", "fieldtype": "Data", "width": 120},
@@ -155,13 +156,10 @@ def get_data(filters):
 		.where(order.creation.between(filters.from_date, filters.to_date))
 	)
 
-	# if filters.get("customer"):
-	# 	query = query.where(order.customer == filters.customer)
-
-	# if filters.get("fleet_customer"):
-	# 	query = query.where(order.fleet_customer == filters.fleet_customer)
-
 	if filters.get("dealer"):
 		query = query.where(order.dealer == filters.dealer)
+
+	if filters.get("custom_dms_warehouse"):
+		query = query.where(order_item.custom_dms_warehouse == filters.custom_dms_warehouse)
 
 	return query.run(as_dict=True)

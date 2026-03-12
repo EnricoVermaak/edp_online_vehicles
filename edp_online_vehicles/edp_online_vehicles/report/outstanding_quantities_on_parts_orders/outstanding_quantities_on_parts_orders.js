@@ -23,5 +23,16 @@ frappe.query_reports["Outstanding Quantities on Parts Orders"] = {
 			fieldtype: "Link",
 			options: "Company",
 		},
+		{
+			fieldname: "custom_dms_warehouse",
+			label: __("DMS Warehouse"),
+			fieldtype: "Select",
+			options: [
+				"",
+				"3PL",
+				"DP WORLD",
+				"FUCHS"
+			],
+		},
 	]
 };
