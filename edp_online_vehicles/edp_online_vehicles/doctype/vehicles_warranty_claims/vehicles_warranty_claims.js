@@ -81,6 +81,7 @@ frappe.ui.form.on("Vehicles Warranty Claims", {
 
 		const has_no_mandatory_rows = !frm.doc.mandatory_documents || frm.doc.mandatory_documents.length === 0;
 		if (has_no_mandatory_rows) {
+			frm.clear_table("mandatory_documents");
 			frappe.db.get_doc("Vehicles Warranty Settings").then((settings) => {
 				if (settings.mandatory_documents && settings.mandatory_documents.length) {
 					for (let row of settings.mandatory_documents) {
