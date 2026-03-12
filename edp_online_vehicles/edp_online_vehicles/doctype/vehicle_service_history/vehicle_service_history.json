@@ -94,11 +94,6 @@
   "warranty_history",
   "breakdown_history",
   "incident_history",
-  "documents_tab",
-  "sticker",
-  "odo_reading",
-  "column_break_cr3g",
-  "dealer_invoice",
   "confirmation_tab",
   "terms_and_conditions",
   "technician_and_customer_section",
@@ -255,12 +250,6 @@
    "read_only": 1
   },
   {
-   "fieldname": "vehicle_registration_number",
-   "fieldtype": "Data",
-   "label": "Vehicle Registration Number",
-   "read_only": 1
-  },
-  {
    "fieldname": "column_break_jy4l",
    "fieldtype": "Column Break"
   },
@@ -362,8 +351,8 @@
    "label": "Vehicles Breakdown",
    "options": "Vehicles Breakdown",
    "print_hide": 1,
-   "report_hide": 1,
    "read_only": 1,
+   "report_hide": 1,
    "search_index": 1
   },
   {
@@ -373,8 +362,8 @@
    "label": "Vehicles Incidents",
    "options": "Vehicles Incidents",
    "print_hide": 1,
-   "report_hide": 1,
    "read_only": 1,
+   "report_hide": 1,
    "search_index": 1
   },
   {
@@ -384,8 +373,8 @@
    "label": "Service Booking",
    "options": "Vehicle Service Booking",
    "print_hide": 1,
-   "report_hide": 1,
    "read_only": 1,
+   "report_hide": 1,
    "search_index": 1
   },
   {
@@ -839,11 +828,18 @@
    "fieldtype": "Link",
    "hidden": 1,
    "label": "Vehicles Service",
-   "options": "Vehicles Service"
+   "options": "Vehicles Service",
+   "read_only": 1
   },
   {
    "fieldname": "section_break_qpjw",
    "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "vehicle_registration_number",
+   "fieldtype": "Data",
+   "label": "Vehicle Registration No",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
@@ -863,11 +859,11 @@
    "link_fieldname": "services"
   }
  ],
- "modified": "2025-12-17 14:26:56.465287",
+ "modified": "2026-03-12 12:00:22.682977",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicle Service History",
- "naming_rule": "Expression",
+ "naming_rule": "Expression (old style)",
  "owner": "Administrator",
  "permissions": [
   {
@@ -888,7 +884,7 @@
    "export": 1,
    "print": 1,
    "read": 1,
-   "report": 1, 
+   "report": 1,
    "role": "Aftersales Manager",
    "share": 1,
    "write": 1

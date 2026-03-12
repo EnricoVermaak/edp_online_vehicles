@@ -243,11 +243,6 @@
    "label": "License Expiry Date"
   },
   {
-   "fieldname": "vehicle_registration_number",
-   "fieldtype": "Data",
-   "label": "Vehicle Registration Number"
-  },
-  {
    "fieldname": "column_break_cncj",
    "fieldtype": "Column Break"
   },
@@ -718,6 +713,11 @@
    "fieldtype": "Currency",
    "label": "Total (Excl)",
    "read_only": 1
+  },
+  {
+   "fieldname": "vehicle_registration_number",
+   "fieldtype": "Data",
+   "label": "Vehicle Registration No"
   }
  ],
  "index_web_pages_for_search": 1,
@@ -731,7 +731,7 @@
    "link_fieldname": "warranty"
   }
  ],
- "modified": "2026-03-11 12:49:56.153439",
+ "modified": "2026-03-12 12:01:01.381781",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicles Warranty Claims",

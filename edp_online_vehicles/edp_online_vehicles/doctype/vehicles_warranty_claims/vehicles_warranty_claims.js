@@ -180,7 +180,7 @@ frappe.ui.form.on("Vehicles Warranty Claims", {
 									});
 									frm.set_value("license_no", segments[5]);
 									frm.set_value("license_expiry_date", segments[13]);
-									frm.set_value("vehicle_registration_number", segments[6]);
+									frm.set_value("register_no", segments[6]);
 								} else {
 									frappe.db.get_value("Company", { name: frm.doc.dealer }, "custom_allow_any_brand_for_dealership")
 										.then((res) => {
@@ -378,6 +378,18 @@ frappe.ui.form.on("Vehicles Warranty Claims", {
 				fieldname: "odo_reading", value: frm.doc.odo_reading
 			}
 		});
+
+		if (frm.doc.hasOwnProperty("vehicle_registration_number") && frm.doc.vehicle_registration_number) {
+			await frappe.call({
+				method: "frappe.client.set_value",
+				args: {
+					doctype: "Vehicle Stock",
+					name: frm.doc.vin_serial_no,
+					fieldname: "register_no",
+					value: frm.doc.vehicle_registration_number
+				}
+			});
+        }
 	},
 
 	after_save(frm) {

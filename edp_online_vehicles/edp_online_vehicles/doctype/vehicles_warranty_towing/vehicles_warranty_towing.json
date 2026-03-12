@@ -52,15 +52,6 @@
    "reqd": 1
   },
   {
-   "fetch_from": "vin_serial_no.register_no",
-   "fieldname": "reg_no",
-   "fieldtype": "Data",
-   "in_list_view": 1,
-   "in_standard_filter": 1,
-   "label": "Reg No",
-   "read_only": 1
-  },
-  {
    "fetch_from": "vin_serial_no.brand",
    "fieldname": "make",
    "fieldtype": "Link",
@@ -204,11 +195,19 @@
   {
    "fieldname": "column_break_gyvb",
    "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "reg_no",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Vehicle Registration No",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-03-11 16:07:23.994524",
+ "modified": "2026-03-12 11:42:30.108239",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicles Warranty Towing",
@@ -228,7 +227,6 @@
   }
  ],
  "row_format": "Dynamic",
- "search_fields": "vin_serial_no, case_no, reg_no, status",
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": []

@@ -41,14 +41,14 @@ frappe.ui.form.on('Vehicles Warranty Towing', {
     },
     
     before_save: async function (frm) {
-        if (frm.doc.hasOwnProperty("vehicle_registration_number") && frm.doc.vehicle_registration_number) {
+        if (frm.doc.hasOwnProperty("reg_no") && frm.doc.reg_no) {
 			await frappe.call({
 				method: "frappe.client.set_value",
 				args: {
 					doctype: "Vehicle Stock",
 					name: frm.doc.vin_serial_no,
 					fieldname: "register_no",
-					value: frm.doc.vehicle_registration_number
+					value: frm.doc.reg_no
 				}
 			});
         }
