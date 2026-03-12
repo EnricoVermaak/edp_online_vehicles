@@ -48,13 +48,17 @@
   "email",
   "adress",
   "warranty_plan_tab",
+  "warranty_summary_section",
   "warranty_start_date",
   "warranty_end_date",
   "warranty_period_years",
+  "warranty_km_hours_limit",
   "column_break_dmel",
   "extended_warranty_start_date",
   "extended_warranty_end_date",
   "extended_warranty_period",
+  "warranty_plans_section",
+  "warranty_plan_view",
   "fault_cause_remedy_tab",
   "fault",
   "cause",
@@ -110,7 +114,8 @@
   "column_break_summary",
   "summary_total_excl",
   "attached_document_tab",
-  "attached_documents"
+  "attached_documents",
+  "connections_tab"
  ],
  "fields": [
   {
@@ -367,6 +372,11 @@
    "label": "Warranty Plan"
   },
   {
+   "fieldname": "warranty_summary_section",
+   "fieldtype": "Section Break",
+   "label": "Warranty Summary"
+  },
+  {
    "fetch_from": "vin_serial_no.warranty_start_date",
    "fieldname": "warranty_start_date",
    "fieldtype": "Date",
@@ -385,6 +395,13 @@
    "fieldname": "warranty_period_years",
    "fieldtype": "Int",
    "label": "Warranty Period (Months)",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "vin_serial_no.warranty_km_hours_limit",
+   "fieldname": "warranty_km_hours_limit",
+   "fieldtype": "Int",
+   "label": "Warranty KM/ Hours Limit",
    "read_only": 1
   },
   {
@@ -407,6 +424,18 @@
    "fieldname": "extended_warranty_period",
    "fieldtype": "Int",
    "label": "Extended Warranty Period (Months)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "warranty_plans_section",
+   "fieldtype": "Section Break",
+   "label": "Warranty Plans"
+  },
+  {
+   "fieldname": "warranty_plan_view",
+   "fieldtype": "Table",
+   "label": "Warranty Plans",
+   "options": "Warranty Plan View",
    "read_only": 1
   },
   {
@@ -712,6 +741,12 @@
    "fieldtype": "Table",
    "label": "Attached Documents",
    "options": "Attached Documents"
+  },
+  {
+   "fieldname": "connections_tab",
+   "fieldtype": "Tab Break",
+   "label": "Connections",
+   "show_dashboard": 1
   }
  ],
  "index_web_pages_for_search": 1,

@@ -77,6 +77,7 @@ frappe.ui.form.on("Vehicles Warranty Claims", {
 	refresh(frm) {
 		setTimeout(() => reapply_colors(frm), 300);
 		edp_vehicles.pricing.recalc_totals(frm, WC_CONFIG);
+		load_claim_warranty_plans(frm);
 
 		const has_no_mandatory_rows = !frm.doc.mandatory_documents || frm.doc.mandatory_documents.length === 0;
 		if (has_no_mandatory_rows) {
@@ -324,6 +325,15 @@ frappe.ui.form.on("Vehicles Warranty Claims", {
 	},
 
 	vin_serial_no: function (frm) {
+		// Clear warranty summary fields first, then reload from VIN
+		frm.set_value("warranty_start_date", null);
+		frm.set_value("warranty_end_date", null);
+		frm.set_value("warranty_period_years", null);
+		frm.set_value("warranty_km_hours_limit", null);
+		frm.set_value("extended_warranty_start_date", null);
+		frm.set_value("extended_warranty_end_date", null);
+		frm.set_value("extended_warranty_period", null);
+		load_claim_warranty_plans(frm);
 		if (frm.doc.part_items && frm.doc.part_items.length > 0) {
 			setTimeout(() => reapply_colors(frm), 400);
 		}
@@ -512,6 +522,31 @@ frappe.ui.form.on('Warranty Part Item', {
 		setTimeout(() => reapply_colors(frm), 100);
 	},
 });
+
+function load_claim_warranty_plans(frm) {
+	if (!frm.fields_dict.warranty_plan_view) return;
+	if (!frm.doc.vin_serial_no) {
+		frm.clear_table("warranty_plan_view");
+		frm.refresh_field("warranty_plan_view");
+		return;
+	}
+	frappe.db.get_list("Vehicle Linked Warranty Plan", {
+		filters: { vin_serial_no: frm.doc.vin_serial_no },
+		fields: ["name", "warranty_period_months", "warranty_limit_km_hours", "status"],
+		order_by: "creation asc",
+	}).then((plans) => {
+		frm.clear_table("warranty_plan_view");
+		(plans || []).forEach((p) => {
+			frm.add_child("warranty_plan_view", {
+				warranty_plan_description: p.name,
+				period_months: p.warranty_period_months,
+				warranty_odo_limit: p.warranty_limit_km_hours,
+				status: p.status,
+			});
+		});
+		frm.refresh_field("warranty_plan_view");
+	});
+}
 
 function set_row_color(frm, row, color) {
 	if (frm.fields_dict['part_items'] && frm.fields_dict['part_items'].grid) {
