@@ -395,7 +395,6 @@ frappe.ui.form.on("Vehicles Shipment", {
 							);
 						}
 
-<<<<<<< HEAD
 						if (row.vin_serial_no) {
 							const promise = frappe.db
 								.get_single_value("Vehicle Stock Settings", "automatically_create_stock_number")
@@ -417,9 +416,6 @@ frappe.ui.form.on("Vehicles Shipment", {
 								});
 							promises.push(promise);
 						} else {
-=======
-						if (!row.vin_serial_no) {
->>>>>>> 911b7489e59cff9b80c59afc32700f6fdbf32dc4
 							frappe.throw(
 								"Please ensure all selected vehicles have VIN/Serial No's assigned to them."
 							);
@@ -808,7 +804,6 @@ frappe.ui.form.on("Vehicles Shipment Items", {
 		}
 		{ frm.trigger("calculate_total_vehicles"); };
 	},
-<<<<<<< HEAD
 
 	vehicles_shipment_items_remove(frm) {
 		calculate_sub_total(frm, "total_excl", "vehicles_shipment_items");
@@ -828,8 +823,6 @@ frappe.ui.form.on("Vehicles Shipment Items", {
 	vin_serial_no(frm) { frm.trigger("calculate_total_vehicles"); },
 	form_render(frm) { frm.trigger("calculate_total_vehicles"); }
 	
-=======
->>>>>>> 911b7489e59cff9b80c59afc32700f6fdbf32dc4
 });
 
 function handle_custom_buttons(frm) {
@@ -1192,81 +1185,6 @@ function handle_custom_buttons(frm) {
 
 
 
-<<<<<<< HEAD
-=======
-// Vehcile counter and price
-frappe.ui.form.on("Vehicles Shipment", {
-	refresh(frm) {
-		frm.trigger("calculate_total_vehicles");
-	},
-
-	calculate_total_vehicles(frm) {
-		const total = (frm.doc.vehicles_shipment_items || []).filter(
-			row => row.model_code || row.vin_serial_no
-		).length;
-
-		const price_excl = (frm.doc.vehicles_shipment_items || []).reduce((sum, row) => {
-			return sum + (row.cost_price_excl || 0);
-		}, 0);
-
-		frm.set_value("total_vehicles", total);
-		frm.set_value("total_excl", price_excl);
-
-		frm.toggle_display("total_vehicles", total > 0);
-		frm.toggle_display("total_excl", price_excl > 0);
-
-		cur_frm.refresh_field("vehicles_shipment_items");
-	}
-});
-
-frappe.ui.form.on("Vehicles Shipment Items", {
-	vehicles_shipment_items_add(frm, cdt, cdn) {
-		frm.trigger("calculate_total_vehicles");
-	},
-
-	vehicles_shipment_items_remove(frm, cdt, cdn) {
-		frm.trigger("calculate_total_vehicles");
-	},
-	
-	vehicles_shipment_items_change(frm, cdt, cdn) {
-		frm.trigger("calculate_total_vehicles");
-	},
-
-	model_code(frm) { frm.trigger("calculate_total_vehicles"); },
-	vin_serial_no(frm) { frm.trigger("calculate_total_vehicles"); },
-	cost_price_excl(frm) { frm.trigger("calculate_total_vehicles"); },
-	form_render(frm) { frm.trigger("calculate_total_vehicles"); }
-});
-
-
-
-
-
-frappe.ui.form.on("Vehicles Shipment", {
-	refresh: function (frm) {
-		frm.set_query("colour", "vehicles_shipment_items", function (doc, cdt, cdn) {
-			const row = frappe.get_doc(cdt, cdn);
-			return {
-				filters: {
-					discontinued: 0,
-					model: row.model_code || undefined
-				}
-			};
-		});
-
-		frm.set_query("interior_colour", "vehicles_shipment_items", function (doc, cdt, cdn) {
-			const row = frappe.get_doc(cdt, cdn);
-			return {
-				filters: {
-					discontinued: 0,
-					model: row.model_code || undefined
-				}
-			};
-		});
-	}
-});
-
->>>>>>> 911b7489e59cff9b80c59afc32700f6fdbf32dc4
 // Function to open the dialog box
 function open_add_multiple_dialog(frm) {
 
