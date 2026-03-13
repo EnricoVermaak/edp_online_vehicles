@@ -94,12 +94,17 @@ def get_vehicles_stock_availability_status(status, vinno, docname):
 @frappe.whitelist()
 def change_vehicles_stock_availability_status(availability_status, vinno, docname=None):
 	stock_doc = frappe.get_doc("Vehicle Stock", vinno)
-	doc = frappe.get_doc("Vehicle Retail", docname)
-
 	stock_doc.availability_status = availability_status
 
-	if doc.sale_type == "Fleet":
-		stock_doc.type = "Fleet"
+	if docname:
+		doc = frappe.get_doc("Vehicle Retail", docname)
+
+		if doc.sale_type and frappe.db.exists("Vehicles Type", doc.sale_type):
+			stock_doc.type = doc.sale_type
+
+		for aor_field in ("custom_aor", "custom_aor_region", "custom_aor_ld"):
+			if hasattr(doc, aor_field) and hasattr(stock_doc, aor_field) and doc.get(aor_field):
+				stock_doc.set(aor_field, doc.get(aor_field))
 
 	stock_doc.save(ignore_permissions=True)
 	frappe.db.commit()
@@ -189,6 +194,9 @@ def remove_from_stock_on_sale(docname):
 		stock_doc.retail_date = doc.retail_date
 		stock_doc.warranty_start_date = doc.retail_date  # Set warranty start date to retail date when sold
 		stock_doc.warranty_end_date = warranty_end_date
+
+		if doc.sale_type and frappe.db.exists("Vehicles Type", doc.sale_type):
+			stock_doc.type = doc.sale_type
 		
 		# Set the warranty period field (this field is named years but contains months)
 		if warranty_period:

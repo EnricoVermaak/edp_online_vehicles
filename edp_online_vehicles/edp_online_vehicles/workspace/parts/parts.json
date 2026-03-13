@@ -5,7 +5,7 @@
    "label": "Part Orders (Dealer Billing)"
   }
  ],
- "content": "[{\"id\":\"C4qQJ44QQC\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Parts</span>\",\"col\":12}},{\"id\":\"MjWNcwKZCo\",\"type\":\"chart\",\"data\":{\"chart_name\":\"Part Orders (Dealer Billing)\",\"col\":12}},{\"id\":\"ppdbKzRLaB\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"-V3l2iKCOp\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Order Parts\",\"col\":3}},{\"id\":\"1IGPdxYElf\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Parts Overview Dashboard\",\"col\":3}},{\"id\":\"_OnI4qA_TM\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"ku2-7SG-zE\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Pending HQ Orders\",\"col\":3}},{\"id\":\"Xc7H9GPkB3\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Credit Limit Exceeded Orders\",\"col\":3}},{\"id\":\"nrqK76eM5N\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"mCEYtj8C9E\",\"type\":\"card\",\"data\":{\"card_name\":\"Part Order\",\"col\":4}},{\"id\":\"JbrYm3tFOK\",\"type\":\"card\",\"data\":{\"card_name\":\"Picking & Delivery\",\"col\":4}}]",
+ "content": "[{\"id\":\"C4qQJ44QQC\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Parts</span>\",\"col\":12}},{\"id\":\"MjWNcwKZCo\",\"type\":\"chart\",\"data\":{\"chart_name\":\"Part Orders (Dealer Billing)\",\"col\":12}},{\"id\":\"ppdbKzRLaB\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"-V3l2iKCOp\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Order Parts\",\"col\":3}},{\"id\":\"1IGPdxYElf\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Parts Overview Dashboard\",\"col\":3}},{\"id\":\"nlDKYHwo0h\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Credit Limit Exceeded Orders\",\"col\":3}},{\"id\":\"_OnI4qA_TM\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"HjV_1p7RkN\",\"type\":\"paragraph\",\"data\":{\"text\":\"Reports\",\"col\":12}},{\"id\":\"u1cbO7P5Xx\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Outstanding Parts Orders\",\"col\":3}},{\"id\":\"cT7j3x7Cx7\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Dealer Parts Orders\",\"col\":3}},{\"id\":\"d1QHbuUqHW\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"HQ Parts Orders\",\"col\":3}},{\"id\":\"nrqK76eM5N\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"mCEYtj8C9E\",\"type\":\"card\",\"data\":{\"card_name\":\"Part Order\",\"col\":4}},{\"id\":\"JbrYm3tFOK\",\"type\":\"card\",\"data\":{\"card_name\":\"Picking & Delivery\",\"col\":4}}]",
  "creation": "2025-06-24 15:23:52.600877",
  "custom_blocks": [],
  "docstatus": 0,
@@ -311,50 +311,9 @@
    "link_type": "DocType",
    "onboard": 0,
    "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Reports",
-   "link_count": 3,
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Card Break"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Stock Ledger",
-   "link_count": 0,
-   "link_to": "Stock Ledger",
-   "link_type": "Report",
-   "onboard": 0,
-   "report_ref_doctype": "Stock Ledger Entry",
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Part Stock Summary",
-   "link_count": 0,
-   "link_to": "stock-balance",
-   "link_type": "Page",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Stock Ageing",
-   "link_count": 0,
-   "link_to": "Stock Ageing",
-   "link_type": "Report",
-   "onboard": 0,
-   "report_ref_doctype": "Item",
-   "type": "Link"
   }
  ],
- "modified": "2026-02-18 22:28:25.590198",
+ "modified": "2026-03-12 08:53:41.366551",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Parts",
@@ -369,17 +328,39 @@
   },
   {
    "role": "Maintenance User"
+  },
+  {
+   "role": "Parts Adminstrator"
+  },
+  {
+   "role": "Parts Dealer Administrator"
   }
  ],
  "sequence_id": 13.0,
  "shortcuts": [
   {
-   "color": "Orange",
+   "color": "Grey",
    "doc_view": "List",
-   "label": "Pending HQ Orders",
+   "label": "Outstanding Parts Orders",
+   "link_to": "Outstanding Quantities on Parts Orders",
+   "report_ref_doctype": "HQ Part Order",
+   "type": "Report"
+  },
+  {
+   "color": "Red",
+   "doc_view": "List",
+   "label": "Credit Limit Exceeded Orders",
    "link_to": "HQ Part Order",
-   "stats_filter": "[[\"HQ Part Order\",\"part_order_status\",\"=\",\"Pending\",false]]",
+   "stats_filter": "[[\"HQ Part Order\",\"part_order_status\",\"=\",\"Credit Limit Exceeded\",false]]",
    "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Dealer Parts Orders",
+   "link_to": "Parts Orders",
+   "report_ref_doctype": "Part Order",
+   "type": "Report"
   },
   {
    "color": "Grey",
@@ -389,11 +370,11 @@
    "type": "Page"
   },
   {
-   "color": "Red",
-   "doc_view": "List",
-   "label": "Credit Limit Exceeded Orders",
+   "color": "Grey",
+   "doc_view": "Report Builder",
+   "label": "HQ Parts Orders",
    "link_to": "HQ Part Order",
-   "stats_filter": "[[\"HQ Part Order\",\"part_order_status\",\"=\",\"Credit Limit Exceeded\",false]]",
+   "stats_filter": "[]",
    "type": "DocType"
   },
   {

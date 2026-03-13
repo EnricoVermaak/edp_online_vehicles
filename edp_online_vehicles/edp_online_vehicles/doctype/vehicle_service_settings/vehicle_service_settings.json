@@ -16,8 +16,7 @@
   "auto_job_card_no_prefix",
   "last_auto_job_card_no",
   "labour_code_filter",
-  "section_break_status_sync",
-  "status_sync_mappings",
+  "create_other_service_schedule",
   "section_break_oeab",
   "mandatory_documents"
  ],
@@ -80,18 +79,6 @@
    "label": "Allow Auto Job Card No"
   },
   {
-   "fieldname": "section_break_status_sync",
-   "fieldtype": "Section Break",
-   "label": "Status Sync (Service to Booking)"
-  },
-  {
-   "description": "When a Vehicles Service is linked to a booking (booking_name), changing the service status will update the linked Vehicle Service Booking status according to these mappings.",
-   "fieldname": "status_sync_mappings",
-   "fieldtype": "Table",
-   "label": "Status Sync Mappings",
-   "options": "Status Sync Mapping"
-  },
-  {
    "fieldname": "section_break_oeab",
    "fieldtype": "Section Break"
   },
@@ -106,13 +93,20 @@
    "fieldname": "labour_code_filter",
    "fieldtype": "Select",
    "label": "Labour Code Filter",
-   "options": "Service Labour\nService Warranty Labour"
+   "options": "Service Labour\nService and Warranty Labour"
+  },
+  {
+   "default": "0",
+   "description": "If checked, an \"other\" service schedule will be created on new model administration creation. If not checked, no service schedule will be created automatically.",
+   "fieldname": "create_other_service_schedule",
+   "fieldtype": "Check",
+   "label": "Create Other Service Schedule"
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2026-03-05 09:52:30.235464",
+ "modified": "2026-03-06 12:02:47.194206",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicle Service Settings",

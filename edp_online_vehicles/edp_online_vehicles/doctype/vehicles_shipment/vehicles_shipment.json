@@ -34,8 +34,8 @@
   "section_break_vsgr",
   "column_break_rhrs",
   "total_vehicles",
-  "column_break_dvnm",
   "total_excl",
+  "column_break_dvnm",
   "amended_from"
  ],
  "fields": [
@@ -162,7 +162,6 @@
   {
    "fieldname": "total_excl",
    "fieldtype": "Currency",
-   "hidden": 1,
    "label": "Total (Excl)",
    "precision": "2",
    "read_only": 1
@@ -226,7 +225,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-03-04 16:08:21.823061",
+ "modified": "2026-03-09 13:26:38.859215",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicles Shipment",

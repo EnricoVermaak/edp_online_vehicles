@@ -72,7 +72,7 @@ edp_online_vehicles.vehicles_service.add_scan_button = function (frm) {
 									license_expiry_date,
 								);
 								frm.set_value(
-									"vehicle_registration_number",
+									"register_no",
 									veh_reg_no,
 								);
 							} else {

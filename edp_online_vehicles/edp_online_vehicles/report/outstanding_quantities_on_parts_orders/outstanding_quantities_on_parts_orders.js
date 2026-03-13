@@ -1,7 +1,7 @@
-// Copyright (c) 2025, NexTash and contributors
+// Copyright (c) 2026, NexTash and contributors
 // For license information, please see license.txt
 
-frappe.query_reports["Parts Orders"] = {
+frappe.query_reports["Outstanding Quantities on Parts Orders"] = {
 	filters: [
 		{
 			fieldname: "from_date",
@@ -34,5 +34,5 @@ frappe.query_reports["Parts Orders"] = {
 				"FUCHS"
 			],
 		},
-	],
+	]
 };

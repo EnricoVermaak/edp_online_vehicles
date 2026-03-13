@@ -11,6 +11,13 @@ def execute(filters=None):
 	return columns, data
 
 
+def _has_aor_fields():
+	try:
+		return frappe.get_meta("Vehicle Retail").has_field("custom_aor")
+	except Exception:
+		return False
+
+
 def get_columns():
 	columns = [
 		{
@@ -82,12 +89,21 @@ def get_columns():
 		},
 	]
 
+	if _has_aor_fields():
+		columns.extend([
+			{"label": _("Regional Sales Manager"), "fieldname": "regional_sales_manager", "fieldtype": "Data", "width": 180},
+			{"label": _("Region"), "fieldname": "aor_region", "fieldtype": "Data", "width": 120},
+			{"label": _("AOR"), "fieldname": "aor", "fieldtype": "Data", "width": 120},
+			{"label": _("AOR LD"), "fieldname": "aor_ld", "fieldtype": "Data", "width": 120},
+		])
+
 	return columns
 
 
 def get_data(filters):
 	sale = DocType("Vehicle Retail")
 	items = DocType("Vehicles Sale Items")
+	has_aor = _has_aor_fields()
 
 	query = (
 		frappe.qb.from_(sale)
@@ -126,7 +142,33 @@ def get_data(filters):
 		)
 	)
 
+	if has_aor:
+		company = DocType("Company")
+		query = (
+			query
+			.left_join(company).on(sale.dealer == company.name)
+			.select(
+				sale.custom_aor_region.as_("aor_region"),
+				sale.custom_aor,
+				sale.custom_aor_ld.as_("aor_ld"),
+				company.custom_regional_sales_manager.as_("regional_sales_manager"),
+			)
+		)
+
 	if filters.get("customer"):
 		query = query.where(sale.customer == filters.customer)
 
-	return query.run(as_dict=True)
+	data = query.run(as_dict=True)
+
+	if has_aor:
+		aor_names = {row.get("custom_aor") for row in data if row.get("custom_aor")}
+		aor_code_map = {}
+		if aor_names:
+			for aor_name in aor_names:
+				aor_doc = frappe.db.get_value("AOR", aor_name, "aor_code", as_dict=True)
+				if aor_doc:
+					aor_code_map[aor_name] = aor_doc.get("aor_code") or ""
+		for row in data:
+			row["aor"] = aor_code_map.get(row.get("custom_aor"), "")
+
+	return data

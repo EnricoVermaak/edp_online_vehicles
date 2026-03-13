@@ -746,30 +746,7 @@ frappe.ui.form.on("Vehicles Shipment Items", {
 				});
 		}
 	},
-
-	vehicles_shipment_items_remove(frm) {
-		calculate_sub_total(frm, "total_excl", "vehicles_shipment_items");
-	},
-
-	cost_price_excl(frm) {
-		calculate_sub_total(frm, "total_excl", "vehicles_shipment_items");
-	},
-
 });
-
-const calculate_sub_total = (frm, field_name, table_name) => {
-	let sub_total = 0;
-	for (const row of frm.doc[table_name]) {
-		sub_total += row.cost_price_excl;
-	}
-
-	frappe.model.set_value(
-		frm.doc.doctype,
-		frm.doc.name,
-		field_name,
-		sub_total,
-	);
-};
 
 function handle_custom_buttons(frm) {
 	const grid_wrapper =
@@ -1073,8 +1050,8 @@ function handle_custom_buttons(frm) {
 									// Refresh child table first
 									frm.refresh_field("vehicles_shipment_items");
 
-									frm.set_value("total_vehicles", count_row);
-									frm.toggle_display("total_vehicles", count_row > 0);
+									// frm.set_value("total_vehicles", count_row);
+									// frm.toggle_display("total_vehicles", count_row > 0);
 
 									frappe.msgprint({
 										message: __("Table updated successfully"),
@@ -1128,7 +1105,7 @@ function handle_custom_buttons(frm) {
 
 
 
-// Vehcile counter
+// Vehcile counter and price
 frappe.ui.form.on("Vehicles Shipment", {
 	refresh(frm) {
 		frm.trigger("calculate_total_vehicles");
@@ -1138,9 +1115,18 @@ frappe.ui.form.on("Vehicles Shipment", {
 		const total = (frm.doc.vehicles_shipment_items || []).filter(
 			row => row.model_code || row.vin_serial_no
 		).length;
-		frm.refresh_field("total_vehicles");
+
+		const price_excl = (frm.doc.vehicles_shipment_items || []).reduce((sum, row) => {
+			return sum + (row.cost_price_excl || 0);
+		}, 0);
+
 		frm.set_value("total_vehicles", total);
+		frm.set_value("total_excl", price_excl);
+
 		frm.toggle_display("total_vehicles", total > 0);
+		frm.toggle_display("total_excl", price_excl > 0);
+
+		cur_frm.refresh_field("vehicles_shipment_items");
 	}
 });
 
@@ -1152,8 +1138,7 @@ frappe.ui.form.on("Vehicles Shipment Items", {
 	vehicles_shipment_items_remove(frm, cdt, cdn) {
 		frm.trigger("calculate_total_vehicles");
 	},
-
-
+	
 	vehicles_shipment_items_change(frm, cdt, cdn) {
 		frm.trigger("calculate_total_vehicles");
 	},
@@ -1221,9 +1206,18 @@ function open_add_multiple_dialog(frm) {
 					frappe.db.get_doc("Model Administration", model)
 						.then(doc => {
 							dialog.set_value("description", doc.model_description || "");
-							dialog.set_value("model_year", doc.model_year || "");
+							dialog.set_value("model_year", doc.model_year || "")
 						});
 
+					frappe.db
+						.get_value("Model Colour", { model: model, default: 1 }, "name")
+						.then((r) => {
+							if (r && r.message && r.message.name) {
+								dialog.set_value("colour", r.message.name);
+							} else {
+								dialog.set_value("colour", "");
+							}
+						});
 				}
 			},
 
@@ -1290,6 +1284,8 @@ function open_add_multiple_dialog(frm) {
 
 			dialog.hide();
 
+			let price_promises = [];
+
 			for (let i = 0; i < values.qty; i++) {
 
 				let row = frm.add_child("vehicles_shipment_items");
@@ -1297,21 +1293,29 @@ function open_add_multiple_dialog(frm) {
 				row.model_code = values.model;
 				row.model_description = values.description;
 				row.colour = values.colour;
-				row.cost_price_excl = values.price_excl;
 
 				if (frm.doc.target_warehouse) {
 					row.target_warehouse = frm.doc.target_warehouse;
 				}
 
+				// Lookup model price and set value
+				let p = frappe.db.get_doc("Model Administration", values.model)
+					.then(doc => {
+						row.cost_price_excl = doc.cost_price_excl || 0;
+					});
+				price_promises.push(p);
+
 			}
 
-			frm.refresh_field("vehicles_shipment_items");
+			// Wait for all price fetches to complete before recalculating
+			Promise.all(price_promises).then(() => {
+				frm.trigger("calculate_total_vehicles");
+				frm.refresh_field("vehicles_shipment_items");
 
-			frm.trigger("calculate_total_vehicles");
-
-			frappe.show_alert({
-				message: `${values.qty} vehicles added`,
-				indicator: "green"
+				frappe.show_alert({
+					message: `${values.qty} vehicles added`,
+					indicator: "green"
+				});
 			});
 
 		}

@@ -2,10 +2,20 @@
 # For license information, please see license.txt
 
 import frappe
+from frappe.model.naming import make_autoname
 from frappe.model.document import Document
-
+from frappe.utils import now_datetime
 
 class HQPartOrder(Document):
+	def autoname(self):
+		# Get prefix from Single DocType
+		prefix = frappe.db.get_single_value("Parts Settings", "part_order_no_prefix") or ""
+		now = now_datetime()
+		mm = now.strftime("%m")
+		yy = now.strftime("%y")
+		series = f"{prefix}{mm}{yy}.####"
+		self.name = make_autoname(series)
+	
 	def validate(self):
 		total_dealer_billing = 0
 		total_delivered = 0

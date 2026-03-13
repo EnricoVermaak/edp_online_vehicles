@@ -115,7 +115,7 @@ def check_duplicate_part(vin, part_no, current_claim=None):
     return {"is_duplicate": False}
 
 @frappe.whitelist()
-def validate_odo_reading(vin_serial_no, odo_reading_hours):
+def validate_odo_reading(vin_serial_no, odo_reading_hours, doctype = None, docname = None):
     """
     Validates the odo_reading_hours.
     Throws an error if odo_reading_hours is lower than Vehicle Stock reading
@@ -125,15 +125,6 @@ def validate_odo_reading(vin_serial_no, odo_reading_hours):
     # VIN/Serial check
     if not vin_serial_no:
         return {"status": "error", "message": "Please enter the Vehicle VIN No/ Serial No"}
-
-    # Check if rollback is allowed
-    # try:
-    #     allow_rollback = frappe.db.get_single_value(
-    #         "Vehicle Service Booking Settings",
-    #         "allow_service_odo_reading_roll_back"
-    #     )
-    # except Exception:
-    #     allow_rollback = False
 
     # Handle empty / null values safely
     if not odo_reading_hours:
@@ -147,8 +138,11 @@ def validate_odo_reading(vin_serial_no, odo_reading_hours):
     # Get current odo from Vehicle Stock
     stock_odo = frappe.get_value("Vehicle Stock", vin_serial_no, "odo_reading") or 0
 
+    # Check if rollback is allowed
+    rollback = rollback_allowed(doctype, docname)
+
     # Rollback validation
-    if int(odo_reading_hours) < int(stock_odo):
+    if (int(odo_reading_hours) < int(stock_odo)) and not rollback:
         return {
             "status": "failed",
             "stock_odo": stock_odo
@@ -160,10 +154,37 @@ def validate_odo_reading(vin_serial_no, odo_reading_hours):
 
 # Save the service odometer reading back to the linked Vehicle Stock record (Not implemented will do later as hook?)
 @frappe.whitelist()
-def update_vehicle_stock_odo(vin_serial_no, odo_reading_hours):
+def update_vehicle_stock_odo(vin_serial_no, odo_reading_hours, doctype = None, docname = None):
         if vin_serial_no and odo_reading_hours:
             stock_odo = frappe.db.get_value("Vehicle Stock", vin_serial_no, "odo_reading") or 0
 
-        if (odo_reading_hours > stock_odo):
+        # Check if rollback is allowed
+        rollback = rollback_allowed(doctype, docname)
+
+        if (odo_reading_hours > stock_odo) or rollback:
             frappe.db.set_value("Vehicle Stock", vin_serial_no, "odo_reading", odo_reading_hours)
-	
+
+# Confirm if ODO rollback is allowed based on settings for each doctype	
+def rollback_allowed(doctype=None, docname=None):
+    
+    # Vehicles Service
+    if doctype == "Vehicles Service" or "Vehicle Service Booking":
+        try:
+            return frappe.db.get_single_value(
+                "Vehicle Service Settings",
+                "allow_service_odo_reading_roll_back"
+            )
+        except Exception:
+            return False
+        
+    # Vehicle Warranty Claims
+    if doctype == "Vehicles Warranty Claims":
+        try:
+            return frappe.db.get_single_value(
+                "Vehicles Warranty Settings",
+                "allow_warranty_odo_reading_roll_back"
+            )
+        except Exception:
+            return False
+    
+    return False

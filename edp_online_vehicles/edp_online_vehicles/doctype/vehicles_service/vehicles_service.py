@@ -28,19 +28,19 @@ class VehiclesService(Document):
     def _sync_booking_status_from_mapping(self):
         if not self.booking_name or not self.service_status:
             return
-        settings = frappe.get_single("Vehicle Service Settings")
-        if not getattr(settings, "status_sync_mappings", None):
-            return
-        for row in settings.status_sync_mappings:
-            if row.service_status == self.service_status and row.booking_status:
-                frappe.db.set_value(
-                    "Vehicle Service Booking",
-                    self.booking_name,
-                    "status",
-                    row.booking_status,
-                    update_modified=False,
-                )
-                break
+        booking_status = frappe.db.get_value(
+            "Service Status",
+            self.service_status,
+            "vehicle_service_booking_status",
+        )
+        if booking_status:
+            frappe.db.set_value(
+                "Vehicle Service Booking",
+                self.booking_name,
+                "status",
+                booking_status,
+                update_modified=False,
+            )
         
     def sync_to_history(self):
         history_name = frappe.db.get_value(
