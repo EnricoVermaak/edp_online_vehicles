@@ -18,6 +18,16 @@ def _has_aor_fields():
 		return False
 
 
+def is_hq():
+	company = frappe.defaults.get_user_default("Company")
+	if not company:
+		return False
+	try:
+		return bool(frappe.db.get_value("Company", company, "custom_head_office"))
+	except Exception:
+		return False
+
+
 def get_columns():
 	columns = [
 		{
@@ -135,12 +145,14 @@ def get_data(filters):
 			items.customer_invoice_no,
 			items.customer_invoice_date,
 		)
-		.where(
-			(sale.creation.between(filters.from_date, filters.to_date))
-			& (sale.dealer == filters.dealer)
-			& (sale.docstatus != 2)
-		)
+		.where(sale.creation.between(filters.from_date, filters.to_date))
+		.where(sale.docstatus != 2)
 	)
+
+	if not is_hq():
+		dealer = filters.get("dealer") or frappe.defaults.get_user_default("Company")
+		if dealer:
+			query = query.where(sale.dealer == dealer)
 
 	if has_aor:
 		company = DocType("Company")

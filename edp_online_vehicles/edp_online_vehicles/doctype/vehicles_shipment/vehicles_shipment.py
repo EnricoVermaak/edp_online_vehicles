@@ -37,35 +37,35 @@ class VehiclesShipment(Document):
 				base_date = self.eta_harbour or nowdate()
 				self.eta_harbour = add_days(base_date, sla_days)
 				
-		self._apply_auto_stock_numbers()
-		self._sync_reserve_to_order()
-		self._set_eta_warehouse_from_sla()
+		# # self._apply_auto_stock_numbers()
+		# self._sync_reserve_to_order()
+		# self._set_eta_warehouse_from_sla()
 
-	def _apply_auto_stock_numbers(self):
-		settings = frappe.get_single("Vehicle Stock Settings")
-		if not (settings.automatically_create_stock_number and settings.last_automated_stock_no):
-			return
-		last_no = settings.last_automated_stock_no
-		match = re.match(r"^([a-zA-Z]+)(\d+)$", last_no)
-		if not match:
-			return
-		prefix = match.group(1)
-		number_str = match.group(2)
-		number_length = len(number_str)
-		full_number = int(number_str)
-		updated = False
-		for row in self.vehicles_shipment_items:
-			if not row.stock_no:
-				full_number += 1
-				row.stock_no = prefix + str(full_number).zfill(number_length)
-				updated = True
-		if updated:
-			frappe.db.set_value(
-				"Vehicle Stock Settings",
-				"Vehicle Stock Settings",
-				"last_automated_stock_no",
-				prefix + str(full_number).zfill(number_length),
-			)
+	# def _apply_auto_stock_numbers(self):
+	# 	settings = frappe.get_single("Vehicle Stock Settings")
+	# 	if not (settings.automatically_create_stock_number and settings.last_automated_stock_no):
+	# 		return
+	# 	last_no = settings.last_automated_stock_no
+	# 	match = re.match(r"^([a-zA-Z]+)(\d+)$", last_no)
+	# 	if not match:
+	# 		return
+	# 	prefix = match.group(1)
+	# 	number_str = match.group(2)
+	# 	number_length = len(number_str)
+	# 	full_number = int(number_str)
+	# 	updated = False
+	# 	for row in self.vehicles_shipment_items:
+	# 		if not row.stock_no:
+	# 			full_number += 1
+	# 			row.stock_no = prefix + str(full_number).zfill(number_length)
+	# 			updated = True
+	# 	if updated:
+	# 		frappe.db.set_value(
+	# 			"Vehicle Stock Settings",
+	# 			"Vehicle Stock Settings",
+	# 			"last_automated_stock_no",
+	# 			prefix + str(full_number).zfill(number_length),
+	# 		)
 
 	def _sync_reserve_to_order(self):
 		for row in self.vehicles_shipment_items:

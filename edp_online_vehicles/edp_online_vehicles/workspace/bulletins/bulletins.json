@@ -10,7 +10,7 @@
  "icon": "notification",
  "idx": 0,
  "indicator_color": "",
- "is_hidden": 0,
+ "is_hidden": 1,
  "label": "Bulletins",
  "links": [
   {
@@ -25,7 +25,7 @@
    "type": "Link"
   }
  ],
- "modified": "2026-03-09 12:05:17.396367",
+ "modified": "2026-03-13 08:22:10.497282",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Bulletins",

@@ -3,13 +3,24 @@
 
 let stockNo = "";
 
+function incrementStockNumber(stockNumber) {
+
+    if (!stockNumber) {
+        console.error("Stock number is empty");
+        return "";
+    }
+    const prefix = stockNumber.replace(/[0-9]/g, "");
+    const numberPart = stockNumber.replace(/\D/g, "");
+    const incrementedNumber = parseInt(numberPart || "0", 10) + 1;
+    const paddedNumber = incrementedNumber.toString().padStart(5, "0");
+    return prefix + paddedNumber;
+}
+
 frappe.ui.form.on("Vehicles Shipment", {
 
-
 	refresh(frm) {
-
 		let grid = frm.fields_dict["vehicles_shipment_items"].grid;
-
+		frm.trigger("calculate_total_vehicles");
 		if (!grid.wrapper.find(".add-multiple-btn").length) {
 
 			let btn = $(`<button class="btn btn-secondary btn-sm add-multiple-btn">
@@ -227,7 +238,7 @@ frappe.ui.form.on("Vehicles Shipment", {
 
 								let orders = r.message || [];
 
-								// 🚀 Remove orders already used in this dialog
+								// Remove orders already used in this dialog
 								orders = orders.filter(o => !used_orders.has(o.name));
 
 								if (orders.length > 0) {
@@ -365,7 +376,6 @@ frappe.ui.form.on("Vehicles Shipment", {
 				frappe.dom.freeze();
 
 				var selected_items = [];
-				var selected_rows = [];
 				var promises = [];
 
 				frm.doc["vehicles_shipment_items"].forEach(function (row) {
@@ -387,12 +397,13 @@ frappe.ui.form.on("Vehicles Shipment", {
 
 						if (row.vin_serial_no) {
 							const promise = frappe.db
-								.get_doc("Vehicle Stock Settings")
-								.then((setting_doc) => {
-									if (setting_doc.automatically_create_stock_number) {
-										var lastStockNo = stockNo;
-										const nextStockNo = incrementStockNumber(lastStockNo);
-										console.log(nextStockNo);
+								.get_single_value("Vehicle Stock Settings", "automatically_create_stock_number")
+								.then((autoCreate) => {
+									if (autoCreate) {
+									const lastStockNo = stockNo;
+									const nextStockNo = incrementStockNumber(lastStockNo);
+									stockNo = nextStockNo;
+									console.log(nextStockNo);
 
 										frappe.model.set_value(
 											row.doctype,
@@ -409,85 +420,77 @@ frappe.ui.form.on("Vehicles Shipment", {
 								"Please ensure all selected vehicles have VIN/Serial No's assigned to them."
 							);
 						}
-						selected_rows.push(row);
+						selected_items.push(row);
+						promises.push(true);
+
 
 					}
 				});
 				frappe.call({
 					method: "edp_online_vehicles.events.linked_plans.create_linked_plans",
-					args: { selected_items: JSON.stringify(selected_rows) },
+					args: { selected_items: JSON.stringify(selected_items) },
 				}).then(() => {
 					console.log("Plans created successfully!");
 				});
 
 
 				// Wait for all promises to resolve
-				Promise.all(promises).then(() => {
-					// Update Stockno counter in Vehicle Stock Settings
-					frappe.call({
-						method: "edp_online_vehicles.events.update_stock_settings.update_stock_no",
-						args: {
-							stockNo: stockNo,
-						},
+				if (selected_items.length > 0) {
+					// ------------------------------------------------------
+					// Create Vehicle Linked Warranty & Service Plan Logic
+					// ------------------------------------------------------
+					let creation_promises = [];
+
+					Promise.all(creation_promises).then(() => {
+						console.log("All Warranty & Service Plan docs created successfully!");
 					});
 
-					if (selected_items.length > 0) {
-						// ------------------------------------------------------
-						// Create Vehicle Linked Warranty & Service Plan Logic
-						// ------------------------------------------------------
-						let creation_promises = [];
+					// ------------------------------------------------------
+					// Continue with stock entry logic
+					// ------------------------------------------------------
+					frm
+						.call("create_stock_entry", {
+							selected_items: JSON.stringify(selected_items),
+						})
+						.then((r) => {
+							if (r.message) {
+								if (r.message == "Received") {
+									for (let row of selected_items) {
+										frappe.model.set_value(
+											row.doctype,
+											row.name,
+											"status",
+											"Received"
+										);
+									}
 
-						Promise.all(creation_promises).then(() => {
-							console.log("All Warranty & Service Plan docs created successfully!");
-						});
+									frappe.dom.unfreeze();
+									frm.save_or_update();
 
-						// ------------------------------------------------------
-						// Continue with stock entry logic
-						// ------------------------------------------------------
-						frm
-							.call("create_stock_entry", {
-								selected_items: JSON.stringify(selected_items),
-							})
-							.then((r) => {
-								if (r.message) {
-									if (r.message == "Received") {
-										for (let row of selected_items) {
-											frappe.model.set_value(
-												row.doctype,
-												row.name,
-												"status",
-												"Received"
-											);
-										}
+									const host = window.location.hostname;
+									const isMahindra = [
+										"msademo.edponline.co.za",
+										"msa.edponline.co.za",
+										"mahindra.localhost",
+									].includes(host);
 
-										frappe.dom.unfreeze();
-										frm.save_or_update();
-
-										const host = window.location.hostname;
-										const isMahindra = [
-											"msademo.edponline.co.za",
-											"msa.edponline.co.za",
-											"mahindra.localhost",
-										].includes(host);
-
-										if (isMahindra) {
-											frappe.call({
-												method:
-													"edp_api.api.TAC.tac_integration.tac_landing_outgoing",
-												args: {
-													selected_items: JSON.stringify(selected_items),
-												},
-											});
-										}
+									if (isMahindra) {
+										frappe.call({
+											method:
+												"edp_api.api.TAC.tac_integration.tac_landing_outgoing",
+											args: {
+												selected_items: JSON.stringify(selected_items),
+											},
+										});
 									}
 								}
-							});
+							}
+						});
 
-					} else {
-						frappe.dom.unfreeze();
-						frappe.throw("Please Select at least One Item.");
-					}
-				});
+				} else {
+					frappe.dom.unfreeze();
+					frappe.throw("Please Select at least One Item.");
+				}
 			});
 		}
 
@@ -533,7 +536,25 @@ frappe.ui.form.on("Vehicles Shipment", {
 				};
 			},
 		);
+		frm.set_query("colour", "vehicles_shipment_items", function (doc, cdt, cdn) {
+			const row = frappe.get_doc(cdt, cdn);
+			return {
+				filters: {
+					discontinued: 0,
+					model: row.model_code || undefined
+				}
+			};
+		});
 
+		frm.set_query("interior_colour", "vehicles_shipment_items", function (doc, cdt, cdn) {
+			const row = frappe.get_doc(cdt, cdn);
+			return {
+				filters: {
+					discontinued: 0,
+					model: row.model_code || undefined
+				}
+			};
+		});
 		// frm.fields_dict['order_no'].df.onchange = function() {
 		//     let value = frm.doc.your_link_field;
 		//     if (value) {
@@ -549,6 +570,14 @@ frappe.ui.form.on("Vehicles Shipment", {
 		// 	}
 		// });
 	},
+		calculate_total_vehicles(frm) {
+		const total = (frm.doc.vehicles_shipment_items || []).filter(
+		row => row.model_code || row.vin_serial_no
+		).length;
+		frm.refresh_field("total_vehicles");
+		frm.set_value("total_vehicles", total);
+		frm.toggle_display("total_vehicles", total > 0);
+		},
 	before_save: async function (frm) {
 		let received_qty = 0;
 		let vin_list = [];
@@ -773,7 +802,27 @@ frappe.ui.form.on("Vehicles Shipment Items", {
 					}
 				});
 		}
+		{ frm.trigger("calculate_total_vehicles"); };
 	},
+
+	vehicles_shipment_items_remove(frm) {
+		calculate_sub_total(frm, "total_excl", "vehicles_shipment_items");
+		frm.trigger("calculate_total_vehicles");
+	},
+
+	cost_price_excl(frm) {
+		calculate_sub_total(frm, "total_excl", "vehicles_shipment_items");
+		{ frm.trigger("calculate_total_vehicles"); }
+	},
+		vehicles_shipment_items_add(frm, cdt, cdn) {
+		frm.trigger("calculate_total_vehicles");
+	},
+		vehicles_shipment_items_change(frm, cdt, cdn) {
+        frm.trigger("calculate_total_vehicles");
+    },
+	vin_serial_no(frm) { frm.trigger("calculate_total_vehicles"); },
+	form_render(frm) { frm.trigger("calculate_total_vehicles"); }
+	
 });
 
 function handle_custom_buttons(frm) {
@@ -822,8 +871,8 @@ function handle_custom_buttons(frm) {
 
 					// Add if field is In List View, not hidden
 					const visible_fields = frappe.get_meta(child_doctype).fields.filter(df =>
-						frappe.model.is_value_type(df.fieldtype) && 
-						df.in_list_view && 
+						frappe.model.is_value_type(df.fieldtype) &&
+						df.in_list_view &&
 						!df.hidden &&
 						df.fieldname !== "model_description" && // Exclude model_descriptions
 						df.fieldname !== "status" // Exclude status
@@ -1007,16 +1056,16 @@ function handle_custom_buttons(frm) {
 																// After color is created, add the row to the child table
 																const d = cur_frm.add_child("vehicles_shipment_items");
 
-																$.each(row, (ci, value) =>{
-																		const fieldname = fieldnames[ci];
-																		const df = frappe.meta.get_docfield("Vehicles Shipment Items",fieldname);
+																$.each(row, (ci, value) => {
+																	const fieldname = fieldnames[ci];
+																	const df = frappe.meta.get_docfield("Vehicles Shipment Items", fieldname);
 
-																		if (df) {
-																			d[fieldname] = value_formatter_map[df.fieldtype]
-																					? value_formatter_map[df.fieldtype](value)
-																					: value;
-																		}
-																	},
+																	if (df) {
+																		d[fieldname] = value_formatter_map[df.fieldtype]
+																			? value_formatter_map[df.fieldtype](value)
+																			: value;
+																	}
+																},
 																);
 
 																// Set the colour field to the colour
@@ -1062,12 +1111,12 @@ function handle_custom_buttons(frm) {
 													});
 												}
 											});
-											
-											// Move to the next row after the current one is done
-											processRow(
-												rowIndex +
-												1,
-											);
+
+										// Move to the next row after the current one is done
+										processRow(
+											rowIndex +
+											1,
+										);
 
 									} else {
 										// If the row is blank, skip it and move to the next one
@@ -1086,7 +1135,7 @@ function handle_custom_buttons(frm) {
 										title: __("Success"),
 										indicator: "green",
 									});
-									
+
 									frappe.msgprint({
 										message: __(
 											"Table updated successfully",
@@ -1118,8 +1167,11 @@ function handle_custom_buttons(frm) {
 
 // function incrementStockNumber(stockNumber) {
 // 	// Split the prefix and number part
-// 	const prefix = stockNumber.match(/[A-Za-z]+/)[0];
-// 	const number = stockNumber.match(/\d+/)[0];
+// 	const prefixMatch = stockNumber.match(/[A-Za-z]+/)[0];
+// 	const numberMatch = stockNumber.match(/\d+/)[0];
+
+// 	const prefix = prefixMatch[0];
+// 	const number = numberMatch[0];
 
 // 	// Increment the numeric part
 // 	const incrementedNumber = (parseInt(number, 10) + 1)
@@ -1132,78 +1184,6 @@ function handle_custom_buttons(frm) {
 
 
 
-
-// Vehcile counter and price
-frappe.ui.form.on("Vehicles Shipment", {
-	refresh(frm) {
-		frm.trigger("calculate_total_vehicles");
-	},
-
-	calculate_total_vehicles(frm) {
-		const total = (frm.doc.vehicles_shipment_items || []).filter(
-			row => row.model_code || row.vin_serial_no
-		).length;
-
-		const price_excl = (frm.doc.vehicles_shipment_items || []).reduce((sum, row) => {
-			return sum + (row.cost_price_excl || 0);
-		}, 0);
-
-		frm.set_value("total_vehicles", total);
-		frm.set_value("total_excl", price_excl);
-
-		frm.toggle_display("total_vehicles", total > 0);
-		frm.toggle_display("total_excl", price_excl > 0);
-
-		cur_frm.refresh_field("vehicles_shipment_items");
-	}
-});
-
-frappe.ui.form.on("Vehicles Shipment Items", {
-	vehicles_shipment_items_add(frm, cdt, cdn) {
-		frm.trigger("calculate_total_vehicles");
-	},
-
-	vehicles_shipment_items_remove(frm, cdt, cdn) {
-		frm.trigger("calculate_total_vehicles");
-	},
-	
-	vehicles_shipment_items_change(frm, cdt, cdn) {
-        frm.trigger("calculate_total_vehicles");
-    },
-
-	model_code(frm) { frm.trigger("calculate_total_vehicles"); },
-	vin_serial_no(frm) { frm.trigger("calculate_total_vehicles"); },
-	cost_price_excl(frm) { frm.trigger("calculate_total_vehicles"); },
-	form_render(frm) { frm.trigger("calculate_total_vehicles"); }
-});
-
-
-
-
-
-frappe.ui.form.on("Vehicles Shipment", {
-	refresh: function (frm) {
-		frm.set_query("colour", "vehicles_shipment_items", function (doc, cdt, cdn) {
-			const row = frappe.get_doc(cdt, cdn);
-			return {
-				filters: {
-					discontinued: 0,
-					model: row.model_code || undefined
-				}
-			};
-		});
-
-		frm.set_query("interior_colour", "vehicles_shipment_items", function (doc, cdt, cdn) {
-			const row = frappe.get_doc(cdt, cdn);
-			return {
-				filters: {
-					discontinued: 0,
-					model: row.model_code || undefined
-				}
-			};
-		});
-	}
-});
 
 // Function to open the dialog box
 function open_add_multiple_dialog(frm) {

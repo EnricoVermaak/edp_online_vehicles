@@ -1,5 +1,5 @@
 import frappe
-
+import time
 
 @frappe.whitelist()
 def adjust_company_name(doc, method=None):
@@ -11,3 +11,6 @@ def adjust_company_name(doc, method=None):
 def append_customer_code_to_company_name(company_name, customer_code):
 	if company_name and customer_code:
 		return f"{company_name} - {customer_code}"
+
+def stock_take():
+    time.sleep(180)

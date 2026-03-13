@@ -46,6 +46,13 @@ frappe.ui.form.on("Vehicle Stock", {
 			},
 			"Action",
 		);
+		frm.add_custom_button(
+			"Enque Job",
+			function () {
+				frm.call("enqueue")
+			},
+			"Action",
+		);
 
 		if (frappe.user.has_role("Vehicles Administrator")) {
 			frm.add_custom_button(
