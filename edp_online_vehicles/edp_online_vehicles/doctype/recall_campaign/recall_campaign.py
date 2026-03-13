@@ -5,5 +5,5 @@
 from frappe.model.document import Document
 
 
-class CampaignScheduleManager(Document):
+class RecallCampaign(Document):
 	pass
