@@ -390,35 +390,6 @@ frappe.ui.form.on("Vehicles Warranty Claims", {
 			}
 		});
 
-<<<<<<< HEAD
-before_save: function(frm) {
-    if (!frm.doc.vin_serial_no || !frm.doc.odo_reading) return;
-
-    frappe.call({
-        method: "frappe.client.get_value",
-        args: {
-            doctype: "Vehicle Stock",
-            filters: { name: frm.doc.vin_serial_no },
-            fieldname: "odo_reading"
-        },
-        callback(r) {
-            let stock_odo = r.message.odo_reading || 0;
-
-            if (parseFloat(frm.doc.odo_reading) > parseFloat(stock_odo)) {
-                frappe.call({
-                    method: "frappe.client.set_value",
-                    args: {
-                        doctype: "Vehicle Stock",
-                        name: frm.doc.vin_serial_no,
-                        fieldname: "odo_reading",
-                        value: frm.doc.odo_reading
-                    }
-                });
-            }
-        }
-    });
-},
-=======
 		if (frm.doc.hasOwnProperty("vehicle_registration_number") && frm.doc.vehicle_registration_number) {
 			await frappe.call({
 				method: "frappe.client.set_value",
@@ -431,7 +402,6 @@ before_save: function(frm) {
 			});
         }
 	},
->>>>>>> 911b7489e59cff9b80c59afc32700f6fdbf32dc4
 
 	after_save(frm) {
 		setTimeout(() => reapply_colors(frm), 400);
