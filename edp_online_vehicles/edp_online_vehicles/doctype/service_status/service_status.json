@@ -9,6 +9,7 @@
   "status",
   "description",
   "set_vehicles_operational_status_to",
+  "vehicle_service_booking_status",
   "automatically_submit_document",
   "is_default_status",
   "technician_started_job",
@@ -34,6 +35,13 @@
    "fieldtype": "Select",
    "label": "Set Vehicles Operational Status To",
    "options": "\nOperational\nService Pending\nService In Progress\nRepairs In Progress\nBreakdown\nNon- Operational"
+  },
+  {
+   "description": "When a Vehicles Service linked to a booking is set to this status, the Vehicle Service Booking status will be updated to this value. Leave blank to not change the booking.",
+   "fieldname": "vehicle_service_booking_status",
+   "fieldtype": "Select",
+   "label": "Vehicle Service Booking Status",
+   "options": "\nPending\nArrived\nCompleted\nCancelled"
   },
   {
    "default": "0",

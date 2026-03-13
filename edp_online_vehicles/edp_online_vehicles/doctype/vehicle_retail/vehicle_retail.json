@@ -26,13 +26,13 @@
   "sales_person",
   "sales_person_full_names",
   "customer_invoice_document",
-  "registration_year",
   "column_break_bttl",
   "sales_card_capture_date",
   "retail_date",
   "natis_release_date",
   "payment_date",
   "delivery_date",
+  "registration_year",
   "customer_information_tab",
   "customer",
   "customer_name",
@@ -444,6 +444,7 @@
    "label": "Customer Invoice Document"
   },
   {
+   "default": "\"eval: int(frappe.utils.nowdate().split('-')[0])\"",
    "fieldname": "registration_year",
    "fieldtype": "Int",
    "label": "Registration Year"
@@ -468,7 +469,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-02-26 13:51:31.076370",
+ "modified": "2026-03-09 15:07:16.264746",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicle Retail",

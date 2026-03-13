@@ -2,6 +2,7 @@
  "actions": [],
  "allow_rename": 1,
  "creation": "2024-06-07 15:01:55.459411",
+ "default_view": "List",
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
@@ -10,11 +11,15 @@
   "reg_no",
   "make",
   "model",
+  "case_info_section",
   "case_no",
-  "case_type",
   "diagnosis",
+  "case_type",
+  "column_break_gyvb",
   "created_on",
   "status",
+  "pickup_section",
+  "pickup_location_column",
   "location_addr1",
   "location_addr2",
   "location_suburb",
@@ -22,6 +27,7 @@
   "location_province",
   "location_country",
   "location_coordinates",
+  "dropoff_details_section",
   "destination_addr1",
   "destination_addr2",
   "destination_suburb",
@@ -33,34 +39,39 @@
  "fields": [
   {
    "fieldname": "section_break_twbf",
-   "fieldtype": "Section Break"
+   "fieldtype": "Section Break",
+   "label": "Vehicle Info"
   },
   {
    "fieldname": "vin_serial_no",
-   "fieldtype": "Data",
-   "label": "VIN/Serial No"
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "VIN/Serial No",
+   "options": "Vehicle Stock",
+   "reqd": 1
   },
   {
-   "fieldname": "reg_no",
-   "fieldtype": "Data",
-   "label": "Reg No"
-  },
-  {
+   "fetch_from": "vin_serial_no.brand",
    "fieldname": "make",
    "fieldtype": "Link",
    "label": "Make",
-   "options": "Vehicles MMCodes"
+   "options": "Brand",
+   "read_only": 1
   },
   {
-   "fetch_from": "make.model",
+   "fetch_from": "vin_serial_no.model",
    "fieldname": "model",
    "fieldtype": "Link",
    "label": "Model",
-   "options": "Vehicles MMCodes"
+   "options": "Model Administration",
+   "read_only": 1
   },
   {
    "fieldname": "case_no",
    "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "Case No"
   },
   {
@@ -75,14 +86,19 @@
    "label": "Diagnosis"
   },
   {
+   "default": "Now",
    "fieldname": "created_on",
-   "fieldtype": "Data",
-   "label": "Created On"
+   "fieldtype": "Datetime",
+   "label": "Created On",
+   "read_only": 1
   },
   {
    "fieldname": "status",
-   "fieldtype": "Data",
-   "label": "Status"
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Status",
+   "options": "Allocated\nReceived\nCompleted"
   },
   {
    "fieldname": "location_addr1",
@@ -153,11 +169,45 @@
    "fieldname": "destination_coordinates",
    "fieldtype": "Data",
    "label": "Destination Coordinates"
+  },
+  {
+   "collapsible": 1,
+   "fieldname": "pickup_section",
+   "fieldtype": "Section Break",
+   "label": "Pickup Location"
+  },
+  {
+   "fieldname": "pickup_location_column",
+   "fieldtype": "Column Break"
+  },
+  {
+   "collapsible": 1,
+   "fieldname": "dropoff_details_section",
+   "fieldtype": "Section Break",
+   "label": "Dropoff Destination"
+  },
+  {
+   "collapsible": 1,
+   "fieldname": "case_info_section",
+   "fieldtype": "Section Break",
+   "label": "Case Info"
+  },
+  {
+   "fieldname": "column_break_gyvb",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "reg_no",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Vehicle Registration No",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-07-03 17:12:51.857743",
+ "modified": "2026-03-12 11:42:30.108239",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicles Warranty Towing",
@@ -176,6 +226,7 @@
    "write": 1
   }
  ],
+ "row_format": "Dynamic",
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": []

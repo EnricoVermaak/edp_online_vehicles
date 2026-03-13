@@ -861,52 +861,59 @@ frappe.ui.form.on("Vehicle Order", {
 									model: g.model,
 									colour: g.colour,
 								},
-								callback: (colRes) => {
-									let available = colRes.message || 0;
-									let requested = g.rows.length;
-									// number to back-order
-									g.to_back = Math.max(
-										0,
-										requested - available,
-									);
-									// mark bottom-up rows to Back Order
-									let sorted = g.rows
-										.slice()
-										.sort((a, b) => b.idx - a.idx);
-									sorted.forEach((row) => {
-										let to_back = g.to_back;
-										if (to_back > 0) {
-											frm._prev_order_from[row.idx] =
-												row.order_from;
-											frappe.model.set_value(
-												row.doctype,
-												row.name,
-												"order_from",
-												"Back Order",
-											);
-											frappe.model.set_value(
-												row.doctype,
-												row.name,
-												"place_back_order",
-												1,
-											);
-											g.to_back--;
-										} else {
-											frappe.model.set_value(
-												row.doctype,
-												row.name,
-												"order_from",
-												"Warehouse",
-											);
-											frappe.model.set_value(
-												row.doctype,
-												row.name,
-												"place_back_order",
-												0,
-											);
-										}
-									});
-									resolve();
+							callback: (colRes) => {
+								let available = colRes.message || 0;
+
+								let forcedRows = g.rows.filter(
+									(row) => row.place_back_order,
+								);
+								let flexibleRows = g.rows.filter(
+									(row) => !row.place_back_order,
+								);
+
+								let requested = flexibleRows.length;
+								g.to_back = Math.max(
+									0,
+									requested - available,
+								);
+
+								let sorted = flexibleRows
+									.slice()
+									.sort((a, b) => b.idx - a.idx);
+								sorted.forEach((row) => {
+									let to_back = g.to_back;
+									if (to_back > 0) {
+										frm._prev_order_from[row.idx] =
+											row.order_from;
+										frappe.model.set_value(
+											row.doctype,
+											row.name,
+											"order_from",
+											"Back Order",
+										);
+										frappe.model.set_value(
+											row.doctype,
+											row.name,
+											"place_back_order",
+											1,
+										);
+										g.to_back--;
+									} else {
+										frappe.model.set_value(
+											row.doctype,
+											row.name,
+											"order_from",
+											"Warehouse",
+										);
+										frappe.model.set_value(
+											row.doctype,
+											row.name,
+											"place_back_order",
+											0,
+										);
+									}
+								});
+								resolve();
 								},
 								error: () => {
 									g.to_back = g.rows.length;

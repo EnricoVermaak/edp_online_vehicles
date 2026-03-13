@@ -27,6 +27,7 @@ def get_columns():
 			"fieldtype": "Datetime",
 			"width": 120,
 		},
+		{"label": _("DMS Warehouse"), "fieldname": "custom_dms_warehouse", "fieldtype": "Data", "width": 120},
 		{"label": _("Order Type"), "fieldname": "order_type", "fieldtype": "Data", "width": 120},
 		{"label": _("Delivery Method"), "fieldname": "delivery_method", "fieldtype": "Data", "width": 120},
 		{"label": _("Sales Person"), "fieldname": "sales_person", "fieldtype": "Data", "width": 120},
@@ -38,22 +39,9 @@ def get_columns():
 		{"label": _("Qty"), "fieldname": "qty", "fieldtype": "Int", "width": 120},
 		{"label": _("SOH"), "fieldname": "soh", "fieldtype": "Int", "width": 120},
 		{"label": _("Qty Delivered"), "fieldname": "qty_delivered", "fieldtype": "Int", "width": 120},
-		{"label": _("Open Orders"), "fieldname": "open_orders", "fieldtype": "Data", "width": 120},
 		{
 			"label": _("Dealer Billing (Excl) per Item"),
 			"fieldname": "dealer_billing_excl",
-			"fieldtype": "Currency",
-			"width": 120,
-		},
-		{
-			"label": _("Disc Amount (Excl) per Item"),
-			"fieldname": "disc_amount",
-			"fieldtype": "Currency",
-			"width": 120,
-		},
-		{
-			"label": _("Air Freight Cost (Excl) per Item"),
-			"fieldname": "air_freight_cost_excl",
 			"fieldtype": "Currency",
 			"width": 120,
 		},
@@ -76,12 +64,6 @@ def get_columns():
 			"width": 120,
 		},
 		{"label": _("Order From"), "fieldname": "order_from", "fieldtype": "Data", "width": 120},
-		{
-			"label": _("Order From Dealer"),
-			"fieldname": "order_from_dealer",
-			"fieldtype": "Data",
-			"width": 120,
-		},
 		{
 			"label": _("Grand Total (Excl)"),
 			"fieldname": "grand_total_excl",
@@ -146,7 +128,6 @@ def get_data(filters):
 			order_item.total_excl,
 			order_item.total_incl,
 			order_item.order_from,
-			(order_item.dealer).as_("order_from_dealer"),
 			Case()
 			.when(order.order_type == "Fleet", order.fleet_customer)
 			.else_(order.customer)
@@ -175,13 +156,10 @@ def get_data(filters):
 		.where(order.creation.between(filters.from_date, filters.to_date))
 	)
 
-	if filters.get("customer"):
-		query = query.where(order.customer == filters.customer)
-
-	if filters.get("fleet_customer"):
-		query = query.where(order.fleet_customer == filters.fleet_customer)
-
 	if filters.get("dealer"):
 		query = query.where(order.dealer == filters.dealer)
+
+	if filters.get("custom_dms_warehouse"):
+		query = query.where(order_item.custom_dms_warehouse == filters.custom_dms_warehouse)
 
 	return query.run(as_dict=True)

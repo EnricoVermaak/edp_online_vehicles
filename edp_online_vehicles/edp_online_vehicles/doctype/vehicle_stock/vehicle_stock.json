@@ -215,11 +215,6 @@
    "read_only": 1
   },
   {
-   "fieldname": "register_no",
-   "fieldtype": "Data",
-   "label": "Register No"
-  },
-  {
    "fieldname": "control_no",
    "fieldtype": "Data",
    "label": "Control No"
@@ -843,12 +838,22 @@
    "fieldtype": "Data",
    "label": "Odo Reading",
    "non_negative": 1
+  },
+  {
+   "fieldname": "register_no",
+   "fieldtype": "Data",
+   "label": "Vehicle Registration No"
   }
  ],
  "grid_page_length": 50,
  "image_field": "image",
  "index_web_pages_for_search": 1,
  "links": [
+  {
+   "group": "Warranty and Service",
+   "link_doctype": "Vehicle Linked Service Plan",
+   "link_fieldname": "vin_serial_no"
+  },
   {
    "group": "Warranty and Service",
    "link_doctype": "Vehicles Service",
@@ -890,7 +895,7 @@
    "link_fieldname": "vin_serial_no"
   }
  ],
- "modified": "2026-02-19 12:15:55.732207",
+ "modified": "2026-03-12 11:51:39.797443",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicle Stock",

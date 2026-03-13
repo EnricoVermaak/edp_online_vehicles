@@ -18,22 +18,21 @@ frappe.query_reports["Parts Orders"] = {
 			reqd: 1,
 		},
 		{
-			fieldname: "customer",
-			label: __("Customer"),
-			fieldtype: "Link",
-			options: "Dealer Customer",
-		},
-		{
-			fieldname: "fleet_customer",
-			label: __("Fleet Customer"),
-			fieldtype: "Link",
-			options: "Fleet Customer",
-		},
-		{
 			fieldname: "dealer",
 			label: __("Dealer"),
 			fieldtype: "Link",
 			options: "Company",
+		},
+		{
+			fieldname: "custom_dms_warehouse",
+			label: __("DMS Warehouse"),
+			fieldtype: "Select",
+			options: [
+				"",
+				"3PL",
+				"DP WORLD",
+				"FUCHS"
+			],
 		},
 	],
 };

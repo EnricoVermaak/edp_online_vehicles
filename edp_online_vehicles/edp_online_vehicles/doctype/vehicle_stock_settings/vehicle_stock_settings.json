@@ -14,7 +14,6 @@
   "default_model_image",
   "automatically_create_model_colours_for_new_model",
   "model_colours",
-  "create_other_service_schedule",
   "update_settings",
   "shipment_tab",
   "shipment_section",
@@ -447,13 +446,6 @@
    "fieldname": "update_settings",
    "fieldtype": "Button",
    "label": "Update Settings"
-  },
-  {
-   "default": "0",
-   "description": "If checked, an \"other\" service schedule will be created on new model administration creation.\nIf not checked, no service schedule will be created automatically.",
-   "fieldname": "create_other_service_schedule",
-   "fieldtype": "Check",
-   "label": "Create Other Service Schedule"
   },
   {
    "fieldname": "evolve_section",

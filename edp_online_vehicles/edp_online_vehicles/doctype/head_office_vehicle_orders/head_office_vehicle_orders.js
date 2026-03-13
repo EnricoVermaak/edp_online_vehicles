@@ -73,6 +73,14 @@ frappe.ui.form.on("Head Office Vehicle Orders", {
 
 		toggle_vin_serial_requirement(frm);
 
+		if (!frm.doc.sap_sales_order_no) {
+			frm.add_custom_button(__("Submit to DMS"), function () {
+				
+
+
+			});
+		}
+
 		frm.add_custom_button(
 			__("Request for Credit"),
 			() => {

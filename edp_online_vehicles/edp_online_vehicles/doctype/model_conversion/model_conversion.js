@@ -111,7 +111,7 @@ frappe.ui.form.on("Model Conversion", {
 					},
 					callback: function (r) {
 						if (r.message) {
-							frappe.msgprint(r.message);
+							frappe.show_alert(r.message);
 						}
 					},
 				});

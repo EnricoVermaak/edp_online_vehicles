@@ -30,10 +30,8 @@ class ModelConversion(Document):
 
 					# Update Serial Description ONLY
 					if frappe.db.exists("Serial No", serial_no):
-						doc = frappe.get_doc("Serial No", serial_no)
-						doc.description = self.convert_to_description
-						doc.save(ignore_permissions=True)
-						
+						frappe.db.set_value("Serial No",serial_no,"item_code",self.convert_to_model)
+
 		# AUTO SUBMIT (APPROVED OR DECLINED)
 
 		if (
