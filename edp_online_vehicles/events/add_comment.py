@@ -89,4 +89,3 @@ def auto_generate_stock_numbers(shipment_name):
         settings.save()
 
     return f"Stock numbers updated for shipment {shipment_name}"
-

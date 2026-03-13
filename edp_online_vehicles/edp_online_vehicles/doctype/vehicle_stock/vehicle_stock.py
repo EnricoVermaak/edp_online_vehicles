@@ -8,7 +8,7 @@ from frappe.utils import add_years, add_months, today, getdate
 from frappe.utils import get_datetime, now_datetime
 from datetime import datetime, timedelta
 from edp_online_vehicles.events.vehicle_aging import calculate_vehicle_ages
-
+import time
 
 class VehicleStock(Document):
     def validate(self):
@@ -267,6 +267,40 @@ class VehicleStock(Document):
         return prefix + incremented_number
 
 
+    @frappe.whitelist()
+    def enqueue(self):
+        frappe.enqueue(
+            "edp_online_vehicles.events.adjust_company_name.stock_take",
+            queue="long"
+        )
+        frappe.enqueue(
+            "edp_online_vehicles.events.adjust_company_name.stock_take",
+            queue="long"
+        )
+        frappe.enqueue(
+            "edp_online_vehicles.events.adjust_company_name.stock_take",
+            queue="long"
+        )
+        frappe.enqueue(
+            "edp_online_vehicles.events.adjust_company_name.stock_take",
+            queue="long"
+        )
+        frappe.enqueue(
+            "edp_online_vehicles.events.adjust_company_name.stock_take",
+            queue="long"
+        )
+        frappe.enqueue(
+            "edp_online_vehicles.events.adjust_company_name.stock_take",
+            queue="long"
+        )
+        frappe.enqueue(
+            "edp_online_vehicles.events.adjust_company_name.stock_take",
+            queue="long"
+        )
+        frappe.enqueue(
+            "edp_online_vehicles.events.adjust_company_name.stock_take",
+            queue="long"
+        )
 
 
 @frappe.whitelist()
@@ -279,3 +313,4 @@ def set_vehicle_received_date(doc, method=None):
                     if not existing_date:
                         frappe.db.set_value("Vehicle Stock", item.serial_no, "ho_date_received", doc.posting_date, update_modified=False)
                         frappe.logger().info(f"Set HO received date for VIN {item.serial_no}: {doc.posting_date}")
+
