@@ -1,0 +1,208 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2026-03-12 16:51:10.023599",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "information_section",
+  "dealer",
+  "campaign_description",
+  "model_code",
+  "model_description",
+  "interval",
+  "status",
+  "notes",
+  "parts_tab",
+  "recall_campaign_parts",
+  "section_break_wvjt",
+  "column_break_xzco",
+  "column_break_cpuu",
+  "parts_total_excl",
+  "labour_tab",
+  "recall_campaign_labour",
+  "section_break_udxv",
+  "column_break_ifqi",
+  "column_break_blig",
+  "duration_total",
+  "labour_total_excl",
+  "extras_tab",
+  "recall_campaign_extras",
+  "section_break_gmbp",
+  "column_break_azwv",
+  "column_break_tfif",
+  "extras_total_excl"
+ ],
+ "fields": [
+  {
+   "fieldname": "parts_tab",
+   "fieldtype": "Tab Break",
+   "label": "Parts"
+  },
+  {
+   "fieldname": "information_section",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "model_code",
+   "fieldtype": "Link",
+   "label": "Model Code",
+   "options": "Model Administration",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "model_code.model_description",
+   "fieldname": "model_description",
+   "fieldtype": "Data",
+   "label": "Model Description",
+   "options": "Model Administration",
+   "read_only": 1
+  },
+  {
+   "fieldname": "campaign_description",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Campaign Description",
+   "reqd": 1
+  },
+  {
+   "fieldname": "interval",
+   "fieldtype": "Data",
+   "label": "Interval"
+  },
+  {
+   "default": "Active",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "Active\nInactive"
+  },
+  {
+   "fieldname": "notes",
+   "fieldtype": "Small Text",
+   "label": "Notes"
+  },
+  {
+   "fieldname": "recall_campaign_parts",
+   "fieldtype": "Table",
+   "label": "Recall Campaign Parts",
+   "options": "Recall Campaign Parts"
+  },
+  {
+   "fieldname": "labour_tab",
+   "fieldtype": "Tab Break",
+   "label": "Labour"
+  },
+  {
+   "fieldname": "recall_campaign_labour",
+   "fieldtype": "Table",
+   "label": "Recall Campaign Labour",
+   "options": "Recall Campaign Labour"
+  },
+  {
+   "fieldname": "dealer",
+   "fieldtype": "Link",
+   "label": "Dealer",
+   "options": "Company",
+   "reqd": 1
+  },
+  {
+   "fieldname": "extras_tab",
+   "fieldtype": "Tab Break",
+   "label": "Extras"
+  },
+  {
+   "fieldname": "recall_campaign_extras",
+   "fieldtype": "Table",
+   "label": "Recall Campaign Extras",
+   "options": "Recall Campaign Extras"
+  },
+  {
+   "fieldname": "section_break_wvjt",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_xzco",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_cpuu",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "parts_total_excl",
+   "fieldtype": "Currency",
+   "label": "Parts Total (Excl)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_udxv",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_ifqi",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_blig",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "duration_total",
+   "fieldtype": "Data",
+   "label": "Duration Total",
+   "read_only": 1
+  },
+  {
+   "fieldname": "labour_total_excl",
+   "fieldtype": "Currency",
+   "label": "Labour Total (Excl)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_gmbp",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_azwv",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_tfif",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "extras_total_excl",
+   "fieldtype": "Currency",
+   "label": "Extras Total (Excl)",
+   "read_only": 1
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2026-03-13 11:55:49.399594",
+ "modified_by": "Administrator",
+ "module": "Edp Online Vehicles",
+ "name": "Campaign Schedule Manager",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

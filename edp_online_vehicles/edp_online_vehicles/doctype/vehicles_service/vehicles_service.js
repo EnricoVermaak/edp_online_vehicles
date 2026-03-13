@@ -202,9 +202,6 @@ frappe.ui.form.on("Vehicles Service", {
 				}));
 			});
 
-		frm.set_query("item", "service_parts_items", () => ({
-			filters: { item_group: "Parts" }
-		}));
 		frm.set_query("service_type", () => ({
 			query: "edp_online_vehicles.events.service_type.service_type_query",
 			filters: {
@@ -219,7 +216,6 @@ frappe.ui.form.on("Vehicles Service", {
 			filters: { type: "Standard Service Checklist" }
 		}));
 		previous_status_value = frm.doc.service_status;
-		toggle_summary_fields(frm);
 		calculate_parts_total_combined(frm);
 		calculate_labours_total_combined(frm);
 		calculate_duration_total_combined(frm);

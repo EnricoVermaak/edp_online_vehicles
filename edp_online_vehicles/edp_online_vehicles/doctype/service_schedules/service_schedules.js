@@ -34,12 +34,13 @@ edp_vehicles.pricing.bind_child_events(SS_CONFIG);
 
 frappe.ui.form.on("Service Schedules", {
     onload(frm) {
-        frm.set_query("item", "service_parts_items", () => ({
-            filters: { item_group: "Parts" }
-        }));
-        frm.set_query("item", "service_labour_items", () => ({
-            filters: { item_group: "Service Labour" }
-        }));
+        frappe.db.get_value("Vehicle Service Settings", "Vehicle Service Settings", "labour_code_filter")
+		    .then(r => {
+		    	let labour_code_filter = r.message?.labour_code_filter || "Service Labour";
+		    	frm.set_query("item", "service_labour_items", () => ({
+		    		filters: { item_group: labour_code_filter }
+		    	}));
+		    });
     },
     refresh(frm) {
         edp_vehicles.pricing.recalc_totals(frm, SS_CONFIG);

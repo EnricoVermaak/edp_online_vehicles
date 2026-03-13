@@ -84,11 +84,6 @@ frappe.ui.form.on("Vehicle Service Booking", {
             filters: { model_code: frm.doc.model, vin_serial_no: frm.doc.vin_serial_no }
         }));
 
-        if (frm.fields_dict.service_parts_items) {
-            frm.set_query("item", "service_parts_items", () => ({
-                filters: { item_group: "Parts" }
-            }));
-        }
         if (frm.fields_dict.service_labour_items) {
             frappe.db.get_value("Vehicle Service Settings", "Vehicle Service Settings", "labour_code_filter")
                 .then(r => {
