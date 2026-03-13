@@ -78,6 +78,18 @@ frappe.ui.form.on("Recall Campaign", {
 		// refresh
 		frm.refresh_field("recall_campaign_vehicles");
 
+		handle_recall_vehicles_buttons(frm);
+
+		// button to copy campaign in active state
+		if (!frm.is_new()) {
+			frm.add_custom_button(__("Copy Campaign"), function () {
+				const new_doc = frappe.model.copy_doc(frm.doc);
+				new_doc.active = 1;
+				new_doc.campaign_description = "";
+				frappe.set_route("Form", "Recall Campaign", new_doc.name);
+			}, __("Actions"));
+		}
+
         // Add Model button only if it doesn't exist
         if (!grid.grid_buttons.find(".add-model-btn").length) {
         $('<button class="btn btn-xs btn-primary add-model-btn">Add Model</button>')
@@ -244,3 +256,82 @@ frappe.ui.form.on("Recall Campaign", {
         } // end Add Series guard
 	}
 });
+
+function handle_recall_vehicles_buttons(frm) {
+	const grid_wrapper = frm.fields_dict["recall_campaign_vehicles"]?.grid?.wrapper?.get(0);
+
+	// Remove existing buttons to avoid duplicates on refresh
+	const existing = grid_wrapper?.querySelector(".recall-vehicles-upload-download");
+	if (existing) existing.remove();
+
+	const button_container = document.createElement("div");
+	button_container.className = "recall-vehicles-upload-download";
+	button_container.style = "position: absolute; bottom: 0px; right: 10px; display: flex; gap: 10px;";
+
+	// Download button
+	const download_button = document.createElement("button");
+	download_button.className = "btn btn-primary btn-sm";
+	download_button.innerText = "Download";
+	download_button.onclick = function () {
+		let data = [];
+
+		// Header rows
+		data.push(["Template (Recall Campaign Vehicles)"]);
+		data.push([]);
+		data.push(["vin_serial_no"]);
+
+		// Existing data
+		(frm.doc.recall_campaign_vehicles || []).forEach(row => {
+			data.push([row.vin_serial_no || ""]);
+		});
+
+		frappe.tools.downloadify(data, null, "Recall Campaign Vehicles");
+	};
+
+	// Upload button
+	const upload_button = document.createElement("button");
+	upload_button.className = "btn btn-secondary btn-sm";
+	upload_button.innerText = "Upload";
+	upload_button.onclick = function () {
+		new frappe.ui.FileUploader({
+			as_dataurl: true,
+			allow_multiple: false,
+			restrictions: { allowed_file_types: [".csv"] },
+			on_success(file) {
+				const data = frappe.utils.csv_to_array(
+					frappe.utils.get_decoded_string(file.dataurl)
+				);
+
+				// Find vin_serial_no column (row index 2 is fieldnames row)
+				const fieldnames = data[2];
+				const vin_col = fieldnames ? fieldnames.indexOf("vin_serial_no") : 0;
+
+				const existing_vins = (frm.doc.recall_campaign_vehicles || []).map(v => v.vin_serial_no);
+				let added = 0;
+
+				for (let i = 3; i < data.length; i++) {
+					const vin = (data[i][vin_col] || "").trim().toUpperCase();
+					if (!vin) continue;
+					if (existing_vins.includes(vin)) continue;
+
+					const row = frm.add_child("recall_campaign_vehicles");
+					row.vin_serial_no = vin;
+					existing_vins.push(vin);
+					added++;
+				}
+
+				frm.refresh_field("recall_campaign_vehicles");
+				frappe.msgprint({
+					message: __(`${added} vehicles added`),
+					title: __("Success"),
+					indicator: "green"
+				});
+			}
+		});
+		return false;
+	};
+
+	button_container.appendChild(download_button);
+	button_container.appendChild(upload_button);
+	grid_wrapper.appendChild(button_container);
+}

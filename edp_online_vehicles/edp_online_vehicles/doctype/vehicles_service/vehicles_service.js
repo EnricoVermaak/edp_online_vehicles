@@ -216,9 +216,6 @@ frappe.ui.form.on("Vehicles Service", {
 			filters: { type: "Standard Service Checklist" }
 		}));
 		previous_status_value = frm.doc.service_status;
-		calculate_parts_total_combined(frm);
-		calculate_labours_total_combined(frm);
-		calculate_duration_total_combined(frm);
 	},
 
 	refresh(frm) {
