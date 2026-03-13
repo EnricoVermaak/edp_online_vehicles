@@ -7,7 +7,7 @@ frappe.query_reports["Retail Between Dates"] = {
 			fieldname: "from_date",
 			label: __("From Date"),
 			fieldtype: "Date",
-			default: frappe.datetime.get_today(),
+			default: frappe.datetime.add_days(frappe.datetime.get_today(), -30),
 			reqd: 1,
 		},
 		{
@@ -28,8 +28,16 @@ frappe.query_reports["Retail Between Dates"] = {
 			label: __("Dealer"),
 			fieldtype: "Link",
 			options: "Company",
-			default: frappe.defaults.get_default("company"),
-			reqd: 1,
-		},
+			default: ""
+		}
 	],
+	onload: function (report) {
+		const defaultCompany = frappe.defaults.get_default("company");
+		if (!defaultCompany) return;
+		frappe.db.get_value("Company", defaultCompany, "custom_head_office").then(function (r) {
+			if (!r || !r.custom_head_office) {
+				report.set_filter_value("dealer", defaultCompany);
+			}
+		});
+	},
 };
