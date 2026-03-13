@@ -81,7 +81,7 @@ frappe.ui.form.on("Vehicles Warranty Claims", {
 		frm.add_custom_button(
 			__("Sales Order"),
 			() => {
-				if (!frm.doc.parts.length > 0) {
+				if (!frm.doc.parts || frm.doc.parts.length === 0) {
 					frappe.throw(
 						"Please Enter data in parts child table first",
 					);
@@ -604,35 +604,33 @@ frappe.ui.form.on("Vehicles Warranty Claims", {
 	},
 
 
-    before_save: async function(frm) {
-		//Save the service odometer reading back to the linked Vehicle Stock record 
-        if (!frm.doc.vin_serial_no || !frm.doc.odo_reading) {
-            return;
-        }
+before_save: function(frm) {
+    if (!frm.doc.vin_serial_no || !frm.doc.odo_reading) return;
 
-        let r = await frappe.call({
-            method: "frappe.client.get_value",
-            args: {
-                doctype: "Vehicle Stock",
-                filters: { name: frm.doc.vin_serial_no },
-                fieldname: "odo_reading"
+    frappe.call({
+        method: "frappe.client.get_value",
+        args: {
+            doctype: "Vehicle Stock",
+            filters: { name: frm.doc.vin_serial_no },
+            fieldname: "odo_reading"
+        },
+        callback(r) {
+            let stock_odo = r.message.odo_reading || 0;
+
+            if (parseFloat(frm.doc.odo_reading) > parseFloat(stock_odo)) {
+                frappe.call({
+                    method: "frappe.client.set_value",
+                    args: {
+                        doctype: "Vehicle Stock",
+                        name: frm.doc.vin_serial_no,
+                        fieldname: "odo_reading",
+                        value: frm.doc.odo_reading
+                    }
+                });
             }
-        });
-
-        let stock_odo = r.message.odo_reading || 0;
-
-        if (parseFloat(frm.doc.odo_reading) > parseFloat(stock_odo)) {
-            await frappe.call({
-                method: "frappe.client.set_value",
-                args: {
-                    doctype: "Vehicle Stock",
-                    name: frm.doc.vin_serial_no,
-                    fieldname: "odo_reading",
-                    value: frm.doc.odo_reading
-                }
-            });
         }
-    },
+    });
+},
 
 	after_save(frm) {
 		setTimeout(() => reapply_colors(frm), 400);

@@ -73,7 +73,7 @@ class ModelConversion(Document):
 			frappe.logger().info(f"Added conversion comment to Vehicle Stock {vin}")
 		except Exception as e:
 			frappe.logger().error(f"Failed to add comment to Vehicle Stock {vin}: {str(e)}")
-
+   
 # @frappe.whitelist()
 # def update_vehicles_details(items, convert_to_model):
 
