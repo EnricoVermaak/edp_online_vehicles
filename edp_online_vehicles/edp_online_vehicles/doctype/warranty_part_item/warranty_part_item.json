@@ -37,6 +37,7 @@
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "Part No",
+   "link_filters": "[[\"Item\",\"item_group\",\"=\",\"Parts\"]]",
    "options": "Item"
   },
   {
@@ -154,7 +155,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2026-03-12 09:52:45.760701",
+ "modified": "2026-03-13 11:20:16.716193",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Warranty Part Item",

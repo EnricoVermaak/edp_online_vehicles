@@ -88,15 +88,19 @@ frappe.ui.form.on("Model Conversion", {
 			frm.set_value("convert_to_brand", selected_code);
 		}
 	},
-	after_save: function (frm) {
-		if (frm.doc.status == "Approved") {
-			var items = [];
+		after_save: function (frm) {
+			if (frm.doc.status == "Approved") {
 
-			frm.doc["table_fgif"].forEach(function (row) {
-				items.push({
-					vin_serial_no: row.vin_serial_no,
+				frm.doc.table_fgif.forEach(function (row) {
+
+					frappe.db.set_value("Serial No", row.vin_serial_no, {
+						item_code: frm.doc.new_model_code
+					}).then(() => {
+						console.log("Model converted for VIN:", row.vin_serial_no);
+					});
+
 				});
-			});
+
 
 			if (items.length > 0) {
 				frm.call({

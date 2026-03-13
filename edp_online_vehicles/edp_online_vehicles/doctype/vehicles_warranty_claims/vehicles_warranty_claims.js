@@ -240,9 +240,7 @@ frappe.ui.form.on("Vehicles Warranty Claims", {
 	},
 
 	onload: function (frm) {
-		frm.fields_dict['part_items'].grid.get_field('part_no').get_query = function () {
-			return { filters: { "item_group": "Parts" } };
-		};
+
 		if (frm.doc.vehicles_incidents) {
 			frappe.db.get_doc("Vehicles Incidents", frm.doc.vehicles_incidents).then((doc) => {
 				for (let row of doc.parts) {
@@ -272,8 +270,6 @@ frappe.ui.form.on("Vehicles Warranty Claims", {
 			});
 		}
 		previous_status_value = frm.doc.status;
-		toggle_summary_fields(frm);
-		calculate_part_sub_total(frm, "total_excl", "part_items");
 	},
 
 	date_of_failure: async function (frm) {
