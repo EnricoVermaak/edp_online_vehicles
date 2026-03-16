@@ -49,7 +49,7 @@ def create_material_request_warranty(docname):
 		newdoc.append(
 			"items",
 			{
-				"item_code": part.item,
+				"item_code": part.part_no,
 				"item_name": part.description,
 				"qty": part.qty,
 				"uom": part.uom,
