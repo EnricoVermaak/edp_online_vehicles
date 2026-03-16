@@ -5,13 +5,11 @@
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
+  "active",
   "information_section",
   "dealer",
   "campaign_description",
-  "model_code",
-  "model_description",
   "interval",
-  "status",
   "notes",
   "parts_tab",
   "recall_campaign_parts",
@@ -31,7 +29,9 @@
   "section_break_gmbp",
   "column_break_azwv",
   "column_break_tfif",
-  "extras_total_excl"
+  "extras_total_excl",
+  "vehicles_tab",
+  "recall_campaign_vehicles"
  ],
  "fields": [
   {
@@ -44,21 +44,6 @@
    "fieldtype": "Section Break"
   },
   {
-   "fieldname": "model_code",
-   "fieldtype": "Link",
-   "label": "Model Code",
-   "options": "Model Administration",
-   "reqd": 1
-  },
-  {
-   "fetch_from": "model_code.model_description",
-   "fieldname": "model_description",
-   "fieldtype": "Data",
-   "label": "Model Description",
-   "options": "Model Administration",
-   "read_only": 1
-  },
-  {
    "fieldname": "campaign_description",
    "fieldtype": "Data",
    "in_list_view": 1,
@@ -69,13 +54,6 @@
    "fieldname": "interval",
    "fieldtype": "Data",
    "label": "Interval"
-  },
-  {
-   "default": "Active",
-   "fieldname": "status",
-   "fieldtype": "Select",
-   "label": "Status",
-   "options": "Active\nInactive"
   },
   {
    "fieldname": "notes",
@@ -176,15 +154,32 @@
    "fieldtype": "Currency",
    "label": "Extras Total (Excl)",
    "read_only": 1
+  },
+  {
+   "default": "1",
+   "fieldname": "active",
+   "fieldtype": "Check",
+   "label": "Active Campaign"
+  },
+  {
+   "fieldname": "vehicles_tab",
+   "fieldtype": "Tab Break",
+   "label": "Vehicles"
+  },
+  {
+   "fieldname": "recall_campaign_vehicles",
+   "fieldtype": "Table",
+   "label": "Recall Campaign Vehicles",
+   "options": "Recall Campaign Vehicles"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-03-13 11:55:49.399594",
+ "modified": "2026-03-13 15:07:44.412741",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
- "name": "Campaign Schedule Manager",
+ "name": "Recall Campaign",
  "owner": "Administrator",
  "permissions": [
   {
