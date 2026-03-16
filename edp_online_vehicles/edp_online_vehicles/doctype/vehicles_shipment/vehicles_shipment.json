@@ -34,9 +34,9 @@
   "section_break_vsgr",
   "column_break_rhrs",
   "total_vehicles",
-  "total_excl",
   "column_break_dvnm",
-  "amended_from"
+  "amended_from",
+  "total_excl"
  ],
  "fields": [
   {
