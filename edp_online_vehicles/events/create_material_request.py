@@ -45,7 +45,13 @@ def create_material_request_warranty(docname):
 	newdoc.company = frappe.defaults.get_user_default("company")
 	newdoc.transaction_date = today()
 
+	# Append items
 	for part in doc.part_items:
+		# Debug check: ensure item exists
+		if not frappe.db.exists("Item", part.part_no):
+			frappe.throw(f"Item {part.part_no} does not exist in Item master")
+
+
 		newdoc.append(
 			"items",
 			{
@@ -54,12 +60,16 @@ def create_material_request_warranty(docname):
 				"qty": part.qty,
 				"uom": part.uom,
 				"schedule_date": doc.part_schedule_date,
+				"conversion_factor": 1,
 			},
 		)
 
 	newdoc.insert()
+	frappe.db.commit()
 	newdoc_link = get_link_to_form("Material Request", newdoc.name)
 	frappe.msgprint(f"New Material Request is Created: {newdoc_link}")
+	return newdoc.name
+
 
 
 @frappe.whitelist()
@@ -79,7 +89,7 @@ def create_material_request_rfs(docname):
 		newdoc.append(
 			"items",
 			{
-				"item_code": part.item,
+				"item_code": part.part_no,
 				"item_name": part.description,
 				"qty": part.qty,
 				"uom": part.uom,
