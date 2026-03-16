@@ -9,8 +9,8 @@
  "filters": [],
  "idx": 48,
  "is_standard": "Yes",
- "letterhead": null,
- "modified": "2025-10-24 09:49:07.446967",
+ "letter_head": null,
+ "modified": "2026-03-13 15:47:02.822314",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Service",
@@ -19,6 +19,13 @@
  "ref_doctype": "Vehicles Service",
  "report_name": "Service",
  "report_type": "Script Report",
- "roles": [],
+ "roles": [
+  {
+   "role": "Service Administrator"
+  },
+  {
+   "role": "Dealer Vehicle Administrator"
+  }
+ ],
  "timeout": 0
 }

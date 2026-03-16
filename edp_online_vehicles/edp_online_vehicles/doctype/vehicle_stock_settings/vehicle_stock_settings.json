@@ -23,6 +23,10 @@
   "automatically_create_stock_number",
   "stock_no_prefix",
   "last_automated_stock_no",
+  "shipment_import_section",
+  "enable_upload_import",
+  "vehicle_stock_import_column_mappings",
+  "download_csv_template",
   "vehicles_stock_availability_tab",
   "vehicles_stock_availability_section",
   "only_show_models_in_stock_at_hq",
@@ -205,6 +209,31 @@
    "fieldtype": "Data",
    "label": "Last Automated Stock No",
    "mandatory_depends_on": "eval: doc.automatically_create_stock_number == 1;"
+  },
+  {
+   "fieldname": "shipment_import_section",
+   "fieldtype": "Section Break",
+   "label": "Shipment CSV Import Layouts"
+  },
+  {
+   "default": "0",
+   "description": "When enabled, Upload Import appears on Vehicles Shipment (draft). You can also show buttons when layouts exist only—see shipment JS.",
+   "fieldname": "enable_upload_import",
+   "fieldtype": "Check",
+   "label": "Enable Upload Import"
+  },
+  {
+   "description": "Map CSV column headers to Shipment Item fields. Each Import Layout Title becomes a sub-button under Upload Import.",
+   "fieldname": "vehicle_stock_import_column_mappings",
+   "fieldtype": "Table",
+   "label": "Import Column Mappings",
+   "options": "Vehicle Stock Import Column Mapping"
+  },
+  {
+   "description": "Download a CSV template with headers for the selected layout.",
+   "fieldname": "download_csv_template",
+   "fieldtype": "Button",
+   "label": "Download CSV Template"
   },
   {
    "depends_on": "eval: doc.automatically_create_model_colours_for_new_model == 1;",

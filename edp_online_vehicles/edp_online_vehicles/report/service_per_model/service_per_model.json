@@ -9,8 +9,8 @@
  "filters": [],
  "idx": 10,
  "is_standard": "Yes",
- "letterhead": null,
- "modified": "2025-10-24 09:49:07.366984",
+ "letter_head": null,
+ "modified": "2026-03-13 15:47:29.144697",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Service Per Model",
@@ -28,6 +28,12 @@
   },
   {
    "role": "Customer"
+  },
+  {
+   "role": "Service Administrator"
+  },
+  {
+   "role": "Dealer Vehicle Administrator"
   }
  ],
  "timeout": 0
