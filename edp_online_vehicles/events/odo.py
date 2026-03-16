@@ -22,28 +22,47 @@ def check_odo_limit(vin_serial_no, odo_reading):
 @frappe.whitelist()
 def check_clor(vin):
     if not vin:
-        return []
+        return {"allowed_items": [], "has_active_warranty_plan": False}
 
     linked = frappe.get_all(
         "Vehicle Linked Warranty Plan",
-        filters={"vin_serial_no": vin},
+        filters={"vin_serial_no": vin, "status": "Active"},
         fields=["warranty_plan"]
     )
 
     if not linked:
-        return []
-
-    warranty_plan = linked[0].warranty_plan
-    plan_doc = frappe.get_doc(
-        "Vehicles Warranty Plan Administration",
-        warranty_plan
-    )
+        return {"allowed_items": [], "has_active_warranty_plan": False}
 
     items_list = []
-    for row in plan_doc.items:
-        items_list.append(row.item)
+    has_active_warranty_plan = False
 
-    return items_list
+    for linked_plan in linked:
+        if not linked_plan.warranty_plan:
+            continue
+
+        plan_status = frappe.db.get_value(
+            "Vehicles Warranty Plan Administration",
+            linked_plan.warranty_plan,
+            "status",
+        )
+
+        if plan_status != "Active":
+            continue
+
+        has_active_warranty_plan = True
+        plan_doc = frappe.get_doc(
+            "Vehicles Warranty Plan Administration",
+            linked_plan.warranty_plan,
+        )
+
+        for row in plan_doc.items:
+            if row.item and row.item not in items_list:
+                items_list.append(row.item)
+
+    return {
+        "allowed_items": items_list,
+        "has_active_warranty_plan": has_active_warranty_plan,
+    }
 
 @frappe.whitelist()
 def check_duplicate_part(vin, part_no, current_claim=None):

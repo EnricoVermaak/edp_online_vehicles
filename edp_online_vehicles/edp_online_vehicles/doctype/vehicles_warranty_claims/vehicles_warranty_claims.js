@@ -573,14 +573,15 @@ function reapply_colors(frm) {
 		method: "edp_online_vehicles.events.odo.check_clor",
 		args: { vin: frm.doc.vin_serial_no },
 		callback(r) {
-			let allowed_items = r.message || [];
+			let allowed_items = r.message?.allowed_items || [];
+			let has_active_warranty_plan = !!r.message?.has_active_warranty_plan;
 			let grid = frm.fields_dict['part_items'].grid;
 			if (!grid) return;
 			grid.grid_rows.forEach(gr => {
 				let color = "";
 				if (gr.doc.system_note && gr.doc.system_note.startsWith("Duplicate Parts Found")) {
 					color = "#ffcc99";
-				} else if (gr.doc.part_no && !allowed_items.includes(gr.doc.part_no)) {
+				} else if (gr.doc.part_no && (!has_active_warranty_plan || !allowed_items.includes(gr.doc.part_no))) {
 					color = "#ffdddd";
 				}
 				set_row_color(frm, gr.doc, color);
@@ -595,12 +596,13 @@ function validate_part_item(frm, row) {
 		method: "edp_online_vehicles.events.odo.check_clor",
 		args: { vin: frm.doc.vin_serial_no },
 		callback(r) {
-			let allowed_items = r.message || [];
+			let allowed_items = r.message?.allowed_items || [];
+			let has_active_warranty_plan = !!r.message?.has_active_warranty_plan;
 			if (row.system_note && row.system_note.startsWith("Duplicate Parts Found")) {
 				set_row_color(frm, row, "#ffcc99");
 				return;
 			}
-			if (!allowed_items.includes(row.part_no)) {
+			if (!has_active_warranty_plan || !allowed_items.includes(row.part_no)) {
 				set_row_color(frm, row, "#ffdddd");
 				frappe.model.set_value(row.doctype, row.name, "system_note", "Part Not Covered");
 			} else {
