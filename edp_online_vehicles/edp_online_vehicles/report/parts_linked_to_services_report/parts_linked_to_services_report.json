@@ -9,8 +9,8 @@
  "filters": [],
  "idx": 10,
  "is_standard": "Yes",
- "letterhead": null,
- "modified": "2025-10-24 09:49:09.407978",
+ "letter_head": null,
+ "modified": "2026-03-13 15:49:39.696714",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Parts Linked to Services Report",
@@ -28,6 +28,12 @@
   },
   {
    "role": "Customer"
+  },
+  {
+   "role": "Service Administrator"
+  },
+  {
+   "role": "Dealer Vehicle Administrator"
   }
  ],
  "timeout": 0

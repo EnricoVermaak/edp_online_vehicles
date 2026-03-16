@@ -1,9 +1,11 @@
 # Copyright (c) 2026, NexTash and contributors
 # For license information, please see license.txt
 
-# import frappe
+import frappe
 from frappe.model.document import Document
 
 
-class CampaignScheduleManager(Document):
-	pass
+class ItemDetails(Document):
+	@frappe.whitelist()
+	def create_item(self):
+		pass

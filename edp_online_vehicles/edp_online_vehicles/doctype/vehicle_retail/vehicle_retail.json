@@ -32,7 +32,6 @@
   "natis_release_date",
   "payment_date",
   "delivery_date",
-  "registration_year",
   "customer_information_tab",
   "customer",
   "customer_name",
@@ -442,12 +441,6 @@
    "fieldname": "customer_invoice_document",
    "fieldtype": "Attach",
    "label": "Customer Invoice Document"
-  },
-  {
-   "default": "\"eval: int(frappe.utils.nowdate().split('-')[0])\"",
-   "fieldname": "registration_year",
-   "fieldtype": "Int",
-   "label": "Registration Year"
   },
   {
    "fieldname": "documents_tab",

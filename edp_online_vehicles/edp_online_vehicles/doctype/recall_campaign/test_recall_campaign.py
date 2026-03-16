@@ -5,5 +5,5 @@
 from frappe.tests.utils import FrappeTestCase
 
 
-class TestCampaignScheduleManager(FrappeTestCase):
+class TestRecallCampaign(FrappeTestCase):
 	pass

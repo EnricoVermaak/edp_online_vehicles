@@ -30,7 +30,6 @@
   "natis_code",
   "natis_release_date",
   "fleet_no",
-  "certificate_number",
   "request_release",
   "column_break_1tyr",
   "dealer",
@@ -768,11 +767,6 @@
    "permlevel": 2
   },
   {
-   "fieldname": "certificate_number",
-   "fieldtype": "Data",
-   "label": "Certificate Number"
-  },
-  {
    "fieldname": "natis_code",
    "fieldtype": "Date",
    "label": "Natis Code",
@@ -895,7 +889,7 @@
    "link_fieldname": "vin_serial_no"
   }
  ],
- "modified": "2026-03-12 11:51:39.797443",
+ "modified": "2026-03-13 13:52:41.980609",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicle Stock",
