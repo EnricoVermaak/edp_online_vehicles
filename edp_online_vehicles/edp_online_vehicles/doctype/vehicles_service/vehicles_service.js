@@ -286,6 +286,15 @@ frappe.ui.form.on("Vehicles Service", {
 		// 	edp_online_vehicles.vehicles_service.add_scan_button(frm);
 		// }
 	},
+	refresh: function(frm) {
+        frm.set_query("vin_serial_no", function() {
+            return {
+                filters: {
+                    availability_status: "Sold"
+                }
+            };
+        });
+    },
 
 	after_save(frm) {
 		frappe.call({
@@ -320,7 +329,15 @@ frappe.ui.form.on("Vehicles Service", {
 		});
 	},
 
+	
 	vin_serial_no(frm) {
+				frm.set_query("vin_serial_no", function() {
+			return {
+				filters: {
+				   availability_status: "Sold"
+				}
+			};
+		});
 		if (frm.doc.vin_serial_no && frm.is_new()) {
 			frappe.call({
 				method: "edp_online_vehicles.events.create_vehicle_service.find_and_link_open_booking",
