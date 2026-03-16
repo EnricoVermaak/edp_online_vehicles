@@ -46,19 +46,19 @@ def create_sales_order_warranty(docname):
 	newdoc.company = frappe.defaults.get_user_default("company")
 	newdoc.transaction_date = today()
 	newdoc.delivery_date = doc.part_schedule_date
-	newdoc.custom_job_reference = doc.job_card_no
+	newdoc.custom_job_reference = doc.dealer_jobcard_no
 
 	for part in doc.part_items:
 		newdoc.append(
 			"items",
 			{
-				"item_code": part.item,
+				"item_code": part.part_no,
 				"item_name": part.description,
 				"qty": part.qty,
 				"uom": part.uom,
 				"conversion_factor": 1,
 				"base_amount": part.total_excl,
-				"base_rate": part.price_excl,
+				# "base_rate": part.price_excl,
 			},
 		)
 

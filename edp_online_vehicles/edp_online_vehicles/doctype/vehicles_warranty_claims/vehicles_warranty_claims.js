@@ -106,7 +106,7 @@ frappe.ui.form.on("Vehicles Warranty Claims", {
 			});
 
 		frm.add_custom_button(__("Sales Order"), () => {
-			if (!frm.doc.parts.length > 0) {
+			if (frm.doc.part_items.length === 0) {
 				frappe.throw("Please Enter data in parts child table first");
 			} else if (!frm.doc.part_schedule_date) {
 				frappe.throw("Please select a Scheduled Delivery Date under Parts Table");
