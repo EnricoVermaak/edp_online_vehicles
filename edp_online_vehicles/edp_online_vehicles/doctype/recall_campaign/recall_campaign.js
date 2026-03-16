@@ -88,6 +88,18 @@ frappe.ui.form.on("Recall Campaign", {
 				new_doc.campaign_description = "";
 				frappe.set_route("Form", "Recall Campaign", new_doc.name);
 			}, __("Actions"));
+
+			if (frm.doc.active) {
+				frm.add_custom_button(__("Close Campaign"), function () {
+					frappe.confirm(
+						__("Close this campaign? This will set Active Campaign to false."),
+						() => {
+							frm.set_value("active", 0);
+							frm.save();
+						}
+					);
+				}, __("Actions"));
+			}
 		}
 
         // Add Model button only if it doesn't exist

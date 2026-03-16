@@ -14,7 +14,6 @@
   "column_break_evqm",
   "warranty_period_months",
   "warranty_odo_limit",
-  "recall_campaign",
   "warranty_company_section",
   "warranty_plan_administrator",
   "column_break_fvmm",
@@ -114,19 +113,11 @@
    "fieldname": "flag_parts_outside_of_this_warranty_claim_parts_list",
    "fieldtype": "Check",
    "label": "Flag Parts Outside of This Warranty Claim Parts List"
-  },
-  {
-   "depends_on": "eval:(doc.warranty_type == 'Recall Campaign');",
-   "fieldname": "recall_campaign",
-   "fieldtype": "Link",
-   "hidden": 1,
-   "label": "Recall Campaign",
-   "options": "Recall Campaign"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-03-16 11:05:26.488023",
+ "modified": "2026-03-16 15:44:03.227901",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicles Warranty Plan Administration",
