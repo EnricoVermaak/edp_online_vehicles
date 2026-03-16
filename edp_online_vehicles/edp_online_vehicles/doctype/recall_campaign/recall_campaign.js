@@ -153,7 +153,10 @@ frappe.ui.form.on("Recall Campaign", {
 
 									frm.refresh_field("recall_campaign_vehicles");
 
-									frappe.msgprint(`${length} vehicles added`);
+									frappe.show_alert({
+										message: __(`${length} vehicles added`),
+										indicator: "green"
+									});
 								}
 							}
 						});
@@ -241,7 +244,10 @@ frappe.ui.form.on("Recall Campaign", {
 
 									frm.refresh_field("recall_campaign_vehicles");
 
-									frappe.msgprint(`${length} vehicles added`);
+									frappe.show_alert({
+										message: __(`${length} vehicles added`),
+										indicator: "green"
+									});
 								}
 							}
 						});
@@ -273,6 +279,8 @@ function handle_recall_vehicles_buttons(frm) {
 	download_button.className = "btn btn-primary btn-sm";
 	download_button.innerText = "Download";
 	download_button.onclick = function () {
+		const selected_rows = (frm.doc.recall_campaign_vehicles || []).filter(row => row.selected);
+		
 		let data = [];
 
 		// Header rows
@@ -280,8 +288,8 @@ function handle_recall_vehicles_buttons(frm) {
 		data.push([]);
 		data.push(["vin_serial_no"]);
 
-		// Existing data
-		(frm.doc.recall_campaign_vehicles || []).forEach(row => {
+		// Selected vehicle data only
+		selected_rows.forEach(row => {
 			data.push([row.vin_serial_no || ""]);
 		});
 
@@ -297,7 +305,7 @@ function handle_recall_vehicles_buttons(frm) {
 			as_dataurl: true,
 			allow_multiple: false,
 			restrictions: { allowed_file_types: [".csv"] },
-			on_success(file) {
+			on_success: async function (file) {
 				const data = frappe.utils.csv_to_array(
 					frappe.utils.get_decoded_string(file.dataurl)
 				);
@@ -307,25 +315,67 @@ function handle_recall_vehicles_buttons(frm) {
 				const vin_col = fieldnames ? fieldnames.indexOf("vin_serial_no") : 0;
 
 				const existing_vins = (frm.doc.recall_campaign_vehicles || []).map(v => v.vin_serial_no);
+				const csv_vins = [];
+
+				for (let i = 3; i < data.length; i++) {
+					const vin = (data[i][vin_col] || "").trim().toUpperCase();
+					if (!vin) continue;
+					if (!csv_vins.includes(vin)) csv_vins.push(vin);
+				}
+
+				let stock_rows = [];
+				if (csv_vins.length) {
+					stock_rows = await frappe.db.get_list("Vehicle Stock", {
+						filters: { vin_serial_no: ["in", csv_vins] },
+						fields: ["vin_serial_no", "model", "series"],
+						limit: 0
+					});
+				}
+
+				const stock_map = {};
+				(stock_rows || []).forEach((row) => {
+					stock_map[(row.vin_serial_no || "").toUpperCase()] = row;
+				});
+
 				let added = 0;
+				let missing_vins = [];
 
 				for (let i = 3; i < data.length; i++) {
 					const vin = (data[i][vin_col] || "").trim().toUpperCase();
 					if (!vin) continue;
 					if (existing_vins.includes(vin)) continue;
 
+					const stock_info = stock_map[vin];
+					if (!stock_info) {
+						if (!missing_vins.includes(vin)) missing_vins.push(vin);
+						continue;
+					}
+
 					const row = frm.add_child("recall_campaign_vehicles");
 					row.vin_serial_no = vin;
+					row.model_code = stock_info.model;
+					row.series_code = stock_info.series;
 					existing_vins.push(vin);
 					added++;
 				}
 
 				frm.refresh_field("recall_campaign_vehicles");
-				frappe.msgprint({
+
+				frappe.show_alert({
 					message: __(`${added} vehicles added`),
-					title: __("Success"),
 					indicator: "green"
 				});
+
+				if (missing_vins.length) {
+					frappe.msgprint({
+						title: __("VINs Not Added"),
+						message: __(
+							"The following VINs were not added because they do not exist in Vehicle Stock:<br><br>{0}",
+							[missing_vins.join("<br>")]
+						),
+						indicator: "orange"
+					});
+				}
 			}
 		});
 		return false;

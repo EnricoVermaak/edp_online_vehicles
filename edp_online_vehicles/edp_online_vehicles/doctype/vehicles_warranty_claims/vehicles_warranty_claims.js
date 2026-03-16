@@ -232,7 +232,6 @@ frappe.ui.form.on("Vehicles Warranty Claims", {
 					cameraContainer.innerHTML = "";
 				}
 				if (err && !(err instanceof ZXing.NotFoundException)) {
-					console.error(err);
 					frappe.msgprint("Scanning error: " + err);
 				}
 			});

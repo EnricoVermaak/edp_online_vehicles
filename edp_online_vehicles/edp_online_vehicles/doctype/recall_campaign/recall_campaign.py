@@ -19,18 +19,24 @@ class RecallCampaign(Document):
 			plan.warranty_period_months = 0
 			plan.warranty_odo_limit = 0
 
-			if frappe.db.exists("Vehicles Warranty Plan Type", "Recall Campaign"):
-				plan.warranty_type = "Recall Campaign"
-			
+			plan_type = frappe.db.exists(
+				"Vehicles Warranty Plan Type",
+				{"description": "Recall Campaign"}
+			)
+
+			if plan_type:
+				plan.warranty_type = plan_type
+
 			else:
-				frappe.get_doc({
+				new_type = frappe.get_doc({
 					"doctype": "Vehicles Warranty Plan Type",
 					"name": "Recall Campaign",
 					"description": "Recall Campaign",
-				}).insert(ignore_permissions=True)
+				})
+				new_type.insert(ignore_permissions=True)
 
 				frappe.db.commit()
-				plan.warranty_type = "Recall Campaign"
+				plan.warranty_type = new_type.name
 
 			for part in self.recall_campaign_parts or []:
 				if part.item:
