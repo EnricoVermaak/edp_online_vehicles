@@ -38,6 +38,7 @@
   "vehicle_order_no_prefix",
   "apply_fifo_rule_on_vehicles_orders",
   "allow_dealer_to_dealer_orders",
+  "auto_generate_dealer_reference_number",
   "allow_stock_allocation_on_invoice_paid",
   "automatically_submit_main_equipment_order_document",
   "display_floorplan",
@@ -456,13 +457,20 @@
    "fieldname": "interface_code",
    "fieldtype": "Data",
    "label": "Interface Code"
+  },
+  {
+   "default": "0",
+   "description": "If selected, dealer reference numbers will be generated with correct incrementation.",
+   "fieldname": "auto_generate_dealer_reference_number",
+   "fieldtype": "Check",
+   "label": "Automatically generate Dealer Reference Numbers"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2026-02-24 09:42:37.582398",
+ "modified": "2026-03-17 09:50:54.320282",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicle Stock Settings",

@@ -66,9 +66,11 @@ def check_and_update_odo(vin_serial_no, odo_reading_hours):
 		)
 		frm.set_value("odo_reading_hours", null)  # Clear the invalid input
 
-	# Update stock if new reading is higher
 	if odo_reading_hours > stock_odo:
-		frappe.db.set_value("Vehicle Stock", vin_serial_no, "odo_reading", odo_reading_hours)
+		stock_doc = frappe.get_doc("Vehicle Stock", vin_serial_no)
+		stock_doc.odo_reading = odo_reading_hours
+		stock_doc.flags.ignore_version = True
+		stock_doc.save(ignore_permissions=True)
 
 	return {
 		"status": "success",
@@ -85,7 +87,10 @@ def update_vehicle_stock(doc, method):
 		stock_odo = frappe.get_value("Vehicle Stock", doc.vin_serial_no, "odo_reading") or 0
 
 		if doc.odo_reading_hours > stock_odo:
-			frappe.db.set_value("Vehicle Stock", doc.vin_serial_no, "odo_reading", doc.odo_reading_hours)
+			stock_doc = frappe.get_doc("Vehicle Stock", doc.vin_serial_no)
+			stock_doc.odo_reading = doc.odo_reading_hours
+			stock_doc.flags.ignore_version = True
+			stock_doc.save(ignore_permissions=True)
 		
 
 

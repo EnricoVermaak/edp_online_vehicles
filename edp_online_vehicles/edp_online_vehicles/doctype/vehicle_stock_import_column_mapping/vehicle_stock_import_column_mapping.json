@@ -1,0 +1,48 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2026-03-09 12:00:00.000000",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "import_layout_title",
+  "csv_column_name",
+  "vehicle_stock_field"
+ ],
+ "fields": [
+  {
+   "fieldname": "import_layout_title",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Import Layout Title",
+   "description": "Label for this template (e.g. DMS, Evolve). Becomes the sub-button under Upload Import."
+  },
+  {
+   "fieldname": "csv_column_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "CSV Column Name",
+   "description": "Exact column header as it appears in the CSV"
+  },
+  {
+   "fieldname": "vehicle_stock_field",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Vehicle Stock / Shipment Field",
+   "options": "vin_serial_no\nengine_no\nstock_no\nalternative_stock_no\nmodel\nmodel_code\ndescription\nbrand\ncatagory\nrange\nseries\nmodel_year\ncolour\ninterior_colour\ncost_price_excl\ndealer_billing_excl\nsuggested_retail_excl\ncondition\ncurrent_location\nmm_code\nnsc_no\nnatis_code\nmicrodot\nregister_no\nodo_reading\ncontainer_no\nframe_no\njet_no\nho_invoice_no\nho_invoice_date\nho_invoice_amt\nvessel_name\nshipment_file_no\ntarget_warehouse\neta_harbour\neta_warehouse\ndealer\nho_date_received"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2026-03-09 12:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Edp Online Vehicles",
+ "name": "Vehicle Stock Import Column Mapping",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

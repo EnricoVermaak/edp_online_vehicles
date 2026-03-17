@@ -22,28 +22,47 @@ def check_odo_limit(vin_serial_no, odo_reading):
 @frappe.whitelist()
 def check_clor(vin):
     if not vin:
-        return []
+        return {"allowed_items": [], "has_active_warranty_plan": False}
 
     linked = frappe.get_all(
         "Vehicle Linked Warranty Plan",
-        filters={"vin_serial_no": vin},
+        filters={"vin_serial_no": vin, "status": "Active"},
         fields=["warranty_plan"]
     )
 
     if not linked:
-        return []
-
-    warranty_plan = linked[0].warranty_plan
-    plan_doc = frappe.get_doc(
-        "Vehicles Warranty Plan Administration",
-        warranty_plan
-    )
+        return {"allowed_items": [], "has_active_warranty_plan": False}
 
     items_list = []
-    for row in plan_doc.items:
-        items_list.append(row.item)
+    has_active_warranty_plan = False
 
-    return items_list
+    for linked_plan in linked:
+        if not linked_plan.warranty_plan:
+            continue
+
+        plan_status = frappe.db.get_value(
+            "Vehicles Warranty Plan Administration",
+            linked_plan.warranty_plan,
+            "status",
+        )
+
+        if plan_status != "Active":
+            continue
+
+        has_active_warranty_plan = True
+        plan_doc = frappe.get_doc(
+            "Vehicles Warranty Plan Administration",
+            linked_plan.warranty_plan,
+        )
+
+        for row in plan_doc.items:
+            if row.item and row.item not in items_list:
+                items_list.append(row.item)
+
+    return {
+        "allowed_items": items_list,
+        "has_active_warranty_plan": has_active_warranty_plan,
+    }
 
 @frappe.whitelist()
 def check_duplicate_part(vin, part_no, current_claim=None):
@@ -154,15 +173,18 @@ def validate_odo_reading(vin_serial_no, odo_reading_hours, doctype = None, docna
 
 # Save the service odometer reading back to the linked Vehicle Stock record (Not implemented will do later as hook?)
 @frappe.whitelist()
-def update_vehicle_stock_odo(vin_serial_no, odo_reading_hours, doctype = None, docname = None):
-        if vin_serial_no and odo_reading_hours:
-            stock_odo = frappe.db.get_value("Vehicle Stock", vin_serial_no, "odo_reading") or 0
+def update_vehicle_stock_odo(vin_serial_no, odo_reading_hours, doctype=None, docname=None):
+    if not vin_serial_no or not odo_reading_hours:
+        return
 
-        # Check if rollback is allowed
-        rollback = rollback_allowed(doctype, docname)
+    stock_odo = frappe.db.get_value("Vehicle Stock", vin_serial_no, "odo_reading") or 0
+    rollback = rollback_allowed(doctype, docname)
 
-        if (odo_reading_hours > stock_odo) or rollback:
-            frappe.db.set_value("Vehicle Stock", vin_serial_no, "odo_reading", odo_reading_hours)
+    if (odo_reading_hours > stock_odo) or rollback:
+        stock_doc = frappe.get_doc("Vehicle Stock", vin_serial_no)
+        stock_doc.odo_reading = odo_reading_hours
+        stock_doc.flags.ignore_version = True
+        stock_doc.save(ignore_permissions=True)
 
 # Confirm if ODO rollback is allowed based on settings for each doctype	
 def rollback_allowed(doctype=None, docname=None):

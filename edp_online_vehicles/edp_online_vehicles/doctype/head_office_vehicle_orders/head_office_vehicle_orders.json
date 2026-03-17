@@ -336,7 +336,6 @@
   {
    "fieldname": "requested_delivery_date",
    "fieldtype": "Date",
-   "hidden": 1,
    "label": "Requested Delivery Date",
    "read_only": 1
   },

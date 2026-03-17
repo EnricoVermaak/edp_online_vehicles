@@ -125,8 +125,11 @@
   "summary_total_excl",
   "booking_name",
   "show_prices_for_vehicles_service",
+  "dms_integration_section",
+  "dms_error_message",
   "attach_document_tab",
-  "attach_documents"
+  "attach_documents",
+  "connections_tab"
  ],
  "fields": [
   {
@@ -835,6 +838,19 @@
    "label": " Show prices for Vehicles Service"
   },
   {
+   "collapsible": 1,
+   "fieldname": "dms_integration_section",
+   "fieldtype": "Section Break",
+   "label": "DMS Integration"
+  },
+  {
+   "fieldname": "dms_error_message",
+   "fieldtype": "Small Text",
+   "label": "DMS Error Message",
+   "permlevel": 1,
+   "read_only": 1
+  },
+  {
    "fieldname": "attach_document_tab",
    "fieldtype": "Tab Break",
    "label": "Attach Document"
@@ -849,6 +865,11 @@
    "fieldname": "vehicle_registration_number",
    "fieldtype": "Data",
    "label": "Vehicle Registration No"
+  },
+  {
+   "fieldname": "connections_tab",
+   "fieldtype": "Tab Break",
+   "label": "Connections"
   }
  ],
  "index_web_pages_for_search": 1,
@@ -868,7 +889,7 @@
    "link_fieldname": "services"
   }
  ],
- "modified": "2026-03-12 11:59:34.259143",
+ "modified": "2026-03-16 13:42:45.194675",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicles Service",

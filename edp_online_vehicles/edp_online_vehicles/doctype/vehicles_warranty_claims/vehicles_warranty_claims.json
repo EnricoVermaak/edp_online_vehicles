@@ -19,6 +19,7 @@
   "submitted_to_dms",
   "column_break_hsbt",
   "dealer",
+  "dms_approval_no",
   "date_of_failure",
   "status",
   "type",
@@ -99,6 +100,8 @@
   "head_office_invoice",
   "technician_invoice",
   "approval_letter",
+  "dms_integration_section",
+  "dms_error_message",
   "tab_break_wcj7",
   "terms_and_conditions",
   "technician_and_customer_section",
@@ -195,6 +198,11 @@
    "label": "Dealer",
    "options": "Company",
    "reqd": 1
+  },
+  {
+   "fieldname": "dms_approval_no",
+   "fieldtype": "Data",
+   "label": "DMS Approval No"
   },
   {
    "fieldname": "date_of_failure",
@@ -637,6 +645,19 @@
    "fieldname": "approval_letter",
    "fieldtype": "Attach",
    "label": "Approval Letter"
+  },
+  {
+   "collapsible": 1,
+   "fieldname": "dms_integration_section",
+   "fieldtype": "Section Break",
+   "label": "DMS Integration"
+  },
+  {
+   "fieldname": "dms_error_message",
+   "fieldtype": "Small Text",
+   "label": "DMS Error Message",
+   "permlevel": 1,
+   "read_only": 1
   },
   {
    "fieldname": "tab_break_wcj7",

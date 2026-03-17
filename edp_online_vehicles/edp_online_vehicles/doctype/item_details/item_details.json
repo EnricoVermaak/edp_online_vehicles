@@ -1,0 +1,139 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2026-03-13 16:10:57.874598",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_fvzt",
+  "item_code",
+  "item_description",
+  "column_break_zxgv",
+  "item_group",
+  "bin_location",
+  "uom",
+  "section_break_qkve",
+  "table_item_price_lists",
+  "section_break_icrn",
+  "service_gp",
+  "column_break_xcza",
+  "warranty_gp",
+  "section_break_xikd",
+  "column_break_rsni",
+  "create_item_button"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_fvzt",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "item_code",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Item Code",
+   "reqd": 1
+  },
+  {
+   "fieldname": "item_description",
+   "fieldtype": "Small Text",
+   "in_list_view": 1,
+   "label": "Item Description",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_zxgv",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "item_group",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Item Group",
+   "options": "Item Group",
+   "reqd": 1
+  },
+  {
+   "fieldname": "bin_location",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Bin Location"
+  },
+  {
+   "fieldname": "uom",
+   "fieldtype": "Link",
+   "label": "UOM",
+   "options": "UOM",
+   "reqd": 1
+  },
+  {
+   "fieldname": "section_break_qkve",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "table_item_price_lists",
+   "fieldtype": "Table",
+   "label": "Item Price Lists",
+   "options": "Items Details Price Lists",
+   "reqd": 1
+  },
+  {
+   "fieldname": "section_break_icrn",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "service_gp",
+   "fieldtype": "Percent",
+   "label": "Service GP %"
+  },
+  {
+   "fieldname": "column_break_xcza",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "warranty_gp",
+   "fieldtype": "Percent",
+   "label": "Warranty GP %"
+  },
+  {
+   "fieldname": "section_break_xikd",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_rsni",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "create_item_button",
+   "fieldtype": "Button",
+   "label": "Create Item"
+  }
+ ],
+ "grid_page_length": 50,
+ "hide_toolbar": 1,
+ "index_web_pages_for_search": 1,
+ "issingle": 1,
+ "links": [],
+ "modified": "2026-03-16 15:37:43.530704",
+ "modified_by": "Administrator",
+ "module": "Edp Online Vehicles",
+ "name": "Item Details",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

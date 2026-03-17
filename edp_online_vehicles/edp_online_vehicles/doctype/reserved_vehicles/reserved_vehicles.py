@@ -45,5 +45,9 @@ class ReservedVehicles(Document):
 			self.total_days = days_between
    
 	def on_insert(self):
-		frappe.db.set_value("Vehicle Stock", self.vin_serial_no, "availability_status", "Reserved")
+		if frappe.db.exists("Vehicle Stock", self.vin_serial_no):
+			stock_doc = frappe.get_doc("Vehicle Stock", self.vin_serial_no)
+			stock_doc.availability_status = "Reserved"
+			stock_doc.flags.ignore_version = True
+			stock_doc.save(ignore_permissions=True)
 		frappe.db.commit()

@@ -2,9 +2,26 @@
 // For license information, please see license.txt
 
 frappe.ui.form.on("Vehicle Order", {
+	onload: function(frm) {
+		// Only auto-fill for new docs
+		if (!frm.is_new()) return;
 
-	onload(frm, dt, dn) {
-		// Fetch and set company address on form load
+		// Auto-generate Dealer Reference Number if checkbox enabled
+		frappe.db.get_single_value(
+			"Vehicle Stock Settings",
+			"auto_generate_dealer_reference_number"
+		).then(enabled => {
+			if (!enabled) return;
+			//calling the function in the vehicle.order.py. Needs the whole path cuz of something about the function not being in app.py
+			frappe.call({
+			method: "edp_online_vehicles.edp_online_vehicles.doctype.vehicle_order.vehicle_order.generate_dealer_reference_number",
+				callback: function(r) {
+					if (r.message) {
+						frm.set_value("dealer_order_no", r.message);
+					}
+				}
+			});
+		});
 		if (frm.is_new()) {
 			// frm.doc.dealer = frappe.defaults.get_default("company");
 
@@ -34,7 +51,6 @@ frappe.ui.form.on("Vehicle Order", {
 					}
 				},
 			});
-
 			// Initialize the HTML table for floorplan options
 			frappe.call({
 				method: "frappe.client.get",
@@ -53,11 +69,11 @@ frappe.ui.form.on("Vehicle Order", {
 						(company_data.custom_floorplan_options || []).forEach(
 							function (row) {
 								table_html += `<tr id="row-${row.bank.replace(/\s+/g, "_")}">
-                                <td>${row.bank}</td>
-                                <td>${row.balance}</td>
-                                <td class="total-field">0</td>
-                                <td class="remaining-field">0</td>
-                            </tr>`;
+								<td>${row.bank}</td>
+								<td>${row.balance}</td>
+								<td class="total-field">0</td>
+								<td class="remaining-field">0</td>
+							</tr>`;
 							},
 						);
 
@@ -131,11 +147,11 @@ frappe.ui.form.on("Vehicle Order", {
 						(company_data.custom_floorplan_options || []).forEach(
 							function (row) {
 								table_html += `<tr id="row-${row.bank.replace(/\s+/g, "_")}">
-                                <td>${row.bank}</td>
-                                <td>${row.balance}</td>
-                                <td class="total-field">0</td>
-                                <td class="remaining-field">0</td>
-                            </tr>`;
+								<td>${row.bank}</td>
+								<td>${row.balance}</td>
+								<td class="total-field">0</td>
+								<td class="remaining-field">0</td>
+							</tr>`;
 							},
 						);
 
@@ -430,18 +446,18 @@ frappe.ui.form.on("Vehicle Order", {
 			// Clear the storage to prevent re-using the data
 			localStorage.removeItem("vehicle_order_model_data");
 		}
-		frappe.db
-			.get_single_value(
-				"Vehicle Stock Settings",
-				"allow_scheduled_orders",
-			)
-			.then((allow_scheduled_orders) => {
-				if (allow_scheduled_orders === 0) {
-					frm.set_df_property("order_date_time", "read_only", 1);
-					frm.refresh_field("order_date_time");
+		frappe.db.get_single_value("Vehicle Stock Settings", "allow_scheduled_orders")
+		.then((allow_scheduled_orders) => {
+			if (allow_scheduled_orders === 0) {
+				// Ensure value exists
+				if (!frm.doc.order_date_time) {
+					frm.set_value("order_date_time", frappe.datetime.now_datetime());
 				}
-			});
-	},
+				// Set read-only without refresh
+				frm.set_df_property("order_date_time", "read_only", 1);
+			}
+		});
+},
 
 	finance_option(frm) {
 		if (frm.doc.finance_option == "Floorplan") {
@@ -476,11 +492,11 @@ frappe.ui.form.on("Vehicle Order", {
 											/\s+/g,
 											"_",
 										)}">
-                                            <td>${row.bank}</td>
-                                            <td>${row.balance}</td>
-                                            <td class="total-field">0</td>
-                                            <td class="remaining-field">0</td>
-                                        </tr>`;
+											<td>${row.bank}</td>
+											<td>${row.balance}</td>
+											<td class="total-field">0</td>
+											<td class="remaining-field">0</td>
+										</tr>`;
 									});
 
 									table_html += "</tbody></table>";
@@ -729,30 +745,52 @@ frappe.ui.form.on("Vehicle Order", {
 
 		frm.refresh_field("mandatory_documents");
 
-		frm.fields_dict["dealer_order_no"].$input &&
-			frm.fields_dict["dealer_order_no"].$input.on("blur", function () {
-				const dealer_order_no = frm.doc.dealer_order_no;
+		// frappe.ui.form.on("Vehicle Order", {
+		// 	refresh: function (frm) {
+		// 		// Only for new docs
+		// 		if (!frm.is_new()) return;
 
-				if (dealer_order_no) {
-					frappe.call({
-						method: "edp_online_vehicles.events.check_order_no.check_dealer_order_no",
-						args: {
-							order_no: frm.doc.dealer_order_no,
-							ordering_dealer: frm.doc.dealer,
-						},
-						callback: function (r) {
-							if (r.message) {
-								if (r.message == "True") {
-									frm.set_value("dealer_order_no", "");
-									frappe.msgprint(
-										"Entered dealer order number already used in another order. Please enter a unique dealer order number.",
-									);
-								}
-							}
-						},
-					});
-				}
-			});
+		// 		frappe.db.get_single_value(
+		// 			"Vehicle Stock Settings",
+		// 			"auto_generate_dealer_reference_number"
+		// 		).then(enabled => {
+		// 			if (!enabled) return;
+
+		// 			frappe.call({
+		// 				method: "edp_online_vehicles.events.check_order_no.generate_dealer_order_no",
+		// 				callback: function (r) {
+		// 					if (r.message) {
+		// 						frm.set_value("dealer_order_no", r.message);
+		// 					}
+		// 				}
+		// 			});
+		// 		});
+		// 	}
+		// });
+		// frm.fields_dict["dealer_order_no"].$input &&
+		// 	frm.fields_dict["dealer_order_no"].$input.on("blur", function () {
+		// 		const dealer_order_no = frm.doc.dealer_order_no;
+
+		// 		if (dealer_order_no) {
+		// 			frappe.call({
+		// 				method: "edp_online_vehicles.events.check_order_no.check_dealer_order_no",
+		// 				args: {
+		// 					order_no: frm.doc.dealer_order_no,
+		// 					ordering_dealer: frm.doc.dealer,
+		// 				},
+		// 				callback: function (r) {
+		// 					if (r.message) {
+		// 						if (r.message == "True") {
+		// 							frm.set_value("dealer_order_no", "");
+		// 							frappe.msgprint(
+		// 								"Entered dealer order number already used in another order. Please enter a unique dealer order number.",
+		// 							);
+		// 						}
+		// 					}
+		// 				},
+		// 			});
+		// 		}
+		// 	});
 
 		$(document).on("click", ".btn-clear", function (e) {
 			let cdn = $(this).closest(".grid-row").attr("data-name");
@@ -934,13 +972,13 @@ frappe.ui.form.on("Vehicle Order", {
 			const summaryRows = Object.values(groups)
 				.map(
 					(g) => `
-                <tr>
-                    <td>${g.model}</td>
-                    <td>${g.description}</td>
-                    <td>${g.colour}</td>
-                    <td>${g.rows.length}</td>
-                </tr>
-            `,
+				<tr>
+					<td>${g.model}</td>
+					<td>${g.description}</td>
+					<td>${g.colour}</td>
+					<td>${g.rows.length}</td>
+				</tr>
+			`,
 				)
 				.join("");
 
@@ -953,13 +991,13 @@ frappe.ui.form.on("Vehicle Order", {
 							? "text-danger"
 							: "";
 					return `
-                <tr class="${danger}">
-                    <td>${row.model}</td>
-                    <td>${row.description}</td>
-                    <td>${row.colour}</td>
-                    <td>${row.purpose}</td>
-                    <td>${row.order_from}</td>
-                </tr>`;
+				<tr class="${danger}">
+					<td>${row.model}</td>
+					<td>${row.description}</td>
+					<td>${row.colour}</td>
+					<td>${row.purpose}</td>
+					<td>${row.order_from}</td>
+				</tr>`;
 				})
 				.join("");
 
@@ -972,41 +1010,41 @@ frappe.ui.form.on("Vehicle Order", {
 
 					// build the full HTML, now including Dealer Details
 					const html = `
-                    <h4>${__("Dealer Details")}</h4>
-                    <p>
-                        ${__("Dealer Name")}: ${comp_name}<br>
-                        ${__("Dealer Code")}: ${comp_code}
-                    </p>
+					<h4>${__("Dealer Details")}</h4>
+					<p>
+						${__("Dealer Name")}: ${comp_name}<br>
+						${__("Dealer Code")}: ${comp_code}
+					</p>
 
-                    <br>
+					<br>
 
-                    <h4>${__("Summary")}</h4>
-                    <table class="table table-bordered mb-4">
-                        <thead>
-                            <tr>
-                                <th>${__("Model")}</th>
-                                <th>${__("Description")}</th>
-                                <th>${__("Colour")}</th>
-                                <th>${__("Qty")}</th>
-                            </tr>
-                        </thead>
-                        <tbody>${summaryRows}</tbody>
-                    </table>
+					<h4>${__("Summary")}</h4>
+					<table class="table table-bordered mb-4">
+						<thead>
+							<tr>
+								<th>${__("Model")}</th>
+								<th>${__("Description")}</th>
+								<th>${__("Colour")}</th>
+								<th>${__("Qty")}</th>
+							</tr>
+						</thead>
+						<tbody>${summaryRows}</tbody>
+					</table>
 
-                    <h4>${__("Vehicles")}</h4>
-                    <table class="table table-bordered">
-                        <thead>
-                            <tr>
-                                <th>${__("Model")}</th>
-                                <th>${__("Description")}</th>
-                                <th>${__("Colour")}</th>
-                                <th>${__("Purpose")}</th>
-                                <th>${__("Order From")}</th>
-                            </tr>
-                        </thead>
-                        <tbody>${vehicleRows}</tbody>
-                    </table>
-                `;
+					<h4>${__("Vehicles")}</h4>
+					<table class="table table-bordered">
+						<thead>
+							<tr>
+								<th>${__("Model")}</th>
+								<th>${__("Description")}</th>
+								<th>${__("Colour")}</th>
+								<th>${__("Purpose")}</th>
+								<th>${__("Order From")}</th>
+							</tr>
+						</thead>
+						<tbody>${vehicleRows}</tbody>
+					</table>
+				`;
 
 					// now create & show your dialog
 					const dlg = new frappe.ui.Dialog({

@@ -19,7 +19,7 @@ def find_and_link_open_booking(vin_serial_no, current_service_name=None):
             "status": ["in", open_statuses]
         },
         fields=["name", "status", "requested_booking_date_time", "dealer", "service_type",
-                "vin_serial_no", "model", "engine_no", "odo_reading_hours", "customer",
+                "vin_serial_no", "model", "odo_reading_hours", "customer",
                 "customer_full_name", "mobile", "service_notes"],
         order_by="creation desc",
         limit_page_length=1

@@ -106,7 +106,7 @@ frappe.ui.form.on("Vehicles Warranty Claims", {
 			});
 
 		frm.add_custom_button(__("Sales Order"), () => {
-			if (!frm.doc.parts.length > 0) {
+			if (frm.doc.part_items.length === 0) {
 				frappe.throw("Please Enter data in parts child table first");
 			} else if (!frm.doc.part_schedule_date) {
 				frappe.throw("Please select a Scheduled Delivery Date under Parts Table");
@@ -120,7 +120,7 @@ frappe.ui.form.on("Vehicles Warranty Claims", {
 		}, __("Create"));
 
 		frm.add_custom_button("Material Request", () => {
-			if (!frm.doc.service_parts_items.length > 0 && !frm.doc.service_labour_items.length > 0) {
+			if (!frm.doc.part_items.length === 0 && frm.doc.labour_items.length === 0) {
 				frappe.throw("Please Enter data in child tables first");
 			} else if (!frm.doc.part_schedule_date) {
 				frappe.throw("Please select a Scheduled Delivery Date under Parts Table");
@@ -128,7 +128,8 @@ frappe.ui.form.on("Vehicles Warranty Claims", {
 				frappe.call({
 					method: "edp_online_vehicles.events.create_material_request.create_material_request_warranty",
 					args: { docname: frm.doc.name },
-					callback: function (r) { if (r.message) frappe.msgprint(r.message); },
+					callback: function (r) { if (r.message) frappe.msgprint(r.message);
+					},
 				});
 			}
 		}, "Create");
@@ -232,7 +233,6 @@ frappe.ui.form.on("Vehicles Warranty Claims", {
 					cameraContainer.innerHTML = "";
 				}
 				if (err && !(err instanceof ZXing.NotFoundException)) {
-					console.error(err);
 					frappe.msgprint("Scanning error: " + err);
 				}
 			});
@@ -245,7 +245,7 @@ frappe.ui.form.on("Vehicles Warranty Claims", {
 			frappe.db.get_doc("Vehicles Incidents", frm.doc.vehicles_incidents).then((doc) => {
 				for (let row of doc.parts) {
 					frm.add_child("part_items", {
-						part_no: row.item || "", description: row.description || "",
+						part_no: row.items || "", description: row.description || "",
 						qty: row.qty || 0, price: row.price_excl || 0, uom: row.uom || "",
 					});
 				}
@@ -404,7 +404,10 @@ frappe.ui.form.on("Vehicles Warranty Claims", {
 		frappe.call({
 			method: "edp_online_vehicles.events.change_vehicles_status.warranty_status_change",
 			args: { vinno: frm.doc.vin_serial_no, status: frm.doc.status },
-			callback: function (r) { if (r.message) frappe.msgprint(r.message); },
+			callback: function (r) { if (r.message) frappe.msgprint(r.message);
+				frm.reload_doc();
+
+			},
 		});
 		frappe.db.get_doc("Vehicles Warranty Settings", frm.doc.convert_out_of_warranty_to_goodwill).then(convert_out_of_warranty_to_goodwill => {
 			if (convert_out_of_warranty_to_goodwill) {
@@ -573,14 +576,15 @@ function reapply_colors(frm) {
 		method: "edp_online_vehicles.events.odo.check_clor",
 		args: { vin: frm.doc.vin_serial_no },
 		callback(r) {
-			let allowed_items = r.message || [];
+			let allowed_items = r.message?.allowed_items || [];
+			let has_active_warranty_plan = !!r.message?.has_active_warranty_plan;
 			let grid = frm.fields_dict['part_items'].grid;
 			if (!grid) return;
 			grid.grid_rows.forEach(gr => {
 				let color = "";
 				if (gr.doc.system_note && gr.doc.system_note.startsWith("Duplicate Parts Found")) {
 					color = "#ffcc99";
-				} else if (gr.doc.part_no && !allowed_items.includes(gr.doc.part_no)) {
+				} else if (gr.doc.part_no && (!has_active_warranty_plan || !allowed_items.includes(gr.doc.part_no))) {
 					color = "#ffdddd";
 				}
 				set_row_color(frm, gr.doc, color);
@@ -595,12 +599,13 @@ function validate_part_item(frm, row) {
 		method: "edp_online_vehicles.events.odo.check_clor",
 		args: { vin: frm.doc.vin_serial_no },
 		callback(r) {
-			let allowed_items = r.message || [];
+			let allowed_items = r.message?.allowed_items || [];
+			let has_active_warranty_plan = !!r.message?.has_active_warranty_plan;
 			if (row.system_note && row.system_note.startsWith("Duplicate Parts Found")) {
 				set_row_color(frm, row, "#ffcc99");
 				return;
 			}
-			if (!allowed_items.includes(row.part_no)) {
+			if (!has_active_warranty_plan || !allowed_items.includes(row.part_no)) {
 				set_row_color(frm, row, "#ffdddd");
 				frappe.model.set_value(row.doctype, row.name, "system_note", "Part Not Covered");
 			} else {
