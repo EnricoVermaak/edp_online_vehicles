@@ -10,19 +10,29 @@ frappe.ui.form.on("Part Picking Slip", {
 					doc.part_order_no = frm.doc.part_order_no;
 					doc.ordered_by_user = frappe.session.user;
 					doc.part_order_date_time = frm.doc.ordered_on_datetime;
-					let total_qty_delivered = 0 
-					for (let child of frm.doc.table_qoik){
-							var row = frappe.model.add_child(
-								doc,
-								"delivery_note_item",
-							);
-							row.part_no = child.part_no;
-							row.description = child.description;
-							row.qty_ordered = child.qty_ordered;
-							row.qty_delivered = child.qty_picked;
-							row.outstanding_qty = child.outstanding_qty;
-							total_qty_delivered += parseInt(child.qty_picked);
+					let total_qty_delivered = 0;
+					for (let child of frm.doc.table_qoik) {
+						if (!child.qty_picked || child.qty_picked <= 0) {
+							continue;
 						}
+
+						var row = frappe.model.add_child(
+							doc,
+							"delivery_note_item",
+						);
+						row.part_no = child.part_no;
+						row.description = child.description;
+						row.qty_ordered = child.qty_ordered;
+						row.qty_delivered = child.qty_picked;
+						row.outstanding_qty = child.outstanding_qty;
+						total_qty_delivered += cint(child.qty_picked);
+					}
+
+					if (!(doc.delivery_note_item || []).length) {
+						frappe.msgprint(__("No picked items with quantity greater than zero were found."));
+						return;
+					}
+
 					doc.total_qty_delivered = total_qty_delivered;
 					frappe.set_route("Form", doc.doctype, doc.name);
 				}); 

@@ -3,21 +3,42 @@
 
 frappe.ui.form.on("HQ Part Order", {
 	refresh(frm) {
-		if(!frm.is_new() && frappe.user.has_role("Parts Adminstrator")){
-			frm.add_custom_button("Create Part Picking Slip", function () {
-				frappe.model.with_doctype("Part Picking Slip", function () {
-					var doc = frappe.model.get_new_doc("Part Picking Slip");
-					doc.part_order_no = frm.doc.name
-					for (let child of frm.doc.table_ugma){
-						var row = frappe.model.add_child(
-							doc,
-							"table_qoik",
-						);
-						row.part_no = child.part_no;
-					}
-					frappe.set_route("Form", doc.doctype, doc.name);
+		if(!frm.is_new()){
+			if(frappe.user.has_role("Parts Adminstrator") || frappe.user.has_role("Administrator")){
+				frm.add_custom_button("Create Part Picking Slip", function () {
+					frappe.model.with_doctype("Part Picking Slip", function () {
+						var doc = frappe.model.get_new_doc("Part Picking Slip");
+						doc.part_order_no = frm.doc.name;
+
+						for (let child of frm.doc.table_qmpy || []) {
+							let outstanding = (child.qty_ordered || 0) - (child.qty_delivered || 0);
+							if (outstanding <= 0) {
+								continue;
+							}
+
+							var row = frappe.model.add_child(
+								doc,
+								"table_qoik",
+							);
+							row.part_no = child.part_no;
+							row.description = child.part_description;
+							row.qty_ordered = child.qty_ordered;
+							row.outstanding_qty = outstanding;
+						}
+
+						if (!(doc.table_qoik || []).length) {
+							frappe.msgprint(__("No outstanding parts remain to pick."));
+							return;
+						}
+
+						frappe.set_route("Form", doc.doctype, doc.name);
+					});
 				});
-			});
+			};
+						
+			// Show Submit to DMS button
+			frm.add_custom_button(__("Submit to DMS"), function () {
+			}, __("Action"));
 		}
 	},
 

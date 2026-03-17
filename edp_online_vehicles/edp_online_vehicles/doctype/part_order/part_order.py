@@ -67,6 +67,10 @@ class PartOrder(Document):
                     if key in avsu_quantities:
                         row.qty_ordered = avsu_quantities[key]
 
+        # If order_type is Warranty, warranty_claim must be set
+        if self.order_type == "Warranty" and not self.warranty_claim:
+            frappe.throw("Warranty Claim is required for Warranty orders.")
+
     def on_submit(self):
         # Filter the child rows that come from a Warehouse
         warehouse_items = [

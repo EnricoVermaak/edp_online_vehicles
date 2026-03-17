@@ -3,6 +3,7 @@
 
 import frappe
 from frappe.model.document import Document
+from frappe.utils import flt
 
 
 class PartPickingSlip(Document):
@@ -84,18 +85,35 @@ class PartPickingSlip(Document):
 		pick_list.company = so.company
 		pick_list.purpose = "Delivery"
 
+		picked_map = {}
+		for row in self.table_qoik:
+			if not row.part_no or not row.qty_picked or row.qty_picked <= 0:
+				continue
+			picked_map[row.part_no] = picked_map.get(row.part_no, 0) + row.qty_picked
+
 		for item in so.items:
+			picked_qty = picked_map.get(item.item_code, 0)
+			if picked_qty <= 0:
+				continue
+
+			allocated_qty = min(picked_qty, item.qty)
 			pick_list.append("locations", {
 				"item_code": item.item_code,
 				"qty": item.qty,
-				"stock_qty": item.qty,
-				"picked_qty": 0,
+				"stock_qty": allocated_qty,
+				"picked_qty": allocated_qty,
 				"stock_uom": item.stock_uom,
 				"uom": item.uom,
 				"conversion_factor": item.conversion_factor or 1,
 				"warehouse": item.warehouse,
 				"sales_order": so.name,
 				"sales_order_item": item.name,
-				"item_name": item.item_name,})
+				"item_name": item.item_name,
+			})
+			picked_map[item.item_code] = max(picked_qty - allocated_qty, 0)
+
+		if not pick_list.locations:
+			frappe.throw("No picked items with quantity greater than zero were found")
+
 		pick_list.save()
 		pick_list.submit()

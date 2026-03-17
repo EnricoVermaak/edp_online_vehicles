@@ -406,7 +406,7 @@ class PartsDeliveryNote(Document):
 		for row in self.delivery_note_item:
 			dn.append("items", {
 				"item_code": row.part_no,
-				"qty": row.qty_ordered,
+				"qty": row.qty_delivered,
     			"custom_qty_delivered": row.qty_delivered,
 				"warehouse": dealer_warehouse,
 			})
