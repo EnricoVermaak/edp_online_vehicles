@@ -87,7 +87,6 @@ class VehicleStock(Document):
 
         if conversion_records:
             self.model_conversion_date = conversion_records[0].conversion_date
-            frappe.db.set_value("Vehicle Stock", self.name, "model_conversion_date", self.model_conversion_date, update_modified=False)
 
     def on_update(self):
         self._handle_deleted_warranty_plans()
@@ -311,6 +310,9 @@ def set_vehicle_received_date(doc, method=None):
                 if frappe.db.exists("Vehicle Stock", item.serial_no):
                     existing_date = frappe.db.get_value("Vehicle Stock", item.serial_no, "ho_date_received")
                     if not existing_date:
-                        frappe.db.set_value("Vehicle Stock", item.serial_no, "ho_date_received", doc.posting_date, update_modified=False)
+                        stock_doc = frappe.get_doc("Vehicle Stock", item.serial_no)
+                        stock_doc.ho_date_received = doc.posting_date
+                        stock_doc.flags.ignore_version = True
+                        stock_doc.save(ignore_permissions=True)
                         frappe.logger().info(f"Set HO received date for VIN {item.serial_no}: {doc.posting_date}")
 

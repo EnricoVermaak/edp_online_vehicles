@@ -22,30 +22,32 @@ function show_already_retailed_message(frm) {
 
 frappe.ui.form.on("Vehicle Stock", {
 	refresh: function (frm) {
-		frm.add_custom_button(
-			"Retail Vehicle",
-			function () {
-				if (is_vehicle_already_retailed(frm)) {
-					show_already_retailed_message(frm);
-					return;
-				}
-				frappe.model.with_doctype("Vehicle Retail", function () {
-					var doc = frappe.model.get_new_doc("Vehicle Retail");
+		if (frm.doc.availability_status === "Available") {
+			frm.add_custom_button(
+				"Retail Vehicle",
+				function () {
+					if (is_vehicle_already_retailed(frm)) {
+						show_already_retailed_message(frm);
+						return;
+					}
+					frappe.model.with_doctype("Vehicle Retail", function () {
+						var doc = frappe.model.get_new_doc("Vehicle Retail");
 
-					var row = frappe.model.add_child(
-						doc,
-						"vehicles_sale_items",
-					);
-					row.vin_serial_no = frm.doc.name;
-					row.model = frm.doc.model;
-					row.colour = frm.doc.colour;
-					row.interior_colour = frm.doc.interior_colour;
+						var row = frappe.model.add_child(
+							doc,
+							"vehicles_sale_items",
+						);
+						row.vin_serial_no = frm.doc.name;
+						row.model = frm.doc.model;
+						row.colour = frm.doc.colour;
+						row.interior_colour = frm.doc.interior_colour;
 
-					frappe.set_route("Form", doc.doctype, doc.name);
-				});
-			},
-			"Action",
-		);
+						frappe.set_route("Form", doc.doctype, doc.name);
+					});
+				},
+				"Action",
+			);
+		}
 
 		if (frappe.user.has_role("Vehicles Administrator")) {
 			frm.add_custom_button(
@@ -224,16 +226,18 @@ frappe.ui.form.on("Vehicle Stock", {
 			},
 			"Action",
 		);
-		frm.add_custom_button(
-			"NATIS Release",
-			function () {
-				let today = frappe.datetime.nowdate(); // gets today's date in YYYY-MM-DD format
-				frm.set_value("request_release", 1);
-				frm.set_value("natis_release_date", today);
-				frm.save()
-			},
-			"Action"
-		);
+		if (!frm.doc.request_release) {
+			frm.add_custom_button(
+				"NATIS Release",
+				function () {
+					let today = frappe.datetime.nowdate();
+					frm.set_value("request_release", 1);
+					frm.set_value("natis_release_date", today);
+					frm.save();
+				},
+				"Action"
+			);
+		}
 
 
 		// frm.add_custom_button(__("Action 2")).addClass("btn-warning").css({'background-color':'black','font-weight': 'bold'});

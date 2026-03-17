@@ -468,6 +468,7 @@ frappe.ui.form.on("Head Office Vehicle Orders", {
 						}
 
 						function applySelection() {
+							frm.doc.__unsaved = 1;
 							frm.set_value("vinserial_no", selected_vin);
 							frm.set_value("status", "Processed");
 							frm.toggle_display("vinserial_no", true);
@@ -688,26 +689,22 @@ frappe.ui.form.on("Head Office Vehicle Orders", {
 
 				// Filter by VIN search only (colour is filtered by backend from order's colour)
 				function setupFilters() {
-					dialog.$wrapper.on("input", "#search-vin-stock", () => {
-						const vinTxt = $("#search-vin-stock").val().toUpperCase();
-						dialog.$wrapper.find("#vin-list-stock tr").each(function () {
+					function filterRows(inputSelector, tableBodySelector) {
+						const vinTxt = (dialog.$wrapper.find(inputSelector).val() || "").toUpperCase();
+						dialog.$wrapper.find(tableBodySelector + " tr").each(function () {
 							const vin = $(this).find("td").eq(0).text().toUpperCase();
-							$(this).toggle(vin.includes(vinTxt));
+							$(this).toggle(!vinTxt || vin.includes(vinTxt));
 						});
+					}
+
+					dialog.$wrapper.on("input search change", "#search-vin-stock", () => {
+						filterRows("#search-vin-stock", "#vin-list-stock");
 					});
-					dialog.$wrapper.on("input", "#search-vin-reserved", () => {
-						const vinTxt = $("#search-vin-reserved").val().toUpperCase();
-						dialog.$wrapper.find("#vin-list-reserved tr").each(function () {
-							const vin = $(this).find("td").eq(0).text().toUpperCase();
-							$(this).toggle(vin.includes(vinTxt));
-						});
+					dialog.$wrapper.on("input search change", "#search-vin-reserved", () => {
+						filterRows("#search-vin-reserved", "#vin-list-reserved");
 					});
-					dialog.$wrapper.on("input", "#search-vin-shipment", () => {
-						const vinTxt = $("#search-vin-shipment").val().toUpperCase();
-						dialog.$wrapper.find("#shipment-stock-list tr").each(function () {
-							const vin = $(this).find("td").eq(0).text().toUpperCase();
-							$(this).toggle(vin.includes(vinTxt));
-						});
+					dialog.$wrapper.on("input search change", "#search-vin-shipment", () => {
+						filterRows("#search-vin-shipment", "#shipment-stock-list");
 					});
 				}
 

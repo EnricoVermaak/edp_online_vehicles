@@ -48,26 +48,28 @@ class HeadOfficeVehicleOrders(Document):
 
 		# Set in-transit date when status changes to "Process Move Instruction"
 		if not self.is_new() and self.has_value_changed("status") and self.status == "Process Move Instruction":
-			if self.vinserial_no:
-				today = frappe.utils.today()
-				# Silent update - no activity logging
-				frappe.db.set_value("Vehicle Stock", self.vinserial_no, "in_transit_date", today, update_modified=False)
-				frappe.logger().info(f"Set in-transit date for VIN {self.vinserial_no}: {today}")
+			if self.vinserial_no and frappe.db.exists("Vehicle Stock", self.vinserial_no):
+				stock_doc = frappe.get_doc("Vehicle Stock", self.vinserial_no)
+				stock_doc.in_transit_date = frappe.utils.today()
+				stock_doc.flags.ignore_version = True
+				stock_doc.save(ignore_permissions=True)
+				frappe.logger().info(f"Set in-transit date for VIN {self.vinserial_no}: {stock_doc.in_transit_date}")
 
 		# Set delivery date when vehicle is moved to dealer (auto_move_stock_hq called)
 		if not self.is_new() and self.has_value_changed("status") and self.status == "Delivered":
-			if self.vinserial_no:
-				today = frappe.utils.today()
-				frappe.db.set_value("Vehicle Stock", self.vinserial_no, "delivery_date", today, update_modified=False)
-				frappe.logger().info(f"Set delivery date for VIN {self.vinserial_no}: {today}")
-    
+			if self.vinserial_no and frappe.db.exists("Vehicle Stock", self.vinserial_no):
+				stock_doc = frappe.get_doc("Vehicle Stock", self.vinserial_no)
+				stock_doc.delivery_date = frappe.utils.today()
+				stock_doc.flags.ignore_version = True
+				stock_doc.save(ignore_permissions=True)
+				frappe.logger().info(f"Set delivery date for VIN {self.vinserial_no}: {stock_doc.delivery_date}")
+
 		if self.vinserial_no and not frappe.db.exists("Reserved Vehicles", {"name":self.vinserial_no}):
 			reserve_doc = frappe.new_doc("Reserved Vehicles")
 			reserve_doc.vin_serial_no = self.vinserial_no
 			reserve_doc.dealer = self.order_placed_by
 			reserve_doc.reserve_reason = f"Allocated to order - {self.name}"
 			reserve_doc.save()
-			frappe.db.set_value("Vehicle Stock", self.vinserial_no, "availability_status", "Reserved")
    
 		elif self.shipment_stock:
 			frappe.db.set_value("Vehicles Shipment Items", {"vin_serial_no": self.shipment_stock}, "reserve_to_order", self.name)
@@ -321,6 +323,7 @@ class HeadOfficeVehicleOrders(Document):
 
 			stock_doc.add_comment("Comment", comment)
 
+			stock_doc.flags.ignore_version = True
 			stock_doc.save(ignore_permissions=True)
 
 			now = now_datetime()
@@ -368,6 +371,7 @@ class HeadOfficeVehicleOrders(Document):
 		)
 
 		if not front_end_call:
+			self.flags.ignore_version = True
 			self.save()
 
 			frappe.db.commit()
@@ -389,7 +393,7 @@ class HeadOfficeVehicleOrders(Document):
 		if stock_doc:
 			reserve_docs = frappe.db.get_all(
 				"Reserved Vehicles",
-				filters={"vin_serial_no": self.vinserial_no, "status": "Reserved"},
+				filters={"vin_serial_no": previous_vinno_value, "status": "Reserved"},
 				pluck="name",
 			)
 
@@ -429,6 +433,7 @@ class HeadOfficeVehicleOrders(Document):
 				if "Stock Available" not in existing_tags:
 					hq_doc.add_tag("Stock Available")
 
+			stock_doc.flags.ignore_version = True
 			stock_doc.save(ignore_permissions=True)
 
 			now = datetime.now()
@@ -444,11 +449,12 @@ class HeadOfficeVehicleOrders(Document):
 			new_tracking_doc.status = "Successful"
 
 			new_tracking_doc.request = (
-				f"VIN/Serial No {self.vinserial_no} has been removed from Order {self.name} by System"
+				f"VIN/Serial No {previous_vinno_value} has been removed from Order {self.name} by System"
 			)
 
 			new_tracking_doc.insert(ignore_permissions=True)
 
+			self.flags.ignore_version = True
 			self.save(ignore_permissions=True)
 
 			frappe.db.commit()
@@ -529,6 +535,7 @@ class HeadOfficeVehicleOrders(Document):
 	@frappe.whitelist()
 	def post_comment(self, comment):
 		if comment:
+			self.flags.ignore_version = True
 			self.add_comment("Comment", comment)
 
 

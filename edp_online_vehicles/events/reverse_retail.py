@@ -72,14 +72,10 @@ def reverse_retail(docname):
 				stock_doc.fleet_customer_mobile = ""
 				stock_doc.fleet_customer_address = ""
 
+			stock_doc.availability_status = "Available"
 			stock_doc.retail_date = ""
 			stock_doc.warranty_start_date = ""
 			stock_doc.warranty_end_date = ""
-
-			# # Update the Serial No document with warranty period and expiry date
-			# serial_doc.warranty_expiry_date = warranty_end_date
-			# serial_doc.warranty_period = warranty_period_days
-			# serial_doc.save(ignore_permissions=True)
 
 			comment = f"Vehicle {stock_doc.name} had it's Retail Reversed"
 
@@ -108,4 +104,5 @@ def reverse_retail(docname):
 			new_tracking_doc.insert(ignore_permissions=True)
 
 		frappe.db.commit()
-		return True
+
+	return True
