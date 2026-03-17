@@ -130,7 +130,7 @@ home_page = "/me"
 
 # Migration
 # ------------
-# after_migrate = "edp_online_vehicles.edp_online_vehicles.settings.run_every_migrate"
+after_migrate = ["edp_online_vehicles.setup.after_migrate"]
 
 
 # Desk Notifications

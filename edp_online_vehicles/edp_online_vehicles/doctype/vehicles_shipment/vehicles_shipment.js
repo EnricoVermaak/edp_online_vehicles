@@ -419,13 +419,30 @@ frappe.ui.form.on("Vehicles Shipment", {
 							);
 						}
 
-						if (!row.vin_serial_no) {
-							frappe.throw(
-								"Please ensure all selected vehicles have VIN/Serial No's assigned to them."
-							);
-						}
-						selected_items.push(row);
-						promises.push(true);
+					if (row.vin_serial_no) {
+						const promise = frappe.db
+							.get_single_value("Vehicle Stock Settings", "automatically_create_stock_number")
+							.then((autoCreate) => {
+								if (autoCreate) {
+								const lastStockNo = stockNo;
+								const nextStockNo = incrementStockNumber(lastStockNo);
+								stockNo = nextStockNo;
+
+									frappe.model.set_value(
+										row.doctype,
+										row.name,
+										"stock_no",
+										nextStockNo
+									);
+								}
+							});
+						promises.push(promise);
+					} else {
+						frappe.throw(
+							"Please ensure all selected vehicles have VIN/Serial No's assigned to them."
+						);
+					}
+					selected_items.push(row);
 
 
 					}
