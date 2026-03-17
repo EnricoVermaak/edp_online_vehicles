@@ -263,19 +263,42 @@ frappe.ui.form.on("Vehicle Retail", {
 		});
 	},
 	before_save(frm) {
+		const is_fleet = frm.doc.sale_type === "Fleet";
+		const customer_doctype = is_fleet ? "Fleet Customer" : "Dealer Customer";
+		const customer_id = is_fleet ? frm.doc.fleet_customer : frm.doc.customer;
+
+		if (!customer_id) {
+			frappe.validated = false;
+			_show_missing_customer_dialog(frm, is_fleet, [
+				is_fleet ? "Fleet Customer (not selected)" : "Customer (not selected)"
+			]);
+			return;
+		}
+
+		let missing_labels = [];
+		frappe.call({
+			method: "edp_online_vehicles.events.validate_customer.get_missing_required_fields",
+			args: { customer_doctype, customer_name: customer_id },
+			async: false,
+			callback: function (r) {
+				if (r.message && r.message.length) {
+					missing_labels = r.message.map(f => f.label);
+				}
+			},
+		});
+
+		if (missing_labels.length) {
+			frappe.validated = false;
+			_show_missing_customer_dialog(frm, is_fleet, missing_labels);
+			return;
+		}
+
 		frappe.call({
 			method: "frappe.client.get",
-			args: {
-				doctype: "Vehicle Stock Settings",
-			},
+			args: { doctype: "Vehicle Stock Settings" },
 			callback: function (r) {
-				if (r.message) {
-					var settings = r.message;
-
-					if (settings.auto_approve_sales) {
-						let status = "Approved";
-						frm.set_value("status", status);
-					}
+				if (r.message && r.message.auto_approve_sales) {
+					frm.set_value("status", "Approved");
 				}
 			},
 		});
@@ -316,21 +339,13 @@ frappe.ui.form.on("Vehicle Retail", {
 		}
 
 		if (
-			frm.customer_address ||
+			frm.doc.customer &&
+			(frm.customer_address ||
 			frm.customer_mobile ||
 			frm.customer_phone ||
-			frm.customer_email
+			frm.customer_email)
 		) {
 			frm.call("update_dealer_customer");
-
-			// frappe.db.set_value(
-			//   'Dealer Customer', frm.doc.customer, {
-			//     'email': frm.doc.customer_email,
-			//     'mobile': frm.doc.customer_mobile,
-			//     'phone': frm.doc.customer_phone,
-			//     'address': frm.doc.customer_address
-			//   }
-			// )
 		}
 	},
 	before_submit(frm) {
@@ -706,6 +721,38 @@ function set_vin_query(frm) {
 		}
 		return { filters: filters };
 	});
+}
+
+function _show_missing_customer_dialog(frm, is_fleet, missing_labels) {
+	const fields_html = missing_labels.map(f => `<li>${f}</li>`).join("");
+	const has_record = is_fleet ? !!frm.doc.fleet_customer : !!frm.doc.customer;
+	const btn_label = has_record
+		? (is_fleet ? __("Edit Fleet Customer") : __("Edit Customer"))
+		: (is_fleet ? __("Select a Fleet Customer first") : __("Select a Customer first"));
+
+	const d = new frappe.ui.Dialog({
+		title: __("Missing Customer Information"),
+		fields: [{
+			fieldtype: "HTML",
+			options: `<p>${__("The following customer details are required before the retail can proceed:")}</p>
+				<ul style="margin: 10px 0;">${fields_html}</ul>
+				<p class="text-muted">${__("Please complete the customer information and try again.")}</p>`,
+		}],
+		primary_action_label: btn_label,
+		primary_action() {
+			if (is_fleet && frm.doc.fleet_customer) {
+				window.open(`/app/fleet-customer/${frm.doc.fleet_customer}`, "_blank");
+			} else if (!is_fleet && frm.doc.customer) {
+				window.open(`/app/dealer-customer/${frm.doc.customer}`, "_blank");
+			} else {
+				frappe.msgprint(__("Please select a customer on the form first, then save again."));
+			}
+			d.hide();
+		},
+		secondary_action_label: __("Close"),
+		secondary_action() { d.hide(); },
+	});
+	d.show();
 }
 
 function validate_sa_id_for_toast(id_number, country) {

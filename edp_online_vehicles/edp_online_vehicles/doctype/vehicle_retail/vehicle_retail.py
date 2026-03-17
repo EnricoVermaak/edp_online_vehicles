@@ -27,14 +27,17 @@ class VehicleRetail(Document):
 
     @frappe.whitelist()
     def update_dealer_customer(self):
+        if not self.customer:
+            return
+        if not frappe.db.exists("Dealer Customer", self.customer):
+            return
         dealer_cust_doc = frappe.get_doc("Dealer Customer", self.customer)
-        if dealer_cust_doc:
-            dealer_cust_doc.email = self.customer_email
-            dealer_cust_doc.mobile = self.customer_mobile
-            dealer_cust_doc.phone = self.customer_phone
-            dealer_cust_doc.address = self.customer_address
-            dealer_cust_doc.save(ignore_permissions=True)
-            frappe.db.commit()
+        dealer_cust_doc.email = self.customer_email
+        dealer_cust_doc.mobile = self.customer_mobile
+        dealer_cust_doc.phone = self.customer_phone
+        dealer_cust_doc.address = self.customer_address
+        dealer_cust_doc.save(ignore_permissions=True)
+        frappe.db.commit()
 
     def update_linked_service_plan(self):
         for row in self.get("vehicles_sale_items"):

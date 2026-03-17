@@ -14,7 +14,6 @@
   "automatically_submit_document",
   "automatically_apply_fifo_rule_on_vehicles_orders",
   "vin_serial_no_mandatory",
-  "visible_to_dealer",
   "transport_section",
   "require_transport_company",
   "in_transit_warehouse",
@@ -39,6 +38,8 @@
   "evolve_section",
   "create_evolve_order",
   "generate_evolve_invoice",
+  "vds_section",
+  "send_delivery_instructions_to_vds",
   "email_tab",
   "email_template",
   "send_email_to_users",
@@ -154,12 +155,6 @@
    "fieldname": "cancel_order_after_hours",
    "fieldtype": "Int",
    "label": "Cancel Order After (Hours)"
-  },
-  {
-   "default": "0",
-   "fieldname": "visible_to_dealer",
-   "fieldtype": "Check",
-   "label": "Visible to Dealer"
   },
   {
    "fieldname": "cancel_order_section",
@@ -299,11 +294,23 @@
    "fieldname": "vehicle_so_credit_note",
    "fieldtype": "Check",
    "label": "Vehicle Credit Note"
+  },
+  {
+   "fieldname": "vds_section",
+   "fieldtype": "Section Break",
+   "label": "VDS"
+  },
+  {
+   "default": "0",
+   "description": "If checked, delivery instrucions will be sent to VDS to arrange delivery of the vehicle. ",
+   "fieldname": "send_delivery_instructions_to_vds",
+   "fieldtype": "Check",
+   "label": "Send Delivery Instructions to VDS"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-02-19 13:16:18.526459",
+ "modified": "2026-03-16 14:54:53.800339",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicles Order Status",

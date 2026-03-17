@@ -57,8 +57,7 @@
    "fieldname": "bin_location",
    "fieldtype": "Data",
    "in_list_view": 1,
-   "label": "Bin Location",
-   "reqd": 1
+   "label": "Bin Location"
   },
   {
    "fieldname": "uom",
@@ -115,7 +114,7 @@
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2026-03-13 16:34:22.799094",
+ "modified": "2026-03-16 15:37:43.530704",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Item Details",

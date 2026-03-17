@@ -173,15 +173,18 @@ def validate_odo_reading(vin_serial_no, odo_reading_hours, doctype = None, docna
 
 # Save the service odometer reading back to the linked Vehicle Stock record (Not implemented will do later as hook?)
 @frappe.whitelist()
-def update_vehicle_stock_odo(vin_serial_no, odo_reading_hours, doctype = None, docname = None):
-        if vin_serial_no and odo_reading_hours:
-            stock_odo = frappe.db.get_value("Vehicle Stock", vin_serial_no, "odo_reading") or 0
+def update_vehicle_stock_odo(vin_serial_no, odo_reading_hours, doctype=None, docname=None):
+    if not vin_serial_no or not odo_reading_hours:
+        return
 
-        # Check if rollback is allowed
-        rollback = rollback_allowed(doctype, docname)
+    stock_odo = frappe.db.get_value("Vehicle Stock", vin_serial_no, "odo_reading") or 0
+    rollback = rollback_allowed(doctype, docname)
 
-        if (odo_reading_hours > stock_odo) or rollback:
-            frappe.db.set_value("Vehicle Stock", vin_serial_no, "odo_reading", odo_reading_hours)
+    if (odo_reading_hours > stock_odo) or rollback:
+        stock_doc = frappe.get_doc("Vehicle Stock", vin_serial_no)
+        stock_doc.odo_reading = odo_reading_hours
+        stock_doc.flags.ignore_version = True
+        stock_doc.save(ignore_permissions=True)
 
 # Confirm if ODO rollback is allowed based on settings for each doctype	
 def rollback_allowed(doctype=None, docname=None):
