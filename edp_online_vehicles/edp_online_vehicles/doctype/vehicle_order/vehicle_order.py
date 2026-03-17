@@ -125,32 +125,23 @@ class VehicleOrder(Document):
 			self.name = make_autoname(f"{prefix}{date}.####")
 		else:
 			self.name = make_autoname(f"EO{date}.####")
-	
-@frappe.whitelist()
-def generate_dealer_reference_number():
-	"""
-	Auto-generate Dealer Reference Number based on Vehicle Stock Settings
-	"""
-	settings = frappe.get_single("Vehicle Stock Settings")
+   
+	@frappe.whitelist()
+	def generate_dealer_reference_number(self):
+		settings = frappe.get_single("Vehicle Stock Settings")
+		if not settings.auto_generate_dealer_reference_number:
+			return None
+		prefix = settings.vehicle_order_no_prefix or "DRN"
+		last_order = frappe.db.get_value(
+			"Vehicle Order",
+			{"dealer_order_no": ["like", f"{prefix}%"]},
+			"dealer_order_no",
+			order_by="dealer_order_no desc"
+		)
+		if last_order:
+			seq_part = last_order.replace(prefix, "")
+			next_seq = int(seq_part) + 1 if seq_part.isdigit() else 1
+		else:
+			next_seq = 1
 
-	# If checkbox not enabled, do nothing
-	if not settings.auto_generate_dealer_reference_number:
-		return None
-
-	prefix = settings.vehicle_order_no_prefix or "DRN"
-
-	# Find last dealer_order_no with this prefix
-	last_order = frappe.db.get_value(
-		"Vehicle Order",
-		{"dealer_order_no": ["like", f"{prefix}%"]},
-		"dealer_order_no",
-		order_by="dealer_order_no desc"
-	)
-
-	if last_order:
-		seq_part = last_order.replace(prefix, "")
-		next_seq = int(seq_part) + 1 if seq_part.isdigit() else 1
-	else:
-		next_seq = 1
-
-	return f"{prefix}{str(next_seq).zfill(6)}"
+		return f"{prefix}{str(next_seq).zfill(6)}"
