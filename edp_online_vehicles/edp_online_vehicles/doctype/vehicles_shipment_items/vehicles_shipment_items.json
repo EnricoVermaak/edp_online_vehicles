@@ -71,6 +71,7 @@
    "in_list_view": 1,
    "label": "Model Code",
    "options": "Model Administration",
+   "read_only_depends_on": "eval: doc.status ===\"Received\"",
    "reqd": 1
   },
   {
@@ -85,7 +86,8 @@
   {
    "fieldname": "stock_no",
    "fieldtype": "Data",
-   "label": "Stock No"
+   "label": "Stock No",
+   "read_only_depends_on": "eval: doc.status ===\"Received\""
   },
   {
    "columns": 2,
@@ -93,13 +95,15 @@
    "fieldtype": "Data",
    "in_list_view": 1,
    "in_standard_filter": 1,
-   "label": "VIN/ Serial No"
+   "label": "VIN/ Serial No",
+   "read_only_depends_on": "eval: doc.status ===\"Received\""
   },
   {
    "fieldname": "engine_no",
    "fieldtype": "Data",
    "in_list_view": 1,
-   "label": "Engine No"
+   "label": "Engine No",
+   "read_only_depends_on": "eval: doc.status ===\"Received\""
   },
   {
    "fieldname": "jet_no",
@@ -233,7 +237,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2026-03-02 16:37:15.408164",
+ "modified": "2026-03-16 12:24:07.025259",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicles Shipment Items",
