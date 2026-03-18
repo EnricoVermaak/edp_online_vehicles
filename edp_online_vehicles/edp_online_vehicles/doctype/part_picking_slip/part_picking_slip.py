@@ -41,11 +41,46 @@ class PartPickingSlip(Document):
 				if hq_row.part_no == slip_row.part_no:
 					hq_row.db_set("qty_picked", slip_row.qty_picked)
 
+		# Release reserved stock at picking stage by syncing SO delivered_qty
+		# to the picked totals and recalculating reserved qty.
+		self.release_reserved_stock_from_sales_order(hq_doc)
+
 		frappe.db.commit()
 		self.create_pick_list()
-
+ 
 	def before_submit(self):
 		self.status = "Completed"
+
+	def release_reserved_stock_from_sales_order(self, hq_doc):
+		if not hq_doc.part_order:
+			return
+
+		sales_order = frappe.db.get_value(
+			"Sales Order",
+			{"custom_part_order": hq_doc.part_order},
+			"name",
+		)
+
+		if not sales_order:
+			return
+
+		so = frappe.get_doc("Sales Order", sales_order)
+
+		picked_map = {}
+		for row in self.table_qoik:
+			if not row.part_no:
+				continue
+			picked_map[row.part_no] = max(flt(row.qty_picked), 0)
+
+		updated_items = []
+		for item in so.items:
+			target_delivered_qty = min(picked_map.get(item.item_code, 0), flt(item.qty))
+			if flt(item.delivered_qty) != flt(target_delivered_qty):
+				item.db_set("delivered_qty", target_delivered_qty, update_modified=False)
+				updated_items.append(item.name)
+
+		if updated_items:
+			so.update_reserved_qty(updated_items)
 
 	def create_pick_list(self):
 		if not self.part_order_no:

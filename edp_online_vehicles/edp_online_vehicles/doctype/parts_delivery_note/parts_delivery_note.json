@@ -58,7 +58,8 @@
   "received_by_full_names",
   "received_by_signature",
   "section_break_ttal",
-  "hq_part_order"
+  "hq_part_order",
+  "part_picking_slip"
  ],
  "fields": [
   {
@@ -413,12 +414,19 @@
    "label": "ERP Delivery Note",
    "options": "Delivery Note",
    "read_only": 1
+  },
+  {
+   "fieldname": "part_picking_slip",
+   "fieldtype": "Link",
+   "label": "Part Picking Slip",
+   "options": "Part Picking Slip",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-03-04 15:35:09.074717",
+ "modified": "2026-03-18 10:32:50.304740",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Parts Delivery Note",
