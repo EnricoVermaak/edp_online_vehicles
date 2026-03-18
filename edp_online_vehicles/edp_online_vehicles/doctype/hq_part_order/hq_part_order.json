@@ -64,6 +64,8 @@
   "total_picking_time",
   "column_break_zefm",
   "total_despatch_time",
+  "dms_submission_tab",
+  "dms_submissions",
   "dashboard_tab",
   "amended_from"
  ],
@@ -398,6 +400,18 @@
    "fieldname": "dms_no",
    "fieldtype": "Data",
    "label": "DMS No"
+  },
+  {
+   "fieldname": "dms_submission_tab",
+   "fieldtype": "Tab Break",
+   "label": "DMS Submissions"
+  },
+  {
+   "fieldname": "dms_submissions",
+   "fieldtype": "Table",
+   "label": "DMS Submissions",
+   "options": "Part Order DMS Submission",
+   "read_only": 1
   },
   {
    "fieldname": "dashboard_tab",
