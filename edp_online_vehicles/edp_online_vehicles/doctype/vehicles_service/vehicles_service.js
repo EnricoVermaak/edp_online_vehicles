@@ -126,7 +126,14 @@ frappe.ui.form.on("Vehicles Service", {
 			return;
 		}
 
-		let schedule = await frappe.db.get_doc("Service Schedules", frm.doc.service_type);
+		if (frm.doc.service_type.endsWith("-Other") && !frm.__create_other) return;
+
+		let schedule;
+		try {
+			schedule = await frappe.db.get_doc("Service Schedules", frm.doc.service_type);
+		} catch (e) {
+			return;
+		}
 
 		let allow_labour = schedule.allow_users_to_add_edit_remove_labour || 0;
 		let allow_parts = schedule.allow_users_to_add_edit_remove_parts || 0;
@@ -149,6 +156,8 @@ frappe.ui.form.on("Vehicles Service", {
 
 	onload(frm) {
 		frappe.db.get_doc("Vehicle Service Settings").then((settings) => {
+			frm.__create_other = settings.create_other_service_schedule;
+
 			let attach = frm.doc.attach_documents || [];
 			let existing_names = new Set(attach.map(row => row.document_name));
 			if (settings.mandatory_documents) {
@@ -347,8 +356,9 @@ frappe.ui.form.on("Vehicles Service", {
 					if (r.message && r.message.found) {
 						frm.set_value("service_booking", r.message.booking_name);
 						frm.set_value("booking_name", r.message.booking_name);
-						if (r.message.service_type != null && r.message.service_type !== "") {
-							frm.set_value("service_type", r.message.service_type);
+						let booking_st = r.message.service_type;
+						if (booking_st && !(booking_st.endsWith("-Other") && !frm.__create_other)) {
+							frm.set_value("service_type", booking_st);
 						}
 						frappe.show_alert({
 							message: __("Linked to open booking: {0}", [r.message.booking_name]),
@@ -398,40 +408,35 @@ frappe.ui.form.on("Vehicles Service", {
 			frm.refresh_field("odo_reading_hours");
 		}
 
-		if (frm.doc.vin_serial_no) {
-			frappe.db.get_value("Vehicle Service Settings", "Vehicle Service Settings", "create_other_service_schedule")
-				.then(settings_res => {
-					if (!settings_res?.message?.create_other_service_schedule) return;
-
+		if (frm.doc.vin_serial_no && frm.__create_other) {
+			frappe.call({
+				method: "edp_online_vehicles.events.service_type.check_service_date",
+				args: { vin: frm.doc.vin_serial_no },
+				callback: function (service_res) {
 					frappe.call({
-						method: "edp_online_vehicles.events.service_type.check_service_date",
+						method: "edp_online_vehicles.events.service_type.check_warranty_date",
 						args: { vin: frm.doc.vin_serial_no },
-						callback: function (service_res) {
-							frappe.call({
-								method: "edp_online_vehicles.events.service_type.check_warranty_date",
-								args: { vin: frm.doc.vin_serial_no },
-								callback: function (warranty_res) {
-									const service_invalid = service_res.message && !service_res.message.is_valid;
-									const warranty_invalid = warranty_res.message && !warranty_res.message.is_valid;
-									if (!service_invalid && !warranty_invalid) return;
-									if (frm.doc.service_type && frm.doc.service_type.endsWith("-Other")) return;
+						callback: function (warranty_res) {
+							const service_invalid = service_res.message && !service_res.message.is_valid;
+							const warranty_invalid = warranty_res.message && !warranty_res.message.is_valid;
+							if (!service_invalid && !warranty_invalid) return;
+							if (frm.doc.service_type && frm.doc.service_type.endsWith("-Other")) return;
 
-									const parts = [];
-									if (service_invalid) parts.push("service period");
-									if (warranty_invalid) parts.push("warranty period");
-									frappe.msgprint("Please note the selected vehicle falls outside the allocated " +
-										parts.join(" and ") + " parameters. Please contact Head Office for more information.");
+							const parts = [];
+							if (service_invalid) parts.push("service period");
+							if (warranty_invalid) parts.push("warranty period");
+							frappe.msgprint("Please note the selected vehicle falls outside the allocated " +
+								parts.join(" and ") + " parameters. Please contact Head Office for more information.");
 
-									frappe.db.get_value("Vehicle Stock", frm.doc.vin_serial_no, "model").then((res) => {
-										let model = res.message.model;
-										frappe.model.set_value(dt, dn, "service_type", `SS-${model}-Other`);
-										frm.refresh_field("service_type");
-									});
-								},
+							frappe.db.get_value("Vehicle Stock", frm.doc.vin_serial_no, "model").then((res) => {
+								let model = res.message.model;
+								frappe.model.set_value(dt, dn, "service_type", `SS-${model}-Other`);
+								frm.refresh_field("service_type");
 							});
 						},
 					});
-				});
+				},
+			});
 
 			_check_recall_campaign_for_service(frm);
 		}
@@ -505,16 +510,14 @@ frappe.ui.form.on("Vehicles Service", {
 							frappe.msgprint("Please select VIN/Serial No first before entering odo reading.");
 							return;
 						}
-						frappe.db.get_value("Vehicle Service Settings", "Vehicle Service Settings", "create_other_service_schedule")
-							.then(svc_settings => {
-								if (!svc_settings?.message?.create_other_service_schedule) return;
-								frappe.db.get_value("Vehicle Stock", frm.doc.vin_serial_no, "model").then((res) => {
-									if (res && res.message && res.message.model) {
-										frappe.model.set_value(dt, dn, "service_type", `SS-${res.message.model}-Other`);
-										frm.refresh_field("service_type");
-									}
-								}).catch(() => frappe.msgprint("Could not fetch model for the selected VIN."));
-							});
+						if (frm.__create_other) {
+							frappe.db.get_value("Vehicle Stock", frm.doc.vin_serial_no, "model").then((res) => {
+								if (res && res.message && res.message.model) {
+									frappe.model.set_value(dt, dn, "service_type", `SS-${res.message.model}-Other`);
+									frm.refresh_field("service_type");
+								}
+							}).catch(() => frappe.msgprint("Could not fetch model for the selected VIN."));
+						}
 						frappe.msgprint("Your vehicle hasn't reached its service threshold yet. Please check back when it meets the minimum mileage requirement.");
 					} else if (odo > max_odo_value) {
 						frappe.msgprint("Your vehicle's mileage has exceeded the current service range. Please select the upcoming service schedule.");

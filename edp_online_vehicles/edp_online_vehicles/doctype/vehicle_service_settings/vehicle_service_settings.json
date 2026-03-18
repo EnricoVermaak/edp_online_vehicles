@@ -97,7 +97,7 @@
   },
   {
    "default": "0",
-   "description": "If checked, an \"other\" service schedule will be created on new model administration creation. If not checked, no service schedule will be created automatically.",
+   "description": "Enable \"-Other\" service schedules: auto-create on new models, assign when vehicle is outside service/warranty period, and carry over from bookings. Uncheck to disable all of this.",
    "fieldname": "create_other_service_schedule",
    "fieldtype": "Check",
    "label": "Create Other Service Schedule"
