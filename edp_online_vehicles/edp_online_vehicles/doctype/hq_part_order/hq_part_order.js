@@ -33,34 +33,12 @@ frappe.ui.form.on("HQ Part Order", {
 
 						frappe.set_route("Form", doc.doctype, doc.name);
 					});
-		if (!frm.is_new() && !frm.doc.submitted_to_dms) {
-			frm.add_custom_button(__("Submit to DMS"), () => {
-				frappe.confirm(__("Submit this parts order to DMS?"), () => {
-					frm.set_value("submitted_to_dms", frappe.datetime.now_datetime());
-					frm.save();
 				});
-			}, __("Actions"));
-		}
 
-		if(!frm.is_new() && frappe.user.has_role("Parts Adminstrator")){
-			frm.add_custom_button("Create Part Picking Slip", function () {
-				frappe.model.with_doctype("Part Picking Slip", function () {
-					var doc = frappe.model.get_new_doc("Part Picking Slip");
-					doc.part_order_no = frm.doc.name
-					for (let child of frm.doc.table_ugma){
-						var row = frappe.model.add_child(
-							doc,
-							"table_qoik",
-						);
-						row.part_no = child.part_no;
-					}
-					frappe.set_route("Form", doc.doctype, doc.name);
-				});
-			};
-						
 			// Show Submit to DMS button
 			frm.add_custom_button(__("Submit to DMS"), function () {
 			}, __("Action"));
+			}
 		}
 	},
 
