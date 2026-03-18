@@ -11,6 +11,19 @@ from frappe.utils import get_datetime
 
 
 class PartsDeliveryNote(Document):
+	def validate(self):
+		if self.part_picking_slip:
+			existing = frappe.db.exists(
+				"Parts Delivery Note",
+				{
+					"part_picking_slip": self.part_picking_slip,
+					"docstatus": ["!=", 2],
+					"name": ["!=", self.name],
+				},
+			)
+			if existing:
+				frappe.throw("A Parts Delivery Note already exists for this Part Picking Slip")
+
 	def autoname(self):
 		if self.part_order_no:
 			# Check if there are existing orders with the same order_no
@@ -23,9 +36,9 @@ class PartsDeliveryNote(Document):
 					index = (
 						max(
 							[
-								int(doc.get("name").split("-")[3])
+								int(doc.get("name").split("-")[2])
 								for doc in docs
-								if doc.get("name").split("-")[3].isdigit()
+								if doc.get("name").split("-")[2].isdigit()
 							],
 							default=0,
 						)
