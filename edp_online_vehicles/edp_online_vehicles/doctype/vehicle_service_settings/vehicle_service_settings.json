@@ -100,13 +100,13 @@
    "description": "Enable \"-Other\" service schedules: auto-create on new models, assign when vehicle is outside service/warranty period, and carry over from bookings. Uncheck to disable all of this.",
    "fieldname": "create_other_service_schedule",
    "fieldtype": "Check",
-   "label": "Create Other Service Schedule"
+   "label": "Allow Other Service Schedule"
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2026-03-06 12:02:47.194206",
+ "modified": "2026-03-18 16:21:52.000804",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicle Service Settings",
