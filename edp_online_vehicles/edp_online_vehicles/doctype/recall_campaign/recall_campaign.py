@@ -6,9 +6,22 @@ from frappe.model.document import Document
 
 
 class RecallCampaign(Document):
+	def _get_plan_description(self):
+		return "Recall: {} - {}".format(
+			self.name,
+			self.campaign_description or "Campaign"
+		)
+
+	def _find_plan_name(self):
+		desc = self._get_plan_description()
+		if frappe.db.exists("Vehicles Warranty Plan Administration", desc):
+			return desc
+		if frappe.db.exists("Vehicles Warranty Plan Administration", self.name):
+			return self.name
+		return None
+
 	def after_insert(self):
-		# Create a corresponding Vehicles Warranty Plan Administration.
-		description = self.name
+		description = self._get_plan_description()
 
 		if frappe.db.exists("Vehicles Warranty Plan Administration", description):
 			plan_name = description
@@ -26,7 +39,6 @@ class RecallCampaign(Document):
 
 			if plan_type:
 				plan.warranty_type = plan_type
-
 			else:
 				new_type = frappe.get_doc({
 					"doctype": "Vehicles Warranty Plan Type",
@@ -34,7 +46,6 @@ class RecallCampaign(Document):
 					"description": "Recall Campaign",
 				})
 				new_type.insert(ignore_permissions=True)
-
 				frappe.db.commit()
 				plan.warranty_type = new_type.name
 
@@ -48,7 +59,9 @@ class RecallCampaign(Document):
 		self._create_missing_linked_warranty_plans(plan_name)
 
 	def on_update(self):
-		self._create_missing_linked_warranty_plans(self.name)
+		plan_name = self._find_plan_name()
+		if plan_name:
+			self._create_missing_linked_warranty_plans(plan_name)
 
 		if self.has_value_changed("active"):
 			self._sync_connected_warranty_plan_status()
@@ -82,7 +95,7 @@ class RecallCampaign(Document):
 			).insert(ignore_permissions=True)
 
 	def _sync_connected_warranty_plan_status(self):
-		plan_name = frappe.db.exists("Vehicles Warranty Plan Administration", self.name)
+		plan_name = self._find_plan_name()
 		if not plan_name:
 			return
 
@@ -93,4 +106,3 @@ class RecallCampaign(Document):
 			"status",
 			status,
 		)
-		

@@ -15,6 +15,7 @@
   "dealer",
   "dealer_order_no",
   "delivery_date",
+  "warranty_claim",
   "section_break_kdes",
   "table_avsu",
   "section_break_hpra",
@@ -429,12 +430,20 @@
    "fieldtype": "Date",
    "label": " Estimated Delivery Date",
    "reqd": 1
+  },
+  {
+   "depends_on": "eval:doc.order_type == \"Warranty\";",
+   "fieldname": "warranty_claim",
+   "fieldtype": "Link",
+   "label": "Warranty Claim",
+   "mandatory_depends_on": "eval:doc.order_type == \"Warranty\";",
+   "options": "Vehicles Warranty Claims"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-03-04 13:53:21.787007",
+ "modified": "2026-03-17 12:34:40.651311",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Part Order",

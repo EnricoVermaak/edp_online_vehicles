@@ -3,6 +3,7 @@
 
 let previous_status_value = null;
 let codeReader;
+const RECALL_TYPES = ["Recall Campaign", "Service Campaign", "Mandatory Recall"];
 
 $(document).ready(function () {
 	frappe.require(
@@ -274,6 +275,7 @@ frappe.ui.form.on("Vehicles Warranty Claims", {
 
 	date_of_failure: async function (frm) {
 		if (!frm.doc.vin_serial_no || !frm.doc.date_of_failure) return;
+		if (RECALL_TYPES.includes(frm.doc.type)) return;
 		let vs = await frappe.db.get_value("Vehicle Stock", frm.doc.vin_serial_no, ["service_start_date", "service_end_date"]);
 		if (!vs || !vs.message) return;
 		let start = vs.message.service_start_date;
@@ -284,6 +286,24 @@ frappe.ui.form.on("Vehicles Warranty Claims", {
 
 	odo_reading: async function (frm) {
 		if (!frm.doc.odo_reading || !frm.doc.vin_serial_no) return;
+		if (RECALL_TYPES.includes(frm.doc.type)) {
+			frappe.call({
+				method: "edp_online_vehicles.events.odo.validate_odo_reading",
+				args: {
+					vin_serial_no: frm.doc.vin_serial_no,
+					odo_reading_hours: frm.doc.odo_reading,
+					doctype: frm.doctype, docname: frm.doc.name,
+				},
+				callback: function (r) {
+					if (r.message.status === "failed") {
+						frappe.msgprint(__("Odometer reading cannot be lower than the previous odometer reading"));
+						frm.set_value("odo_reading", null);
+						frm.refresh_field("odo_reading");
+					}
+				}
+			});
+			return;
+		}
 		const vs = await frappe.db.get_value("Vehicle Stock", frm.doc.vin_serial_no, "warranty_km_hours_limit");
 		if (vs?.message?.warranty_km_hours_limit === frm.doc.odo_reading) {
 			frm.set_value("type", "Goodwill");
@@ -360,14 +380,14 @@ frappe.ui.form.on("Vehicles Warranty Claims", {
 		}
 		frappe.db.get_doc("Vehicles Warranty Settings", frm.doc.convert_out_of_warranty_to_goodwill).then(convert_out_of_warranty_to_goodwill => {
 			if (convert_out_of_warranty_to_goodwill) {
-				if (frm.doc.vin_serial_no && frm.doc.type !== "Goodwill") {
+				if (frm.doc.vin_serial_no && !RECALL_TYPES.includes(frm.doc.type) && frm.doc.type !== "Goodwill") {
 					frappe.call({
 						method: "edp_online_vehicles.events.service_type.check_warranty_date",
 						args: { vin: frm.doc.vin_serial_no },
 						callback(r) {
 							if (!r.message) return;
 							if (!r.message.is_valid) {
-								if (frm.doc.type !== "Goodwill") frm.set_value("type", "Goodwill");
+								if (!RECALL_TYPES.includes(frm.doc.type) && frm.doc.type !== "Goodwill") frm.set_value("type", "Goodwill");
 								frappe.msgprint("Please note the selected vehicle falls outside the allocated warranty period parameters. Please contact Head Office for more information");
 							}
 						},
@@ -375,6 +395,8 @@ frappe.ui.form.on("Vehicles Warranty Claims", {
 				}
 			}
 		});
+
+		_check_recall_campaign_for_warranty(frm);
 	},
 
 	before_save: async function(frm) {
@@ -411,14 +433,14 @@ frappe.ui.form.on("Vehicles Warranty Claims", {
 		});
 		frappe.db.get_doc("Vehicles Warranty Settings", frm.doc.convert_out_of_warranty_to_goodwill).then(convert_out_of_warranty_to_goodwill => {
 			if (convert_out_of_warranty_to_goodwill) {
-				if (frm.doc.vin_serial_no && frm.doc.type !== "Goodwill") {
+				if (frm.doc.vin_serial_no && !RECALL_TYPES.includes(frm.doc.type) && frm.doc.type !== "Goodwill") {
 					frappe.call({
 						method: "edp_online_vehicles.events.service_type.check_warranty_date",
 						args: { vin: frm.doc.vin_serial_no },
 						callback(r) {
 							if (!r.message) return;
 							if (!r.message.is_valid) {
-								if (frm.doc.type !== "Goodwill") frm.set_value("type", "Goodwill");
+								if (!RECALL_TYPES.includes(frm.doc.type) && frm.doc.type !== "Goodwill") frm.set_value("type", "Goodwill");
 								frappe.msgprint("Please note the selected vehicle falls outside the allocated warranty period parameters. Please contact Head Office for more information");
 							}
 						},
@@ -426,17 +448,34 @@ frappe.ui.form.on("Vehicles Warranty Claims", {
 				}
 			}
 		});
+
+		if (frm._recall_campaign_to_remove) {
+			const { campaign, vin } = frm._recall_campaign_to_remove;
+			delete frm._recall_campaign_to_remove;
+
+			frappe.call({
+				method: "edp_online_vehicles.events.recall_campaign_check.set_vehicle_selected_false",
+				args: { campaign_name: campaign, vin_serial_no: vin },
+				callback: function () {
+					frappe.show_alert({
+						message: __(`Recall campaign "${campaign}" removed for vehicle "${vin}".`),
+						indicator: "blue"
+					});
+				}
+			});
+		}
 	},
 });
 
 function validate_odo_reading(frm) {
 	if (!frm.doc.vin_serial_no || !frm.doc.odo_reading) return;
+	if (RECALL_TYPES.includes(frm.doc.type)) return;
 	frappe.db.get_doc("Vehicles Warranty Settings", frm.doc.convert_out_of_warranty_to_goodwill).then(convert_out_of_warranty_to_goodwill => {
 		if (convert_out_of_warranty_to_goodwill) {
 			frappe.db.get_doc("Vehicle Stock", frm.doc.vin_serial_no).then(vehicle => {
 				if (!vehicle.warranty_km_hours_limit) return;
 				if (frm.doc.odo_reading > vehicle.warranty_km_hours_limit) {
-					if (frm.doc.type !== "Goodwill") {
+					if (!RECALL_TYPES.includes(frm.doc.type) && frm.doc.type !== "Goodwill") {
 						frm.set_value("type", "Goodwill");
 						frappe.msgprint({ message: "Please note the selected vehicle Odo Reading falls outside the allocated warranty plan parameters. Please contact Head Office for more information", indicator: "orange" });
 					}
@@ -612,5 +651,92 @@ function validate_part_item(frm, row) {
 				set_row_color(frm, row, "");
 			}
 		}
+	});
+}
+
+function _check_recall_campaign_for_warranty(frm) {
+	const vin = frm.doc.vin_serial_no;
+	if (!vin) return;
+
+	frappe.db.get_single_value("Vehicles Warranty Settings", "enable_recall_campaigns").then(enabled => {
+		if (!enabled) return;
+
+		setTimeout(function () {
+			if (frm.doc.vin_serial_no !== vin) return;
+
+			frappe.call({
+				method: "edp_online_vehicles.events.recall_campaign_check.get_active_recall_campaign",
+				args: { vin_serial_no: vin },
+				callback: function (r) {
+					if (!r.message) return;
+
+					const campaign = r.message;
+					const desc = campaign.campaign_description ? ` — ${campaign.campaign_description}` : "";
+
+					frappe.confirm(
+						`Vehicle <b>${vin}</b> is listed in active recall campaign <b>${campaign.name}</b>${desc}.<br><br>Do you want to apply the recall campaign work to this claim?`,
+						function () {
+							for (let pcfg of WC_CONFIG.parts || []) frm.clear_table(pcfg.table);
+							for (let lcfg of WC_CONFIG.labour || []) frm.clear_table(lcfg.table);
+							if (WC_CONFIG.extras) frm.clear_table(WC_CONFIG.extras.table);
+
+							let parts_cfg = (WC_CONFIG.parts || [])[0];
+							if (parts_cfg) {
+								for (let part of campaign.recall_campaign_parts || []) {
+									let row = frappe.model.add_child(frm.doc, parts_cfg.childtype, parts_cfg.table);
+									frappe.model.set_value(row.doctype, row.name, parts_cfg.item_field, part.item);
+									frappe.model.set_value(row.doctype, row.name, parts_cfg.qty_field, flt(part.qty || 1));
+									frappe.model.set_value(row.doctype, row.name, parts_cfg.price_field, flt(part.price || 0));
+									frappe.model.set_value(row.doctype, row.name, parts_cfg.total_field, flt(part.total_excl || 0));
+								}
+								frm.refresh_field(parts_cfg.table);
+							}
+
+							let labour_cfg = (WC_CONFIG.labour || [])[0];
+							if (labour_cfg) {
+								for (let labour of campaign.recall_campaign_labour || []) {
+									let row = frappe.model.add_child(frm.doc, labour_cfg.childtype, labour_cfg.table);
+									frappe.model.set_value(row.doctype, row.name, labour_cfg.item_field, labour.item);
+									frappe.model.set_value(row.doctype, row.name, labour_cfg.duration_field, flt(labour.duration_hours || 0));
+									frappe.model.set_value(row.doctype, row.name, labour_cfg.rate_field, flt(labour.rate_hour || 0));
+									frappe.model.set_value(row.doctype, row.name, labour_cfg.total_field, flt(labour.total_excl || 0));
+								}
+								frm.refresh_field(labour_cfg.table);
+							}
+
+							if (WC_CONFIG.extras) {
+								let ecfg = WC_CONFIG.extras;
+								for (let extra of campaign.recall_campaign_extras || []) {
+									let row = frappe.model.add_child(frm.doc, ecfg.childtype, ecfg.table);
+									frappe.model.set_value(row.doctype, row.name, ecfg.item_field, extra.item);
+									frappe.model.set_value(row.doctype, row.name, ecfg.qty_field, flt(extra.qty || 1));
+									frappe.model.set_value(row.doctype, row.name, ecfg.price_field, flt(extra.price || 0));
+									frappe.model.set_value(row.doctype, row.name, ecfg.total_field, flt(extra.total_excl || 0));
+								}
+								frm.refresh_field(ecfg.table);
+							}
+
+							edp_vehicles.pricing.recalc_totals(frm, WC_CONFIG);
+
+							frm.set_value("type", "Recall Campaign");
+							frm.set_value("summary", campaign.campaign_description || "Recall campaign");
+							frm.set_value("fault", "Recall campaign");
+							frm.set_value("cause", "Recall campaign");
+							frm.set_value("remedy", "Recall campaign");
+
+							frm._recall_campaign_to_remove = {
+								campaign: campaign.name,
+								vin: vin
+							};
+
+							frappe.show_alert({
+								message: __(`Recall campaign "${campaign.name}" applied.`),
+								indicator: "green"
+							});
+						}
+					);
+				}
+			});
+		}, 800);
 	});
 }

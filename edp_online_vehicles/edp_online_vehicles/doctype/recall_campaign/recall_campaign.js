@@ -60,14 +60,14 @@ edp_vehicles.pricing.bind_child_events(CSM_CONFIG);
 
 frappe.ui.form.on("Recall Campaign", {
     onload: function(frm) {
-                frappe.db.get_value("Vehicle Service Settings", "Vehicle Service Settings", "labour_code_filter")
-		    .then(r => {
-		    	let labour_code_filter = r.message?.labour_code_filter || "Service Labour";
-		    	frm.set_query("item", "recall_campaign_labour", () => ({
-		    		filters: { item_group: labour_code_filter }
-		    	}));
-		    });
-        },
+		frappe.db.get_value("Vehicles Warranty Settings", "Vehicles Warranty Settings", "labour_code_filter")
+			.then(r => {
+				let labour_code_filter = r.message?.labour_code_filter || "Warranty Labour";
+				frm.set_query("item", "recall_campaign_labour", () => ({
+					filters: { item_group: labour_code_filter }
+				}));
+			});
+    },
 
     refresh(frm) {
 
