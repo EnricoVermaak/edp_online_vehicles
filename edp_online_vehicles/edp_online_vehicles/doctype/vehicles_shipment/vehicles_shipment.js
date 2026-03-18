@@ -513,6 +513,44 @@ frappe.ui.form.on("Vehicles Shipment", {
 					frappe.throw("Please Select at least One Item.");
 				}
 			});
+
+			frm.add_custom_button(__("Receive All"), function () {
+				const all_items = frm.doc.vehicles_shipment_items || [];
+				const pending = all_items.filter(r => r.vin_serial_no && r.status !== "Received");
+
+				if (!pending.length) {
+					frappe.msgprint(__("All vehicles in this shipment have already been received."));
+					return;
+				}
+
+				const missing_colour = pending.filter(r => !r.colour);
+				if (missing_colour.length) {
+					frappe.throw(__(`${missing_colour.length} vehicle(s) are missing a Colour. Please fill in all colours before using Receive All.`));
+					return;
+				}
+
+				const missing_warehouse = pending.filter(r => !r.target_warehouse && !frm.doc.target_warehouse);
+				if (missing_warehouse.length) {
+					frappe.throw(__("Some vehicles are missing a Target Warehouse and no header warehouse is set."));
+					return;
+				}
+
+				frappe.confirm(
+					__(`This will receive all ${pending.length} pending vehicle(s) as a background job. Continue?`),
+					() => {
+						frappe.dom.freeze(__("Queuing background job\u2026"));
+						frm.call("receive_all_in_background").then(r => {
+							frappe.dom.unfreeze();
+							if (r && r.message) {
+								frappe.show_alert({
+									message: __(`Receive All queued for ${r.message} vehicle(s).`),
+									indicator: "blue"
+								}, 8);
+							}
+						}).catch(() => frappe.dom.unfreeze());
+					}
+				);
+			});
 		}
 
 
