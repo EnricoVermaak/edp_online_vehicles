@@ -72,6 +72,11 @@ class PartOrder(Document):
             frappe.throw("Warranty Claim is required for Warranty orders.")
 
     def on_submit(self):
+        hq_company = frappe.db.get_value("Company", {"custom_head_office": 1}, "name")
+
+        if not hq_company:
+            frappe.throw("No Head Office company (custom_head_office=1) found.")
+
         # Filter the child rows that come from a Warehouse
         warehouse_items = [
             item
@@ -172,11 +177,6 @@ class PartOrder(Document):
             newdoc.order_type = "Sales"
             newdoc.custom_sales_category = "Parts"
             newdoc.custom_part_order = self.name
-
-            hq_company = frappe.db.get_value("Company", {"custom_head_office": 1}, "name")
-
-            if not hq_company:
-                frappe.throw("No Head Office company (custom_head_office=1) found.")
 
             newdoc.company = hq_company
 

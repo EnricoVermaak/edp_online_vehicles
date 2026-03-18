@@ -34,11 +34,11 @@ frappe.ui.form.on("HQ Part Order", {
 						frappe.set_route("Form", doc.doctype, doc.name);
 					});
 				});
-			};
-						
+
 			// Show Submit to DMS button
 			frm.add_custom_button(__("Submit to DMS"), function () {
 			}, __("Action"));
+			}
 		}
 	},
 
