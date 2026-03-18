@@ -283,19 +283,19 @@ frappe.ui.form.on("Vehicles Service", {
 			}, __("Action"));
 		}
 
-// if (edp_online_vehicles && edp_online_vehicles.vehicles_service && edp_online_vehicles.vehicles_service.add_scan_button) {
+		// if (edp_online_vehicles && edp_online_vehicles.vehicles_service && edp_online_vehicles.vehicles_service.add_scan_button) {
 		// 	edp_online_vehicles.vehicles_service.add_scan_button(frm);
 		// }
 	},
 	refresh: function(frm) {
         frm.set_query("vin_serial_no", function() {
-            return {
-                filters: {
-                    availability_status: "Sold"
-                }
-            };
-        });
-    },
+			return {
+				filters: {
+					availability_status: "Sold"
+				}
+			};
+		});
+	},
 
 	after_save(frm) {
 		frappe.call({
@@ -330,12 +330,12 @@ frappe.ui.form.on("Vehicles Service", {
 		});
 	},
 
-	
+
 	vin_serial_no(frm) {
 				frm.set_query("vin_serial_no", function() {
 			return {
 				filters: {
-				   availability_status: "Sold"
+					availability_status: "Sold"
 				}
 			};
 		});
@@ -403,35 +403,39 @@ frappe.ui.form.on("Vehicles Service", {
 				.then(settings_res => {
 					if (!settings_res?.message?.create_other_service_schedule) return;
 
-					frappe.call({
-						method: "edp_online_vehicles.events.service_type.check_service_date",
-						args: { vin: frm.doc.vin_serial_no },
-						callback: function (service_res) {
-							frappe.call({
-								method: "edp_online_vehicles.events.service_type.check_warranty_date",
-								args: { vin: frm.doc.vin_serial_no },
-								callback: function (warranty_res) {
-									const service_invalid = service_res.message && !service_res.message.is_valid;
-									const warranty_invalid = warranty_res.message && !warranty_res.message.is_valid;
-									if (!service_invalid && !warranty_invalid) return;
-									if (frm.doc.service_type && frm.doc.service_type.endsWith("-Other")) return;
+				frappe.call({
+					method: "edp_online_vehicles.events.service_type.check_service_date",
+					args: { vin: frm.doc.vin_serial_no },
+					callback: function (service_res) {
 
-									const parts = [];
-									if (service_invalid) parts.push("service period");
-									if (warranty_invalid) parts.push("warranty period");
-									frappe.msgprint("Please note the selected vehicle falls outside the allocated " +
-										parts.join(" and ") + " parameters. Please contact Head Office for more information.");
+						frappe.call({
+							method: "edp_online_vehicles.events.service_type.check_warranty_date",
+							args: { vin: frm.doc.vin_serial_no },
+							callback: async function (warranty_res) {
 
-									frappe.db.get_value("Vehicle Stock", frm.doc.vin_serial_no, "model").then((res) => {
-										let model = res.message.model;
-										frappe.model.set_value(dt, dn, "service_type", `SS-${model}-Other`);
-										frm.refresh_field("service_type");
-									});
-								},
-							});
-						},
-					});
+								const invalid = (
+									service_res.message?.is_valid === false ||
+									warranty_res.message?.is_valid === false
+								);
+
+								if (!invalid) return;
+
+								if (can_use_other) {
+									await set_other_service();
+									frappe.msgprint(__(
+										"Vehicle is outside service/warranty parameters. Defaulting to 'Other'."
+									));
+								} else {
+									await frm.set_value("service_type", "");
+									frappe.throw(__(
+										"Vehicle is outside service/warranty parameters"
+									));
+								}
+							},
+						});
+					},
 				});
+			});
 
 			_check_recall_campaign_for_service(frm);
 		}
@@ -468,60 +472,61 @@ frappe.ui.form.on("Vehicles Service", {
 	},
 
 	odo_reading_hours(frm) {
-		const dt = frm.doctype;
-		const dn = frm.doc.name;
+		if (!frm.doc.service_type || !frm.doc.model) return;
 
-		if (!frm.doc.service_type) {
-			frappe.model.set_value(dt, dn, "system_status", null);
-			frappe.msgprint("Please select a Service Type and VIN/Serial No before setting the Odo Reading");
-			frm.doc.odo_reading_hours = null;
-			frm.refresh_field("odo_reading_hours");
-			return;
-		}
 
-		if (frm.doc.odo_reading_hours > 0 && frm.doc.model) {
-			frappe.db.get_value("Service Schedules", frm.doc.service_type, "interval").then((r) => {
-				if (!r || !r.message || r.message.interval == null) return;
-				let interval = r.message.interval;
-				return frappe.db.get_value("Model Administration", frm.doc.model, [
-					"service_type_max_allowance",
-					"service_type_minimum_allowance",
-				]).then((r2) => {
-					if (!r2 || !r2.message) return;
-					let max_allowance = parseInt(r2.message.service_type_max_allowance || 0, 10);
-					let min_allowance = parseInt(r2.message.service_type_minimum_allowance || 0, 10);
-					let min_odo_value = parseInt(interval, 10) - min_allowance;
-					let max_odo_value = parseInt(interval, 10) + max_allowance;
-					let odo = parseInt(frm.doc.odo_reading_hours, 10);
+		frappe.db.get_value("Service Schedules", frm.doc.service_type, "interval")
+			.then((r) => {
+				const interval = parseInt(r?.message?.interval || 0, 10);
 
-					if (!Number.isNaN(odo)) {
-						const in_range = odo >= min_odo_value && odo <= max_odo_value;
-						frappe.model.set_value(dt, dn, "system_status", in_range ? "Conditionally Approved" : "Conditionally Declined");
-						frm.refresh_field("system_status");
-					}
+				return Promise.all([
+					frappe.db.get_value("Vehicle Service Settings", "Vehicle Service Settings",
+						["default_service_type_max_allowance", "default_service_type_min_allowance"]),
+					frappe.db.get_value("Model Administration", frm.doc.model,
+						["service_type_max_allowance", "service_type_minimum_allowance"])
+				]).then(([settings_res, model_res]) => {
 
-					if (odo < min_odo_value) {
-						if (!frm.doc.vin_serial_no) {
-							frappe.msgprint("Please select VIN/Serial No first before entering odo reading.");
-							return;
+					const settings = settings_res?.message || {};
+					const model_data = model_res?.message || {};
+
+					const model_min = parseInt(model_data.service_type_minimum_allowance || settings.default_service_type_minimum_allowance || 0, 10);
+					const model_max = parseInt(model_data.service_type_max_allowance || settings.default_service_type_max_allowance || 0, 10);
+
+					const min_allow = (model_min === 0 || isNaN(model_min))
+						? parseInt(settings.default_service_type_min_allowance, 10) || 0
+						: model_min;
+
+					const max_allow = (model_max === 0 || isNaN(model_max))
+						? parseInt(settings.default_service_type_max_allowance, 10) || 0
+						: model_max;
+
+					const min_odo_value = interval - model_min;
+					const max_odo_value = interval + model_max;
+					const odo = parseInt(frm.doc.odo_reading_hours, 10);
+
+					if (Number.isNaN(odo)) return;
+
+					const in_range = odo >= min_odo_value && odo <= max_odo_value;
+
+					frm.set_value("system_status",
+						in_range ? "Conditionally Approved" : "Conditionally Declined"
+					);
+
+					if (!in_range) {
+
+						} else {
+							frm.set_value("service_type", "");
+
+							frappe.throw(__(
+								"Sorry the mileage is not within range for a service"
+							));
 						}
-						frappe.db.get_value("Vehicle Service Settings", "Vehicle Service Settings", "create_other_service_schedule")
-							.then(svc_settings => {
-								if (!svc_settings?.message?.create_other_service_schedule) return;
-								frappe.db.get_value("Vehicle Stock", frm.doc.vin_serial_no, "model").then((res) => {
-									if (res && res.message && res.message.model) {
-										frappe.model.set_value(dt, dn, "service_type", `SS-${res.message.model}-Other`);
-										frm.refresh_field("service_type");
-									}
-								}).catch(() => frappe.msgprint("Could not fetch model for the selected VIN."));
-							});
-						frappe.msgprint("Your vehicle hasn't reached its service threshold yet. Please check back when it meets the minimum mileage requirement.");
-					} else if (odo > max_odo_value) {
-						frappe.msgprint("Your vehicle's mileage has exceeded the current service range. Please select the upcoming service schedule.");
-					}
+					
 				});
 			});
-		}
+		// }
+
+
 
 		if (!frm.doc.vin_serial_no || !frm.doc.odo_reading_hours) return;
 

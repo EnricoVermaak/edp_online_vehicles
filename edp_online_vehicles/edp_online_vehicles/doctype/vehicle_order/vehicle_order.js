@@ -1010,7 +1010,6 @@ frappe.ui.form.on("Vehicle Order", {
 					<h4>${__("Dealer Details")}</h4>
 					<p>
 						${__("Dealer Name")}: ${comp_name}<br>
-						${__("Dealer Code")}: ${comp_code}
 					</p>
 
 					<br>
