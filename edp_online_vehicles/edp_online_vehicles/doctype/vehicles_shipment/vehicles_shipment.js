@@ -170,7 +170,6 @@ frappe.ui.form.on("Vehicles Shipment", {
 				const dialog_grid = d.fields_dict.order_table.grid;
 
 				dialog_grid.get_field("order").get_query = function (doc, cdt, cdn) {
-					// ✅ Dialog tables sometimes don't have locals[cdt][cdn]
 					const grid_row = dialog_grid.get_row(cdn);
 					const r = grid_row ? grid_row.doc : null;
 
@@ -312,57 +311,11 @@ frappe.ui.form.on("Vehicles Shipment", {
 					}, 120);
 				});
 
-				// Promise.all(fetch_promises).then(() => {
-				// 	dialog_grid.refresh(); // ensure rows exist
-
-				// 	const $g = dialog_grid.wrapper.find('.form-grid');
-
-				// 	// Hide the entire checkbox column (header + rows)
-				// 	$g.find('.grid-heading-row .row-check').css({ display: 'none', width: 0, padding: 0, margin: 0 });
-				// 	$g.find('.grid-body .row-check').css({ display: 'none', width: 0, padding: 0, margin: 0 });
-
-				// 	// Optional: if you ALSO want to remove the "No." column
-				// 	// $g.find('.grid-heading-row .row-index, .grid-body .row-index')
-				// 	//   .css({ display: 'none', width: 0, padding: 0, margin: 0 });
-
-				// 	// Remove any leftover left spacing some layouts add
-				// 	$g.find('.grid-heading-row .grid-row .data-row').css({ 'margin-left': 0, 'padding-left': 0 });
-				// 	$g.find('.grid-body .data-row').css({ 'margin-left': 0, 'padding-left': 0 });
-
-				// 	// Force reflow so the bootstrap cols recalc nicely
-				// 	$g[0]?.offsetHeight;
-
-				// 	dialog_grid.refresh();
-				// 	d.show();
-
-				// 	setTimeout(() => {
-				// 		dialog_grid.grid_rows.forEach((grid_row) => {
-				// 			if (!grid_row.doc._order_locked) return;
-
-				// 			// Disable the cell in the grid row (per-row, no shared state)
-				// 			const $cell = grid_row.row && grid_row.row.find('[data-fieldname="order"]');
-				// 			if ($cell && $cell.length) {
-				// 				$cell.find("input").prop("disabled", true).attr("readonly", true);
-				// 				$cell.find(".link-btn, button").prop("disabled", true);
-				// 				// stop click from opening link picker
-				// 				$cell.css("pointer-events", "none");
-				// 			}
-
-				// 			// If user opens the row form, disable it there too
-				// 			if (grid_row.grid_form?.fields_dict?.order) {
-				// 				const ctrl = grid_row.grid_form.fields_dict.order;
-				// 				ctrl.$input?.prop("disabled", true).attr("readonly", true);
-				// 				ctrl.$wrapper?.css("pointer-events", "none");
-				// 			}
-				// 		});
-				// 	}, 120);
-				// });
+			
 
 
-			});
+			}, __("Actions"));
 			frm.add_custom_button(__("Receive"), function () {
-				frappe.dom.freeze();
-
 				var selected_items = [];
 				var promises = [];
 
@@ -411,28 +364,8 @@ frappe.ui.form.on("Vehicles Shipment", {
 
 					}
 				});
-				frappe.call({
-					method: "edp_online_vehicles.events.linked_plans.create_linked_plans",
-					args: { selected_items: JSON.stringify(selected_items) },
-				}).then(() => {
-					console.log("Plans created successfully!");
-				});
-
-
-				// Wait for all promises to resolve
 				if (selected_items.length > 0) {
-					// ------------------------------------------------------
-					// Create Vehicle Linked Warranty & Service Plan Logic
-					// ------------------------------------------------------
-					let creation_promises = [];
-
-					Promise.all(creation_promises).then(() => {
-						console.log("All Warranty & Service Plan docs created successfully!");
-					});
-
-					// ------------------------------------------------------
-					// Continue with stock entry logic
-					// ------------------------------------------------------
+					frappe.dom.freeze(__("Receiving vehicles…"));
 					frm
 						.call("create_stock_entry", {
 							selected_items: JSON.stringify(selected_items),
@@ -470,13 +403,12 @@ frappe.ui.form.on("Vehicles Shipment", {
 									}
 								}
 							}
-						});
+						}).catch(() => frappe.dom.unfreeze());
 
 				} else {
-					frappe.dom.unfreeze();
-					frappe.throw("Please Select at least One Item.");
+					frappe.throw(__("Please select at least one item to receive."));
 				}
-			});
+			}, __("Actions"));
 
 			frm.add_custom_button(__("Receive All"), function () {
 				const all_items = frm.doc.vehicles_shipment_items || [];
@@ -514,7 +446,16 @@ frappe.ui.form.on("Vehicles Shipment", {
 						}).catch(() => frappe.dom.unfreeze());
 					}
 				);
-			});
+			}, __("Actions"));
+
+			const shipment_grid = frm.fields_dict.vehicles_shipment_items.grid;
+			const _toggle_receive_all = () => {
+				const has_selected = (shipment_grid.get_selected_children() || []).length > 0;
+				const $btn = frm.custom_buttons[__("Receive All")];
+				if ($btn) $btn.toggle(!has_selected);
+			};
+			shipment_grid.wrapper.on("change", ".grid-row-check", _toggle_receive_all);
+			setTimeout(_toggle_receive_all, 200);
 		}
 
 
