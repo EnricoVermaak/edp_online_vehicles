@@ -116,6 +116,27 @@ class VehiclesShipment(Document):
 
 
 
+	def _receive_items(self, items):
+		self.create_or_update_items(items)
+		self.create_stock_entry_for_serial_numbers(items)
+		self.create_vehicles_stock_entries(items)
+		self.create_vehicles_card(items)
+		self.check_head_office_orders(items)
+		self.create_reserve_doc(items)
+
+		from edp_online_vehicles.events.linked_plans import create_vehicle_plans
+		for item in items:
+			try:
+				create_vehicle_plans(item.get("vin_serial_no"), item.get("model_code"))
+			except Exception:
+				frappe.log_error(
+					frappe.get_traceback(),
+					f"create_vehicle_plans failed for VIN {item.get('vin_serial_no')}",
+				)
+
+		frappe.db.commit()
+		_fire_on_vehicle_shipment_received(items)
+
 	@frappe.whitelist()
 	def create_stock_entry(self, selected_items):
 		selected_items = frappe.parse_json(selected_items)
@@ -124,14 +145,7 @@ class VehiclesShipment(Document):
 			return "Received"
 
 		try:
-			self.create_or_update_items(to_receive)
-			self.create_stock_entry_for_serial_numbers(to_receive)
-			self.create_vehicles_stock_entries(to_receive)
-			self.create_vehicles_card(to_receive)
-			self.check_head_office_orders(to_receive)
-			self.create_reserve_doc(to_receive)
-			frappe.db.commit()
-			_fire_on_vehicle_shipment_received(to_receive)
+			self._receive_items(to_receive)
 			return "Received"
 		except Exception:
 			frappe.db.rollback()
@@ -141,7 +155,7 @@ class VehiclesShipment(Document):
 		for item in selected_items:
 			item_name = frappe.utils.get_link_to_form("Model Administration", item.get("model_code"))
 			if not frappe.db.exists("Item", item.get("model_code")):
-				frappe.throw(f"{item_name} Item not Exist")
+				frappe.throw(_("{0} does not exist as an Item").format(item_name))
 
 	def create_stock_entry_for_serial_numbers(self, selected_items):
 		stock_entry = frappe.get_doc(
@@ -395,7 +409,6 @@ class VehiclesShipment(Document):
 
 	@frappe.whitelist()
 	def receive_all_in_background(self):
-		"""Validate all pending items, then enqueue a background receive job."""
 		errors = []
 		pending_count = 0
 		for row in self.vehicles_shipment_items:
@@ -442,7 +455,6 @@ def _fire_on_vehicle_shipment_received(selected_items):
 
 
 def receive_all_background_job(shipment_name, requested_by=None):
-	"""Background job: receive all pending items in a shipment and notify on completion."""
 	doc = frappe.get_doc("Vehicles Shipment", shipment_name)
 	notify_user = requested_by or doc.modified_by or doc.owner
 
@@ -453,8 +465,6 @@ def receive_all_background_job(shipment_name, requested_by=None):
 			continue
 		if not row.vin_serial_no:
 			continue
-		# Skip vehicles where a Vehicle Stock record already exists (handles cases
-		# where the row status was not saved after a prior receive attempt)
 		if frappe.db.exists("Vehicle Stock", {"vin_serial_no": row.vin_serial_no}):
 			skipped_vins.append(row.vin_serial_no)
 			continue
@@ -480,41 +490,29 @@ def receive_all_background_job(shipment_name, requested_by=None):
 		return
 
 	try:
-		doc.create_or_update_items(selected_items)
-		doc.create_stock_entry_for_serial_numbers(selected_items)
-		doc.create_vehicles_stock_entries(selected_items)
-		doc.create_vehicles_card(selected_items)
-		doc.check_head_office_orders(selected_items)
-		doc.create_reserve_doc(selected_items)
-		frappe.db.commit()
-		_fire_on_vehicle_shipment_received(selected_items)
+		doc._receive_items(selected_items)
 
-		from edp_online_vehicles.events.linked_plans import create_vehicle_plans
-		for item in selected_items:
-			try:
-				create_vehicle_plans(item.get("vin_serial_no"), item.get("model_code"))
-			except Exception:
-				frappe.log_error(
-					frappe.get_traceback(),
-					f"create_vehicle_plans failed for VIN {item.get('vin_serial_no')}",
-				)
-		frappe.db.commit()
-
+		doc.reload()
 		received_vins = {item.get("vin_serial_no") for item in selected_items}
 		for row in doc.vehicles_shipment_items:
 			if row.vin_serial_no in received_vins:
-				frappe.db.set_value(
-					"Vehicles Shipment Items", row.name, "status", "Received",
-					update_modified=False,
-				)
+				row.status = "Received"
 
-		received_count = frappe.db.count(
-			"Vehicles Shipment Items", {"parent": shipment_name, "status": "Received"}
-		)
+		received_count = sum(1 for r in doc.vehicles_shipment_items if r.status == "Received")
 		total_count = len(doc.vehicles_shipment_items)
-		new_status = "Completed" if received_count == total_count else "Partially Received"
-		frappe.db.set_value("Vehicles Shipment", shipment_name, "status", new_status)
+		if received_count == total_count:
+			doc.status = "Completed"
+		elif received_count > 0:
+			doc.status = "Partially Received"
+
+		doc.save(ignore_permissions=True)
 		frappe.db.commit()
+
+		new_status = doc.status
+
+		if new_status == "Completed" and doc.docstatus == 0:
+			doc.submit()
+			frappe.db.commit()
 
 		frappe.publish_realtime(
 			"msgprint",
