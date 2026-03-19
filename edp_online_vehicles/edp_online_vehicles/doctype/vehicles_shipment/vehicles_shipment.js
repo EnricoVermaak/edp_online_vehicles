@@ -9,18 +9,25 @@ frappe.ui.form.on("Vehicles Shipment", {
 
 		let grid = frm.fields_dict["vehicles_shipment_items"].grid;
 
-		if (!grid.wrapper.find(".add-multiple-btn").length) {
+		if (frm.doc.docstatus === 0) {
+			if (!grid.wrapper.find(".add-multiple-btn").length) {
+				let btn = $(`<button class="btn btn-secondary btn-sm add-multiple-btn">
+					Add Multiple
+				</button>`);
 
-			let btn = $(`<button class="btn btn-secondary btn-sm add-multiple-btn">
-				Add Multiple
-			</button>`);
+				btn.click(() => {
+					open_add_multiple_dialog(frm);
+				});
 
-			btn.click(() => {
-				open_add_multiple_dialog(frm);
-			});
-
-			grid.wrapper.find(".grid-buttons").append(btn);
+				grid.wrapper.find(".grid-buttons").append(btn);
+			}
+		} else {
+			// Remove button if document is submitted or cancelled
+			grid.wrapper.find(".add-multiple-btn").remove();
 		}
+
+		// Handle download and upload buttons
+		handle_custom_buttons(frm);
 
 		frm.set_query("target_warehouse", () => {
 			return {
@@ -1026,92 +1033,91 @@ function handle_custom_buttons(frm) {
 
 	// Check if the document is in draft state
 	if (frm.doc.docstatus === 0) {
-		frappe.after_ajax(() => {
-			if (
-				grid_wrapper &&
-				!grid_wrapper.querySelector(".custom-upload-download-buttons")
-			) {
-				// Create a container for the buttons
-				const button_container = document.createElement("div");
-				button_container.className = "custom-upload-download-buttons";
-				button_container.style =
-					"position: absolute; bottom: 0px; right: 10px; display: flex; gap: 10px;";
+		if (
+			grid_wrapper &&
+			!grid_wrapper.querySelector(".custom-upload-download-buttons")
+		) {
+			// Create a container for the buttons
+			const button_container = document.createElement("div");
+			button_container.className = "custom-upload-download-buttons";
+			button_container.style =
+				"position: absolute; bottom: 0px; right: 10px; display: flex; gap: 10px;";
 
-				// Create Download button
-				const download_button = document.createElement("button");
-				download_button.className = "btn btn-primary btn-sm";
-				download_button.innerText = "Download";
-				download_button.onclick = function () {
-					let title = "Vehicles Shipment Items";
-					let data = [];
-					let docfields = [];
+			// Create Download button
+			const download_button = document.createElement("button");
+			download_button.className = "btn btn-primary btn-sm";
+			download_button.innerText = "Download";
+			download_button.onclick = function () {
+				let title = "Vehicles Shipment Items";
+				let data = [];
+				let docfields = [];
 
-					// Add header rows with instructions
-					data.push([__("Template", [title])]);
-					data.push([]);
-					data.push([]);
-					data.push([]);
-					data.push([__("The CSV format is case sensitive")]);
-					data.push([__("Do not edit headers which are preset in the template")]);
-					data.push(["------"]);
+				// Add header rows with instructions
+				data.push([__("Template", [title])]);
+				data.push([]);
+				data.push([]);
+				data.push([]);
+				data.push([__("The CSV format is case sensitive")]);
+				data.push([__("Do not edit headers which are preset in the template")]);
+				data.push(["------"]);
 
-					// Get child and visible columns
-					const child_doctype = "Vehicles Shipment Items";
+				// Get child and visible columns
+				const child_doctype = "Vehicles Shipment Items";
 
-					// Add if field is In List View, not hidden
-					const visible_fields = frappe.get_meta(child_doctype).fields.filter(df =>
-						frappe.model.is_value_type(df.fieldtype) &&
-						df.in_list_view &&
-						!df.hidden &&
-						df.fieldname !== "model_description" && // Exclude model_descriptions
-						df.fieldname !== "status" // Exclude status
-					);
+				// Add if field is In List View, not hidden
+				const visible_fields = frappe.get_meta(child_doctype).fields.filter(df =>
+					frappe.model.is_value_type(df.fieldtype) &&
+					df.in_list_view &&
+					!df.hidden &&
+					df.fieldname !== "model_description" && // Exclude model_descriptions
+					df.fieldname !== "status" // Exclude status
+				);
 
-					// Add visible fields
-					visible_fields.forEach((field) => {
-						data[1].push(field.label);     // Label row
-						data[2].push(field.fieldname); // Fieldname row
-						docfields.push(field);         // Store metadata for formatting
+				// Add visible fields
+				visible_fields.forEach((field) => {
+					data[1].push(field.label);     // Label row
+					data[2].push(field.fieldname); // Fieldname row
+					docfields.push(field);         // Store metadata for formatting
+				});
+
+				// Add existing data from the child table
+				(cur_frm.doc.vehicles_shipment_items || []).forEach((d) => {
+					let row = [];
+					data[2].forEach((fieldname, i) => {
+						let value = d[fieldname];
+
+						// If this is the colour field
+						if (fieldname === "colour" && value) {
+							value = value.split(" - ")[0];
+						}
+						if (fieldname === "interior_colour" && value) {
+							value = value.split(" - ")[0];
+						}
+						if (docfields[i].fieldtype === "Date" && value) {
+							value = frappe.datetime.str_to_user(value);
+						}
+						row.push(value || "");
 					});
+					data.push(row);
+				});
 
-					// Add existing data from the child table
-					(cur_frm.doc.vehicles_shipment_items || []).forEach((d) => {
-						let row = [];
-						data[2].forEach((fieldname, i) => {
-							let value = d[fieldname];
+				// Trigger download
+				frappe.tools.downloadify(data, null, title);
+			};
 
-							// If this is the colour field
-							if (fieldname === "colour" && value) {
-								value = value.split(" - ")[0];
-							}
-							if (fieldname === "interior_colour" && value) {
-								value = value.split(" - ")[0];
-							}
-							if (docfields[i].fieldtype === "Date" && value) {
-								value = frappe.datetime.str_to_user(value);
-							}
-							row.push(value || "");
-						});
-						data.push(row);
-					});
-
-					// Trigger download
-					frappe.tools.downloadify(data, null, title);
+			// Create Upload button
+			const upload_button = document.createElement("button");
+			upload_button.className = "btn btn-secondary btn-sm";
+			upload_button.innerText = "Upload";
+			upload_button.onclick = function () {
+				const value_formatter_map = {
+					Date: (val) =>
+						val ? frappe.datetime.user_to_str(val) : val,
+					Int: (val) => cint(val),
+					Check: (val) => cint(val),
+					Float: (val) => flt(val),
+					Currency: (val) => flt(val),
 				};
-
-				// Create Upload button
-				const upload_button = document.createElement("button");
-				upload_button.className = "btn btn-secondary btn-sm";
-				upload_button.innerText = "Upload";
-				upload_button.onclick = function () {
-					const value_formatter_map = {
-						Date: (val) =>
-							val ? frappe.datetime.user_to_str(val) : val,
-						Int: (val) => cint(val),
-						Check: (val) => cint(val),
-						Float: (val) => flt(val),
-						Currency: (val) => flt(val),
-					};
 
 					new frappe.ui.FileUploader({
 						as_dataurl: true,
@@ -1330,11 +1336,10 @@ function handle_custom_buttons(frm) {
 				// Append the button container to the child table grid
 				grid_wrapper.appendChild(button_container);
 			}
-		});
+		}
 	}
-}
 
-// function incrementStockNumber(stockNumber) {
+	// function incrementStockNumber(stockNumber) {
 // 	// Split the prefix and number part
 // 	const prefix = stockNumber.match(/[A-Za-z]+/)[0];
 // 	const number = stockNumber.match(/\d+/)[0];
