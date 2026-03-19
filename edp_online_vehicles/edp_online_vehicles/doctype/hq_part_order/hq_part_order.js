@@ -45,20 +45,17 @@ frappe.ui.form.on("HQ Part Order", {
 	before_save(frm) {
 		let total_qty = 0;
 
-		frm.doc.table_ugma.forEach((row) => {
+		(frm.doc.table_ugma || []).forEach((row) => {
 			total_qty += row.qty || 0;
 		});
 
 		frm.set_value("total_qty_parts_ordered", total_qty);
-		frm.set_value(
-			"total_qty_parts_delivered",
-			frm.doc.total_delivered_parts_qty || 0,
-		);
+
+		let delivered = frm.doc.total_delivered_parts_qty || 0;
+		frm.set_value("total_qty_parts_delivered", delivered);
 		frm.set_value(
 			"_order_delivered",
-			((frm.doc.total_delivered_parts_qty || 0) /
-				frm.doc.total_qty_parts_ordered) *
-				100,
+			total_qty > 0 ? (delivered / total_qty) * 100 : 0,
 		);
 	},
 	total_excl(frm) {
