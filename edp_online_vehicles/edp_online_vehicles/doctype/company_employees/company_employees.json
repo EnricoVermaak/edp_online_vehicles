@@ -1,0 +1,67 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2026-03-19 11:06:30.469500",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "employee",
+  "employee_full_name",
+  "active",
+  "medically_fit",
+  "compliant"
+ ],
+ "fields": [
+  {
+   "fieldname": "employee",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Employee",
+   "options": "User"
+  },
+  {
+   "fetch_from": "employee.full_name",
+   "fieldname": "employee_full_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Employee Full Name"
+  },
+  {
+   "default": "0",
+   "fieldname": "active",
+   "fieldtype": "Check",
+   "in_list_view": 1,
+   "label": "Active"
+  },
+  {
+   "default": "0",
+   "fieldname": "medically_fit",
+   "fieldtype": "Check",
+   "in_list_view": 1,
+   "label": "Medically Fit"
+  },
+  {
+   "default": "0",
+   "fieldname": "compliant",
+   "fieldtype": "Check",
+   "in_list_view": 1,
+   "label": "Compliant"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2026-03-19 11:18:02.704148",
+ "modified_by": "Administrator",
+ "module": "Edp Online Vehicles",
+ "name": "Company Employees",
+ "owner": "Administrator",
+ "permissions": [],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
