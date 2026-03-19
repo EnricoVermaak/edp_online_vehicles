@@ -663,7 +663,7 @@ frappe.ui.form.on("Vehicles Shipment", {
 
 	after_save(frm) {
 		if (frm.doc.status == "Completed") {
-			console.log(frm.doc.name);
+			// console.log(frm.doc.name);
 
 			frappe.call({
 				method: "edp_online_vehicles.events.submit_document.submit_shipment_document",
