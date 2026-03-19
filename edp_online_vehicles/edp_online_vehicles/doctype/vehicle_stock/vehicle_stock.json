@@ -115,6 +115,7 @@
   "service_start_date",
   "service_end_date",
   "image",
+  "third_party_service",
   "section_break_llyx",
   "last_service_hours",
   "column_break_wjfr",
@@ -837,6 +838,12 @@
    "fieldname": "register_no",
    "fieldtype": "Data",
    "label": "Vehicle Registration No"
+  },
+  {
+   "default": "0",
+   "fieldname": "third_party_service",
+   "fieldtype": "Check",
+   "label": "Third Party Service "
   }
  ],
  "grid_page_length": 50,
@@ -889,7 +896,7 @@
    "link_fieldname": "vin_serial_no"
   }
  ],
- "modified": "2026-03-13 13:52:41.980609",
+ "modified": "2026-03-19 11:16:19.202632",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicle Stock",

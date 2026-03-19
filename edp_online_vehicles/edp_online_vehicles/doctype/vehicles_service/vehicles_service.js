@@ -306,39 +306,6 @@ frappe.ui.form.on("Vehicles Service", {
 		});
 	},
 
-	after_save(frm) {
-		frappe.call({
-			method: "edp_online_vehicles.events.change_vehicles_status.service_status_change",
-			args: { vinno: frm.doc.vin_serial_no, status: frm.doc.service_status },
-			callback: function (r) {
-				if (r.message) {
-					frappe.show_alert({ message: r.message }, 5);
-					frappe.db.get_list("Service Status", {
-						filters: { automatically_submit_document: 1 },
-						fields: ["name"],
-					}).then((statuses) => {
-						if (statuses.length > 0) {
-							let status = statuses.map((s) => s.name);
-							if (status == frm.doc.service_status) {
-								frappe.call({
-									method: "edp_online_vehicles.events.submit_document.submit_service_document",
-									args: { doc: frm.doc.name },
-									callback: function (r) {
-										if (r.message) {
-											frm.reload_doc().then(() => {
-												frappe.show_alert({ message: r.message }, 5);
-											});
-										}
-									},
-								});
-							}
-						}
-					});
-				}
-			},
-		});
-	},
-
 
 	vin_serial_no(frm) {
 				frm.set_query("vin_serial_no", function() {
@@ -490,6 +457,7 @@ frappe.ui.form.on("Vehicles Service", {
 			frappe.db.get_value("Service Schedules", frm.doc.service_type, "interval").then((r) => {
 				if (!r || !r.message || r.message.interval == null) return;
 				let interval = r.message.interval;
+
 				return frappe.db.get_value("Model Administration", frm.doc.model, [
 					"service_type_max_allowance",
 					"service_type_minimum_allowance",
@@ -497,33 +465,49 @@ frappe.ui.form.on("Vehicles Service", {
 					if (!r2 || !r2.message) return;
 					let max_allowance = parseInt(r2.message.service_type_max_allowance || 0, 10);
 					let min_allowance = parseInt(r2.message.service_type_minimum_allowance || 0, 10);
-					let min_odo_value = parseInt(interval, 10) - min_allowance;
-					let max_odo_value = parseInt(interval, 10) + max_allowance;
-					let odo = parseInt(frm.doc.odo_reading_hours, 10);
 
-					if (!Number.isNaN(odo)) {
-						const in_range = odo >= min_odo_value && odo <= max_odo_value;
-						frappe.model.set_value(dt, dn, "system_status", in_range ? "Conditionally Approved" : "Conditionally Declined");
-						frm.refresh_field("system_status");
+					let promise = Promise.resolve();
+
+					if (max_allowance === 0 || min_allowance === 0) {
+						promise = frappe.db.get_doc("Vehicle Service Settings").then(settings => {
+							if (max_allowance === 0) {
+								max_allowance = parseInt(settings.default_service_type_max_allowance || 0, 10);
+							}
+							if (min_allowance === 0) {
+								min_allowance = parseInt(settings.default_service_type_minimum_allowance || 0, 10);
+							}
+						});
 					}
 
-					if (odo < min_odo_value) {
-						if (!frm.doc.vin_serial_no) {
-							frappe.msgprint("Please select VIN/Serial No first before entering odo reading.");
-							return;
+					promise.then(() => {
+						let min_odo_value = parseInt(interval, 10) - min_allowance;
+						let max_odo_value = parseInt(interval, 10) + max_allowance;
+						let odo = parseInt(frm.doc.odo_reading_hours, 10);
+
+						if (!Number.isNaN(odo)) {
+							const in_range = odo >= min_odo_value && odo <= max_odo_value;
+							frappe.model.set_value(frm.doc.doctype, frm.doc.name, "system_status", in_range ? "Conditionally Approved" : "Conditionally Declined");
+							frm.refresh_field("system_status");
 						}
-						if (frm.__create_other) {
-							frappe.db.get_value("Vehicle Stock", frm.doc.vin_serial_no, "model").then((res) => {
-								if (res && res.message && res.message.model) {
-									frappe.model.set_value(dt, dn, "service_type", `SS-${res.message.model}-Other`);
-									frm.refresh_field("service_type");
-								}
-							}).catch(() => frappe.msgprint("Could not fetch model for the selected VIN."));
+
+						if (odo < min_odo_value) {
+							if (!frm.doc.vin_serial_no) {
+								frappe.msgprint("Please select VIN/Serial No first before entering odo reading.");
+								return;
+							}
+							if (frm.__create_other) {
+								frappe.db.get_value("Vehicle Stock", frm.doc.vin_serial_no, "model").then((res) => {
+									if (res && res.message && res.message.model) {
+										frappe.model.set_value(frm.doc.doctype, frm.doc.name, "service_type", `SS-${res.message.model}-Other`);
+										frm.refresh_field("service_type");
+									}
+								});
+							}
+							frappe.msgprint("Your vehicle hasn't reached its service threshold yet.");
+						} else if (odo > max_odo_value) {
+							frappe.msgprint("Your vehicle's mileage has exceeded the current service range.");
 						}
-						frappe.msgprint("Your vehicle hasn't reached its service threshold yet. Please check back when it meets the minimum mileage requirement.");
-					} else if (odo > max_odo_value) {
-						frappe.msgprint("Your vehicle's mileage has exceeded the current service range. Please select the upcoming service schedule.");
-					}
+					}); 
 				});
 			});
 		}
