@@ -427,7 +427,7 @@ frappe.ui.form.on("Vehicles Shipment", {
 
 									frappe.dom.unfreeze();
 									frm.save_or_update();
-				
+								}
 							}
 						}).catch(() => frappe.dom.unfreeze());
 
