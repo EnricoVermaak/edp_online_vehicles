@@ -413,8 +413,8 @@ class PartsDeliveryNote(Document):
 			undelivered_billing += price_list * remaining
 			undelivered_qty += remaining
 
-		hq_doc.total_undelivered_parts_qty = undelivered_qty
-		hq_doc.total_undelivered_parts_dealer_billing_excl = undelivered_billing
+		hq_doc.total_undelivered_parts_qty = int(undelivered_qty)
+		hq_doc.total_undelivered_parts_dealer_billing_excl = flt(undelivered_billing, 2)
 
 		delivered_billing = 0
 		delivered_qty = 0
@@ -426,14 +426,14 @@ class PartsDeliveryNote(Document):
 			delivered_billing += price_list * flt(row.qty_delivered)
 			delivered_qty += flt(row.qty_delivered)
 
-		hq_doc.total_delivered_parts_qty = delivered_qty
-		hq_doc.total_delivered_parts_dealer_billing_excl = delivered_billing
+		hq_doc.total_delivered_parts_qty = int(delivered_qty)
+		hq_doc.total_delivered_parts_dealer_billing_excl = flt(delivered_billing, 2)
 
 		if flt(hq_doc.total_qty_parts_ordered) > 0:
-			hq_doc.total_qty_parts_delivered = flt(hq_doc.total_qty_parts_ordered) - undelivered_qty
-			hq_doc._order_delivered = (
-				flt(hq_doc.total_qty_parts_delivered) / flt(hq_doc.total_qty_parts_ordered)
-			) * 100
+			hq_doc.total_qty_parts_delivered = int(flt(hq_doc.total_qty_parts_ordered) - undelivered_qty)
+			hq_doc._order_delivered = flt(
+				(flt(hq_doc.total_qty_parts_delivered) / flt(hq_doc.total_qty_parts_ordered)) * 100, 9
+			)
 		else:
 			hq_doc.total_qty_parts_delivered = 0
 			hq_doc._order_delivered = 0
@@ -451,8 +451,8 @@ class PartsDeliveryNote(Document):
 				total_dealer_billing += flt(price_list) * (flt(row.qty_ordered) - flt(row.qty_delivered))
 				total_undelivered += flt(row.qty_ordered) - flt(row.qty_delivered)
 
-			order_doc.total_undelivered_parts_qty = total_undelivered
-			order_doc.total_undelivered_parts_dealer_billing = total_dealer_billing
+			order_doc.total_undelivered_parts_qty = int(total_undelivered)
+			order_doc.total_undelivered_parts_dealer_billing = flt(total_dealer_billing, 2)
 		else:
 			order_doc.total_undelivered_parts_qty = 0
 			order_doc.total_undelivered_parts_dealer_billing = 0
@@ -468,19 +468,19 @@ class PartsDeliveryNote(Document):
 				total_dealer_billing += flt(price_list) * flt(row.qty_delivered)
 				total_delivered += flt(row.qty_delivered)
 
-			order_doc.total_delivered_parts_qty = total_delivered
-			order_doc.total_delivered_parts_dealer_billing = total_dealer_billing
+			order_doc.total_delivered_parts_qty = int(total_delivered)
+			order_doc.total_delivered_parts_dealer_billing = flt(total_dealer_billing, 2)
 		else:
 			order_doc.total_delivered_parts_qty = 0
 			order_doc.total_delivered_parts_dealer_billing = 0
 
 		if flt(order_doc.total_parts_ordered) > 0:
-			order_doc.total_parts_delivered = (
+			order_doc.total_parts_delivered = int(
 				flt(order_doc.total_parts_ordered) - flt(order_doc.total_undelivered_parts_qty)
 			)
-			order_doc._order_delivered = (
-				flt(order_doc.total_parts_delivered) / flt(order_doc.total_parts_ordered)
-			) * 100
+			order_doc._order_delivered = flt(
+				(flt(order_doc.total_parts_delivered) / flt(order_doc.total_parts_ordered)) * 100, 9
+			)
 		else:
 			order_doc.total_parts_delivered = 0
 			order_doc._order_delivered = 0

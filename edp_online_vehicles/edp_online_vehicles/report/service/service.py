@@ -14,7 +14,7 @@ def execute(filters=None):
 def get_columns():
 	columns = [
 		{
-			"fieldname": "vinserial_no",
+			"fieldname": "vin_serial_no",
 			"label": _("Vehicles VIN No/ Serial No"),
 			"fieldtype": "Data",
 			"width": 120,
@@ -27,9 +27,9 @@ def get_columns():
 			"width": 120,
 		},
 		{
-			"fieldname": "schedule_date",
+			"fieldname": "requested_booking_date_time",
 			"label": _("Requested Booking Date"),
-			"fieldtype": "Date",
+			"fieldtype": "Datetime",
 			"width": 120,
 		},
 		{"fieldname": "service_date", "label": _("Service Date"), "fieldtype": "Date", "width": 120},
@@ -45,13 +45,7 @@ def get_columns():
 		{"fieldname": "price_list", "label": _("Price List"), "fieldtype": "Data", "width": 120},
 		{"fieldname": "service_type", "label": _("Service Type"), "fieldtype": "Data", "width": 120},
 		{"fieldname": "service_status", "label": _("Status"), "fieldtype": "Data", "width": 120},
-		{"fieldname": "transferred", "label": _("Transferred"), "fieldtype": "Check", "width": 60},
-		{
-			"fieldname": "added_to_sales_order",
-			"label": _("Added to Sales Order"),
-			"fieldtype": "Check",
-			"width": 120,
-		},
+
 		{"fieldname": "engine_no", "label": _("Engine No"), "fieldtype": "Data", "width": 120},
 		{"fieldname": "brand", "label": _("Brand"), "fieldtype": "Data", "width": 120},
 		{"fieldname": "licence_no", "label": _("Licence No"), "fieldtype": "Data", "width": 120},
@@ -82,8 +76,8 @@ def get_columns():
 			"width": 120,
 		},
 		{
-			"fieldname": "warranty_period_years",
-			"label": _("Warranty Period (Years)"),
+			"fieldname": "warranty_period_months",
+			"label": _("Warranty Period (Months)"),
 			"fieldtype": "Int",
 			"width": 120,
 		},
@@ -141,24 +135,24 @@ def get_columns():
 
 def get_data(filters):
 	services = frappe.qb.DocType("Vehicles Service")
+	stock = frappe.qb.DocType("Vehicle Stock")
 
 	query = (
 		frappe.qb.from_(services)
+		.left_join(stock).on(stock.name == services.vin_serial_no)
 		.select(
-			services.vinserial_no,
+			services.vin_serial_no,
 			services.model,
 			services.odo_reading_hours,
-			services.schedule_date,
+			services.requested_booking_date_time,
 			services.service_date,
 			services.service_completed,
 			services.customer,
 			services.customer_name,
-			services.current_location,
+			stock.current_location,
 			services.price_list,
 			services.service_type,
 			services.service_status,
-			services.transferred,
-			services.added_to_sales_order,
 			services.engine_no,
 			services.brand,
 			services.licence_no,
@@ -168,7 +162,7 @@ def get_data(filters):
 			services.bought_from_dealer,
 			services.warranty_start_date,
 			services.warranty_end_date,
-			services.warranty_period_years,
+			services.warranty_period_months,
 			services.job_card_no,
 			services.dms_approval_no,
 			services.dealer,
@@ -190,19 +184,19 @@ def get_data(filters):
 		)
 	)
 
-	if filters.get("vinserial_no"):
-		query = query.where(services.vinserial_no == filters.get("vinserial_no"))
+	if filters.get("vin_serial_no"):
+		query = query.where(services.vin_serial_no == filters.get("vin_serial_no"))
 
 	if filters.get("customer"):
 		query = query.where(services.customer == filters.get("customer"))
 
 	if filters.get("current_location"):
-		query = query.where(services.current_location == filters.get("current_location"))
+		query = query.where(stock.current_location == filters.get("current_location"))
 
 	if filters.get("service_type"):
 		query = query.where(services.service_type == filters.get("service_type"))
 
 	if filters.get("status"):
-		query = query.where(services.status == filters.get("status"))
+		query = query.where(services.service_status == filters.get("status"))
 
 	return query.run(as_dict=1)

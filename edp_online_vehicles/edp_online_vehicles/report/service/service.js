@@ -18,7 +18,7 @@ frappe.query_reports["Service"] = {
 			reqd: 1,
 		},
 		{
-			fieldname: "vinserial_no",
+			fieldname: "vin_serial_no",
 			label: __("Vin/Serial No"),
 			fieldtype: "Link",
 			options: "Vehicle Stock",

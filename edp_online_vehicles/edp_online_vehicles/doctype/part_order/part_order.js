@@ -109,7 +109,7 @@ frappe.ui.form.on("Part Order", {
 
 	before_save(frm) {
 		if (!frm.doc.order_date_time) {
-			frm.set_value("order_date_time", frappe.datetime.now_datetime());
+			frm.doc.order_date_time = frappe.datetime.now_datetime();
 		}
 
 		let qty_ordered = 0;
@@ -121,12 +121,12 @@ frappe.ui.form.on("Part Order", {
 		});
 
 		if (frm.is_new()) {
-			frm.set_value("order_delivery_time", "00:00:00");
-			frm.set_value("_order_delivered", "0");
-			frm.set_value("total_parts_delivered", "0");
+			frm.doc.order_delivery_time = "00:00:00";
+			frm.doc._order_delivered = 0;
+			frm.doc.total_parts_delivered = 0;
 		} else {
-			if (qty_ordered > 0 && qty_ordered === qty_delivered) {
-				frm.set_value("order_delivery_time", formatTimeDifference(frm));
+			if (qty_ordered > 0 && qty_ordered === qty_delivered && !frm.doc.order_delivery_time) {
+				frm.doc.order_delivery_time = formatTimeDifference(frm);
 			}
 
 			let total_ordered = 0;
@@ -139,22 +139,18 @@ frappe.ui.form.on("Part Order", {
 				total_undelivered_parts_dealer_billing += row.dealer_billing_excl;
 			}
 
-			frm.set_value("total_parts_ordered", total_ordered);
-			frm.set_value("total_undelivered_parts_qty", total_ordered);
-			frm.set_value(
-				"total_undelivered_parts_dealer_billing",
-				total_undelivered_parts_dealer_billing,
-			);
+			frm.doc.total_parts_ordered = total_ordered;
+			frm.doc.total_undelivered_parts_qty = total_ordered;
+			frm.doc.total_undelivered_parts_dealer_billing = total_undelivered_parts_dealer_billing;
 		}
 	},
 
 	total_excl(frm) {
 		let total_excl = frm.doc.total_excl;
 		let vat = 0.15 * total_excl;
-		let VATPromise = frm.set_value("vat", vat);
-		let grand_totalPromise = frm.set_value("total_incl", vat + total_excl);
-
-		return Promise.all([VATPromise, grand_totalPromise]);
+		frm.doc.vat = vat;
+		frm.doc.total_incl = vat + total_excl;
+		frm.refresh_fields();
 	},
 
 	refresh(frm) {

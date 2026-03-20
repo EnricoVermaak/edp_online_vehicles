@@ -28,8 +28,8 @@ class VehiclesService(Document):
         setting_doc.save(ignore_permissions=True)
         frappe.db.commit()
 
-        if self.has_value_changed("service_status"):
-            self.send_hq_service_notification()
+        # if self.has_value_changed("service_status"):
+        #     self.send_hq_service_notification()
         self.update_vehicle_status()
 
         self.check_and_auto_submit()

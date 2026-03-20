@@ -69,8 +69,8 @@ class D2DPartOrder(Document):
 				undelivered_billing += price_list * remaining
 				undelivered_qty += remaining
 
-		self.total_undelivered_parts_qty = undelivered_qty
-		self.total_undelivered_parts_dealer_billing = undelivered_billing
+		self.total_undelivered_parts_qty = int(undelivered_qty)
+		self.total_undelivered_parts_dealer_billing = flt(undelivered_billing, 2)
 
 		delivered_billing = 0
 		delivered_qty = 0
@@ -83,12 +83,14 @@ class D2DPartOrder(Document):
 				delivered_billing += price_list * flt(row.qty_delivered)
 				delivered_qty += flt(row.qty_delivered)
 
-		self.total_delivered_parts_qty = delivered_qty
-		self.total_delivered_parts_dealer_billing = delivered_billing
+		self.total_delivered_parts_qty = int(delivered_qty)
+		self.total_delivered_parts_dealer_billing = flt(delivered_billing, 2)
 
 		if flt(self.total_qty_parts_ordered) > 0:
-			self.total_qty_parts_delivered = flt(self.total_qty_parts_ordered) - undelivered_qty
-			self._order_delivered = (flt(self.total_qty_parts_delivered) / flt(self.total_qty_parts_ordered)) * 100
+			self.total_qty_parts_delivered = int(flt(self.total_qty_parts_ordered) - undelivered_qty)
+			self._order_delivered = flt(
+				(flt(self.total_qty_parts_delivered) / flt(self.total_qty_parts_ordered)) * 100, 9
+			)
 		else:
 			self.total_qty_parts_delivered = 0
 			self._order_delivered = 0
