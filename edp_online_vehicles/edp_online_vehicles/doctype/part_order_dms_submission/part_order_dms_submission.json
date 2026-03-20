@@ -1,0 +1,78 @@
+{
+ "actions": [],
+ "creation": "2026-03-17 10:00:00.000000",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "part_no",
+  "description",
+  "qty_submitted",
+  "dms_reference",
+  "evolve_invoice_no",
+  "submitted_on"
+ ],
+ "fields": [
+  {
+   "columns": 2,
+   "fieldname": "part_no",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Part No",
+   "options": "Item",
+   "read_only": 1
+  },
+  {
+   "columns": 2,
+   "fieldname": "description",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Description",
+   "read_only": 1
+  },
+  {
+   "columns": 1,
+   "fieldname": "qty_submitted",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Qty Submitted",
+   "read_only": 1
+  },
+  {
+   "columns": 2,
+   "fieldname": "dms_reference",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "DMS Reference",
+   "read_only": 1
+  },
+  {
+   "columns": 2,
+   "fieldname": "evolve_invoice_no",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Evolve Invoice No"
+  },
+  {
+   "columns": 1,
+   "fieldname": "submitted_on",
+   "fieldtype": "Datetime",
+   "in_list_view": 1,
+   "label": "Submitted On",
+   "read_only": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2026-03-17 10:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Edp Online Vehicles",
+ "name": "Part Order DMS Submission",
+ "owner": "Administrator",
+ "permissions": [],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

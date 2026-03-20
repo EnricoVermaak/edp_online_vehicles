@@ -450,9 +450,10 @@
    "label": "Evolve"
   },
   {
+   "description": "OEM interface code for Evolve DMS. Used by warranty, service and parts order submissions.",
    "fieldname": "interface_code",
    "fieldtype": "Data",
-   "label": "Interface Code"
+   "label": "Evolve Interface Code"
   },
   {
    "default": "0",

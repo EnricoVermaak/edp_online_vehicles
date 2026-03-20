@@ -140,8 +140,8 @@ def auto_move_stock_hq_transit(vinno, hq, dealer, model, rate):
 	stock_doc.target_warehouse = transit_warehouse
 	stock_doc.dealer = hq
 
-	# serial_doc.custom_dealer = dealer
-	# serial_doc.save(ignore_permissions=True)
+	if not stock_doc.in_transit_date:
+		stock_doc.in_transit_date = frappe.utils.today()
 
 	comment = f"Vehicle {stock_doc.name} has been transferred to Head Office In Transit warehouse: {transit_warehouse}"
 

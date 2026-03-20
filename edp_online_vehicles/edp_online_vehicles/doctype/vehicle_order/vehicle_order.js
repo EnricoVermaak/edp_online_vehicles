@@ -2,26 +2,23 @@
 // For license information, please see license.txt
 
 frappe.ui.form.on("Vehicle Order", {
-	onload: function(frm) {
-		// Only auto-fill for new docs
-		if (!frm.is_new()) return;
+    onload: function(frm) {
+        if (!frm.is_new()) return;
 
-		// Auto-generate Dealer Reference Number if checkbox enabled
-		frappe.db.get_single_value(
-			"Vehicle Stock Settings",
-			"auto_generate_dealer_reference_number"
-		).then(enabled => {
-			if (!enabled) return;
-			//calling the function in the vehicle.order.py. Needs the whole path cuz of something about the function not being in app.py
-			frappe.call({
-			method: "edp_online_vehicles.edp_online_vehicles.doctype.vehicle_order.vehicle_order.generate_dealer_reference_number",
-				callback: function(r) {
-					if (r.message) {
-						frm.set_value("dealer_order_no", r.message);
-					}
-				}
-			});
-		});
+        frappe.db.get_single_value(
+            "Vehicle Stock Settings",
+            "auto_generate_dealer_reference_number"
+        ).then(enabled => {
+            if (!enabled) return;
+
+            // Correct usage: ONLY frm.call
+            frm.call("generate_dealer_reference_number").then(r => {
+                if (r.message) {
+                    frm.set_value("dealer_order_no", r.message);
+                }
+            });
+        });
+
 		if (frm.is_new()) {
 			// frm.doc.dealer = frappe.defaults.get_default("company");
 
@@ -1013,7 +1010,6 @@ frappe.ui.form.on("Vehicle Order", {
 					<h4>${__("Dealer Details")}</h4>
 					<p>
 						${__("Dealer Name")}: ${comp_name}<br>
-						${__("Dealer Code")}: ${comp_code}
 					</p>
 
 					<br>

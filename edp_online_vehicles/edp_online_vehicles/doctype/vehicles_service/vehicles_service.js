@@ -126,7 +126,14 @@ frappe.ui.form.on("Vehicles Service", {
 			return;
 		}
 
-		let schedule = await frappe.db.get_doc("Service Schedules", frm.doc.service_type);
+		if (frm.doc.service_type.endsWith("-Other") && !frm.__create_other) return;
+
+		let schedule;
+		try {
+			schedule = await frappe.db.get_doc("Service Schedules", frm.doc.service_type);
+		} catch (e) {
+			return;
+		}
 
 		let allow_labour = schedule.allow_users_to_add_edit_remove_labour || 0;
 		let allow_parts = schedule.allow_users_to_add_edit_remove_parts || 0;
@@ -140,11 +147,17 @@ frappe.ui.form.on("Vehicles Service", {
 		frm.set_value("edit_parts", allow_parts);
 
 		await edp_vehicles.pricing.load_schedule(frm, frm.doc.service_type, VS_CONFIG);
+
+		if (frm.doc.vin_serial_no) {
+			_check_recall_campaign_for_service(frm);
+		}
 	},
 
 
 	onload(frm) {
 		frappe.db.get_doc("Vehicle Service Settings").then((settings) => {
+			frm.__create_other = settings.create_other_service_schedule || 0;
+
 			let attach = frm.doc.attach_documents || [];
 			let existing_names = new Set(attach.map(row => row.document_name));
 			if (settings.mandatory_documents) {
@@ -279,19 +292,19 @@ frappe.ui.form.on("Vehicles Service", {
 			}, __("Action"));
 		}
 
-// if (edp_online_vehicles && edp_online_vehicles.vehicles_service && edp_online_vehicles.vehicles_service.add_scan_button) {
+		// if (edp_online_vehicles && edp_online_vehicles.vehicles_service && edp_online_vehicles.vehicles_service.add_scan_button) {
 		// 	edp_online_vehicles.vehicles_service.add_scan_button(frm);
 		// }
 	},
 	refresh: function(frm) {
         frm.set_query("vin_serial_no", function() {
-            return {
-                filters: {
-                    availability_status: "Sold"
-                }
-            };
-        });
-    },
+			return {
+				filters: {
+					availability_status: "Sold"
+				}
+			};
+		});
+	},
 
 	after_save(frm) {
 		frappe.call({
@@ -326,12 +339,12 @@ frappe.ui.form.on("Vehicles Service", {
 		});
 	},
 
-	
+
 	vin_serial_no(frm) {
 				frm.set_query("vin_serial_no", function() {
 			return {
 				filters: {
-				   availability_status: "Sold"
+					availability_status: "Sold"
 				}
 			};
 		});
@@ -343,8 +356,9 @@ frappe.ui.form.on("Vehicles Service", {
 					if (r.message && r.message.found) {
 						frm.set_value("service_booking", r.message.booking_name);
 						frm.set_value("booking_name", r.message.booking_name);
-						if (r.message.service_type != null && r.message.service_type !== "") {
-							frm.set_value("service_type", r.message.service_type);
+						let booking_st = r.message.service_type;
+						if (booking_st && !(booking_st.endsWith("-Other") && !frm.__create_other)) {
+							frm.set_value("service_type", booking_st);
 						}
 						frappe.show_alert({
 							message: __("Linked to open booking: {0}", [r.message.booking_name]),
@@ -394,7 +408,7 @@ frappe.ui.form.on("Vehicles Service", {
 			frm.refresh_field("odo_reading_hours");
 		}
 
-		if (frm.doc.vin_serial_no) {
+		if (frm.doc.vin_serial_no && frm.__create_other) {
 			frappe.call({
 				method: "edp_online_vehicles.events.service_type.check_service_date",
 				args: { vin: frm.doc.vin_serial_no },
@@ -423,6 +437,10 @@ frappe.ui.form.on("Vehicles Service", {
 					});
 				},
 			});
+		}
+
+		if (frm.doc.vin_serial_no) {
+			_check_recall_campaign_for_service(frm);
 		}
 	},
 
@@ -494,12 +512,14 @@ frappe.ui.form.on("Vehicles Service", {
 							frappe.msgprint("Please select VIN/Serial No first before entering odo reading.");
 							return;
 						}
-						frappe.db.get_value("Vehicle Stock", frm.doc.vin_serial_no, "model").then((res) => {
-							if (res && res.message && res.message.model) {
-								frappe.model.set_value(dt, dn, "service_type", `SS-${res.message.model}-Other`);
-								frm.refresh_field("service_type");
-							}
-						}).catch(() => frappe.msgprint("Could not fetch model for the selected VIN."));
+						if (frm.__create_other) {
+							frappe.db.get_value("Vehicle Stock", frm.doc.vin_serial_no, "model").then((res) => {
+								if (res && res.message && res.message.model) {
+									frappe.model.set_value(dt, dn, "service_type", `SS-${res.message.model}-Other`);
+									frm.refresh_field("service_type");
+								}
+							}).catch(() => frappe.msgprint("Could not fetch model for the selected VIN."));
+						}
 						frappe.msgprint("Your vehicle hasn't reached its service threshold yet. Please check back when it meets the minimum mileage requirement.");
 					} else if (odo > max_odo_value) {
 						frappe.msgprint("Your vehicle's mileage has exceeded the current service range. Please select the upcoming service schedule.");
@@ -607,3 +627,57 @@ frappe.ui.form.on("Vehicles Service", {
 		edp_vehicles.pricing.recalc_totals(frm, VS_CONFIG);
 	}
 });
+
+function _check_recall_campaign_for_service(frm) {
+	const vin = frm.doc.vin_serial_no;
+	if (!vin) return;
+
+	frappe.db.get_single_value("Vehicles Warranty Settings", "enable_recall_campaigns").then(enabled => {
+		if (!enabled) return;
+
+		setTimeout(function () {
+			if (frm.doc.vin_serial_no !== vin) return;
+
+			frappe.call({
+				method: "edp_online_vehicles.events.recall_campaign_check.get_active_recall_campaign",
+				args: {
+					vin_serial_no: vin,
+					service_interval: frm.doc.service_type || null,
+					from_service: 1,
+				},
+				callback: function (r) {
+					if (!r.message) return;
+
+					const campaign = r.message;
+					const desc = campaign.campaign_description ? ` — ${campaign.campaign_description}` : "";
+
+					frappe.confirm(
+						`Vehicle <b>${vin}</b> has an active recall campaign <b>${campaign.name}</b>${desc}.<br><br>` +
+						`Recall work must be processed as a <b>Warranty Claim</b>.<br>` +
+						`Do you want to create a warranty claim for this recall now?`,
+						function () {
+							frappe.call({
+								method: "edp_online_vehicles.events.recall_campaign_check.create_warranty_claim_from_recall",
+								args: {
+									vin_serial_no: vin,
+									campaign_name: campaign.name,
+								},
+								freeze: true,
+								freeze_message: __("Creating warranty claim for recall campaign..."),
+								callback: function (res) {
+									if (res.message) {
+										frappe.show_alert({
+											message: __(`Warranty claim ${res.message} created for recall campaign "${campaign.name}".`),
+											indicator: "green"
+										});
+										frappe.set_route("Form", "Vehicles Warranty Claims", res.message);
+									}
+								}
+							});
+						}
+					);
+				}
+			});
+		}, 800);
+	});
+}

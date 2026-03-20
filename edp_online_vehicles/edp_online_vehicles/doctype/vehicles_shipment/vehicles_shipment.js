@@ -45,18 +45,25 @@ frappe.ui.form.on("Vehicles Shipment", {
 
 		let grid = frm.fields_dict["vehicles_shipment_items"].grid;
 
-		if (!grid.wrapper.find(".add-multiple-btn").length) {
+		if (frm.doc.docstatus === 0) {
+			if (!grid.wrapper.find(".add-multiple-btn").length) {
+				let btn = $(`<button class="btn btn-secondary btn-sm add-multiple-btn">
+					Add Multiple
+				</button>`);
 
-			let btn = $(`<button class="btn btn-secondary btn-sm add-multiple-btn">
-				Add Multiple
-			</button>`);
+				btn.click(() => {
+					open_add_multiple_dialog(frm);
+				});
 
-			btn.click(() => {
-				open_add_multiple_dialog(frm);
-			});
-
-			grid.wrapper.find(".grid-buttons").append(btn);
+				grid.wrapper.find(".grid-buttons").append(btn);
+			}
+		} else {
+			// Remove button if document is submitted or cancelled
+			grid.wrapper.find(".add-multiple-btn").remove();
 		}
+
+		// Handle download and upload buttons
+		handle_custom_buttons(frm);
 
 		frm.set_query("target_warehouse", () => {
 			return {
@@ -206,7 +213,6 @@ frappe.ui.form.on("Vehicles Shipment", {
 				const dialog_grid = d.fields_dict.order_table.grid;
 
 				dialog_grid.get_field("order").get_query = function (doc, cdt, cdn) {
-					// ✅ Dialog tables sometimes don't have locals[cdt][cdn]
 					const grid_row = dialog_grid.get_row(cdn);
 					const r = grid_row ? grid_row.doc : null;
 
@@ -348,57 +354,11 @@ frappe.ui.form.on("Vehicles Shipment", {
 					}, 120);
 				});
 
-				// Promise.all(fetch_promises).then(() => {
-				// 	dialog_grid.refresh(); // ensure rows exist
-
-				// 	const $g = dialog_grid.wrapper.find('.form-grid');
-
-				// 	// Hide the entire checkbox column (header + rows)
-				// 	$g.find('.grid-heading-row .row-check').css({ display: 'none', width: 0, padding: 0, margin: 0 });
-				// 	$g.find('.grid-body .row-check').css({ display: 'none', width: 0, padding: 0, margin: 0 });
-
-				// 	// Optional: if you ALSO want to remove the "No." column
-				// 	// $g.find('.grid-heading-row .row-index, .grid-body .row-index')
-				// 	//   .css({ display: 'none', width: 0, padding: 0, margin: 0 });
-
-				// 	// Remove any leftover left spacing some layouts add
-				// 	$g.find('.grid-heading-row .grid-row .data-row').css({ 'margin-left': 0, 'padding-left': 0 });
-				// 	$g.find('.grid-body .data-row').css({ 'margin-left': 0, 'padding-left': 0 });
-
-				// 	// Force reflow so the bootstrap cols recalc nicely
-				// 	$g[0]?.offsetHeight;
-
-				// 	dialog_grid.refresh();
-				// 	d.show();
-
-				// 	setTimeout(() => {
-				// 		dialog_grid.grid_rows.forEach((grid_row) => {
-				// 			if (!grid_row.doc._order_locked) return;
-
-				// 			// Disable the cell in the grid row (per-row, no shared state)
-				// 			const $cell = grid_row.row && grid_row.row.find('[data-fieldname="order"]');
-				// 			if ($cell && $cell.length) {
-				// 				$cell.find("input").prop("disabled", true).attr("readonly", true);
-				// 				$cell.find(".link-btn, button").prop("disabled", true);
-				// 				// stop click from opening link picker
-				// 				$cell.css("pointer-events", "none");
-				// 			}
-
-				// 			// If user opens the row form, disable it there too
-				// 			if (grid_row.grid_form?.fields_dict?.order) {
-				// 				const ctrl = grid_row.grid_form.fields_dict.order;
-				// 				ctrl.$input?.prop("disabled", true).attr("readonly", true);
-				// 				ctrl.$wrapper?.css("pointer-events", "none");
-				// 			}
-				// 		});
-				// 	}, 120);
-				// });
+			
 
 
-			});
+			}, __("Actions"));
 			frm.add_custom_button(__("Receive"), function () {
-				frappe.dom.freeze();
-
 				var selected_items = [];
 				var promises = [];
 
@@ -419,39 +379,36 @@ frappe.ui.form.on("Vehicles Shipment", {
 							);
 						}
 
-						if (!row.vin_serial_no) {
-							frappe.throw(
-								"Please ensure all selected vehicles have VIN/Serial No's assigned to them."
-							);
-						}
-						selected_items.push(row);
-						promises.push(true);
+					if (row.vin_serial_no) {
+						const promise = frappe.db
+							.get_single_value("Vehicle Stock Settings", "automatically_create_stock_number")
+							.then((autoCreate) => {
+								if (autoCreate) {
+								const lastStockNo = stockNo;
+								const nextStockNo = incrementStockNumber(lastStockNo);
+								stockNo = nextStockNo;
+
+									frappe.model.set_value(
+										row.doctype,
+										row.name,
+										"stock_no",
+										nextStockNo
+									);
+								}
+							});
+						promises.push(promise);
+					} else {
+						frappe.throw(
+							"Please ensure all selected vehicles have VIN/Serial No's assigned to them."
+						);
+					}
+					selected_items.push(row);
 
 
 					}
 				});
-				frappe.call({
-					method: "edp_online_vehicles.events.linked_plans.create_linked_plans",
-					args: { selected_items: JSON.stringify(selected_items) },
-				}).then(() => {
-					console.log("Plans created successfully!");
-				});
-
-
-				// Wait for all promises to resolve
 				if (selected_items.length > 0) {
-					// ------------------------------------------------------
-					// Create Vehicle Linked Warranty & Service Plan Logic
-					// ------------------------------------------------------
-					let creation_promises = [];
-
-					Promise.all(creation_promises).then(() => {
-						console.log("All Warranty & Service Plan docs created successfully!");
-					});
-
-					// ------------------------------------------------------
-					// Continue with stock entry logic
-					// ------------------------------------------------------
+					frappe.dom.freeze(__("Receiving vehicles…"));
 					frm
 						.call("create_stock_entry", {
 							selected_items: JSON.stringify(selected_items),
@@ -489,13 +446,59 @@ frappe.ui.form.on("Vehicles Shipment", {
 									}
 								}
 							}
-						});
+						}).catch(() => frappe.dom.unfreeze());
 
 				} else {
-					frappe.dom.unfreeze();
-					frappe.throw("Please Select at least One Item.");
+					frappe.throw(__("Please select at least one item to receive."));
 				}
-			});
+			}, __("Actions"));
+
+			frm.add_custom_button(__("Receive All"), function () {
+				const all_items = frm.doc.vehicles_shipment_items || [];
+				const pending = all_items.filter(r => r.vin_serial_no && r.status !== "Received");
+
+				if (!pending.length) {
+					frappe.msgprint(__("All vehicles in this shipment have already been received."));
+					return;
+				}
+
+				const missing_colour = pending.filter(r => !r.colour);
+				if (missing_colour.length) {
+					frappe.throw(__(`${missing_colour.length} vehicle(s) are missing a Colour. Please fill in all colours before using Receive All.`));
+					return;
+				}
+
+				const missing_warehouse = pending.filter(r => !r.target_warehouse && !frm.doc.target_warehouse);
+				if (missing_warehouse.length) {
+					frappe.throw(__("Some vehicles are missing a Target Warehouse and no header warehouse is set."));
+					return;
+				}
+
+				frappe.confirm(
+					__(`This will receive all ${pending.length} pending vehicle(s) as a background job. Continue?`),
+					() => {
+						frappe.dom.freeze(__("Queuing background job\u2026"));
+						frm.call("receive_all_in_background").then(r => {
+							frappe.dom.unfreeze();
+							if (r && r.message) {
+								frappe.show_alert({
+									message: __(`Receive All queued for ${r.message} vehicle(s).`),
+									indicator: "blue"
+								}, 8);
+							}
+						}).catch(() => frappe.dom.unfreeze());
+					}
+				);
+			}, __("Actions"));
+
+			const shipment_grid = frm.fields_dict.vehicles_shipment_items.grid;
+			const _toggle_receive_all = () => {
+				const has_selected = (shipment_grid.get_selected_children() || []).length > 0;
+				const $btn = frm.custom_buttons[__("Receive All")];
+				if ($btn) $btn.toggle(!has_selected);
+			};
+			shipment_grid.wrapper.on("change", ".grid-row-check", _toggle_receive_all);
+			setTimeout(_toggle_receive_all, 200);
 		}
 
 
@@ -696,7 +699,7 @@ frappe.ui.form.on("Vehicles Shipment", {
 
 	after_save(frm) {
 		if (frm.doc.status == "Completed") {
-			console.log(frm.doc.name);
+			// console.log(frm.doc.name);
 
 			frappe.call({
 				method: "edp_online_vehicles.events.submit_document.submit_shipment_document",
@@ -1007,92 +1010,91 @@ function handle_custom_buttons(frm) {
 
 	// Check if the document is in draft state
 	if (frm.doc.docstatus === 0) {
-		frappe.after_ajax(() => {
-			if (
-				grid_wrapper &&
-				!grid_wrapper.querySelector(".custom-upload-download-buttons")
-			) {
-				// Create a container for the buttons
-				const button_container = document.createElement("div");
-				button_container.className = "custom-upload-download-buttons";
-				button_container.style =
-					"position: absolute; bottom: 0px; right: 10px; display: flex; gap: 10px;";
+		if (
+			grid_wrapper &&
+			!grid_wrapper.querySelector(".custom-upload-download-buttons")
+		) {
+			// Create a container for the buttons
+			const button_container = document.createElement("div");
+			button_container.className = "custom-upload-download-buttons";
+			button_container.style =
+				"position: absolute; bottom: 0px; right: 10px; display: flex; gap: 10px;";
 
-				// Create Download button
-				const download_button = document.createElement("button");
-				download_button.className = "btn btn-primary btn-sm";
-				download_button.innerText = "Download";
-				download_button.onclick = function () {
-					let title = "Vehicles Shipment Items";
-					let data = [];
-					let docfields = [];
+			// Create Download button
+			const download_button = document.createElement("button");
+			download_button.className = "btn btn-primary btn-sm";
+			download_button.innerText = "Download";
+			download_button.onclick = function () {
+				let title = "Vehicles Shipment Items";
+				let data = [];
+				let docfields = [];
 
-					// Add header rows with instructions
-					data.push([__("Template", [title])]);
-					data.push([]);
-					data.push([]);
-					data.push([]);
-					data.push([__("The CSV format is case sensitive")]);
-					data.push([__("Do not edit headers which are preset in the template")]);
-					data.push(["------"]);
+				// Add header rows with instructions
+				data.push([__("Template", [title])]);
+				data.push([]);
+				data.push([]);
+				data.push([]);
+				data.push([__("The CSV format is case sensitive")]);
+				data.push([__("Do not edit headers which are preset in the template")]);
+				data.push(["------"]);
 
-					// Get child and visible columns
-					const child_doctype = "Vehicles Shipment Items";
+				// Get child and visible columns
+				const child_doctype = "Vehicles Shipment Items";
 
-					// Add if field is In List View, not hidden
-					const visible_fields = frappe.get_meta(child_doctype).fields.filter(df =>
-						frappe.model.is_value_type(df.fieldtype) &&
-						df.in_list_view &&
-						!df.hidden &&
-						df.fieldname !== "model_description" && // Exclude model_descriptions
-						df.fieldname !== "status" // Exclude status
-					);
+				// Add if field is In List View, not hidden
+				const visible_fields = frappe.get_meta(child_doctype).fields.filter(df =>
+					frappe.model.is_value_type(df.fieldtype) &&
+					df.in_list_view &&
+					!df.hidden &&
+					df.fieldname !== "model_description" && // Exclude model_descriptions
+					df.fieldname !== "status" // Exclude status
+				);
 
-					// Add visible fields
-					visible_fields.forEach((field) => {
-						data[1].push(field.label);     // Label row
-						data[2].push(field.fieldname); // Fieldname row
-						docfields.push(field);         // Store metadata for formatting
+				// Add visible fields
+				visible_fields.forEach((field) => {
+					data[1].push(field.label);     // Label row
+					data[2].push(field.fieldname); // Fieldname row
+					docfields.push(field);         // Store metadata for formatting
+				});
+
+				// Add existing data from the child table
+				(cur_frm.doc.vehicles_shipment_items || []).forEach((d) => {
+					let row = [];
+					data[2].forEach((fieldname, i) => {
+						let value = d[fieldname];
+
+						// If this is the colour field
+						if (fieldname === "colour" && value) {
+							value = value.split(" - ")[0];
+						}
+						if (fieldname === "interior_colour" && value) {
+							value = value.split(" - ")[0];
+						}
+						if (docfields[i].fieldtype === "Date" && value) {
+							value = frappe.datetime.str_to_user(value);
+						}
+						row.push(value || "");
 					});
+					data.push(row);
+				});
 
-					// Add existing data from the child table
-					(cur_frm.doc.vehicles_shipment_items || []).forEach((d) => {
-						let row = [];
-						data[2].forEach((fieldname, i) => {
-							let value = d[fieldname];
+				// Trigger download
+				frappe.tools.downloadify(data, null, title);
+			};
 
-							// If this is the colour field
-							if (fieldname === "colour" && value) {
-								value = value.split(" - ")[0];
-							}
-							if (fieldname === "interior_colour" && value) {
-								value = value.split(" - ")[0];
-							}
-							if (docfields[i].fieldtype === "Date" && value) {
-								value = frappe.datetime.str_to_user(value);
-							}
-							row.push(value || "");
-						});
-						data.push(row);
-					});
-
-					// Trigger download
-					frappe.tools.downloadify(data, null, title);
+			// Create Upload button
+			const upload_button = document.createElement("button");
+			upload_button.className = "btn btn-secondary btn-sm";
+			upload_button.innerText = "Upload";
+			upload_button.onclick = function () {
+				const value_formatter_map = {
+					Date: (val) =>
+						val ? frappe.datetime.user_to_str(val) : val,
+					Int: (val) => cint(val),
+					Check: (val) => cint(val),
+					Float: (val) => flt(val),
+					Currency: (val) => flt(val),
 				};
-
-				// Create Upload button
-				const upload_button = document.createElement("button");
-				upload_button.className = "btn btn-secondary btn-sm";
-				upload_button.innerText = "Upload";
-				upload_button.onclick = function () {
-					const value_formatter_map = {
-						Date: (val) =>
-							val ? frappe.datetime.user_to_str(val) : val,
-						Int: (val) => cint(val),
-						Check: (val) => cint(val),
-						Float: (val) => flt(val),
-						Currency: (val) => flt(val),
-					};
 
 					new frappe.ui.FileUploader({
 						as_dataurl: true,
@@ -1311,11 +1313,10 @@ function handle_custom_buttons(frm) {
 				// Append the button container to the child table grid
 				grid_wrapper.appendChild(button_container);
 			}
-		});
+		}
 	}
-}
 
-// function incrementStockNumber(stockNumber) {
+	// function incrementStockNumber(stockNumber) {
 // 	// Split the prefix and number part
 // 	const prefix = stockNumber.match(/[A-Za-z]+/)[0];
 // 	const number = stockNumber.match(/\d+/)[0];

@@ -46,23 +46,25 @@ class HeadOfficeVehicleOrders(Document):
 		if submit_doc:
 			self.submit()
 
-		# Set in-transit date when status changes to "Process Move Instruction"
-		if not self.is_new() and self.has_value_changed("status") and self.status == "Process Move Instruction":
-			if self.vinserial_no and frappe.db.exists("Vehicle Stock", self.vinserial_no):
-				stock_doc = frappe.get_doc("Vehicle Stock", self.vinserial_no)
-				stock_doc.in_transit_date = frappe.utils.today()
-				stock_doc.flags.ignore_version = True
-				stock_doc.save(ignore_permissions=True)
-				frappe.logger().info(f"Set in-transit date for VIN {self.vinserial_no}: {stock_doc.in_transit_date}")
+		if not self.is_new() and self.has_value_changed("status") and self.vinserial_no:
+			in_transit = frappe.db.get_value("Vehicles Order Status", self.status, "in_transit_warehouse")
+			move_stock = frappe.db.get_value("Vehicles Order Status", self.status, "auto_move_stock")
 
-		# Set delivery date when vehicle is moved to dealer (auto_move_stock_hq called)
-		if not self.is_new() and self.has_value_changed("status") and self.status == "Delivered":
-			if self.vinserial_no and frappe.db.exists("Vehicle Stock", self.vinserial_no):
+			if (in_transit or move_stock) and frappe.db.exists("Vehicle Stock", self.vinserial_no):
 				stock_doc = frappe.get_doc("Vehicle Stock", self.vinserial_no)
-				stock_doc.delivery_date = frappe.utils.today()
-				stock_doc.flags.ignore_version = True
-				stock_doc.save(ignore_permissions=True)
-				frappe.logger().info(f"Set delivery date for VIN {self.vinserial_no}: {stock_doc.delivery_date}")
+				changed = False
+
+				if in_transit and not stock_doc.in_transit_date:
+					stock_doc.in_transit_date = frappe.utils.today()
+					changed = True
+
+				if move_stock and not stock_doc.delivery_date:
+					stock_doc.delivery_date = frappe.utils.today()
+					changed = True
+
+				if changed:
+					stock_doc.flags.ignore_version = True
+					stock_doc.save(ignore_permissions=True)
 
 		if self.vinserial_no and not frappe.db.exists("Reserved Vehicles", {"name":self.vinserial_no}):
 			reserve_doc = frappe.new_doc("Reserved Vehicles")

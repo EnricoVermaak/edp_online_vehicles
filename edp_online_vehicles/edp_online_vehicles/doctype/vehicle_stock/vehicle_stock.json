@@ -166,6 +166,7 @@
   },
   {
    "allow_in_quick_entry": 1,
+   "depends_on": "model",
    "fieldname": "colour",
    "fieldtype": "Link",
    "in_list_view": 1,
@@ -754,6 +755,7 @@
    "fieldtype": "Column Break"
   },
   {
+   "depends_on": "model",
    "fieldname": "interior_colour",
    "fieldtype": "Link",
    "label": "Interior Colour",

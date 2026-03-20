@@ -9,6 +9,7 @@
   "allow_goodwill_for_out_of_warranty_claims",
   "allow_warranty_odo_reading_roll_back",
   "labour_code_filter",
+  "enable_recall_campaigns",
   "mandatory_documents_section",
   "mandatory_documents"
  ],
@@ -48,12 +49,19 @@
    "fieldtype": "Select",
    "label": "Labour Code Filter",
    "options": "Warranty Labour\nService and Warranty Labour"
+  },
+  {
+   "default": "0",
+   "description": "When enabled, VIN entry on Warranty Claims and Services will check for active Recall Campaigns and prompt users to apply or create recall work.",
+   "fieldname": "enable_recall_campaigns",
+   "fieldtype": "Check",
+   "label": "Enable Recall Campaigns"
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2026-03-06 12:04:00.425463",
+ "modified": "2026-03-07 14:00:00.000000",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicles Warranty Settings",

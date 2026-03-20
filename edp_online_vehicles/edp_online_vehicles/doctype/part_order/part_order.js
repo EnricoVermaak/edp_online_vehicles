@@ -78,6 +78,11 @@ frappe.ui.form.on("Part Order", {
 			frm.set_value("fleet_customer", null);
 			frm.set_value("fleet_customer_name", null);
 		}
+
+		// Clear Field when Switching away from Warranty
+		if (frm.doc.order_type !== "Warranty") {
+            frm.set_value("warranty_claim", null);
+        }
 	},
 	customer: function (frm) {
 		if (frm.doc.customer) {
@@ -120,26 +125,28 @@ frappe.ui.form.on("Part Order", {
 			frm.set_value("_order_delivered", "0");
 			frm.set_value("total_parts_delivered", "0");
 		} else {
-			 if (qty_ordered > 0 && qty_ordered === qty_delivered) {
-			frm.set_value("order_delivery_time", formatTimeDifference(frm));
-		}
+			if (qty_ordered > 0 && qty_ordered === qty_delivered) {
+				frm.set_value("order_delivery_time", formatTimeDifference(frm));
+			}
 
-		let total_ordered = 0;
-		for (let row of frm.doc.table_avsu) {
-			total_ordered += row.qty;
+			let total_ordered = 0;
+			for (let row of frm.doc.table_avsu) {
+				total_ordered += row.qty;
+			}
+
+			let total_undelivered_parts_dealer_billing = 0;
+			for (let row of frm.doc.table_avsu) {
+				total_undelivered_parts_dealer_billing += row.dealer_billing_excl;
+			}
+
+			frm.set_value("total_parts_ordered", total_ordered);
+			frm.set_value("total_undelivered_parts_qty", total_ordered);
+			frm.set_value(
+				"total_undelivered_parts_dealer_billing",
+				total_undelivered_parts_dealer_billing,
+			);
 		}
-		let total_undelivered_parts_dealer_billing = 0;
-		for (let row of frm.doc.table_avsu) {
-			total_undelivered_parts_dealer_billing += row.dealer_billing_excl;
-		}
-		frm.set_value("total_parts_ordered", total_ordered);
-		frm.set_value("total_undelivered_parts_qty", total_ordered);
-		frm.set_value(
-			"total_undelivered_parts_dealer_billing",
-			total_undelivered_parts_dealer_billing,
-		);
-	}
-},
+	},
 
 	total_excl(frm) {
 		let total_excl = frm.doc.total_excl;
@@ -177,6 +184,15 @@ frappe.ui.form.on("Part Order", {
 				},
 			});
 		}
+
+		// Filter warranty claims to not show Declined and Pending ones
+		frm.set_query("warranty_claim", function() {
+            return {
+                filters: {
+                    status: ["not in", ["Declined", "Pending"]]
+                }
+            };
+        });
 	},
 
 	recalculate_totals(frm) {

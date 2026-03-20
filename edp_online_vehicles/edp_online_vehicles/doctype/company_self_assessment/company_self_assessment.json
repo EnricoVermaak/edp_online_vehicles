@@ -1,0 +1,201 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2026-03-19 10:57:38.920953",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_i79r",
+  "company",
+  "registration_number",
+  "license_number",
+  "region",
+  "column_break_iuyi",
+  "date_submitted",
+  "submitted_by",
+  "section_break_ccru",
+  "table_whzn",
+  "section_break_whhp",
+  "active_guards",
+  "section_break_nrrf",
+  "amended_from",
+  "confirmation_tab",
+  "company_section",
+  "self_assessed_by",
+  "self_assessed_by_full_name",
+  "self_assessed_by_signature",
+  "column_break_bxpi",
+  "approved_by",
+  "approved_by_full_name",
+  "approved_by_signature"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_i79r",
+   "fieldtype": "Section Break",
+   "label": "Company Details"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Company Self-Assessment",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Company",
+   "options": "Company",
+   "reqd": 1
+  },
+  {
+   "fieldname": "registration_number",
+   "fieldtype": "Data",
+   "label": "Registration Number",
+   "reqd": 1
+  },
+  {
+   "fieldname": "license_number",
+   "fieldtype": "Data",
+   "label": "License Number",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "company.custom_territory",
+   "fieldname": "region",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Territory",
+   "options": "Territory",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_iuyi",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "date_submitted",
+   "fieldtype": "Datetime",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Date Submitted",
+   "reqd": 1
+  },
+  {
+   "fieldname": "submitted_by",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Submitted By",
+   "reqd": 1
+  },
+  {
+   "fieldname": "section_break_nrrf",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "section_break_ccru",
+   "fieldtype": "Section Break",
+   "label": "Compliance"
+  },
+  {
+   "fieldname": "table_whzn",
+   "fieldtype": "Table",
+   "options": "Company SA Compliance"
+  },
+  {
+   "fieldname": "section_break_whhp",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "active_guards",
+   "fieldtype": "Table",
+   "label": "Active Guards",
+   "options": "Company Employees"
+  },
+  {
+   "fieldname": "confirmation_tab",
+   "fieldtype": "Tab Break",
+   "label": "Confirmation"
+  },
+  {
+   "fieldname": "self_assessed_by",
+   "fieldtype": "Link",
+   "label": "Self Assessed By",
+   "options": "User",
+   "reqd": 1
+  },
+  {
+   "fieldname": "self_assessed_by_full_name",
+   "fieldtype": "Data",
+   "label": "Self Assessed By Full Name"
+  },
+  {
+   "fieldname": "self_assessed_by_signature",
+   "fieldtype": "Signature",
+   "label": "Self Assessed By Signature"
+  },
+  {
+   "fieldname": "column_break_bxpi",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "approved_by",
+   "fieldtype": "Link",
+   "label": "Verified By",
+   "options": "User",
+   "reqd": 1
+  },
+  {
+   "fieldname": "approved_by_full_name",
+   "fieldtype": "Data",
+   "label": "Verified By Full Name"
+  },
+  {
+   "fieldname": "approved_by_signature",
+   "fieldtype": "Signature",
+   "label": "Verified By Signature"
+  },
+  {
+   "fieldname": "company_section",
+   "fieldtype": "Section Break",
+   "label": "Company"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2026-03-19 11:26:39.626526",
+ "modified_by": "Administrator",
+ "module": "Edp Online Vehicles",
+ "name": "Company Self-Assessment",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

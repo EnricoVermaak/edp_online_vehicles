@@ -116,6 +116,27 @@ class VehiclesShipment(Document):
 
 
 
+	def _receive_items(self, items):
+		self.create_or_update_items(items)
+		self.create_stock_entry_for_serial_numbers(items)
+		self.create_vehicles_stock_entries(items)
+		self.create_vehicles_card(items)
+		self.check_head_office_orders(items)
+		self.create_reserve_doc(items)
+
+		from edp_online_vehicles.events.linked_plans import create_vehicle_plans
+		for item in items:
+			try:
+				create_vehicle_plans(item.get("vin_serial_no"), item.get("model_code"))
+			except Exception:
+				frappe.log_error(
+					frappe.get_traceback(),
+					f"create_vehicle_plans failed for VIN {item.get('vin_serial_no')}",
+				)
+
+		frappe.db.commit()
+		_fire_on_vehicle_shipment_received(items)
+
 	@frappe.whitelist()
 	def create_stock_entry(self, selected_items):
 		selected_items = frappe.parse_json(selected_items)
@@ -124,14 +145,7 @@ class VehiclesShipment(Document):
 			return "Received"
 
 		try:
-			self.create_or_update_items(to_receive)
-			self.create_stock_entry_for_serial_numbers(to_receive)
-			self.create_vehicles_stock_entries(to_receive)
-			self.create_vehicles_card(to_receive)
-			self.check_head_office_orders(to_receive)
-			self.create_reserve_doc(to_receive)
-			frappe.db.commit()
-			_fire_on_vehicle_shipment_received(to_receive)
+			self._receive_items(to_receive)
 			return "Received"
 		except Exception:
 			frappe.db.rollback()
@@ -141,7 +155,7 @@ class VehiclesShipment(Document):
 		for item in selected_items:
 			item_name = frappe.utils.get_link_to_form("Model Administration", item.get("model_code"))
 			if not frappe.db.exists("Item", item.get("model_code")):
-				frappe.throw(f"{item_name} Item not Exist")
+				frappe.throw(_("{0} does not exist as an Item").format(item_name))
 
 	def create_stock_entry_for_serial_numbers(self, selected_items):
 		stock_entry = frappe.get_doc(
@@ -201,6 +215,8 @@ class VehiclesShipment(Document):
 				"availability_status": availability_status,
 				"ho_date_received": today(),
 			}
+			if model_doc.automatically_reserve_model:
+				stock_dict["reserve_reason"] = "Automatically reserved after shipment was received"
 			new_vehicles_stock = frappe.get_doc(stock_dict)
 			new_vehicles_stock.insert(ignore_permissions=True)
 			if model_doc.automatically_reserve_model:
@@ -388,10 +404,41 @@ class VehiclesShipment(Document):
 			# Update Vehicle Stock availability status
 			stock_doc = frappe.get_doc('Vehicle Stock', item.get("vin_serial_no"))
 			stock_doc.availability_status = 'Reserved'
-			stock_doc.reserve_reason = 'Automatically Reserved'
+			stock_doc.reserve_reason = 'Automatically reserved after shipment was received'
 			stock_doc.save(ignore_permissions=True)
 
 			reserved_count += 1
+
+	@frappe.whitelist()
+	def receive_all_in_background(self):
+		errors = []
+		pending_count = 0
+		for row in self.vehicles_shipment_items:
+			if row.status == "Received":
+				continue
+			if not row.vin_serial_no:
+				continue
+			if not row.colour:
+				errors.append(_(f"Row {row.idx} ({row.vin_serial_no}): Colour is required"))
+			if not (row.target_warehouse or self.target_warehouse):
+				errors.append(_(f"Row {row.idx} ({row.vin_serial_no}): Target Warehouse is required"))
+			pending_count += 1
+
+		if errors:
+			frappe.throw("<br>".join(errors))
+
+		if not pending_count:
+			frappe.throw(_("All vehicles in this shipment have already been received."))
+
+		frappe.enqueue(
+			"edp_online_vehicles.edp_online_vehicles.doctype.vehicles_shipment.vehicles_shipment.receive_all_background_job",
+			queue="long",
+			timeout=3600,
+			job_name=f"receive_all_{self.name}",
+			shipment_name=self.name,
+			requested_by=frappe.session.user,
+		)
+		return pending_count
 
 
 def _filter_already_received(selected_items):
@@ -407,6 +454,95 @@ def _fire_on_vehicle_shipment_received(selected_items):
 				frappe.get_traceback(),
 				f"on_vehicle_shipment_received hook failed: {method}",
 			)
+
+
+def receive_all_background_job(shipment_name, requested_by=None):
+	doc = frappe.get_doc("Vehicles Shipment", shipment_name)
+	notify_user = requested_by or doc.modified_by or doc.owner
+
+	selected_items = []
+	skipped_vins = []
+	for row in doc.vehicles_shipment_items:
+		if row.status == "Received":
+			continue
+		if not row.vin_serial_no:
+			continue
+		if frappe.db.exists("Vehicle Stock", {"vin_serial_no": row.vin_serial_no}):
+			skipped_vins.append(row.vin_serial_no)
+			continue
+		item_dict = row.as_dict()
+		if not item_dict.get("target_warehouse"):
+			item_dict["target_warehouse"] = doc.target_warehouse
+		selected_items.append(item_dict)
+
+	if not selected_items:
+		if skipped_vins:
+			frappe.publish_realtime(
+				"msgprint",
+				{
+					"message": (
+						f"No vehicles were received — all pending VINs already have a Vehicle Stock record.<br><br>"
+						f"Skipped ({len(skipped_vins)}): {', '.join(skipped_vins)}"
+					),
+					"indicator": "orange",
+					"title": "Receive All — Nothing to Do",
+				},
+				user=notify_user,
+			)
+		return
+
+	try:
+		doc._receive_items(selected_items)
+
+		doc.reload()
+		received_vins = {item.get("vin_serial_no") for item in selected_items}
+		for row in doc.vehicles_shipment_items:
+			if row.vin_serial_no in received_vins:
+				row.status = "Received"
+
+		received_count = sum(1 for r in doc.vehicles_shipment_items if r.status == "Received")
+		total_count = len(doc.vehicles_shipment_items)
+		if received_count == total_count:
+			doc.status = "Completed"
+		elif received_count > 0:
+			doc.status = "Partially Received"
+
+		doc.save(ignore_permissions=True)
+		frappe.db.commit()
+
+		new_status = doc.status
+
+		if new_status == "Completed" and doc.docstatus == 0:
+			doc.submit()
+			frappe.db.commit()
+
+		frappe.publish_realtime(
+			"msgprint",
+			{
+				"message": (
+					f"{len(selected_items)} vehicle(s) received successfully. Shipment status: {new_status}."
+					+ (
+						f"<br><br>Skipped — already received ({len(skipped_vins)}): {', '.join(skipped_vins)}"
+						if skipped_vins else ""
+					)
+				),
+				"indicator": "green",
+				"title": "Receive All Complete",
+			},
+			user=notify_user,
+		)
+	except Exception:
+		frappe.db.rollback()
+		frappe.log_error(frappe.get_traceback(), f"receive_all_background_job failed for {shipment_name}")
+		frappe.publish_realtime(
+			"msgprint",
+			{
+				"message": "Receive All failed. Please check the error logs.",
+				"indicator": "red",
+				"title": "Receive All Failed",
+			},
+			user=notify_user,
+		)
 
 
 @frappe.whitelist()

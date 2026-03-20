@@ -16,6 +16,8 @@
   "dealer",
   "dealer_order_no",
   "part_order_status",
+  "warranty_claim",
+  "material_request",
   "part_basket_section",
   "table_ugma",
   "section_break_ywid",
@@ -64,6 +66,8 @@
   "total_picking_time",
   "column_break_zefm",
   "total_despatch_time",
+  "dms_submission_tab",
+  "dms_submissions",
   "dashboard_tab",
   "amended_from"
  ],
@@ -125,6 +129,22 @@
    "fieldtype": "Link",
    "label": "Part Order Status",
    "options": "Part Order Status"
+  },
+  {
+   "depends_on": "eval:doc.order_type == 'Warranty'",
+   "fieldname": "warranty_claim",
+   "fieldtype": "Link",
+   "label": "Warranty Claim",
+   "options": "Vehicles Warranty Claims",
+   "read_only": 1
+  },
+  {
+   "depends_on": "eval:doc.material_request",
+   "fieldname": "material_request",
+   "fieldtype": "Link",
+   "label": "Material Request (Back Order)",
+   "options": "Material Request",
+   "read_only": 1
   },
   {
    "fieldname": "order_information_section",
@@ -398,6 +418,18 @@
    "fieldname": "dms_no",
    "fieldtype": "Data",
    "label": "DMS No"
+  },
+  {
+   "fieldname": "dms_submission_tab",
+   "fieldtype": "Tab Break",
+   "label": "DMS Submissions"
+  },
+  {
+   "fieldname": "dms_submissions",
+   "fieldtype": "Table",
+   "label": "DMS Submissions",
+   "options": "Part Order DMS Submission",
+   "read_only": 1
   },
   {
    "fieldname": "dashboard_tab",
