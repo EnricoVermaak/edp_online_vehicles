@@ -470,9 +470,19 @@ def receive_all_background_job(shipment_name, requested_by=None):
 		if frappe.db.exists("Vehicle Stock", {"vin_serial_no": row.vin_serial_no}):
 			skipped_vins.append(row.vin_serial_no)
 			continue
-		item_dict = row.as_dict()
-		if not item_dict.get("target_warehouse"):
-			item_dict["target_warehouse"] = doc.target_warehouse
+			# PLease keep this dictionary as is. Changing it wil break the msa TAC integration
+		item_dict = {
+			"vin_serial_no": row.vin_serial_no,
+			"model_code": row.model_code,
+			"engine_no": row.engine_no or "",
+			"target_warehouse": row.target_warehouse or doc.target_warehouse,
+			"colour": row.colour,
+			"stock_no": row.stock_no,
+			"cost_price_excl": row.cost_price_excl,
+			"model_description": row.model_description,
+			"interior_colour": row.interior_colour,
+			"dealer": doc.dealer,
+		}
 		selected_items.append(item_dict)
 
 	if not selected_items:

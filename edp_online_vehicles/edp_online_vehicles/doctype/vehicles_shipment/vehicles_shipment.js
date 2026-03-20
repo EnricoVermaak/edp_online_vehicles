@@ -427,24 +427,7 @@ frappe.ui.form.on("Vehicles Shipment", {
 
 									frappe.dom.unfreeze();
 									frm.save_or_update();
-
-									const host = window.location.hostname;
-									const isMahindra = [
-										"msademo.edponline.co.za",
-										"msa.edponline.co.za",
-										"mahindra.localhost",
-									].includes(host);
-
-									if (isMahindra) {
-										frappe.call({
-											method:
-												"edp_api.api.TAC.tac_integration.tac_landing_outgoing",
-											args: {
-												selected_items: JSON.stringify(selected_items),
-											},
-										});
-									}
-								}
+				
 							}
 						}).catch(() => frappe.dom.unfreeze());
 
