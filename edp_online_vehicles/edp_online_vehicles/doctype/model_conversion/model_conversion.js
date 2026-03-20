@@ -90,13 +90,17 @@ frappe.ui.form.on("Model Conversion", {
 	},
 		after_save: function (frm) {
 			if (frm.doc.status == "Approved") {
+				const rows = frm.doc.table_fgif || [];
+				const items = (frm.doc.table_fgif || []).map((row) => ({
+					vin_serial_no: row.vin_serial_no,
+				})).filter((row) => row.vin_serial_no);
 
-				frm.doc.table_fgif.forEach(function (row) {
+				rows.forEach(function (row) {
 
 					frappe.db.set_value("Serial No", row.vin_serial_no, {
 						item_code: frm.doc.new_model_code
 					}).then(() => {
-						console.log("Model converted for VIN:", row.vin_serial_no);
+						// console.log("Model converted for VIN:", row.vin_serial_no);
 					});
 
 				});

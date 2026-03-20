@@ -38,6 +38,7 @@ app_include_js = [
     "/assets/edp_online_vehicles/js/hide_integration_workspaces.js",
     "/assets/edp_online_vehicles/js/default_order_report_view.js",
     "/assets/edp_online_vehicles/js/hide_searchbar.js",
+    "/assets/edp_online_vehicles/js/listview_filter_utils.js",
     "/assets/edp_online_vehicles/js/bulletin_popup.js",
 ]
 

@@ -95,7 +95,7 @@ frappe.ui.form.on("Reserved Vehicles", {
 			}
 		}
 
-		if (frm.doc.status === "Available" && frm.reserved_comment === null) {
+		if (frm.doc.status === "Available" && !frm.doc.unreserve_reason) {
 			frappe.validated = false;
 
 			const dialog = new frappe.ui.Dialog({
@@ -111,11 +111,11 @@ frappe.ui.form.on("Reserved Vehicles", {
 				primary_action_label: "Submit",
 				primary_action(values) {
 					if (values.comment) {
+						frm.doc.unreserve_reason = values.comment;
 						frm.reserved_comment = values.comment;
 						dialog.hide();
 						frappe.validated = true;
 						frm.save();
-						frm.refresh();
 					} else {
 						frappe.msgprint(
 							__("Comment is required to unreserve the vehicle."),
@@ -131,30 +131,44 @@ frappe.ui.form.on("Reserved Vehicles", {
 	},
 	after_save(frm) {
 		if (frm.doc.status === "Available") {
+			// Use the working unreserve_vehicles function instead of submit
 			frappe.call({
-				method: "edp_online_vehicles.events.submit_document.submit_reserved_vehicles",
+				method: "edp_online_vehicles.events.unreserve_vehicles.unreserve_vehicles",
 				args: {
-					doc: frm.doc.name,
+					docnames: [frm.doc.vin_serial_no],
 				},
 				callback: function (r) {
 					if (r.message) {
 						frappe.show_alert(
 							{
-								message: r.message,
+								message: "Vehicle Unreserved Successfully",
+								indicator: "green",
 							},
 							5,
 						);
+						
+						// Now update with the unreserve reason as a comment
+						const unreserve_reason = frm.doc.unreserve_reason || frm.reserved_comment || "Unreserved via form";
+						frappe.call({
+							method: "edp_online_vehicles.events.reserved_vehicles.update_stock",
+							args: {
+								message: "User Comment: " + unreserve_reason,
+								vinno: frm.doc.vin_serial_no,
+								status: "Available",
+							},
+							callback: function (r) {
+								// Refresh to go back to list
+								frappe.ui.form.Form.back_to_list = true;
+								setTimeout(() => {
+									window.history.back();
+								}, 1000);
+							},
+						});
 					}
 				},
-			});
-			frappe.call({
-				method: "edp_online_vehicles.events.reserved_vehicles.update_stock",
-				args: {
-					message: "User Comment: " + frm.reserved_comment,
-					vinno: frm.doc.vin_serial_no,
-					status: "Available",
-				},
-				callback: function (r) {},
+				error: function(r) {
+					frappe.msgprint(__("Error unreserving vehicle"));
+				}
 			});
 		} else if (frm.doc.status === "Reserved" && frm.is_new_doc === 1) {
 			let userFullName = null;

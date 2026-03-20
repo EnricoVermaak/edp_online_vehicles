@@ -332,8 +332,8 @@
    "type": "Link"
   }
  ],
- "modified": "2026-03-16 16:49:01.124287",
- "modified_by": "Administrator",
+ "modified": "2026-03-19 11:34:41.702743",
+ "modified_by": "enrico@tecwise.co.za",
  "module": "Edp Online Vehicles",
  "name": "Parts",
  "number_cards": [],
@@ -355,7 +355,7 @@
    "role": "Parts Dealer Administrator"
   }
  ],
- "sequence_id": 13.0,
+ "sequence_id": 24.0,
  "shortcuts": [
   {
    "color": "Grey",

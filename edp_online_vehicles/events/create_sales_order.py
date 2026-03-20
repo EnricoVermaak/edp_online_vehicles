@@ -36,35 +36,51 @@ def create_sales_order_service(docname):
 
 
 @frappe.whitelist()
-def create_sales_order_warranty(docname):
+def create_sales_order_warranty(docname, dealer_order_no=None):
 	doc = frappe.get_doc("Vehicles Warranty Claims", docname)
-	newdoc = frappe.new_doc("Sales Order")
-	newdoc.custom_linked_warranty_id = docname
-	newdoc.custom_vinserial_no = doc.vin_serial_no
-	newdoc.customer = doc.customer
-	newdoc.order_type = "Sales"
-	newdoc.company = frappe.defaults.get_user_default("company")
-	newdoc.transaction_date = today()
-	newdoc.delivery_date = doc.part_schedule_date
-	newdoc.custom_job_reference = doc.dealer_jobcard_no
 
-	for part in doc.part_items:
+	existing = frappe.db.exists("Part Order", {"warranty_claim": docname, "docstatus": ["!=", 2]})
+	if existing:
+		link = get_link_to_form("Part Order", existing)
+		frappe.throw(f"A Part Order already exists for this warranty claim: {link}")
+
+	approved_parts = [p for p in doc.part_items if p.approved and p.part_no]
+	if not approved_parts:
+		frappe.throw("No approved parts found on this warranty claim to order.")
+
+	newdoc = frappe.new_doc("Part Order")
+	newdoc.order_type = "Warranty"
+	newdoc.warranty_claim = docname
+	newdoc.dealer = doc.dealer
+	newdoc.customer = doc.customer
+	newdoc.dealer_order_no = dealer_order_no
+	newdoc.order_date_time = frappe.utils.now_datetime()
+	newdoc.delivery_date = doc.part_schedule_date or today()
+
+	total_excl = 0
+	for part in approved_parts:
 		newdoc.append(
-			"items",
+			"table_avsu",
 			{
-				"item_code": part.part_no,
-				"item_name": part.description,
-				"qty": part.qty,
+				"part_no": part.part_no,
+				"description": part.description,
+				"qty": part.qty or 1,
 				"uom": part.uom,
-				"conversion_factor": 1,
-				"base_amount": part.total_excl,
-				# "base_rate": part.price_excl,
+				"dealer_billing_excl": part.price or 0,
+				"total_excl": part.total_excl or 0,
+				"order_from": "Warehouse",
 			},
 		)
+		total_excl += part.total_excl or 0
+
+	vat = round(total_excl * 0.15, 2)
+	newdoc.total_excl = total_excl
+	newdoc.vat = vat
+	newdoc.total_incl = total_excl + vat
 
 	newdoc.insert()
-	newdoc_link = get_link_to_form("Sales Order", newdoc.name)
-	frappe.msgprint(f"New Sales Order is Created {newdoc_link}")
+	newdoc_link = get_link_to_form("Part Order", newdoc.name)
+	frappe.msgprint(f"Part Order created: {newdoc_link}")
 
 
 @frappe.whitelist()

@@ -17,7 +17,7 @@ def get_columns():
 			"fieldname": "order_no",
 			"label": _("Order No"),
 			"fieldtype": "Link",
-			"options": "Part Order",
+			"options": "HQ Part Order",
 			"width": 150,
 		},
 		{"fieldname": "dealer", "label": _("Dealer"), "fieldtype": "Data", "width": 250},
@@ -33,7 +33,7 @@ def get_columns():
 
 
 def get_data(filters):
-	order = DocType("Part Order")
+	order = DocType("HQ Part Order")
 	item = DocType("Part Order Summary Item")
 
 	query = (
@@ -50,7 +50,9 @@ def get_data(filters):
 			item.qty_delivered,
 		)
 		.where(
-			(order.creation.between(filters.from_date, filters.to_date))
+			(item.parenttype == "HQ Part Order")
+			& (item.parentfield == "table_qmpy")
+			& (order.order_date_time.between(filters.from_date, filters.to_date))
 			& (item.qty_ordered > item.qty_delivered)
 		)
 	)
@@ -61,8 +63,7 @@ def get_data(filters):
 	orders = query.run(as_dict=True)
 
 	for order in orders:
-		qty_to_deliver = order["qty_ordered"] - order["qty_delivered"]
-
+		qty_to_deliver = (order["qty_ordered"] or 0) - (order["qty_delivered"] or 0)
 		order["qty_to_deliver"] = qty_to_deliver
 
 	return orders
