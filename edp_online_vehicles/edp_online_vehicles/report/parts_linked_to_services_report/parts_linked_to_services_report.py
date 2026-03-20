@@ -27,7 +27,7 @@ def get_columns():
 		{"label": _("Job Card No"), "fieldname": "job_card_no", "fieldtype": "Data", "width": 150},
 		{
 			"label": _("Vehicles VIN No/ Serial No"),
-			"fieldname": "vinserial_no",
+			"fieldname": "vin_serial_no",
 			"fieldtype": "Data",
 			"width": 150,
 		},
@@ -59,7 +59,7 @@ def get_data(filters):
 			service.name,
 			service.customer,
 			service.job_card_no,
-			service.vinserial_no,
+			service.vin_serial_no,
 			service.model,
 			service.service_type,
 			parts.item,

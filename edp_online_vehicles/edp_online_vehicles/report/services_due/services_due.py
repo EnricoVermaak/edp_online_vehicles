@@ -97,9 +97,9 @@ def get_data(filters):
             service.service_status AS last_service_status
         FROM `tabVehicle Stock` stock
         LEFT JOIN ({subquery}) subquery
-        ON subquery.vinserial_no = stock.vin_serial_no
+        ON subquery.vin_serial_no = stock.vin_serial_no
         LEFT JOIN `tabVehicles Service` service
-        ON service.vinserial_no = subquery.vinserial_no
+        ON service.vin_serial_no = subquery.vin_serial_no
         AND service.service_date = subquery.last_service_date
         LEFT JOIN `tabCustomer` customer
         ON stock.customer = customer.name
