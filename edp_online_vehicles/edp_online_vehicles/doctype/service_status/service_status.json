@@ -14,7 +14,10 @@
   "is_default_status",
   "technician_started_job",
   "technician_completed_job",
-  "documents"
+  "documents",
+  "email_tab",
+  "email_template",
+  "email_recipients"
  ],
  "fields": [
   {
@@ -75,11 +78,29 @@
    "fieldtype": "Table",
    "label": "Mandatory Documents",
    "options": "Mandatory Documents"
+  },
+  {
+   "fieldname": "email_tab",
+   "fieldtype": "Tab Break",
+   "label": "Email"
+  },
+  {
+   "fieldname": "email_template",
+   "fieldtype": "Link",
+   "label": "Email Template",
+   "options": "Email Template"
+  },
+  {
+   "columns": 2,
+   "fieldname": "email_recipients",
+   "fieldtype": "Table",
+   "label": "Email Recipients",
+   "options": "Email Users"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-12-18 09:52:12.343342",
+ "modified": "2026-03-19 10:49:38.728994",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Service Status",

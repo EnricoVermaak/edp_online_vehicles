@@ -215,6 +215,8 @@ class VehiclesShipment(Document):
 				"availability_status": availability_status,
 				"ho_date_received": today(),
 			}
+			if model_doc.automatically_reserve_model:
+				stock_dict["reserve_reason"] = "Automatically reserved after shipment was received"
 			new_vehicles_stock = frappe.get_doc(stock_dict)
 			new_vehicles_stock.insert(ignore_permissions=True)
 			if model_doc.automatically_reserve_model:
@@ -402,7 +404,7 @@ class VehiclesShipment(Document):
 			# Update Vehicle Stock availability status
 			stock_doc = frappe.get_doc('Vehicle Stock', item.get("vin_serial_no"))
 			stock_doc.availability_status = 'Reserved'
-			stock_doc.reserve_reason = 'Automatically Reserved'
+			stock_doc.reserve_reason = 'Automatically reserved after shipment was received'
 			stock_doc.save(ignore_permissions=True)
 
 			reserved_count += 1

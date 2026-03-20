@@ -16,6 +16,8 @@
   "dealer",
   "dealer_order_no",
   "part_order_status",
+  "warranty_claim",
+  "material_request",
   "part_basket_section",
   "table_ugma",
   "section_break_ywid",
@@ -123,10 +125,27 @@
    "read_only": 1
   },
   {
+   "allow_on_submit": 1,
    "fieldname": "part_order_status",
    "fieldtype": "Link",
    "label": "Part Order Status",
    "options": "Part Order Status"
+  },
+  {
+   "depends_on": "eval:doc.order_type == 'Warranty'",
+   "fieldname": "warranty_claim",
+   "fieldtype": "Link",
+   "label": "Warranty Claim",
+   "options": "Vehicles Warranty Claims",
+   "read_only": 1
+  },
+  {
+   "depends_on": "eval:doc.material_request",
+   "fieldname": "material_request",
+   "fieldtype": "Link",
+   "label": "Material Request (Back Order)",
+   "options": "Material Request",
+   "read_only": 1
   },
   {
    "fieldname": "order_information_section",
@@ -139,6 +158,7 @@
    "label": "Part Basket"
   },
   {
+   "allow_on_submit": 1,
    "fieldname": "table_ugma",
    "fieldtype": "Table",
    "options": "Part Order Item",
@@ -229,12 +249,14 @@
    "label": "Overview"
   },
   {
+   "allow_on_submit": 1,
    "fieldname": "total_qty_parts_ordered",
    "fieldtype": "Int",
    "label": "Total Qty Parts Ordered",
    "read_only": 1
   },
   {
+   "allow_on_submit": 1,
    "fieldname": "_order_delivered",
    "fieldtype": "Percent",
    "in_list_view": 1,
@@ -246,12 +268,14 @@
    "fieldtype": "Column Break"
   },
   {
+   "allow_on_submit": 1,
    "fieldname": "total_qty_parts_delivered",
    "fieldtype": "Int",
    "label": "Total Qty Parts Delivered",
    "read_only": 1
   },
   {
+   "allow_on_submit": 1,
    "fieldname": "order_delivery_time",
    "fieldtype": "Data",
    "label": "Order Delivery Time (HH:MM:SS)",
@@ -263,6 +287,7 @@
    "label": "Undelivered Parts"
   },
   {
+   "allow_on_submit": 1,
    "fieldname": "table_qmpy",
    "fieldtype": "Table",
    "options": "Part Order Summary Item"
@@ -280,6 +305,7 @@
    "fieldtype": "Column Break"
   },
   {
+   "allow_on_submit": 1,
    "depends_on": "eval: doc.total_undelivered_parts_qty != 0",
    "fieldname": "total_undelivered_parts_qty",
    "fieldtype": "Int",
@@ -287,6 +313,7 @@
    "read_only": 1
   },
   {
+   "allow_on_submit": 1,
    "depends_on": "eval: doc.total_undelivered_parts_dealer_billing_excl != 0",
    "fieldname": "total_undelivered_parts_dealer_billing_excl",
    "fieldtype": "Currency",
@@ -299,6 +326,7 @@
    "label": "Fully Delivered Parts"
   },
   {
+   "allow_on_submit": 1,
    "fieldname": "table_cipd",
    "fieldtype": "Table",
    "options": "Part Order Summary Item",
@@ -317,6 +345,7 @@
    "fieldtype": "Column Break"
   },
   {
+   "allow_on_submit": 1,
    "depends_on": "eval: doc.total_delivered_parts_qty != 0",
    "fieldname": "total_delivered_parts_qty",
    "fieldtype": "Int",
@@ -324,6 +353,7 @@
    "read_only": 1
   },
   {
+   "allow_on_submit": 1,
    "depends_on": "eval: doc.total_delivered_parts_qty != 0",
    "fieldname": "total_delivered_parts_dealer_billing_excl",
    "fieldtype": "Currency",
@@ -335,6 +365,7 @@
    "fieldtype": "Section Break"
   },
   {
+   "allow_on_submit": 1,
    "fieldname": "total_picking_time",
    "fieldtype": "Data",
    "label": "Total Picking Time (HH:MM:SS)",
@@ -345,6 +376,7 @@
    "fieldtype": "Column Break"
   },
   {
+   "allow_on_submit": 1,
    "fieldname": "total_despatch_time",
    "fieldtype": "Data",
    "label": "Total Despatch Time (HH:MM:SS)",
@@ -420,6 +452,7 @@
    "show_dashboard": 1
   },
   {
+   "allow_on_submit": 1,
    "fieldname": "part_picking_slip",
    "fieldtype": "Link",
    "label": "Part Picking Slip",
@@ -442,12 +475,12 @@
   {
    "group": "Picking",
    "link_doctype": "Part Picking Slip",
-   "link_fieldname": "hq_part_order"
+   "link_fieldname": "part_order_no"
   },
   {
    "group": "Delivery",
    "link_doctype": "Parts Delivery Note",
-   "link_fieldname": "hq_part_order"
+   "link_fieldname": "part_order_no"
   }
  ],
  "modified": "2026-03-12 15:37:47.172513",

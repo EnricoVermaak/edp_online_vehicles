@@ -12,6 +12,7 @@
   "allow_service_odo_reading_roll_back",
   "default_service_type_max_allowance",
   "default_service_type_minimum_allowance",
+  "service_allowance_days",
   "allow_auto_job_card_no",
   "auto_job_card_no_prefix",
   "last_auto_job_card_no",
@@ -101,12 +102,17 @@
    "fieldname": "create_other_service_schedule",
    "fieldtype": "Check",
    "label": "Allow Other Service Schedule"
+  },
+  {
+   "fieldname": "service_allowance_days",
+   "fieldtype": "Int",
+   "label": "Service allowance (days)"
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2026-03-18 16:21:52.000804",
+ "modified": "2026-03-20 08:21:43.638402",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicle Service Settings",

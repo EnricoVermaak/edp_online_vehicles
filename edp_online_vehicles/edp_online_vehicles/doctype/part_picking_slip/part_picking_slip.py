@@ -8,7 +8,6 @@ from frappe.utils import flt
 
 class PartPickingSlip(Document):
 	def autoname(self):
-		# Check if there are existing orders with the same part_order_no
 		if frappe.db.exists("Part Picking Slip", {"part_order_no": self.part_order_no}):
 			docs = frappe.get_all("Part Picking Slip", filters={"part_order_no": self.part_order_no})
 			index = 1
@@ -31,88 +30,51 @@ class PartPickingSlip(Document):
 		self.name = f"PPS-{self.part_order_no}-{index}"
 
 	def on_submit(self):
-		# Retrieve the HQ Part Order document
 		hq_doc = frappe.get_doc("HQ Part Order", self.part_order_no)
 		hq_doc.db_set("part_picking_slip", self.name, notify=True)
-
 
 		for slip_row in self.table_qoik:
 			for hq_row in hq_doc.table_ugma:
 				if hq_row.part_no == slip_row.part_no:
 					hq_row.db_set("qty_picked", slip_row.qty_picked)
 
-		# Release reserved stock at picking stage by syncing SO delivered_qty
-		# to the picked totals and recalculating reserved qty.
-		self.release_reserved_stock_from_sales_order(hq_doc)
+			for summary_row in hq_doc.table_qmpy:
+				if summary_row.part_no == slip_row.part_no:
+					summary_row.db_set("qty_picked", slip_row.qty_picked)
 
 		frappe.db.commit()
 		self.create_pick_list()
- 
+
 	def before_submit(self):
 		self.status = "Completed"
-
-	def release_reserved_stock_from_sales_order(self, hq_doc):
-		if not hq_doc.part_order:
-			return
-
-		sales_order = frappe.db.get_value(
-			"Sales Order",
-			{"custom_part_order": hq_doc.part_order},
-			"name",
-		)
-
-		if not sales_order:
-			return
-
-		so = frappe.get_doc("Sales Order", sales_order)
-
-		picked_map = {}
-		for row in self.table_qoik:
-			if not row.part_no:
-				continue
-			picked_map[row.part_no] = max(flt(row.qty_picked), 0)
-
-		updated_items = []
-		for item in so.items:
-			target_delivered_qty = min(picked_map.get(item.item_code, 0), flt(item.qty))
-			if flt(item.delivered_qty) != flt(target_delivered_qty):
-				item.db_set("delivered_qty", target_delivered_qty, update_modified=False)
-				updated_items.append(item.name)
-
-		if updated_items:
-			so.update_reserved_qty(updated_items)
 
 	def create_pick_list(self):
 		if not self.part_order_no:
 			frappe.throw("HQ Part Order is required")
 
-		# 1. HQ Part Order
 		hq_order = frappe.get_doc("HQ Part Order", self.part_order_no)
 
 		if not hq_order.part_order:
 			frappe.throw("Part Order not linked in HQ Part Order")
 
-		# 2. Part Order
 		part_order = hq_order.part_order
 
-		# 2. Find Sales Order linked to Part Order
+		hq_company = frappe.db.get_value("Company", {"custom_head_office": 1}, "name")
 		sales_order = frappe.db.get_value(
 			"Sales Order",
-			{"custom_part_order": part_order},
-			# , "docstatus": 1
+			{"custom_part_order": part_order, "company": hq_company, "docstatus": 1},
 			"name"
 		)
 
 		if not sales_order:
-			frappe.throw(f"No submitted Sales Order found for Part Order {part_order}")
+			frappe.log_error(f"No submitted Sales Order found for Part Order {part_order}")
+			return
 
 		so = frappe.get_doc("Sales Order", sales_order)
 
-		# 3. Prevent duplicate Pick List
-		if frappe.db.exists("Pick List", {"sales_order": so.name}):
+		if frappe.db.exists("Pick List", {"sales_order": so.name, "docstatus": ["!=", 2]}):
 			return
 
-		# 4. Create Pick List
 		pick_list = frappe.new_doc("Pick List")
 		pick_list.sales_order = so.name
 		pick_list.parent_warehouse = so.items[0].warehouse if so.items else None
@@ -148,7 +110,8 @@ class PartPickingSlip(Document):
 			picked_map[item.item_code] = max(picked_qty - allocated_qty, 0)
 
 		if not pick_list.locations:
-			frappe.throw("No picked items with quantity greater than zero were found")
+			frappe.log_error("No picked items matched Sales Order items for Pick List creation")
+			return
 
 		pick_list.save()
 		pick_list.submit()

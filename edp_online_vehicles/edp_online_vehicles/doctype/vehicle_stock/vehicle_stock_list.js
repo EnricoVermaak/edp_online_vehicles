@@ -23,6 +23,8 @@ frappe.listview_settings["Vehicle Stock"] = {
 	},
 
 	onload: function (listview) {
+		edp.listview_utils.enable_strict_filters(listview);
+
 		// Hide the default "New" button
 		$('[data-label="Add Vehicle Stock"]').hide();
 
@@ -80,7 +82,7 @@ frappe.listview_settings["Vehicle Stock"] = {
 					frappe.db
 						.get_value(
 							"Company",
-							values.dealer,
+							values.to_dealer,
 							"custom_default_vehicles_stock_warehouse"
 						)
 						.then((res) => {
@@ -699,8 +701,7 @@ frappe.listview_settings["Vehicle Stock"] = {
 			}
 		});
 
-		if (frappe.user.has_role("Vehicles Administrator")) {
-			listview.page.add_actions_menu_item(__("Unreserve"), function () {
+		listview.page.add_actions_menu_item(__("Unreserve"), function () {
 				const selected_docs = listview.get_checked_items();
 
 				for (let doc of selected_docs) {
@@ -766,7 +767,6 @@ frappe.listview_settings["Vehicle Stock"] = {
 				});
 				dialog.show();
 			});
-		}
 	},
 	// 	frm.set_query("warehouse", function() {
 	// return {

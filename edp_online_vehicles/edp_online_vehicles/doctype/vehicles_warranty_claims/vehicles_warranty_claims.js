@@ -106,17 +106,41 @@ frappe.ui.form.on("Vehicles Warranty Claims", {
 				}));
 			});
 
-		frm.add_custom_button(__("Sales Order"), () => {
-			if (frm.doc.part_items.length === 0) {
-				frappe.throw("Please Enter data in parts child table first");
+		frm.add_custom_button(__("Part Order"), () => {
+			let approved = (frm.doc.part_items || []).filter(r => r.approved && r.part_no);
+			if (!approved.length) {
+				frappe.throw("No approved parts found to create an order");
 			} else if (!frm.doc.part_schedule_date) {
 				frappe.throw("Please select a Scheduled Delivery Date under Parts Table");
 			} else {
-				frappe.call({
-					method: "edp_online_vehicles.events.create_sales_order.create_sales_order_warranty",
-					args: { docname: frm.doc.name },
-					callback: function (r) { if (r.message) frappe.msgprint(r.message); },
+				let d = new frappe.ui.Dialog({
+					title: __("Create Part Order"),
+					fields: [
+						{
+							label: __("Dealer Order No"),
+							fieldname: "dealer_order_no",
+							fieldtype: "Data",
+							reqd: 1,
+						},
+					],
+					primary_action_label: __("Create"),
+					primary_action(values) {
+						d.hide();
+						frappe.call({
+							method: "edp_online_vehicles.events.create_sales_order.create_sales_order_warranty",
+							args: {
+								docname: frm.doc.name,
+								dealer_order_no: values.dealer_order_no,
+							},
+							freeze: true,
+							freeze_message: __("Creating Part Order..."),
+							callback: function (r) {
+								frm.reload_doc();
+							},
+						});
+					},
 				});
+				d.show();
 			}
 		}, __("Create"));
 

@@ -15,6 +15,7 @@
   "stock_information_section",
   "qty",
   "qty_picked",
+  "qty_supplied",
   "qty_invoiced",
   "qty_delivered",
   "column_break_eelx",
@@ -216,6 +217,14 @@
    "fieldname": "qty_picked",
    "fieldtype": "Int",
    "label": "Qty Picked",
+   "read_only": 1
+  },
+  {
+   "columns": 1,
+   "fieldname": "qty_supplied",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Qty Supplied",
    "read_only": 1
   },
   {
