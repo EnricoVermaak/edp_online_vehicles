@@ -38,6 +38,10 @@ class PartPickingSlip(Document):
 				if hq_row.part_no == slip_row.part_no:
 					hq_row.db_set("qty_picked", slip_row.qty_picked)
 
+			for summary_row in hq_doc.table_qmpy:
+				if summary_row.part_no == slip_row.part_no:
+					summary_row.db_set("qty_picked", slip_row.qty_picked)
+
 		frappe.db.commit()
 		self.create_pick_list()
 

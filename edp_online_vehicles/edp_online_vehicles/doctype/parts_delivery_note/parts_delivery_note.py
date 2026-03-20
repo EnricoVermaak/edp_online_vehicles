@@ -100,10 +100,13 @@ class PartsDeliveryNote(Document):
 			self._update_hq_order_item(hq_doc, part, now_dt)
 			self._update_part_order_item(order_doc, part, now_dt)
 
+		self._recalculate_hq_order_totals(hq_doc)
 		self._recalculate_part_order_totals(order_doc)
 		self._sync_qty_supplied(hq_doc)
 
+		hq_doc.flags.ignore_validate_update_after_submit = True
 		hq_doc.save(ignore_permissions=True)
+		order_doc.flags.ignore_validate_update_after_submit = True
 		order_doc.save(ignore_permissions=True)
 		frappe.db.commit()
 
@@ -204,7 +207,9 @@ class PartsDeliveryNote(Document):
 
 		self._recalculate_part_order_totals(order_doc)
 
+		d2d_doc.flags.ignore_validate_update_after_submit = True
 		d2d_doc.save(ignore_permissions=True)
+		order_doc.flags.ignore_validate_update_after_submit = True
 		order_doc.save(ignore_permissions=True)
 		frappe.db.commit()
 
@@ -395,6 +400,43 @@ class PartsDeliveryNote(Document):
 			}
 			order_doc.table_eaco.remove(matching)
 			order_doc.append("table_poxl", record_data)
+
+	def _recalculate_hq_order_totals(self, hq_doc):
+		undelivered_billing = 0
+		undelivered_qty = 0
+
+		for row in (hq_doc.table_qmpy or []):
+			price_list = flt(frappe.db.get_value(
+				"Item Price", {"item_code": row.part_no}, "price_list_rate"
+			))
+			remaining = flt(row.qty_ordered) - flt(row.qty_delivered)
+			undelivered_billing += price_list * remaining
+			undelivered_qty += remaining
+
+		hq_doc.total_undelivered_parts_qty = undelivered_qty
+		hq_doc.total_undelivered_parts_dealer_billing_excl = undelivered_billing
+
+		delivered_billing = 0
+		delivered_qty = 0
+
+		for row in (hq_doc.get("table_cipd") or []):
+			price_list = flt(frappe.db.get_value(
+				"Item Price", {"item_code": row.part_no}, "price_list_rate"
+			))
+			delivered_billing += price_list * flt(row.qty_delivered)
+			delivered_qty += flt(row.qty_delivered)
+
+		hq_doc.total_delivered_parts_qty = delivered_qty
+		hq_doc.total_delivered_parts_dealer_billing_excl = delivered_billing
+
+		if flt(hq_doc.total_qty_parts_ordered) > 0:
+			hq_doc.total_qty_parts_delivered = flt(hq_doc.total_qty_parts_ordered) - undelivered_qty
+			hq_doc._order_delivered = (
+				flt(hq_doc.total_qty_parts_delivered) / flt(hq_doc.total_qty_parts_ordered)
+			) * 100
+		else:
+			hq_doc.total_qty_parts_delivered = 0
+			hq_doc._order_delivered = 0
 
 	def _recalculate_part_order_totals(self, order_doc):
 		"""Recalculate Part Order totals from its child tables."""

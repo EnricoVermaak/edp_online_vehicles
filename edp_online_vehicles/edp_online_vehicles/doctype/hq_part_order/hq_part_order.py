@@ -8,13 +8,20 @@ from frappe.utils import now_datetime, today, flt
 
 
 def get_company_warehouse(company):
+
 	wh = frappe.db.get_value(
 		"Company", company, "custom_default_vehicles_stock_warehouse"
 	)
 	if not wh:
+		abbr = frappe.db.get_value("Company", company, "abbr")
+		fallback = f"Stores - {abbr}"
+		if frappe.db.exists("Warehouse", fallback):
+			wh = fallback
+	if not wh:
 		frappe.throw(
-			f"Default Vehicles Stock Warehouse is not set on Company <b>{company}</b>. "
-			"Please set it under Company > Settings before proceeding."
+			f"No warehouse found for Company <b>{company}</b>. "
+			"Please set Default Vehicles Stock Warehouse under Company > Settings, "
+			"or ensure a 'Stores' warehouse exists for this company."
 		)
 	return wh
 
@@ -69,6 +76,7 @@ class HQPartOrder(Document):
 		so.submit()
 
 	def _create_material_request_for_back_orders(self):
+		"""Create a Material Request (Purchase) for items marked as BackOrder."""
 		back_order_items = [
 			item for item in self.table_ugma
 			if (item.order_from or "").strip() == "BackOrder"
