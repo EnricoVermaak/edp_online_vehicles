@@ -36,9 +36,9 @@
   "default_turn_around_time_on_orders",
   "maximum_reservation_time_hours",
   "vehicle_order_no_prefix",
+  "auto_generate_dealer_reference_number",
   "apply_fifo_rule_on_vehicles_orders",
   "allow_dealer_to_dealer_orders",
-  "auto_generate_dealer_reference_number",
   "allow_stock_allocation_on_invoice_paid",
   "automatically_submit_main_equipment_order_document",
   "display_floorplan",
@@ -62,13 +62,19 @@
   "integrations_tab",
   "bank_integration_section",
   "max_retries",
-  "php_timeout",
+  "column_break_cosv",
+  "credit_check_success_status",
+  "credit_check_failed_status",
+  "credit_approval_success_status",
+  "credit_approval_failed_status",
   "sap_integration_section",
   "sap_token",
   "sap_token_expires_at",
   "sap_token_fetched_at",
   "evolve_section",
   "interface_code",
+  "credentails_section",
+  "credentails",
   "servers_section",
   "integration_servers"
  ],
@@ -396,11 +402,6 @@
    "label": "Integrations"
   },
   {
-   "fieldname": "servers_section",
-   "fieldtype": "Section Break",
-   "label": "Servers"
-  },
-  {
    "fieldname": "bank_integration_section",
    "fieldtype": "Section Break",
    "label": "Bank Integration"
@@ -409,11 +410,6 @@
    "fieldname": "max_retries",
    "fieldtype": "Int",
    "label": "Max Retries"
-  },
-  {
-   "fieldname": "php_timeout",
-   "fieldtype": "Int",
-   "label": "PHP Timeout (Seconds)"
   },
   {
    "fieldname": "sap_integration_section",
@@ -460,17 +456,60 @@
   },
   {
    "default": "0",
-   "description": "If selected, dealer reference numbers will be generated with correct incrementation.",
+   "description": "If selected, dealer reference numbers will be generated using the Vehicle Order No Prefix.",
    "fieldname": "auto_generate_dealer_reference_number",
    "fieldtype": "Check",
-   "label": "Automatically generate Dealer Reference Numbers"
+   "label": "Automatically Generate Dealer Reference Number"
+  },
+  {
+   "fieldname": "credit_check_success_status",
+   "fieldtype": "Link",
+   "label": "Credit Check Success Status",
+   "options": "Vehicles Order Status"
+  },
+  {
+   "fieldname": "credit_check_failed_status",
+   "fieldtype": "Link",
+   "label": "Credit Check Failed Status",
+   "options": "Vehicles Order Status"
+  },
+  {
+   "fieldname": "credit_approval_success_status",
+   "fieldtype": "Link",
+   "label": "Credit Approval Success Status",
+   "options": "Vehicles Order Status"
+  },
+  {
+   "fieldname": "credit_approval_failed_status",
+   "fieldtype": "Link",
+   "label": "Credit Approval Failed Status",
+   "options": "Vehicles Order Status"
+  },
+  {
+   "fieldname": "column_break_cosv",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "servers_section",
+   "fieldtype": "Section Break",
+   "label": "Servers"
+  },
+  {
+   "fieldname": "credentails_section",
+   "fieldtype": "Section Break",
+   "label": "Credentails"
+  },
+  {
+   "fieldname": "credentails",
+   "fieldtype": "Table",
+   "options": "Integration Credentails"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2026-03-17 09:50:54.320282",
+ "modified": "2026-03-18 17:03:06.507711",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicle Stock Settings",

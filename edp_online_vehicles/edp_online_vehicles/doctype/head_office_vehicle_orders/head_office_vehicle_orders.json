@@ -460,12 +460,14 @@
    "read_only": 1
   },
   {
+   "depends_on": "eval: doc.sap_net_price != 0",
    "fieldname": "sap_net_price",
    "fieldtype": "Currency",
    "label": "DMS Net Price",
    "read_only": 1
   },
   {
+   "depends_on": "eval: doc.sap_tax != 0",
    "fieldname": "sap_tax",
    "fieldtype": "Currency",
    "label": "DMS Tax",
@@ -498,14 +500,17 @@
    "options": "Invoice\nCredit\nReinvoice\nUsed"
   },
   {
+   "depends_on": "eval: doc.invoice_amount != 0",
    "fieldname": "invoice_amount",
    "fieldtype": "Currency",
-   "label": "Invoice Amount"
+   "label": "Invoice Amount",
+   "read_only": 1
   },
   {
    "fieldname": "invoice_date",
    "fieldtype": "Date",
-   "label": "Invoice date"
+   "label": "Invoice date",
+   "read_only": 1
   },
   {
    "fieldname": "check_invoice",
@@ -524,10 +529,12 @@
    "read_only": 1
   },
   {
+   "depends_on": "eval: doc.sap_invoice_no",
    "fieldname": "credit_note_type",
    "fieldtype": "Select",
    "label": "Type",
-   "options": "Invoice\nCredit\nReinvoice\nUsed"
+   "options": "Invoice\nCredit\nReinvoice\nUsed",
+   "read_only": 1
   },
   {
    "fieldname": "credit_note_date",
@@ -542,9 +549,11 @@
    "read_only": 1
   },
   {
+   "depends_on": "eval: doc.total_excl_vat != 0",
    "fieldname": "total_excl_vat",
    "fieldtype": "Currency",
-   "label": "Total (Excl. VAT)"
+   "label": "Total (Excl. VAT)",
+   "read_only": 1
   },
   {
    "fieldname": "integration_retry_count",
@@ -589,7 +598,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-03-09 15:28:17.273710",
+ "modified": "2026-03-19 17:46:56.507723",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Head Office Vehicle Orders",

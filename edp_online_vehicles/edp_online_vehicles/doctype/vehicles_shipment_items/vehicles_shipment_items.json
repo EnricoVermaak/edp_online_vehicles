@@ -230,7 +230,6 @@
    "columns": 1,
    "fieldname": "interior_colour",
    "fieldtype": "Link",
-   "in_list_view": 1,
    "label": "Interior Colour",
    "options": "Interior Model Colour"
   }
@@ -239,7 +238,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2026-03-16 12:24:07.025259",
+ "modified": "2026-03-18 14:14:45.476070",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicles Shipment Items",
