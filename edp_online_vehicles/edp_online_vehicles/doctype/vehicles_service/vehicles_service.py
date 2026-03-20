@@ -315,7 +315,41 @@ class VehiclesService(Document):
                 'Vehicle Service', 
                 self.name                 
             )
+            
+    def validate(self):
+        self.check_service_allowance()
+    
+    def check_service_allowance(self):
+        if not self.vin_serial_no or not self.service_date:
+            return
 
+        allowance_days = frappe.db.get_single_value("Vehicle Service Settings", "service_allowance_days") or 0
+        
+        vehicle_dates = frappe.db.get_value("Vehicle Stock", 
+            {"vin_serial_no": self.vin_serial_no},
+            ["service_start_date", "service_end_date"],
+            as_dict=True)
+
+        if vehicle_dates and vehicle_dates.service_end_date:
+            cut_off = add_days(vehicle_dates.service_end_date, allowance_days)
+            current_service_date = getdate(self.service_date)
+
+            if current_service_date > cut_off:
+                overdue_by = date_diff(current_service_date, cut_off)
+                
+                frappe.throw(
+                    msg=_("Cannot save: This service is overdue by {0} days. "
+                        "The service window ended on {1}. With a {2}-day allowance, "
+                        "the final deadline was {3}.")
+                    .format(
+                        overdue_by,
+                        frappe.format(vehicle_dates.service_end_date, "Date"),
+                        allowance_days,
+                        frappe.format(cut_off, "Date")
+                    ),
+                    title=_("Service Period Expired")
+                )
+                
 @frappe.whitelist()
 def create_internal_docs_notes(source_name, target_doc=None):
     doc = get_mapped_doc(
