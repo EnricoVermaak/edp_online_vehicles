@@ -2,6 +2,8 @@
 # For license information, please see license.txt
 
 import frappe
+from frappe import _
+from frappe.utils import getdate, add_months, add_days, date_diff
 from frappe.model.document import Document
 from frappe.model.mapper import get_mapped_doc
 from edp_online_vehicles.events.send_email import send_custom_email_from_template
