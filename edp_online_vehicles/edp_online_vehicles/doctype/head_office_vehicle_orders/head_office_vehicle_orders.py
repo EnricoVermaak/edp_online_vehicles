@@ -13,6 +13,8 @@ from frappe.utils import now_datetime
 
 class HeadOfficeVehicleOrders(Document):
 	def validate(self):
+		if self.credit_note_no:
+			return
 
 		move_stock = frappe.db.get_value("Vehicles Order Status", {"name": self.status}, "auto_move_stock")
 		in_transit = frappe.db.get_value(
@@ -39,6 +41,9 @@ class HeadOfficeVehicleOrders(Document):
 				)
 
 	def on_update(self):
+		if self.credit_note_no:
+			return
+
 		submit_doc = frappe.db.get_value(
 			"Vehicles Order Status", {"name": self.status}, "automatically_submit_document"
 		)
