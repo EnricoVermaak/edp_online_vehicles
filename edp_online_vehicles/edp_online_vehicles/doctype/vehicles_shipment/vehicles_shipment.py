@@ -555,8 +555,14 @@ def receive_all_background_job(shipment_name, requested_by=None):
 		)
 
 
+def _shipment_csv_import_enabled():
+	return bool(frappe.db.get_single_value("Vehicle Stock Settings", "enable_upload_import"))
+
+
 @frappe.whitelist()
 def get_import_layout_titles():
+	if not _shipment_csv_import_enabled():
+		return []
 	settings = frappe.get_single("Vehicle Stock Settings")
 	seen = set()
 	out = []
@@ -570,6 +576,8 @@ def get_import_layout_titles():
 
 @frappe.whitelist()
 def get_import_layout_mappings(layout_title):
+	if not _shipment_csv_import_enabled():
+		return []
 	if not layout_title:
 		return []
 	settings = frappe.get_single("Vehicle Stock Settings")

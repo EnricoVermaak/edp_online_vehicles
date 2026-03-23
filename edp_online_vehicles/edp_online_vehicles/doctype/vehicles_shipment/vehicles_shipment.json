@@ -30,6 +30,7 @@
   "column_break_iqzy",
   "exchange_rate",
   "shipment_items_tab",
+  "upload_import",
   "vehicles_shipment_items",
   "section_break_vsgr",
   "column_break_rhrs",
@@ -130,6 +131,12 @@
    "fieldname": "shipment_items_tab",
    "fieldtype": "Tab Break",
    "label": "Shipment Items"
+  },
+  {
+   "depends_on": "eval:doc.docstatus===0",
+   "fieldname": "upload_import",
+   "fieldtype": "Button",
+   "label": "Upload Import"
   },
   {
    "fieldname": "vehicles_shipment_items",
