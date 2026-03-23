@@ -230,6 +230,7 @@
    "columns": 1,
    "fieldname": "interior_colour",
    "fieldtype": "Link",
+   "in_list_view": 1,
    "label": "Interior Colour",
    "options": "Interior Model Colour"
   }

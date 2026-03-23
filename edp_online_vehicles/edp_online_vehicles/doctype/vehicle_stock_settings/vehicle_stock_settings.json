@@ -23,6 +23,10 @@
   "automatically_create_stock_number",
   "stock_no_prefix",
   "last_automated_stock_no",
+  "csv_import_section",
+  "enable_upload_import",
+  "download_csv_template",
+  "vehicle_stock_import_column_mappings",
   "vehicles_stock_availability_tab",
   "vehicles_stock_availability_section",
   "only_show_models_in_stock_at_hq",
@@ -225,6 +229,31 @@
    "fieldname": "automatically_create_model_colours_for_new_model",
    "fieldtype": "Check",
    "label": "Automatically create Model Colours for New Model"
+  },
+  {
+   "fieldname": "csv_import_section",
+   "fieldtype": "Section Break",
+   "label": "Shipment CSV Import Layouts"
+  },
+  {
+   "default": "0",
+   "description": "When enabled, the Vehicles Shipment form will show 'Upload Import' buttons for each configured layout.",
+   "fieldname": "enable_upload_import",
+   "fieldtype": "Check",
+   "label": "Enable Upload Import"
+  },
+  {
+   "depends_on": "eval: doc.enable_upload_import == 1",
+   "fieldname": "download_csv_template",
+   "fieldtype": "Button",
+   "label": "Download CSV Template"
+  },
+  {
+   "depends_on": "eval: doc.enable_upload_import == 1",
+   "fieldname": "vehicle_stock_import_column_mappings",
+   "fieldtype": "Table",
+   "label": "Import Column Mappings",
+   "options": "Vehicle Stock Import Column Mapping"
   },
   {
    "fieldname": "used_vehicles_section",
