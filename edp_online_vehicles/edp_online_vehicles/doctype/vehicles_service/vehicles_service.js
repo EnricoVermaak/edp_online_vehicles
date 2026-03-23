@@ -359,6 +359,25 @@ frappe.ui.form.on("Vehicles Service", {
 			}
 		});
 
+		frappe.call({
+    method: "frappe.client.get_list",
+    args: {
+        doctype: "Item Price",
+        filters: {
+            item_code: row.item,
+            selling: 1,
+            price_list: "Standard Selling"
+        },
+        fields: ["price_list_rate"]
+    },
+    callback: function(res) {
+        if(res.message.length) {
+            row.rate_hour = res.message[0].price_list_rate;
+            row.total_excl = row.rate_hour * (row.duration_hours || 0);
+        }
+    }
+});
+
 		if (frm.is_new()) {
 			frm.set_value("dealer", frappe.defaults.get_default("company"));
 			frappe.db.get_list("Service Status", {
@@ -375,7 +394,15 @@ frappe.ui.form.on("Vehicles Service", {
 			.then(r => {
 				let labour_code_filter = r.message?.labour_code_filter || "Service Labour";
 				frm.set_query("item", "service_labour_items", () => ({
-					filters: { item_group: labour_code_filter }
+					filters: {
+						item_group: labour_code_filter
+					}
+				}));
+
+				frm.set_query("item", "non_oem_labour_items", () => ({
+					filters: {
+						item_group: labour_code_filter
+					}
 				}));
 			});
 
@@ -629,6 +656,20 @@ frappe.ui.form.on("Vehicles Service", {
 		frm.refresh_field("service_labour_items");
 		frm.refresh_field("non_oem_labour_items");
 		edp_vehicles.pricing.recalc_totals(frm, VS_CONFIG);
+
+		for (let row of frm.doc.service_labour_items) {
+			if (row.item) {
+				let price_list_rate = await frappe.db.get_value("Item Price", {
+					item_code: row.item,
+					price_list: "Standard Selling"
+				}, "price_list_rate");
+				let item_doc = await frappe.db.get_doc("Item", row.item);
+				let gp_pct = item_doc.custom_service_gp || 0;
+				let rate = (price_list_rate?.price_list_rate || 0) + (price_list_rate?.price_list_rate || 0) * (gp_pct/100);
+				row.rate_hour = rate;
+				row.total_excl = rate * (row.duration_hours || 0);
+			}
+		}
 	}
 });
 
