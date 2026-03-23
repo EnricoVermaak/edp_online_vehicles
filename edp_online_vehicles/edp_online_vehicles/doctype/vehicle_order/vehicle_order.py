@@ -11,6 +11,21 @@ from frappe.utils import getdate, now_datetime
 
 
 class VehicleOrder(Document):
+	def autoname(self):
+		prefix = frappe.get_single("Vehicle Stock Settings").vehicle_order_no_prefix
+
+		date = getdate().strftime("%m%y")
+
+		vehicle_count = 0
+
+		for _row in self.vehicles_basket:
+			vehicle_count += 1
+
+		if prefix:
+			self.name = make_autoname(f"{prefix}{date}.####")
+		else:
+			self.name = make_autoname(f"EO{date}.####")
+   
 	def before_insert(self):
 		if not self.dealer_order_no:
 			self.dealer_order_no = generate_dealer_reference_number()
@@ -111,21 +126,7 @@ class VehicleOrder(Document):
 
 		frappe.msgprint("Orders created")
 
-	def autoname(self):
-		prefix = frappe.get_single("Vehicle Stock Settings").vehicle_order_no_prefix
 
-		date = getdate().strftime("%m%y")
-
-		vehicle_count = 0
-
-		for _row in self.vehicles_basket:
-			vehicle_count += 1
-
-		if prefix:
-			self.name = make_autoname(f"{prefix}{date}.####")
-		else:
-			self.name = make_autoname(f"EO{date}.####")
-   
 	@frappe.whitelist()
 	def generate_dealer_reference_number(self):
 		settings = frappe.get_single("Vehicle Stock Settings")
@@ -145,3 +146,56 @@ class VehicleOrder(Document):
 			next_seq = 1
 
 		return f"{prefix}{str(next_seq).zfill(6)}"
+	
+	@frappe.whitelist()
+	def check_stock_availability(self):
+		pass
+
+	@frappe.whitelist()
+	def row_has_stock(self, row):
+		hq_companies = frappe.db.get_all("Company", {"custom_head_office": 1}, pluck="name")
+
+		warehosues = frappe.get_all(
+			"Warehouse",
+			filters={"custom_visible_for_vehicles_orders": 1, "company": com_name.name},
+			pluck=["name"],
+		)
+
+		model = row.model
+
+		filters = {
+				"dealer": ["in", hq_companies],
+				"target_warehouse": ["in", warehosues],
+				"model": model,
+				"availability_status": "Available",
+			},
+
+
+		colour = row.colour 
+
+		count = frappe.db.count(
+			"Vehicle Stock",
+			filters
+		)
+
+		if colour:
+			filters.append("colour": colour,)
+			colour_count = frappe.db.count(
+				"Vehicle Stock",
+				filters
+			)
+
+
+		for unit in self.vehicles_basket:
+			if not unit == row and unit.model == row.model and order_from == "Warehouse":
+
+
+
+
+	# com_name = frappe.db.get_value("Company", {"custom_head_office": 1}, ["name"], as_dict=1)
+
+	return frappe.get_all(
+		"Warehouse",
+		filters={"custom_visible_for_vehicles_orders": 1, "company": com_name.name},
+		fields=["name", "company"],
+	)

@@ -2,22 +2,22 @@
 // For license information, please see license.txt
 
 frappe.ui.form.on("Vehicle Order", {
-    onload: function(frm) {
-        if (!frm.is_new()) return;
+	onload: function (frm) {
+		if (!frm.is_new()) return;
 
-        frappe.db.get_single_value(
-            "Vehicle Stock Settings",
-            "auto_generate_dealer_reference_number"
-        ).then(enabled => {
-            if (!enabled) return;
+		frappe.db.get_single_value(
+			"Vehicle Stock Settings",
+			"auto_generate_dealer_reference_number"
+		).then(enabled => {
+			if (!enabled) return;
 
-            // Correct usage: ONLY frm.call
-            frm.call("generate_dealer_reference_number").then(r => {
-                if (r.message) {
-                    frm.set_value("dealer_order_no", r.message);
-                }
-            });
-        });
+			// Correct usage: ONLY frm.call
+			frm.call("generate_dealer_reference_number").then(r => {
+				if (r.message) {
+					frm.set_value("dealer_order_no", r.message);
+				}
+			});
+		});
 
 		if (frm.is_new()) {
 			// frm.doc.dealer = frappe.defaults.get_default("company");
@@ -443,18 +443,19 @@ frappe.ui.form.on("Vehicle Order", {
 			// Clear the storage to prevent re-using the data
 			localStorage.removeItem("vehicle_order_model_data");
 		}
+
 		frappe.db.get_single_value("Vehicle Stock Settings", "allow_scheduled_orders")
-		.then((allow_scheduled_orders) => {
-			if (allow_scheduled_orders === 0) {
-				// Ensure value exists
-				if (!frm.doc.order_date_time) {
-					frm.set_value("order_date_time", frappe.datetime.now_datetime());
+			.then((allow_scheduled_orders) => {
+				if (allow_scheduled_orders === 0) {
+					// Ensure value exists
+					if (!frm.doc.order_date_time) {
+						frm.set_value("order_date_time", frappe.datetime.now_datetime());
+					}
+					// Set read-only without refresh
+					frm.set_df_property("order_date_time", "read_only", 1);
 				}
-				// Set read-only without refresh
-				frm.set_df_property("order_date_time", "read_only", 1);
-			}
-		});
-},
+			});
+	},
 
 	finance_option(frm) {
 		if (frm.doc.finance_option == "Floorplan") {
@@ -742,52 +743,6 @@ frappe.ui.form.on("Vehicle Order", {
 
 		frm.refresh_field("mandatory_documents");
 
-		// frappe.ui.form.on("Vehicle Order", {
-		// 	refresh: function (frm) {
-		// 		// Only for new docs
-		// 		if (!frm.is_new()) return;
-
-		// 		frappe.db.get_single_value(
-		// 			"Vehicle Stock Settings",
-		// 			"auto_generate_dealer_reference_number"
-		// 		).then(enabled => {
-		// 			if (!enabled) return;
-
-		// 			frappe.call({
-		// 				method: "edp_online_vehicles.events.check_order_no.generate_dealer_order_no",
-		// 				callback: function (r) {
-		// 					if (r.message) {
-		// 						frm.set_value("dealer_order_no", r.message);
-		// 					}
-		// 				}
-		// 			});
-		// 		});
-		// 	}
-		// });
-		// frm.fields_dict["dealer_order_no"].$input &&
-		// 	frm.fields_dict["dealer_order_no"].$input.on("blur", function () {
-		// 		const dealer_order_no = frm.doc.dealer_order_no;
-
-		// 		if (dealer_order_no) {
-		// 			frappe.call({
-		// 				method: "edp_online_vehicles.events.check_order_no.check_dealer_order_no",
-		// 				args: {
-		// 					order_no: frm.doc.dealer_order_no,
-		// 					ordering_dealer: frm.doc.dealer,
-		// 				},
-		// 				callback: function (r) {
-		// 					if (r.message) {
-		// 						if (r.message == "True") {
-		// 							frm.set_value("dealer_order_no", "");
-		// 							frappe.msgprint(
-		// 								"Entered dealer order number already used in another order. Please enter a unique dealer order number.",
-		// 							);
-		// 						}
-		// 					}
-		// 				},
-		// 			});
-		// 		}
-		// 	});
 
 		$(document).on("click", ".btn-clear", function (e) {
 			let cdn = $(this).closest(".grid-row").attr("data-name");
@@ -896,59 +851,59 @@ frappe.ui.form.on("Vehicle Order", {
 									model: g.model,
 									colour: g.colour,
 								},
-							callback: (colRes) => {
-								let available = colRes.message || 0;
+								callback: (colRes) => {
+									let available = colRes.message || 0;
 
-								let forcedRows = g.rows.filter(
-									(row) => row.place_back_order,
-								);
-								let flexibleRows = g.rows.filter(
-									(row) => !row.place_back_order,
-								);
+									let forcedRows = g.rows.filter(
+										(row) => row.place_back_order,
+									);
+									let flexibleRows = g.rows.filter(
+										(row) => !row.place_back_order,
+									);
 
-								let requested = flexibleRows.length;
-								g.to_back = Math.max(
-									0,
-									requested - available,
-								);
+									let requested = flexibleRows.length;
+									g.to_back = Math.max(
+										0,
+										requested - available,
+									);
 
-								let sorted = flexibleRows
-									.slice()
-									.sort((a, b) => b.idx - a.idx);
-								sorted.forEach((row) => {
-									let to_back = g.to_back;
-									if (to_back > 0) {
-										frm._prev_order_from[row.idx] =
-											row.order_from;
-										frappe.model.set_value(
-											row.doctype,
-											row.name,
-											"order_from",
-											"Back Order",
-										);
-										frappe.model.set_value(
-											row.doctype,
-											row.name,
-											"place_back_order",
-											1,
-										);
-										g.to_back--;
-									} else {
-										frappe.model.set_value(
-											row.doctype,
-											row.name,
-											"order_from",
-											"Warehouse",
-										);
-										frappe.model.set_value(
-											row.doctype,
-											row.name,
-											"place_back_order",
-											0,
-										);
-									}
-								});
-								resolve();
+									let sorted = flexibleRows
+										.slice()
+										.sort((a, b) => b.idx - a.idx);
+									sorted.forEach((row) => {
+										let to_back = g.to_back;
+										if (to_back > 0) {
+											frm._prev_order_from[row.idx] =
+												row.order_from;
+											frappe.model.set_value(
+												row.doctype,
+												row.name,
+												"order_from",
+												"Back Order",
+											);
+											frappe.model.set_value(
+												row.doctype,
+												row.name,
+												"place_back_order",
+												1,
+											);
+											g.to_back--;
+										} else {
+											frappe.model.set_value(
+												row.doctype,
+												row.name,
+												"order_from",
+												"Warehouse",
+											);
+											frappe.model.set_value(
+												row.doctype,
+												row.name,
+												"place_back_order",
+												0,
+											);
+										}
+									});
+									resolve();
 								},
 								error: () => {
 									g.to_back = g.rows.length;
@@ -1052,10 +1007,10 @@ frappe.ui.form.on("Vehicle Order", {
 							frappe.validated = true;
 							dlg.hide();
 							frm._skip_stock_dialog = true;
-							
-							if(frm.is_new() || frm.is_dirty()) {
+
+							if (frm.is_new() || frm.is_dirty()) {
 								frm.save();
-							}else{
+							} else {
 								frm.save("Submit");
 							}
 						},
@@ -2994,413 +2949,386 @@ frappe.ui.form.on("Vehicles Order Item", {
 		}
 	},
 
-	colour: function (frm, cdt, cdn) {
-		var row = locals[cdt][cdn];
-		check_and_fetch(frm, cdt, cdn);
+	// colour: function (frm, cdt, cdn) {
+	// 	var row = locals[cdt][cdn];
+	// 	check_and_fetch(frm, cdt, cdn);
 
-		let order_from = row.order_from;
-		let anycolor = "Any Colour - " + row.model;
+	// 	let order_from = row.order_from;
+	// 	let anycolor = "Any Colour - " + row.model;
 
-		// Ensure that the colour is selected
-		if (row.colour) {
-			frappe.call({
-				method: "edp_online_vehicles.events.get_warehouse_data.get_visible_HQ_warehouses",
-				callback: function (r) {
-					if (r.message && r.message.length > 0) {
-						let warehouse_names = r.message.map((w) => w.name);
-						let hq_company = r.message[0].company;
+	// 	// Ensure that the colour is selected
+	// 	if (row.colour) {
+	// 		frappe.call({
+	// 			method: "edp_online_vehicles.events.get_warehouse_data.get_visible_HQ_warehouses",
+	// 			callback: function (r) {
+	// 				if (r.message && r.message.length > 0) {
+	// 					let warehouse_names = r.message.map((w) => w.name);
+	// 					let hq_company = r.message[0].company;
 
-						frappe.call({
-							method: "edp_online_vehicles.events.get_warehouse_data.check_warehouses_colours",
-							args: {
-								dealers: [hq_company],
-								warehouse_names: warehouse_names,
-								model: row.model,
-								// colour: "White",
-								colour: row.colour,
-							},
-							callback: function (r) {
-								if (r.message > 0) {
-									let basket = frm.doc.vehicles_basket || [];
-									let warehouseCount = basket
-										.filter(
-											(item) =>
-												item.model === row.model &&
-												item.colour === row.colour,
-										)
-										.filter(
-											(item) =>
-												item.order_from === "Warehouse",
-										)
-										.filter(
-											(item) => item.name !== row.name,
-										).length;
+	// 					frappe.call({
+	// 						method: "edp_online_vehicles.events.get_warehouse_data.check_warehouses_colours",
+	// 						args: {
+	// 							dealers: [hq_company],
+	// 							warehouse_names: warehouse_names,
+	// 							model: row.model,
+	// 							// colour: "White",
+	// 							colour: row.colour,
+	// 						},
+	// 						callback: function (r) {
+	// 							if (r.message > 0) {
+	// 								let basket = frm.doc.vehicles_basket || [];
+	// 								let warehouseCount = basket
+	// 									.filter(
+	// 										(item) =>
+	// 											item.model === row.model &&
+	// 											item.colour === row.colour,
+	// 									)
+	// 									.filter(
+	// 										(item) =>
+	// 											item.order_from === "Warehouse",
+	// 									)
+	// 									.filter(
+	// 										(item) => item.name !== row.name,
+	// 									).length;
 
-									// if requested rows exceed available stock, force back-order
-									if (warehouseCount >= r.message) {
-										// reset to HQ + back-order
-										resetDealerField(frm);
-										updateDealerOptions(frm, [hq_company]);
+	// 								// if requested rows exceed available stock, force back-order
+	// 								if (warehouseCount >= r.message) {
+	// 									// reset to HQ + back-order
+	// 									resetDealerField(frm);
+	// 									updateDealerOptions(frm, [hq_company]);
 
-										frappe.model.set_value(
-											cdt,
-											cdn,
-											"dealer",
-											hq_company,
-										);
-										frm.fields_dict[
-											"vehicles_basket"
-										].grid.update_docfield_property(
-											"dealer",
-											"description",
-											"",
-										);
+	// 									frappe.model.set_value(
+	// 										cdt,
+	// 										cdn,
+	// 										"dealer",
+	// 										hq_company,
+	// 									);
+	// 									frm.fields_dict[
+	// 										"vehicles_basket"
+	// 									].grid.update_docfield_property(
+	// 										"dealer",
+	// 										"description",
+	// 										"",
+	// 									);
 
-										frappe.model.set_value(
-											cdt,
-											cdn,
-											"place_back_order",
-											1,
-										);
-										frappe.model.set_value(
-											cdt,
-											cdn,
-											"order_from",
-											"Back Order",
-										);
-										return;
-									}
+	// 									frappe.model.set_value(
+	// 										cdt,
+	// 										cdn,
+	// 										"place_back_order",
+	// 										1,
+	// 									);
+	// 									frappe.model.set_value(
+	// 										cdt,
+	// 										cdn,
+	// 										"order_from",
+	// 										"Back Order",
+	// 									);
+	// 									return;
+	// 								}
 
-									frappe.model.set_value(
-										cdt,
-										cdn,
-										"place_back_order",
-										0,
-									);
-									updateDealerOptions(frm, [hq_company]);
+	// 								frappe.model.set_value(
+	// 									cdt,
+	// 									cdn,
+	// 									"place_back_order",
+	// 									0,
+	// 								);
+	// 								updateDealerOptions(frm, [hq_company]);
 
-									frappe.model.set_value(
-										cdt,
-										cdn,
-										"dealer",
-										hq_company,
-									);
-									frappe.model.set_value(
-										cdt,
-										cdn,
-										"order_from",
-										"Warehouse",
-									);
-									frm.refresh_field("vehicles_basket");
-								} else {
-									frappe.show_alert(
-										{
-											message:
-												"No stock available at any HQ warehouse for the selected colour.",
-										},
-										30,
-									);
+	// 								frappe.model.set_value(
+	// 									cdt,
+	// 									cdn,
+	// 									"dealer",
+	// 									hq_company,
+	// 								);
+	// 								frappe.model.set_value(
+	// 									cdt,
+	// 									cdn,
+	// 									"order_from",
+	// 									"Warehouse",
+	// 								);
+	// 								frm.refresh_field("vehicles_basket");
+	// 							} else {
+	// 								frappe.show_alert(
+	// 									{
+	// 										message:
+	// 											"No stock available at any HQ warehouse for the selected colour.",
+	// 									},
+	// 									30,
+	// 								);
 
-									frappe.db
-										.get_single_value(
-											"Vehicle Stock Settings",
-											"allow_dealer_to_dealer_orders",
-										)
-										.then((dealer_to_dealer) => {
-											if (dealer_to_dealer) {
-												frappe.call({
-													method: "edp_online_vehicles.events.get_warehouse_data.get_visible_Dealer_warehouses",
-													args: {
-														ordering_dealer:
-															frm.doc.dealer,
-													},
-													callback: function (r) {
-														if (
-															r.message &&
-															r.message.length > 0
-														) {
-															let warehouse_names =
-																r.message.map(
-																	(w) =>
-																		w.name,
-																);
-															let dealers =
-																r.message.map(
-																	(w) =>
-																		w.company,
-																);
+	// 								frappe.db
+	// 									.get_single_value(
+	// 										"Vehicle Stock Settings",
+	// 										"allow_dealer_to_dealer_orders",
+	// 									)
+	// 									.then((dealer_to_dealer) => {
+	// 										if (dealer_to_dealer) {
+	// 											frappe.call({
+	// 												method: "edp_online_vehicles.events.get_warehouse_data.get_visible_Dealer_warehouses",
+	// 												args: {
+	// 													ordering_dealer:
+	// 														frm.doc.dealer,
+	// 												},
+	// 												callback: function (r) {
+	// 													if (
+	// 														r.message &&
+	// 														r.message.length > 0
+	// 													) {
+	// 														let warehouse_names =
+	// 															r.message.map(
+	// 																(w) =>
+	// 																	w.name,
+	// 															);
+	// 														let dealers =
+	// 															r.message.map(
+	// 																(w) =>
+	// 																	w.company,
+	// 															);
 
-															frappe.call({
-																method: "edp_online_vehicles.events.get_warehouse_data.check_dealer_warehouses_colours",
-																args: {
-																	dealers:
-																		dealers,
-																	warehouse_names:
-																		warehouse_names,
-																	model: row.model,
-																	colour: row.colour,
-																},
-																callback:
-																	function (
-																		r,
-																	) {
-																		let dealer =
-																			r.message.map(
-																				(
-																					d,
-																				) =>
-																					d.dealer,
-																			);
-																		let uniqueDealers =
-																			[
-																				...new Set(
-																					dealer,
-																				),
-																			];
-																		if (
-																			uniqueDealers.length >
-																			0
-																		) {
-																			frappe.model.set_value(
-																				cdt,
-																				cdn,
-																				"place_back_order",
-																				0,
-																			);
-																			updateDealerOptions(
-																				frm,
-																				uniqueDealers,
-																			);
-																			frappe.model.set_value(
-																				cdt,
-																				cdn,
-																				"order_from",
-																				"Action Required",
-																			);
-																			frm.refresh_field(
-																				"vehicles_basket",
-																			);
-																		} else {
-																			resetDealerField(
-																				frm,
-																			);
-																			updateDealerOptions(
-																				frm,
-																				[
-																					hq_company,
-																				],
-																			);
+	// 														frappe.call({
+	// 															method: "edp_online_vehicles.events.get_warehouse_data.check_dealer_warehouses_colours",
+	// 															args: {
+	// 																dealers:
+	// 																	dealers,
+	// 																warehouse_names:
+	// 																	warehouse_names,
+	// 																model: row.model,
+	// 																colour: row.colour,
+	// 															},
+	// 															callback:
+	// 																function (
+	// 																	r,
+	// 																) {
+	// 																	let dealer =
+	// 																		r.message.map(
+	// 																			(
+	// 																				d,
+	// 																			) =>
+	// 																				d.dealer,
+	// 																		);
+	// 																	let uniqueDealers =
+	// 																		[
+	// 																			...new Set(
+	// 																				dealer,
+	// 																			),
+	// 																		];
+	// 																	if (
+	// 																		uniqueDealers.length >
+	// 																		0
+	// 																	) {
+	// 																		frappe.model.set_value(
+	// 																			cdt,
+	// 																			cdn,
+	// 																			"place_back_order",
+	// 																			0,
+	// 																		);
+	// 																		updateDealerOptions(
+	// 																			frm,
+	// 																			uniqueDealers,
+	// 																		);
+	// 																		frappe.model.set_value(
+	// 																			cdt,
+	// 																			cdn,
+	// 																			"order_from",
+	// 																			"Action Required",
+	// 																		);
+	// 																		frm.refresh_field(
+	// 																			"vehicles_basket",
+	// 																		);
+	// 																	} else {
+	// 																		resetDealerField(
+	// 																			frm,
+	// 																		);
+	// 																		updateDealerOptions(
+	// 																			frm,
+	// 																			[
+	// 																				hq_company,
+	// 																			],
+	// 																		);
 
-																			frappe.model.set_value(
-																				cdt,
-																				cdn,
-																				"dealer",
-																				hq_company,
-																			);
-																			frm.fields_dict[
-																				"vehicles_basket"
-																			].grid.update_docfield_property(
-																				"dealer",
-																				"description",
-																				"",
-																			);
+	// 																		frappe.model.set_value(
+	// 																			cdt,
+	// 																			cdn,
+	// 																			"dealer",
+	// 																			hq_company,
+	// 																		);
+	// 																		frm.fields_dict[
+	// 																			"vehicles_basket"
+	// 																		].grid.update_docfield_property(
+	// 																			"dealer",
+	// 																			"description",
+	// 																			"",
+	// 																		);
 
-																			frappe.model.set_value(
-																				cdt,
-																				cdn,
-																				"place_back_order",
-																				1,
-																			);
-																			frappe.model.set_value(
-																				cdt,
-																				cdn,
-																				"order_from",
-																				"Back Order",
-																			);
-																		}
-																	},
-															});
-														}
-													},
-												});
-											} else {
-												updateDealerOptions(frm, [
-													hq_company,
-												]);
+	// 																		frappe.model.set_value(
+	// 																			cdt,
+	// 																			cdn,
+	// 																			"place_back_order",
+	// 																			1,
+	// 																		);
+	// 																		frappe.model.set_value(
+	// 																			cdt,
+	// 																			cdn,
+	// 																			"order_from",
+	// 																			"Back Order",
+	// 																		);
+	// 																	}
+	// 																},
+	// 														});
+	// 													}
+	// 												},
+	// 											});
+	// 										} else {
+	// 											updateDealerOptions(frm, [
+	// 												hq_company,
+	// 											]);
 
-												frappe.model.set_value(
-													cdt,
-													cdn,
-													"dealer",
-													hq_company,
-												);
-												frm.fields_dict[
-													"vehicles_basket"
-												].grid.update_docfield_property(
-													"dealer",
-													"description",
-													"",
-												);
+	// 											frappe.model.set_value(
+	// 												cdt,
+	// 												cdn,
+	// 												"dealer",
+	// 												hq_company,
+	// 											);
+	// 											frm.fields_dict[
+	// 												"vehicles_basket"
+	// 											].grid.update_docfield_property(
+	// 												"dealer",
+	// 												"description",
+	// 												"",
+	// 											);
 
-												frappe.model.set_value(
-													cdt,
-													cdn,
-													"place_back_order",
-													1,
-												);
-												frappe.model.set_value(
-													cdt,
-													cdn,
-													"order_from",
-													"Back Order",
-												);
-											}
-										})
-										.catch((err) => {
-											console.error(
-												"Error fetching dealer_to_dealer setting:",
-												err,
-											);
-										});
-								}
-							},
-						});
-					} else {
-						frappe.show_alert(
-							{
-								message:
-									"No HQ warehouses available. Please ask Head Office to select an HQ Warehouse",
-								indicator: "orange",
-							},
-							30,
-						);
-					}
-				},
-			});
-		}
-	},
-	purpose: function (frm, cdt, cdn) {
-		var row = locals[cdt][cdn];
-		if (row.purpose) {
-			frappe.call({
-				method: "frappe.client.get_value",
-				args: {
-					doctype: "Vehicles Payment Terms",
-					filters: { order_purpose: row.purpose },
-					fieldname: "description",
-				},
-				callback: function (response) {
-					if (response) {
-						row.default_payment = response.message.description;
-					}
-				},
-			});
+	// 											frappe.model.set_value(
+	// 												cdt,
+	// 												cdn,
+	// 												"place_back_order",
+	// 												1,
+	// 											);
+	// 											frappe.model.set_value(
+	// 												cdt,
+	// 												cdn,
+	// 												"order_from",
+	// 												"Back Order",
+	// 											);
+	// 										}
+	// 									})
+	// 									.catch((err) => {
+	// 										console.error(
+	// 											"Error fetching dealer_to_dealer setting:",
+	// 											err,
+	// 										);
+	// 									});
+	// 							}
+	// 						},
+	// 					});
+	// 				} else {
+	// 					frappe.show_alert(
+	// 						{
+	// 							message:
+	// 								"No HQ warehouses available. Please ask Head Office to select an HQ Warehouse",
+	// 							indicator: "orange",
+	// 						},
+	// 						30,
+	// 					);
+	// 				}
+	// 			},
+	// 		});
+	// 	}
+	// },
+	// purpose: function (frm, cdt, cdn) {
+	// 	var row = locals[cdt][cdn];
+	// 	if (row.purpose) {
+	// 		frappe.call({
+	// 			method: "frappe.client.get_value",
+	// 			args: {
+	// 				doctype: "Vehicles Payment Terms",
+	// 				filters: { order_purpose: row.purpose },
+	// 				fieldname: "description",
+	// 			},
+	// 			callback: function (response) {
+	// 				if (response) {
+	// 					row.default_payment = response.message.description;
+	// 				}
+	// 			},
+	// 		});
 
-			if (row.colour && row.model) {
-				frappe.db
-					.get_value(
-						"Vehicles Order Purpose",
-						{ name: row.purpose },
-						"automatically_set_to_back_order",
-					)
-					.then((r) => {
-						if (r.message.automatically_set_to_back_order) {
-							frappe.call({
-								method: "edp_online_vehicles.events.get_warehouse_data.get_visible_HQ_warehouses",
-								callback: function (r) {
-									if (r.message && r.message.length > 0) {
-										let hq_company = r.message[0].company;
+	// 		if (row.colour && row.model) {
+	// 			frappe.db
+	// 				.get_value(
+	// 					"Vehicles Order Purpose",
+	// 					{ name: row.purpose },
+	// 					"automatically_set_to_back_order",
+	// 				)
+	// 				.then((r) => {
+	// 					if (r.message.automatically_set_to_back_order) {
+	// 						frappe.call({
+	// 							method: "edp_online_vehicles.events.get_warehouse_data.get_visible_HQ_warehouses",
+	// 							callback: function (r) {
+	// 								if (r.message && r.message.length > 0) {
+	// 									let hq_company = r.message[0].company;
 
-										updateDealerOptions(frm, [hq_company]);
+	// 									updateDealerOptions(frm, [hq_company]);
 
-										frappe.model.set_value(
-											cdt,
-											cdn,
-											"dealer",
-											hq_company,
-										);
-										frm.fields_dict[
-											"vehicles_basket"
-										].grid.update_docfield_property(
-											"dealer",
-											"description",
-											"",
-										);
+	// 									frappe.model.set_value(
+	// 										cdt,
+	// 										cdn,
+	// 										"dealer",
+	// 										hq_company,
+	// 									);
+	// 									frm.fields_dict[
+	// 										"vehicles_basket"
+	// 									].grid.update_docfield_property(
+	// 										"dealer",
+	// 										"description",
+	// 										"",
+	// 									);
 
-										frappe.model.set_value(
-											cdt,
-											cdn,
-											"place_back_order",
-											1,
-										);
-										frappe.model.set_value(
-											cdt,
-											cdn,
-											"order_from",
-											"Back Order",
-										);
-									} else {
-										frappe.show_alert(
-											{
-												message:
-													"No HQ warehouses available. Please ask Head Office to select an HQ Warehouse",
-												indicator: "orange",
-											},
-											30,
-										);
-									}
-								},
-							});
-						}
-						// else {
-						// 	frappe.call({
-						// 		method: "edp_online_vehicles.events.check_orders.check_if_stock_available",
-						// 		args: {
-						// 			model: row.model,
-						// 			colour: row.colour,
-						// 		},
-						// 		callback: function (r) {
-						// 			if (r.message) {
-						// 				frappe.model.set_value(
-						// 					cdt,
-						// 					cdn,
-						// 					"place_back_order",
-						// 					0,
-						// 				);
-						// 				frappe.model.set_value(
-						// 					cdt,
-						// 					cdn,
-						// 					"order_from",
-						// 					"Warehouse",
-						// 				);
-						// 			} else {
-						// 				frappe.model.set_value(
-						// 					cdt,
-						// 					cdn,
-						// 					"place_back_order",
-						// 					1,
-						// 				);
-						// 				frappe.model.set_value(
-						// 					cdt,
-						// 					cdn,
-						// 					"order_from",
-						// 					"Back Order",
-						// 				);
-						// 			}
-						// 		},
-						// 	});
-						// }
-					});
-			} else {
-				frappe.model.set_value(cdt, cdn, "purpose", null);
-				frappe.msgprint("Please select a colour and model first");
-			}
-		} else {
-			row.deafault_payment = null;
-		}
-	},
+	// 									frappe.model.set_value(
+	// 										cdt,
+	// 										cdn,
+	// 										"place_back_order",
+	// 										1,
+	// 									);
+	// 									frappe.model.set_value(
+	// 										cdt,
+	// 										cdn,
+	// 										"order_from",
+	// 										"Back Order",
+	// 									);
+	// 								} else {
+	// 									frappe.show_alert(
+	// 										{
+	// 											message:
+	// 												"No HQ warehouses available. Please ask Head Office to select an HQ Warehouse",
+	// 											indicator: "orange",
+	// 										},
+	// 										30,
+	// 									);
+	// 								}
+	// 							},
+	// 						});
+	// 					}
+
+	// 				});
+	// 		} else {
+	// 			frappe.model.set_value(cdt, cdn, "purpose", null);
+	// 			frappe.msgprint("Please select a colour and model first");
+	// 		}
+	// 	} else {
+	// 		row.deafault_payment = null;
+	// 	}
+	// },
 });
 
+function check_and_update_order_type(frm, cdt, cdn) {
+	var row = locals[cdt][cdn];
+	if (row.status === "Pending") {
+		frm.call("generate_dealer_reference_number").then(r => {
+				if (r.message) {
+					frm.set_value("dealer_order_no", r.message);
+				}
+			});
+	}
+}
 function check_and_fetch(frm, cdt, cdn) {
 	let row = locals[cdt][cdn];
 
