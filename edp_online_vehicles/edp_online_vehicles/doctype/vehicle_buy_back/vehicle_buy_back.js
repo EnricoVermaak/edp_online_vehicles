@@ -1,32 +1,14 @@
 frappe.ui.form.on("Vehicle Buy Back", {
 	refresh(frm) {
-		if (frm.is_new()) {
-			frm.set_value("buy_back_date_time", frappe.datetime.now_datetime());
-		}
-		if (!frm.doc.vat || frm.doc.vat == 0) {
-			frm.set_value("vat", 15);
-		}
-		
-		set_vin_filter(frm);
+		apply_form_defaults(frm);
+
+		setup_action_buttons(frm);
 	},
 
 	onload(frm) {
-		if (frm.is_new()) {
-			frm.set_value("buy_back_date_time", frappe.datetime.now_datetime());
-		}
-		if (!frm.doc.vat || frm.doc.vat == 0) {
-			frm.set_value("vat", 15);
-		}
-		
-		set_vin_filter(frm);
+		apply_form_defaults(frm);
 	},
 
-	status(frm) {
-		if (frm.doc.status === "Completed") {
-			frm._needs_confirmation = true;
-		}
-	},
-	
 	before_save(frm) {
 		if (!frm.doc.buy_back_date_time) {
 			frm.set_value("buy_back_date_time", frappe.datetime.now_datetime());
@@ -38,35 +20,26 @@ frappe.ui.form.on("Vehicle Buy Back", {
 		if (frm.doc.offer_price_incl && frm.doc.offer_price_incl > 0) {
 			calculate_offer_price_from_incl(frm);
 		}
-		
-		if (frm._needs_confirmation && frm.doc.status === "Completed") {
+
+		// Auto-fill customer from VINs if not already set
+		const vins_for_search = (frm.doc.table_vsmr || []).map(r => r.vin_serial_no).filter(v => v);
+		if (vins_for_search.length && !frm.doc.customer && !frm._customer_search_done) {
 			frappe.validated = false;
-			
-			frappe.confirm(
-				__("Are you sure you want to receive these vehicles in stock?"),
-				function() {
-					frm._needs_confirmation = false;
-					frappe.validated = true;
-					frm.save().then(() => {
-						transfer_vehicles_to_dealer(frm);
-					});
-				},
-				function() {
-					frm.set_value("status", "Pending");
-					frm._needs_confirmation = false;
-					frappe.validated = true;
-					frm.save();
-				}
-			);
+			search_vins_and_set_customer(frm, vins_for_search, function() {
+				frm._customer_search_done = true;
+				frappe.validated = true;
+				frm.save();
+			});
 			return;
 		}
 	},
 
 	table_vsmr(frm) {
-		calculate_totals(frm);
-		if (frm.doc.offer_price_incl && frm.doc.offer_price_incl > 0) {
-			calculate_offer_price_from_incl(frm);
-		}
+		handle_table_change(frm);
+	},
+
+	table_vsmr_remove(frm) {
+		handle_table_change(frm);
 	},
 
 	offer_price_incl(frm) {
@@ -76,65 +49,279 @@ frappe.ui.form.on("Vehicle Buy Back", {
 	},
 
 	buy_from(frm) {
-		set_vin_filter(frm);
+		if (frm._is_head_office === false && frm.doc.buy_from !== "Customer") {
+			frm.set_value("buy_from", "Customer");
+		}
 		frm.refresh_field("table_vsmr");
 	},
 
 	dealer(frm) {
 		if (frm.doc.buy_from === "Dealer") {
-			set_vin_filter(frm);
 			frm.refresh_field("table_vsmr");
 		}
 	}
 });
 
+function apply_form_defaults(frm) {
+	if (frm.is_new()) {
+		frm.set_value("buy_back_date_time", frappe.datetime.now_datetime());
+		if (!frm.doc.status) {
+			frm.set_value("status", "Awaiting Customer Feedback");
+		}
+	}
+
+	set_default_purchasing_dealer(frm);
+	apply_buy_from_company_rules(frm);
+	if (!frm.doc.vat || frm.doc.vat == 0) {
+		frm.set_value("vat", 15);
+	}
+}
+
+function set_default_purchasing_dealer(frm) {
+	if (!frm.is_new() || frm.doc.purchasing_dealer) return;
+	const default_company = frappe.defaults.get_default("company");
+	if (default_company) {
+		frm.set_value("purchasing_dealer", default_company);
+	}
+}
+
+function apply_buy_from_company_rules(frm) {
+	const default_company = frappe.defaults.get_default("company");
+	if (!default_company) return;
+
+	frappe.db.get_value("Company", default_company, "custom_head_office").then((r) => {
+		const is_head_office = !!(r && r.message && Number(r.message.custom_head_office) === 1);
+		frm._is_head_office = is_head_office;
+
+		frm.set_df_property("buy_from", "read_only", is_head_office ? 0 : 1);
+
+		if (!is_head_office) {
+			if (frm.doc.buy_from !== "Customer") {
+				frm.set_value("buy_from", "Customer");
+			}
+			if (frm.doc.dealer) {
+				frm.set_value("dealer", null);
+			}
+		}
+
+		frm.refresh_field("buy_from");
+		frm.refresh_field("dealer");
+	});
+}
+
 frappe.ui.form.on("Vehicle Buy Back List", {
-	vin_serial_no(frm, cdt, cdn) {
-		let row = locals[cdt][cdn];
-		if (!row.vin_serial_no) return;
-		const unpack = (v) => (v && v.message !== undefined ? v.message : v) || {};
-		frappe.call({
-			method: "frappe.client.get_value",
-			type: "GET",
-			args: {
-				doctype: "Vehicle Stock",
-				fieldname: ["model", "description", "engine_no", "colour", "condition", "status", "ho_invoice_no", "ho_invoice_amt", "ho_invoice_date"],
-				filters: { name: row.vin_serial_no }
-			}
-		}).then((r) => {
-			let v = unpack(r);
-			if (!v.model) return;
-			return frappe.call({
-				method: "frappe.client.get_value",
-				type: "GET",
-				args: {
-					doctype: "Model Administration",
-					fieldname: ["cost_price_excl", "dealer_billing_excl", "suggested_retail_excl"],
-					filters: { name: v.model }
-				}
+	async vin_serial_no(frm, cdt, cdn) {
+		const row = locals[cdt][cdn];
+		const vin = (row.vin_serial_no || "").trim();
+		if (!vin) return;
+
+		if (vin !== row.vin_serial_no) {
+			await frappe.model.set_value(cdt, cdn, "vin_serial_no", vin);
+		}
+
+		const has_duplicate = (frm.doc.table_vsmr || []).some((r) =>
+			r.name !== row.name && (r.vin_serial_no || "").trim() === vin
+		);
+		if (has_duplicate) {
+			await reject_vin(frm, cdt, cdn, "VIN {0} is already added in this Buy Back.", [vin]);
+			return;
+		}
+
+		try {
+			const vehicle_resp = await frappe.call({
+				method: "edp_online_vehicles.edp_online_vehicles.doctype.vehicle_buy_back.vehicle_buy_back.get_vin_details",
+				args: { vin: vin }
 			});
-		}).then((r) => {
-			let m = unpack(r);
-			if (m) {
-				if (m.cost_price_excl != null) frappe.model.set_value(cdt, cdn, "cost_price_excl", m.cost_price_excl);
-				if (m.dealer_billing_excl != null) frappe.model.set_value(cdt, cdn, "dealer_billing_excl", m.dealer_billing_excl);
-				if (m.suggested_retail_excl != null) frappe.model.set_value(cdt, cdn, "suggested_retail_excl", m.suggested_retail_excl);
+			const vehicle = (vehicle_resp && vehicle_resp.message) || {};
+
+			if (!vehicle.model) {
+				await reject_vin(frm, cdt, cdn, "VIN {0} was not found in Vehicle Stock.", [vin]);
+				return;
 			}
-			if (cur_frm && cur_frm.doctype === "Vehicle Buy Back") cur_frm.trigger("table_vsmr");
-		});
+
+			const vehicle_status = ((vehicle.availability_status || "") + "").trim().toLowerCase();
+			if (vehicle_status !== "sold") {
+				await reject_vin(
+					frm,
+					cdt,
+					cdn,
+					"VIN {0} cannot be added because its status is {1}. Only Sold vehicles are allowed.",
+					[vin, vehicle.availability_status || __("Unknown")]
+				);
+				return;
+			}
+
+			const vin_customer = vehicle.customer || null;
+			if (frm.doc.customer && vin_customer && frm.doc.customer !== vin_customer) {
+				await reject_vin(
+					frm,
+					cdt,
+					cdn,
+					"VIN {0} belongs to customer {1}, but this Buy Back customer is {2}.",
+					[vin, vin_customer, frm.doc.customer]
+				);
+				return;
+			}
+
+			if (!frm.doc.customer && vin_customer) {
+				await frm.set_value("customer", vin_customer);
+				await frm.set_value("buy_from", "Customer");
+			}
+
+			await set_row_values(cdt, cdn, {
+				model: vehicle.model,
+				description: vehicle.description,
+				engine_no: vehicle.engine_no,
+				exterior_colour: vehicle.colour,
+				condition: vehicle.condition,
+				availability_status: vehicle.availability_status,
+				ho_invoice_no: vehicle.ho_invoice_no,
+				ho_invoice_amt: vehicle.ho_invoice_amt,
+				ho_invoice_date: vehicle.ho_invoice_date,
+				cost_price_excl: vehicle.cost_price_excl,
+				dealer_billing_excl: vehicle.dealer_billing_excl,
+				suggested_retail_excl: vehicle.suggested_retail_excl,
+			});
+
+			if (cur_frm && cur_frm.doctype === "Vehicle Buy Back") {
+				cur_frm.trigger("table_vsmr");
+			}
+		} catch (e) {
+			frappe.msgprint(__("Could not fetch VIN details for {0}.", [vin]));
+			console.error("Vehicle Buy Back VIN lookup failed", e);
+		}
 	}
 });
 
-function set_vin_filter(frm) {
-	frm.set_query("vin_serial_no", "table_vsmr", function(doc) {
-		if (doc.buy_from === "Dealer" && doc.dealer) {
-			return {
-				filters: {
-					dealer: doc.dealer
-				}
-			};
+function search_vins_and_set_customer(frm, vins, callback) {
+	frappe.call({
+		method: "edp_online_vehicles.edp_online_vehicles.doctype.vehicle_buy_back.vehicle_buy_back.search_vins",
+		args: { vins: vins },
+		callback: function(r) {
+			if (r.exc || !r.message) {
+				frappe.msgprint(__("Error looking up VIN customers."));
+				if (callback) callback(null);
+				return;
+			}
+			const result = r.message;
+			if (result.status === "single") {
+				frm.set_value("customer", result.customer);
+				frm.set_value("buy_from", "Customer");
+				frappe.show_alert({ message: __("Customer set to {0}", [result.customer]), indicator: "green" });
+			} else if (result.status === "multiple") {
+				frappe.msgprint(__("VINs belong to multiple customers: {0}. Please set the customer manually.", [result.customers.join(", ")]));
+			} else {
+				frappe.msgprint(__("No customer found on any of the selected VINs."));
+			}
+			if (callback) callback(result);
 		}
-		return {};
+	});
+}
+
+function clear_customer_if_no_vins(frm) {
+	const has_vins = (frm.doc.table_vsmr || []).some((r) => (r.vin_serial_no || "").trim());
+	if (!has_vins && frm.doc.customer) {
+		frm.set_value("customer", null);
+	}
+}
+
+function handle_table_change(frm) {
+	frm._customer_search_done = false;
+	clear_customer_if_no_vins(frm);
+	calculate_totals(frm);
+	if (frm.doc.offer_price_incl && frm.doc.offer_price_incl > 0) {
+		calculate_offer_price_from_incl(frm);
+	}
+}
+
+async function reject_vin(frm, cdt, cdn, message, messageArgs) {
+	frappe.msgprint(__(message, messageArgs));
+	await frappe.model.set_value(cdt, cdn, "vin_serial_no", null);
+	clear_customer_if_no_vins(frm);
+}
+
+async function set_row_values(cdt, cdn, values) {
+	for (const [fieldname, value] of Object.entries(values)) {
+		if (value != null) {
+			await frappe.model.set_value(cdt, cdn, fieldname, value);
+		}
+	}
+}
+
+function setup_action_buttons(frm) {
+	const status = frm.doc.status;
+
+	// Remove any existing custom buttons to avoid duplicates
+	frm.remove_custom_button("Search Vins");
+	frm.remove_custom_button("Seller Accepted");
+	frm.remove_custom_button("Seller Cancelled");
+
+	// Search Vins is visible when status is Awaiting Customer Feedback or on a new doc
+	if (!status || status === "Awaiting Customer Feedback") {
+		frm.add_custom_button("Search Vins", function() {
+			const vins = (frm.doc.table_vsmr || [])
+				.map(r => r.vin_serial_no)
+				.filter(v => v);
+
+			if (!vins.length) {
+				frappe.msgprint(__("Please add at least one VIN to the table first."));
+				return;
+			}
+
+			search_vins_and_set_customer(frm, vins, function(result) {
+				frm.set_value("status", "Awaiting Seller Response");
+				if (!frm.is_new()) {
+					frm.save();
+				} else {
+					setup_action_buttons(frm);
+				}
+			});
+		}, "Actions");
+	}
+
+	if (!frm.is_new()) {
+		if (status === "Awaiting Seller Response") {
+			frm.add_custom_button("Seller Accepted", function() {
+				frappe.confirm(
+					__("Are you sure you want to receive these vehicles in stock?"),
+					function() {
+						submit_with_seller_decision(frm, "accepted");
+					}
+				);
+			}, "Actions");
+
+			frm.add_custom_button("Seller Cancelled", function() {
+				submit_with_seller_decision(frm, "cancelled");
+			}, "Actions");
+		}
+	}
+
+}
+
+function submit_with_seller_decision(frm, decision) {
+	if (frm.is_new()) {
+		frm.save().then(() => {
+			submit_with_seller_decision(frm, decision);
+		});
+		return;
+	}
+
+	frappe.call({
+		method: "edp_online_vehicles.edp_online_vehicles.doctype.vehicle_buy_back.vehicle_buy_back.submit_with_seller_decision",
+		args: {
+			docname: frm.doc.name,
+			decision: decision
+		},
+		freeze: true,
+		freeze_message: __("Submitting Vehicle Buy Back..."),
+		callback: function(r) {
+			if (r.exc || !r.message || !r.message.success) {
+				frappe.msgprint((r.message && r.message.error) || __("Could not submit the seller decision."));
+				return;
+			}
+			frappe.show_alert({ message: __("Vehicle Buy Back submitted successfully."), indicator: "green" });
+			frm.reload_doc();
+		}
 	});
 }
 
@@ -178,63 +365,4 @@ function calculate_offer_price_from_incl(frm) {
 	let offer_excl = offer_incl / (1 + (vat_percent / 100));
 	
 	frm.set_value("offer_price_excl", offer_excl);
-}
-
-function transfer_vehicles_to_dealer(frm) {
-	if (!frm.doc.purchasing_dealer || !frm.doc.table_vsmr || frm.doc.table_vsmr.length === 0) {
-		frappe.msgprint(__("Please select a purchasing dealer and add vehicles to the table."));
-		return;
-	}
-
-	frappe.call({
-		method: "edp_online_vehicles.edp_online_vehicles.doctype.vehicle_buy_back.vehicle_buy_back.transfer_vehicles_to_dealer",
-		args: {
-			docname: frm.doc.name,
-			purchasing_dealer: frm.doc.purchasing_dealer
-		},
-		callback: function(r) {
-			if (r.exc) {
-				frappe.msgprint(__("An error occurred during transfer. Please check the error log for details."));
-				return;
-			}
-			
-			if (r.message && r.message.success) {
-				let message_lines = [];
-				
-				if (r.message.transferred && r.message.transferred.length > 0) {
-					message_lines.push(`<div style="margin-bottom: 10px;"><b>Successfully transferred ${r.message.transferred.length} vehicle(s) to ${frm.doc.purchasing_dealer}:</b></div>`);
-					r.message.transferred.forEach(function(vin) {
-						message_lines.push(`<div>${vin}</div>`);
-					});
-				}
-				
-				if (r.message.failed && r.message.failed.length > 0) {
-					message_lines.push(`<div style="margin-top: 15px; margin-bottom: 10px;"><b style="color: orange;">⚠️ Failed to transfer ${r.message.failed.length} vehicle(s):</b></div>`);
-					r.message.failed.forEach(function(fail) {
-						message_lines.push(`<div>✗ ${fail.vin}: ${fail.error}</div>`);
-					});
-				}
-				
-				let d = new frappe.ui.Dialog({
-					title: __("Transfer Complete"),
-					indicator: r.message.failed && r.message.failed.length > 0 ? "orange" : "green",
-					fields: [{
-						fieldtype: "HTML",
-						fieldname: "message_html",
-						options: message_lines.join("")
-					}],
-					primary_action_label: __("OK"),
-					primary_action: function() {
-						d.hide();
-						frm.reload_doc();
-					}
-				});
-				d.show();
-			} else if (r.message && r.message.error) {
-				frappe.msgprint(__("Error: ") + r.message.error);
-			} else {
-				frappe.msgprint(__("Unknown error occurred during transfer"));
-			}
-		}
-	});
 }
