@@ -28,7 +28,7 @@ class VehiclesService(Document):
         setting_doc.save(ignore_permissions=True)
         frappe.db.commit()
 
-        if self.has_value_changed("service_status"):
+        if self.has_value_changed("service_status") and self.service_status in ["Pending", "Approved"]:
             self.send_hq_service_notification()
         self.update_vehicle_status()
 
@@ -288,6 +288,7 @@ class VehiclesService(Document):
             frappe.db.set_single_value("Vehicle Service Settings","last_auto_job_card_no",self.job_card_no)
             
     def send_hq_service_notification(self):
+        template_content = frappe.db.get_value('Service Status', self.service_status, 'email_template')
         """Logic for Vehicle Service notifications to Head Office."""
         if not self.service_status:
             return
@@ -297,6 +298,7 @@ class VehiclesService(Document):
         
         if self.owner and self.owner not in recipients:
             recipients.append(self.owner)
+            
         
         if recipients:
             context = {
@@ -310,7 +312,7 @@ class VehiclesService(Document):
             }
             send_custom_email_from_template(
                 recipients,           
-                "Test Mail",             
+                template_content,             
                 context,                  
                 'Vehicle Service', 
                 self.name                 
@@ -349,7 +351,34 @@ class VehiclesService(Document):
                     ),
                     title=_("Service Period Expired")
                 )
+import frappe
+from frappe import _
+
+@frappe.whitelist()
+def bulk_update_service_status(names, target_status):
+    """
+    Updates the status for multiple Vehicles Service records.
+    :param names: List of document names (strings)
+    :param target_status: The status string to update to
+    """
+    # Defensive check: ensure 'names' is a list
+    if isinstance(names, str):
+        names = frappe.parse_json(names)
+
+    if not names:
+        return
+
+    for name in names:
+        if frappe.has_permission("Vehicles Service", "write", doc=name):
+            try:
+                doc = frappe.get_doc("Vehicles Service", name)
+                doc.service_status = target_status
+                doc.save(ignore_permissions=True)
                 
+            except Exception as e:
+                frappe.log_error(f"Failed to update {name}: {str(e)}", "Bulk Status Update Error")
+                continue
+
 @frappe.whitelist()
 def create_internal_docs_notes(source_name, target_doc=None):
     doc = get_mapped_doc(

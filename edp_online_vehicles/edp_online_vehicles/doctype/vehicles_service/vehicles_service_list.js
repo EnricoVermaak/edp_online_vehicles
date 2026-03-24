@@ -1,16 +1,24 @@
             frappe.listview_settings['Vehicles Service'] = {
                 onload: function(listview) {
 
-                    if (frappe.user_roles.includes("Head Office")) {
-                        frappe.defaults.get_default("company")
-                        listview.page.add_inner_button(__("Update to Remittance"), () => {
-                            show_bulk_update_dialog(listview, "Payment Request", "Remittance");
-                        });
+                const company = frappe.defaults.get_default("company");
 
-                        listview.page.add_inner_button(__("Update to Paid"), () => {
-                            show_bulk_update_dialog(listview, "Remittance", "Paid");
+                if (company) {
+                    frappe.db.get_value("Company", company, "custom_head_office")
+                        .then(r => {
+                            if (r.message && r.message.custom_head_office) {
+
+                                listview.page.add_inner_button(__("Update to Remittance"), () => {
+                                    show_bulk_update_dialog(listview, "Payment Request", "Remittance");
+                                });
+
+                                listview.page.add_inner_button(__("Update to Paid"), () => {
+                                    show_bulk_update_dialog(listview, "Remittance", "Paid");
+                                });
+
+                            }
                         });
-                    }
+                }
 
                 setTimeout(() => {
                     const vinHeader = $('span[data-sort-by="vin_serial_no"]');
@@ -66,7 +74,6 @@
             }
         };
 
-
             function show_bulk_update_dialog(listview, source_status, target_status) {
                 let dealers = [...new Set(listview.data.map(d => d.dealer))].filter(Boolean).sort();
 
@@ -102,21 +109,23 @@
                         }
 
                         frappe.confirm(`Update ${selected.length} records to ${target_status}?`, () => {
-                            const updates = selected.map(docname => {
-                                return frappe.db.set_value("Vehicles Service", docname, "service_status", target_status);
-                            });
 
-                            Promise.all(updates).then(() => {
-                                frappe.show_alert({ 
-                                    message: __("{0} Records Updated to {1}", [selected.length, target_status]), 
-                                    indicator: 'green' 
-                                });
-                                d.hide();
-                                listview.refresh();
-                            }).catch(err => {
-                                console.error(err);
-                                frappe.msgprint(__("An error occurred during the update. Check the console."));
-                            });
+                            // Map each selected doc to a frappe.call with ignore_version
+                            frappe.call({
+                                method: "edp_online_vehicles.edp_online_vehicles.doctype.vehicles_service.vehicles_service.bulk_update_service_status",
+                                args: {
+                                    names: selected,
+                                    target_status: target_status
+                                },
+                                callback: function(r) {
+                                    frappe.show_alert({
+                                        message: __("{0} Records Updated to {1}", [selected.length, target_status]),
+                                        indicator: "green"
+                                    });
+                                    d.hide();
+                                    listview.refresh();
+                                }
+                            })
                         });
                     }
                 });
@@ -152,7 +161,8 @@
                     <td>${row.name}</td>
                     <td>${row.service_status}</td>
                 </tr>
-            `).join("");
+            `)
+            .join("");
 
             return `
                 <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
