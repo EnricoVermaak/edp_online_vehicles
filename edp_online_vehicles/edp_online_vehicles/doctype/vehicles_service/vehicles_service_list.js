@@ -74,63 +74,65 @@
             }
         };
 
-            function show_bulk_update_dialog(listview, source_status, target_status) {
-                let dealers = [...new Set(listview.data.map(d => d.dealer))].filter(Boolean).sort();
+                    function show_bulk_update_dialog(listview, source_status, target_status) {
 
-                const d = new frappe.ui.Dialog({
-                    title: __(`Bulk Update: ${target_status}`),
-                    size: "large",
-                    fields: [
-                        {
-                            label: __("Select Dealer"),
-                            fieldname: "dealer",
-                            fieldtype: "Select",
-                            options: ["", ...dealers], // Adds a blank option at the top
-                            reqd: 1,
-                            onchange: function() {
-                                const dealer = d.get_value("dealer");
-                                if (dealer) {
-                                    fetch_and_render_services(d, dealer, source_status);
-                                }
-                            }
-                        },
-                        { fieldtype: "HTML", fieldname: "services_html" }
-                    ],
-                    primary_action_label: __(`Update to ${target_status}`),
-                    primary_action() {
-                        const selected = d.fields_dict.services_html.$wrapper
-                            .find('input.js-service-select:checked')
-                            .map(function() { return $(this).attr("data-name"); })
-                            .get();
-
-                        if (!selected.length) {
-                            frappe.msgprint(__("Please select at least one service."));
-                            return;
-                        }
-
-                        frappe.confirm(`Update ${selected.length} records to ${target_status}?`, () => {
-
-                            // Map each selected doc to a frappe.call with ignore_version
-                            frappe.call({
-                                method: "edp_online_vehicles.edp_online_vehicles.doctype.vehicles_service.vehicles_service.bulk_update_service_status",
-                                args: {
-                                    names: selected,
-                                    target_status: target_status
+                        const d = new frappe.ui.Dialog({
+                            title: __(`Bulk Update: ${target_status}`),
+                            size: "large",
+                            fields: [
+                                {
+                                    label: __("Select Dealer"),
+                                    fieldname: "dealer",
+                                    fieldtype: "Link",
+                                    options: "Company", 
+                                    reqd: 1,
+                                    onchange: function() {
+                                        const dealer = d.get_value("dealer");
+                                        if (!dealer) {
+                                            d.get_field("services_html").$wrapper.empty();
+                                            return;
+                                        }
+                                        fetch_and_render_services(d, dealer, source_status);
+                                    }
                                 },
-                                callback: function(r) {
-                                    frappe.show_alert({
-                                        message: __("{0} Records Updated to {1}", [selected.length, target_status]),
-                                        indicator: "green"
-                                    });
-                                    d.hide();
-                                    listview.refresh();
+                                { 
+                                    fieldtype: "HTML", 
+                                    fieldname: "services_html" 
                                 }
-                            })
+                            ],
+                            primary_action_label: __(`Update to ${target_status}`),
+                            primary_action() {
+                                const selected = d.fields_dict.services_html.$wrapper
+                                    .find('input.js-service-select:checked')
+                                    .map(function() { return $(this).attr("data-name"); })
+                                    .get();
+
+                                if (!selected.length) {
+                                    frappe.msgprint(__("Please select at least one service."));
+                                    return;
+                                }
+
+                                frappe.confirm(`Update ${selected.length} records to ${target_status}?`, () => {
+                                    frappe.call({
+                                        method: "edp_online_vehicles.edp_online_vehicles.doctype.vehicles_service.vehicles_service.bulk_update_service_status",
+                                        args: {
+                                            names: selected,
+                                            target_status: target_status
+                                        },
+                                        callback: function(r) {
+                                            frappe.show_alert({
+                                                message: __("{0} Records Updated to {1}", [selected.length, target_status]),
+                                                indicator: "green"
+                                            });
+                                            d.hide();
+                                            listview.refresh();
+                                        }
+                                    });
+                                });
+                            }
                         });
+                        d.show();
                     }
-                });
-                d.show();
-            }
 
         function fetch_and_render_services(dialog, dealer, status) {
             frappe.db.get_list("Vehicles Service", {
