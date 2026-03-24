@@ -40,6 +40,7 @@ app_include_js = [
     "/assets/edp_online_vehicles/js/hide_searchbar.js",
     "/assets/edp_online_vehicles/js/listview_filter_utils.js",
     "/assets/edp_online_vehicles/js/bulletin_popup.js",
+    "/assets/edp_online_vehicles/js/readonly_link_display.js",
 ]
 
 # include js, css files in header of web template

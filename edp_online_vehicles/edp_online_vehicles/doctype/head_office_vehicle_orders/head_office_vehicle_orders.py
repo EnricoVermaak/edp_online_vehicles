@@ -4,15 +4,21 @@
 from datetime import datetime, timedelta
 
 import frappe
-from edp_online_vehicles.events.auto_move_stock import auto_move_stock_hq, auto_move_stock_hq_transit
+from edp_online_vehicles.events.auto_move_stock import (
+	auto_move_stock_hq,
+	auto_move_stock_hq_transit,
+	auto_move_stock_to_ho,
+)
 from frappe.desk.doctype.tag.tag import remove_tag
 
 from frappe.model.document import Document
-from frappe.utils import now_datetime
+from frappe.utils import cint, now_datetime
 
 
 class HeadOfficeVehicleOrders(Document):
 	def validate(self):
+		if self.credit_note_no:
+			return
 
 		move_stock = frappe.db.get_value("Vehicles Order Status", {"name": self.status}, "auto_move_stock")
 		in_transit = frappe.db.get_value(
@@ -39,6 +45,12 @@ class HeadOfficeVehicleOrders(Document):
 				)
 
 	def on_update(self):
+		if self.credit_note_no:
+			return
+
+		if not self.is_new() and self.has_value_changed("status") and self.vinserial_no:
+			self._apply_vehicles_order_status_stock_rules()
+
 		submit_doc = frappe.db.get_value(
 			"Vehicles Order Status", {"name": self.status}, "automatically_submit_document"
 		)
@@ -75,6 +87,65 @@ class HeadOfficeVehicleOrders(Document):
    
 		elif self.shipment_stock:
 			frappe.db.set_value("Vehicles Shipment Items", {"vin_serial_no": self.shipment_stock}, "reserve_to_order", self.name)
+
+	def _apply_vehicles_order_status_stock_rules(self):
+		move_to_ho = frappe.db.get_value("Vehicles Order Status", self.status, "auto_move_vehicle_to_head_office_stock")
+		remove_vin = frappe.db.get_value("Vehicles Order Status", self.status, "remove_vin_from_order")
+
+		if not cint(move_to_ho) and not cint(remove_vin):
+			return
+
+		ho_availability = frappe.db.get_value("Vehicles Order Status", self.status, "vehicle_stock_availability_after_ho_move") or "Reserved"
+		previous_vin = self.vinserial_no
+
+		if cint(move_to_ho):
+			try:
+				auto_move_stock_to_ho(previous_vin, self.order_placed_to, self.model, self.price_excl)
+			except Exception:
+				frappe.log_error(frappe.get_traceback(), f"HO stock move failed: {self.name}")
+
+		if cint(remove_vin):
+			self._unallocate_vin(previous_vin, ho_availability)
+
+	def _unallocate_vin(self, previous_vin, availability_status="Available"):
+		if frappe.db.exists("Vehicle Stock", previous_vin):
+			stock_doc = frappe.get_doc("Vehicle Stock", previous_vin)
+			stock_doc.availability_status = availability_status
+			stock_doc.hq_order_no = None
+			stock_doc.original_purchasing_dealer = ""
+			stock_doc.ho_invoice_no = ""
+			stock_doc.ho_invoice_amt = ""
+			stock_doc.ho_invoice_date = ""
+			stock_doc.add_comment("Comment", f"VIN removed from order {self.name} (status: {self.status}).")
+			stock_doc.flags.ignore_version = True
+			stock_doc.flags.from_order_unalloc = True
+			stock_doc.save(ignore_permissions=True)
+
+		for docname in frappe.db.get_all("Reserved Vehicles", filters={"vin_serial_no": previous_vin, "status": "Reserved"}, pluck="name"):
+			rdoc = frappe.get_doc("Reserved Vehicles", docname)
+			rdoc.status = "Available"
+			rdoc.save(ignore_permissions=True)
+			rdoc.submit()
+
+		frappe.db.set_value("Head Office Vehicle Orders", self.name, {
+			"vinserial_no": None, "model_delivered": None, "modelyear_delivered": None,
+			"model_description": None, "colour_delivered": None, "engine_no": None,
+			"shipment_stock": None, "shipment_no": None, "shipment_target_warehouse": None,
+		}, update_modified=False)
+
+		self.vinserial_no = None
+		self.model_delivered = None
+		self.engine_no = None
+		self.model_description = None
+
+		tracking = frappe.new_doc("Vehicle Tracking")
+		tracking.vin_serial_no = previous_vin
+		tracking.action_summary = f"Vehicle un-allocated from order {self.name} ({self.status})"
+		tracking.request_datetime = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+		tracking.type = "EDP Online"
+		tracking.status = "Successful"
+		tracking.request = f"VIN {previous_vin} removed from order {self.name}."
+		tracking.insert(ignore_permissions=True)
 
 	def before_submit(self):
 		if self.status != "Delivered" or self.status != "Canceled":

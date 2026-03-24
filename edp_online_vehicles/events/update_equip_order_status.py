@@ -16,7 +16,7 @@ def update_equip_order_status(order_doc, status, row_id):
 
 
 @frappe.whitelist()
-def update_equip_order_vinno(order_doc, vinno, row_id):
+def update_equip_order_vinno(order_doc, row_id, vinno=None):
 	order_doc = frappe.get_doc("Vehicle Order", order_doc)
 
 	row_id = int(row_id)
@@ -44,7 +44,7 @@ def update_equip_order_price(order_doc, price, row_id):
 
 
 @frappe.whitelist()
-def update_equip_order_all(order_doc, price, vinno, status, row_id):
+def update_equip_order_all(order_doc, price, status, row_id, vinno=None):
 	order_doc = frappe.get_doc("Vehicle Order", order_doc)
 
 	row_id = int(row_id)
@@ -60,7 +60,7 @@ def update_equip_order_all(order_doc, price, vinno, status, row_id):
 
 
 @frappe.whitelist()
-def update_equip_order_vinno_status(order_doc, vinno, status, row_id):
+def update_equip_order_vinno_status(order_doc, status, row_id, vinno=None):
 	order_doc = frappe.get_doc("Vehicle Order", order_doc)
 
 	row_id = int(row_id)
@@ -75,7 +75,7 @@ def update_equip_order_vinno_status(order_doc, vinno, status, row_id):
 
 
 @frappe.whitelist()
-def update_equip_order_price_vinno(order_doc, price, vinno, row_id):
+def update_equip_order_price_vinno(order_doc, price, row_id, vinno=None):
 	order_doc = frappe.get_doc("Vehicle Order", order_doc)
 
 	row_id = int(row_id)

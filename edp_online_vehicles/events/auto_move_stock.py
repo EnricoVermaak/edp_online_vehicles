@@ -450,3 +450,50 @@ def auto_move_stock_hq_cancel(vinno, hq, dealer, model, rate, hq_comment):
 		frappe.msgprint(f"An error occurred: {e!s}")
 
 	return "Success"
+
+
+def auto_move_stock_to_ho(vinno, ho_company, model, rate):
+	"""Move vehicle from its current dealer back to head office (ho_company).
+	No-op if already at ho_company."""
+	stock_doc = frappe.get_doc("Vehicle Stock", vinno, ignore_permissions=True)
+	if not stock_doc.dealer or stock_doc.dealer == ho_company:
+		return
+
+	from_dealer = stock_doc.dealer
+	serial_doc = frappe.get_doc("Serial No", vinno, ignore_permissions=True)
+	ho_com_doc = frappe.get_doc("Company", ho_company, ignore_permissions=True)
+	if not ho_com_doc.custom_default_vehicles_stock_warehouse:
+		ho_com_doc.custom_default_vehicles_stock_warehouse = "Stores - " + ho_com_doc.abbr
+		ho_com_doc.save(ignore_permissions=True)
+
+	issue = frappe.new_doc("Stock Entry")
+	issue.stock_entry_type = "Material Issue"
+	issue.company = from_dealer
+	issue.append("items", {
+		"s_warehouse": serial_doc.warehouse,
+		"item_code": model, "qty": 1, "uom": "Unit",
+		"basic_rate": rate or 0,
+		"use_serial_batch_fields": 1, "serial_no": vinno,
+		"allow_zero_valuation_rate": 1,
+	})
+	issue.insert(ignore_permissions=True)
+	issue.submit()
+
+	receipt = frappe.new_doc("Stock Entry")
+	receipt.stock_entry_type = "Material Receipt"
+	receipt.company = ho_company
+	receipt.append("items", {
+		"t_warehouse": ho_com_doc.custom_default_vehicles_stock_warehouse,
+		"item_code": model, "qty": 1, "uom": "Unit",
+		"basic_rate": rate or 0,
+		"use_serial_batch_fields": 1, "serial_no": vinno,
+		"allow_zero_valuation_rate": 1,
+	})
+	receipt.insert(ignore_permissions=True)
+	receipt.submit()
+
+	stock_doc.reload()
+	stock_doc.target_warehouse = ho_com_doc.custom_default_vehicles_stock_warehouse
+	stock_doc.dealer = ho_company
+	stock_doc.flags.ignore_version = True
+	stock_doc.save(ignore_permissions=True)

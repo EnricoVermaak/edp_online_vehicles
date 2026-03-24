@@ -28,8 +28,11 @@ class VehiclesService(Document):
         setting_doc.save(ignore_permissions=True)
         frappe.db.commit()
 
-        # if self.has_value_changed("service_status"):
-        #     self.send_hq_service_notification()
+        if self.has_value_changed("service_status") and self.service_status in ["Pending", "Approved"]:
+            if self.email_template:
+                self.send_hq_service_notification()
+            else:
+                pass
         self.update_vehicle_status()
 
         self.check_and_auto_submit()
@@ -288,6 +291,7 @@ class VehiclesService(Document):
             frappe.db.set_single_value("Vehicle Service Settings","last_auto_job_card_no",self.job_card_no)
             
     def send_hq_service_notification(self):
+        template_content = frappe.db.get_value('Service Status', self.service_status, 'email_template')
         """Logic for Vehicle Service notifications to Head Office."""
         if not self.service_status:
             return
@@ -297,6 +301,7 @@ class VehiclesService(Document):
         
         if self.owner and self.owner not in recipients:
             recipients.append(self.owner)
+            
         
         if recipients:
             context = {
@@ -310,11 +315,72 @@ class VehiclesService(Document):
             }
             send_custom_email_from_template(
                 recipients,           
-                "Test Mail",             
+                template_content,             
                 context,                  
                 'Vehicle Service', 
                 self.name                 
             )
+            
+    def validate(self):
+        self.check_service_allowance()
+    
+    def check_service_allowance(self):
+        if not self.vin_serial_no or not self.service_date:
+            return
+
+        allowance_days = frappe.db.get_single_value("Vehicle Service Settings", "service_allowance_days") or 0
+        
+        vehicle_dates = frappe.db.get_value("Vehicle Stock", 
+            {"vin_serial_no": self.vin_serial_no},
+            ["service_start_date", "service_end_date"],
+            as_dict=True)
+
+        if vehicle_dates and vehicle_dates.service_end_date:
+            cut_off = add_days(vehicle_dates.service_end_date, allowance_days)
+            current_service_date = getdate(self.service_date)
+
+            if current_service_date > cut_off:
+                overdue_by = date_diff(current_service_date, cut_off)
+                
+                frappe.throw(
+                    msg=_("Cannot save: This service is overdue by {0} days. "
+                        "The service window ended on {1}. With a {2}-day allowance, "
+                        "the final deadline was {3}.")
+                    .format(
+                        overdue_by,
+                        frappe.format(vehicle_dates.service_end_date, "Date"),
+                        allowance_days,
+                        frappe.format(cut_off, "Date")
+                    ),
+                    title=_("Service Period Expired")
+                )
+import frappe
+from frappe import _
+
+@frappe.whitelist()
+def bulk_update_service_status(names, target_status):
+    """
+    Updates the status for multiple Vehicles Service records.
+    :param names: List of document names (strings)
+    :param target_status: The status string to update to
+    """
+    # Defensive check: ensure 'names' is a list
+    if isinstance(names, str):
+        names = frappe.parse_json(names)
+
+    if not names:
+        return
+
+    for name in names:
+        if frappe.has_permission("Vehicles Service", "write", doc=name):
+            try:
+                doc = frappe.get_doc("Vehicles Service", name)
+                doc.service_status = target_status
+                doc.save(ignore_permissions=True)
+                
+            except Exception as e:
+                frappe.log_error(f"Failed to update {name}: {str(e)}", "Bulk Status Update Error")
+                continue
 
 @frappe.whitelist()
 def create_internal_docs_notes(source_name, target_doc=None):
