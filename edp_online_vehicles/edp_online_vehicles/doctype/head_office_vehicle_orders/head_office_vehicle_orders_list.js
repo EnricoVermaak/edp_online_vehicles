@@ -246,7 +246,7 @@ frappe.listview_settings["Head Office Vehicle Orders"] = {
 				async: false, // Synchronous call
 				args: {
 					doctype: "Vehicles Order Status",
-					fields: ["name", "colour"],
+					fields: ["name", "colour", "description"],
 				},
 				callback: function (r) {
 					records = r.message;
@@ -267,6 +267,63 @@ frappe.listview_settings["Head Office Vehicle Orders"] = {
 		return [__(doc.status), "grey", "status,=," + doc.status];
 	},
 };
+
+function apply_hvo_list_indicator_title_patch() {
+	function _escape_attr(s) {
+		return String(s || "")
+			.replace(/&/g, "&amp;")
+			.replace(/'/g, "&#39;")
+			.replace(/</g, "&lt;");
+	}
+
+	function _pill_title(doc, indicator) {
+		const sr = records.find((r) => r.name === doc.status);
+		if (sr && sr.description && String(sr.description).trim()) {
+			return sr.description;
+		}
+		if (doc.status) {
+			return __(doc.status);
+		}
+		if (indicator && indicator[0]) {
+			return String(indicator[0]).trim();
+		}
+		const docstatus = [
+			__("Document is in draft state"),
+			__("Document has been submitted"),
+			__("Document has been cancelled"),
+		];
+		return docstatus[doc.docstatus || 0];
+	}
+
+	if (!frappe.views?.ListView || frappe.views.ListView.prototype._hvo_indicator_title_patched) {
+		return;
+	}
+	frappe.views.ListView.prototype._hvo_indicator_title_patched = true;
+	const orig = frappe.views.ListView.prototype.get_indicator_html;
+	frappe.views.ListView.prototype.get_indicator_html = function (doc, show_workflow_state) {
+		if (this.doctype !== "Head Office Vehicle Orders") {
+			return orig.call(this, doc, show_workflow_state);
+		}
+		const indicator = frappe.get_indicator(doc, this.doctype, show_workflow_state);
+		if (!indicator) {
+			return "";
+		}
+		const title = _escape_attr(_pill_title(doc, indicator));
+		return `<span class="indicator-pill ${indicator[1]} filterable no-indicator-dot ellipsis"
+			data-filter='${indicator[2]}' title='${title}'>
+			<span class="ellipsis"> ${indicator[0]}</span>
+		</span>`;
+	};
+}
+
+if (frappe.views?.ListView) {
+	apply_hvo_list_indicator_title_patch();
+} else {
+	$(document).one("app_ready", apply_hvo_list_indicator_title_patch);
+}
+
+frappe.provide("edp.head_office_orders_list");
+edp.head_office_orders_list.patch_indicator_tooltips = apply_hvo_list_indicator_title_patch;
 
 function apply_custom_styles(listview) {
 	if (listview.page.current_view !== "List") {
