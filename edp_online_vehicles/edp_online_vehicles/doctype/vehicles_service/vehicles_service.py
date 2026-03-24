@@ -29,7 +29,10 @@ class VehiclesService(Document):
         frappe.db.commit()
 
         if self.has_value_changed("service_status") and self.service_status in ["Pending", "Approved"]:
-            self.send_hq_service_notification()
+            if self.email_template:
+                self.send_hq_service_notification()
+            else:
+                pass
         self.update_vehicle_status()
 
         self.check_and_auto_submit()

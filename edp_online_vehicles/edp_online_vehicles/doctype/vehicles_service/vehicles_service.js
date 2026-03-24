@@ -643,9 +643,8 @@ frappe.ui.form.on("Vehicles Service", {
 		});
 	},
 	
-	dealer: async function (frm) {
+	dealer: async function(frm) {
 		if (!frm.doc.dealer) return;
-
 		let r = await frappe.db.get_value("Company", frm.doc.dealer, "custom_service_labour_rate");
 		let base_rate = flt(r?.message?.custom_service_labour_rate || 0);
 
@@ -658,51 +657,19 @@ frappe.ui.form.on("Vehicles Service", {
 			}, "price_list_rate");
 
 			let item_rate = flt(price_info?.price_list_rate || base_rate);
-
 			let item_doc = await frappe.db.get_doc("Item", row.item);
 			let gp_pct = flt(item_doc.custom_service_gp || 0);
 			let final_rate = item_rate + (item_rate * (gp_pct / 100));
 
-			row.rate_hour = final_rate;
-			row.total_excl = final_rate * flt(row.duration_hours || 0);
+			frappe.model.set_value(row.doctype, row.name, "rate_hour", final_rate);
+			frappe.model.set_value(row.doctype, row.name, "total_excl", final_rate * flt(row.duration_hours || 0));
 		};
 
-		// for (let row of frm.doc.service_labour_items || []) {
-		// 	if (row.item) {
-		// 		const response = await frappe.db.get_value("Item Price", {
-		// 			item_code: row.item,
-		// 			price_list: "Standard Selling"
-		// 		}, "price_list_rate");
-
-		// 		let price_list_rate = response && response.message ? response.message.price_list_rate : 0;
-
-		// 		const item_doc = await frappe.db.get_doc("Item", row.item);
-		// 		let gp_pct = item_doc.custom_service_gp || 0;
-
-		// 		let rate = flt(price_list_rate) + (flt(price_list_rate) * (flt(gp_pct) / 100));
-
-		// 		row.rate_hour = rate;
-		// 		row.total_excl = rate * flt(row.duration_hours || 0);
-		// 	}
-		// }
-		frm.refresh_field("service_labour_items");
-		edp_vehicles.pricing.recalc_totals(frm, VS_CONFIG);
-		
 		for (let row of frm.doc.service_labour_items) {
-			if (row.item) {
-				let price_list_rate = await frappe.db.get_value("Item Price", {
-					item_code: row.item,
-					price_list: "Standard Selling"
-				}, "price_list_rate");
-				let item_doc = await frappe.db.get_doc("Item", row.item);
-				let gp_pct = item_doc.custom_service_gp || 0;
-				let rate = (price_list_rate?.price_list_rate || 0) + (price_list_rate?.price_list_rate || 0) * (gp_pct/100);
-				row.rate_hour = rate;
-				row.total_excl = rate * (row.duration_hours || 0);
-			}
+			await calc_rate(row);
 		}
 		frm.refresh_field("service_labour_items");
-		frm.refresh_field("non_oem_labour_items");
+		edp_vehicles.pricing.recalc_totals(frm, VS_CONFIG);
 	}
 });
 
