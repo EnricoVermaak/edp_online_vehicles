@@ -22,6 +22,9 @@
   "cancel_order_section",
   "cancel_order_after_hours",
   "remove_vin_from_order",
+  "ho_stock_return_section",
+  "auto_move_vehicle_to_head_office_stock",
+  "vehicle_stock_availability_after_ho_move",
   "section_break_cssb",
   "status_visble_to_head_office",
   "status_visble_to_dealers",
@@ -197,6 +200,27 @@
    "fieldname": "remove_vin_from_order",
    "fieldtype": "Check",
    "label": "Remove VIN from order."
+  },
+  {
+   "fieldname": "ho_stock_return_section",
+   "fieldtype": "Section Break",
+   "label": "Head office stock return"
+  },
+  {
+   "default": "0",
+   "description": "When the order reaches this status, move the vehicle from the dealer company back into Head Office (OEM) stock if it is not already there.",
+   "fieldname": "auto_move_vehicle_to_head_office_stock",
+   "fieldtype": "Check",
+   "label": "Move vehicle to head office stock"
+  },
+  {
+   "depends_on": "eval: doc.auto_move_vehicle_to_head_office_stock==1",
+   "description": "Availability status set on Vehicle Stock after the move to head office (and when removing VIN from the order, if applicable).",
+   "fieldname": "vehicle_stock_availability_after_ho_move",
+   "fieldtype": "Select",
+   "label": "Vehicle stock availability after HO move",
+   "mandatory_depends_on": "eval: doc.auto_move_vehicle_to_head_office_stock==1",
+   "options": "Available\nStolen\nSold\nActive Contract\nExpired Contract\nReserved\nPending Sale\nFleet"
   },
   {
    "default": "0",
