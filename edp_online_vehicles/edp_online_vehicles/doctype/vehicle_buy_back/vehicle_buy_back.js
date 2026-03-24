@@ -66,7 +66,7 @@ function apply_form_defaults(frm) {
 	if (frm.is_new()) {
 		frm.set_value("buy_back_date_time", frappe.datetime.now_datetime());
 		if (!frm.doc.status) {
-			frm.set_value("status", "Awaiting Customer Feedback");
+			frm.set_value("status", "Awaiting Seller Response");
 		}
 	}
 
@@ -254,30 +254,7 @@ function setup_action_buttons(frm) {
 	// Remove any existing custom buttons to avoid duplicates
 	frm.remove_custom_button("Search Vins");
 	frm.remove_custom_button("Seller Accepted");
-	frm.remove_custom_button("Seller Cancelled");
-
-	// Search Vins is visible when status is Awaiting Customer Feedback or on a new doc
-	if (!status || status === "Awaiting Customer Feedback") {
-		frm.add_custom_button("Search Vins", function() {
-			const vins = (frm.doc.table_vsmr || [])
-				.map(r => r.vin_serial_no)
-				.filter(v => v);
-
-			if (!vins.length) {
-				frappe.msgprint(__("Please add at least one VIN to the table first."));
-				return;
-			}
-
-			search_vins_and_set_customer(frm, vins, function(result) {
-				frm.set_value("status", "Awaiting Seller Response");
-				if (!frm.is_new()) {
-					frm.save();
-				} else {
-					setup_action_buttons(frm);
-				}
-			});
-		}, "Actions");
-	}
+	frm.remove_custom_button("Seller Declined");
 
 	if (!frm.is_new()) {
 		if (status === "Awaiting Seller Response") {
@@ -290,8 +267,8 @@ function setup_action_buttons(frm) {
 				);
 			}, "Actions");
 
-			frm.add_custom_button("Seller Cancelled", function() {
-				submit_with_seller_decision(frm, "cancelled");
+			frm.add_custom_button("Seller Declined", function() {
+				submit_with_seller_decision(frm, "declined");
 			}, "Actions");
 		}
 	}
