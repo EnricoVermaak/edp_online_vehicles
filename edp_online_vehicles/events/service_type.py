@@ -52,7 +52,7 @@ def service_type_query(doctype, txt, searchfield, start, page_len, filters):
             service_interval = None
         else:
             try:
-                service_interval = int(interval_val)
+                service_interval = int(str(interval_val).replace(" ", ""))
                 is_numeric_interval = True
             except (ValueError, TypeError):
                 service_interval = interval_val

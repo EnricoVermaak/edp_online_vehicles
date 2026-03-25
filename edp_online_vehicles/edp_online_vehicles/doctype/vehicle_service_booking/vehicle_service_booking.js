@@ -36,45 +36,62 @@ frappe.ui.form.on("Vehicle Service Booking", {
         edp_vehicles.pricing.recalc_totals(frm, VSB_CONFIG);
 
         if (!frm.is_new()) {
-            frm.add_custom_button("Create Service", function () {
-                frappe.call({
-                    method: "edp_online_vehicles.events.create_vehicle_service.create_service_from_booking",
-                    args: { booking_name: frm.doc.name },
-                    freeze: true,
-                    freeze_message: "Creating Service...",
-                    callback: function(r) {
-                        if (!r.exc && r.message) {
-                            frappe.set_route("Form", "Vehicles Service", r.message);
-                        }
+            frappe.db
+                .get_value("Vehicle Service Settings", "Vehicle Service Settings", [
+                    "allow_user_to_create_part_order_from_vehicle_service_booking",
+                ])
+                .then((r) => {
+                    const allowPartOrder =
+                        r.message?.allow_user_to_create_part_order_from_vehicle_service_booking;
+
+                    frm.add_custom_button(
+                        __("Vehicles Service"),
+                        function () {
+                            frappe.call({
+                                method: "edp_online_vehicles.events.create_vehicle_service.create_service_from_booking",
+                                args: { booking_name: frm.doc.name },
+                                freeze: true,
+                                freeze_message: __("Creating Service..."),
+                                callback(res) {
+                                    if (!res.exc && res.message) {
+                                        frappe.set_route("Form", "Vehicles Service", res.message);
+                                    }
+                                },
+                            });
+                        },
+                        __("Create"),
+                    );
+
+                    if (allowPartOrder) {
+                        frm.add_custom_button(
+                            __("Part Order"),
+                            function () {
+                                if (!frm.doc.service_parts_items || frm.doc.service_parts_items.length === 0) {
+                                    frappe.throw(
+                                        __(
+                                            "No parts added to the parts table, please add parts to perform this action",
+                                        ),
+                                    );
+                                }
+                                if (!frm.doc.part_schedule_date) {
+                                    frappe.throw(
+                                        __("Please select a Scheduled Delivery Date under Parts Table"),
+                                    );
+                                }
+                                frappe.call({
+                                    method: "edp_online_vehicles.events.create_part_order.create_part_order_from_booking",
+                                    args: { docname: frm.doc.name },
+                                    callback(res) {
+                                        if (res.message) {
+                                            frappe.msgprint(res.message);
+                                        }
+                                    },
+                                });
+                            },
+                            __("Create"),
+                        );
                     }
                 });
-            });
-
-            frappe.call({
-                method: "frappe.client.get",
-                args: { doctype: "Vehicle Service Settings" },
-                callback: function (r) {
-                    if (r.message && r.message.allow_user_to_create_part_order_from_vehicle_service_booking) {
-                        frm.add_custom_button(__("Part Order"), function () {
-                            if (!frm.doc.service_parts_items || frm.doc.service_parts_items.length === 0) {
-                                frappe.throw(__("No parts added to the parts table, please add parts to perform this action"));
-                            }
-                            if (!frm.doc.part_schedule_date) {
-                                frappe.throw(__("Please select a Scheduled Delivery Date under Parts Table"));
-                            }
-                            frappe.call({
-                                method: "edp_online_vehicles.events.create_part_order.create_part_order_from_booking",
-                                args: { docname: frm.doc.name },
-                                callback: function (r) {
-                                    if (r.message) {
-                                        frappe.msgprint(r.message);
-                                    }
-                                }
-                            });
-                        }, __("Create"));
-                    }
-                }
-            });
         }
     },
 
@@ -181,7 +198,7 @@ frappe.ui.form.on("Vehicle Service Booking", {
             frappe.db.get_value("Service Schedules", frm.doc.service_type, "interval")
                 .then(r => {
                     if (!r || !r.message) return;
-                    let interval = parseInt(r.message.interval || 0, 10);
+                    let interval = parseInt(String(r.message.interval || 0).replace(/ /g, ""), 10);
                     return frappe.db.get_value("Model Administration", frm.doc.model, [
                         "service_type_max_allowance",
                         "service_type_minimum_allowance"
