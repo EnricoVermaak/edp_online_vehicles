@@ -52,12 +52,11 @@
    "read_only": 1
   },
   {
-   "depends_on": "eval:doc.buy_from == \"Dealer\"",
    "fieldname": "dealer",
    "fieldtype": "Link",
    "in_list_view": 1,
    "in_standard_filter": 1,
-   "label": "Buy From Dealer",
+   "label": "Dealer",
    "mandatory_depends_on": "eval:doc.buy_from == \"Dealer\"",
    "options": "Company",
    "read_only": 1
@@ -67,7 +66,6 @@
    "fieldname": "customer",
    "fieldtype": "Link",
    "label": "Customer",
-   "mandatory_depends_on": "eval:doc.buy_from == \"Customer\"",
    "options": "Dealer Customer",
    "read_only": 1
   },
@@ -144,6 +142,7 @@
    "fieldtype": "Currency",
    "in_list_view": 1,
    "label": "Offer Price (Incl)",
+   "read_only_depends_on": "eval:doc.buy_from==\"Dealer\" && !(frappe.user.has_role(\"Service Administrator\") || frappe.user.has_role(\"Vehicle Administrator\") || frappe.user.has_role(\"Administrator\"))",
    "reqd": 1
   },
   {
@@ -152,16 +151,14 @@
    "in_list_view": 1,
    "in_standard_filter": 1,
    "label": "Buy From",
-   "options": "Dealer\nCustomer",
+   "options": "Customer\nDealer",
    "reqd": 1
   },
   {
    "fieldname": "purchasing_dealer",
-   "fieldtype": "Link",
+   "fieldtype": "Data",
    "label": "Purchasing Dealer",
-   "options": "Company",
-   "read_only": 1,
-   "reqd": 1
+   "read_only": 1
   },
   {
    "fieldname": "section_break_ioww",
@@ -187,7 +184,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-03-25 08:44:58.316132",
+ "modified": "2026-03-25 13:58:43.365235",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicle Buy Back",

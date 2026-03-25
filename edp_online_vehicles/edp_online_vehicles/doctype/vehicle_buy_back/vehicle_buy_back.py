@@ -89,10 +89,13 @@ class VehicleBuyBack(Document):
 		if not user_company:
 			return
 
-		is_head_office = frappe.db.get_value("Company", user_company, "custom_head_office")
-		if not cint(is_head_office):
+		if not self.purchasing_dealer:
+			self.purchasing_dealer = user_company
+
+		company_for_rules = self.purchasing_dealer or user_company
+		is_head_office = frappe.db.get_value("Company", company_for_rules, "custom_head_office")
+		if not cint(is_head_office) and self.is_new():
 			self.buy_from = "Customer"
-			self.dealer = None
 	
 	def _populate_child_from_vehicle_and_model(self):
 		if not self.table_vsmr:

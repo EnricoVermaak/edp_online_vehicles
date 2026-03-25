@@ -1,15 +1,20 @@
 frappe.ui.form.on("Vehicle Buy Back", {
 	refresh(frm) {
 		apply_form_defaults(frm);
+		sync_seller_field_visibility(frm);
 
 		setup_action_buttons(frm);
 	},
 
 	onload(frm) {
 		apply_form_defaults(frm);
+		sync_seller_field_visibility(frm);
 	},
 
 	before_save(frm) {
+		remove_empty_vin_rows(frm);
+		clear_seller_if_table_empty(frm);
+
 		if (!frm.doc.buy_back_date_time) {
 			frm.set_value("buy_back_date_time", frappe.datetime.now_datetime());
 		}
@@ -59,14 +64,15 @@ frappe.ui.form.on("Vehicle Buy Back", {
 			return;
 		}
 
+		if (frm.doc.buy_from === "Dealer" && frm.doc.dealer) {
+			frm.set_value("dealer", null);
+		}
+
 		if (frm.doc.buy_from === "Dealer" && frm.doc.customer) {
 			frm.set_value("customer", null);
 		}
 
-		if (frm.doc.buy_from === "Customer" && frm.doc.dealer) {
-			frm.set_value("dealer", null);
-		}
-
+		sync_seller_field_visibility(frm);
 		frm.refresh_field("table_vsmr");
 	},
 
@@ -86,11 +92,17 @@ function apply_form_defaults(frm) {
 	}
 
 	set_default_purchasing_dealer(frm);
-	clear_auto_default_buy_from_dealer(frm);
 	apply_buy_from_company_rules(frm);
+	sync_seller_field_visibility(frm);
 	if (!frm.doc.vat || frm.doc.vat == 0) {
 		frm.set_value("vat", 15);
 	}
+}
+
+function sync_seller_field_visibility(frm) {
+	const is_buy_from_dealer = frm.doc.buy_from === "Dealer";
+	frm.toggle_display("dealer", is_buy_from_dealer);
+	frm.toggle_display("customer", !is_buy_from_dealer);
 }
 
 function set_default_purchasing_dealer(frm) {
@@ -101,35 +113,24 @@ function set_default_purchasing_dealer(frm) {
 	}
 }
 
-function clear_auto_default_buy_from_dealer(frm) {
-	if (!frm.is_new() || frm._dealer_default_checked) return;
-	frm._dealer_default_checked = true;
-
-	const default_company = frappe.defaults.get_default("company");
-	if (default_company && frm.doc.dealer === default_company) {
-		frm.set_value("dealer", null);
-	}
-}
-
 function apply_buy_from_company_rules(frm) {
 	const default_company = frappe.defaults.get_default("company");
-	if (!default_company) return;
+	const company_for_rules = frm.doc.purchasing_dealer || default_company;
+	if (!company_for_rules) return;
 
-	frappe.db.get_value("Company", default_company, "custom_head_office").then((r) => {
+	frappe.db.get_value("Company", company_for_rules, "custom_head_office").then((r) => {
 		const is_head_office = !!(r && r.message && Number(r.message.custom_head_office) === 1);
 		frm._is_head_office = is_head_office;
 
 		frm.set_df_property("buy_from", "read_only", is_head_office ? 0 : 1);
 
 		if (!is_head_office) {
-			if (frm.doc.buy_from !== "Customer") {
+			if (frm.is_new() && frm.doc.buy_from !== "Customer") {
 				frm.set_value("buy_from", "Customer");
-			}
-			if (frm.doc.dealer) {
-				frm.set_value("dealer", null);
 			}
 		}
 
+		sync_seller_field_visibility(frm);
 		frm.refresh_field("buy_from");
 		frm.refresh_field("dealer");
 	});
@@ -139,7 +140,11 @@ frappe.ui.form.on("Vehicle Buy Back List", {
 	async vin_serial_no(frm, cdt, cdn) {
 		const row = locals[cdt][cdn];
 		const vin = (row.vin_serial_no || "").trim();
-		if (!vin) return;
+		if (!vin) {
+			remove_row_by_name(frm, cdn);
+			handle_table_change(frm);
+			return;
+		}
 
 		if (vin !== row.vin_serial_no) {
 			await frappe.model.set_value(cdt, cdn, "vin_serial_no", vin);
@@ -226,8 +231,8 @@ frappe.ui.form.on("Vehicle Buy Back List", {
 			}
 			
 			if (frm.doc.buy_from === "Dealer" && !frm.doc.dealer && vin_dealer) {
-				await frm.set_value("dealer", vin_dealer);
 				await frm.set_value("buy_from", "Dealer");
+				await frm.set_value("dealer", vin_dealer);
 			}
 
 			await set_row_values(cdt, cdn, {
@@ -291,8 +296,8 @@ function search_vins_and_set_seller(frm, vins, buy_from, callback) {
 			if (buy_from === "Dealer") {
 
 				if (result.status === "single") {
-					frm.set_value("dealer", result.dealer);
 					frm.set_value("buy_from", "Dealer");
+					frm.set_value("dealer", result.dealer);
 					frappe.show_alert({ message: __("Dealer set to {0}", [result.dealer]), indicator: "green" });
 
 				} else if (result.status === "multiple") {
@@ -310,20 +315,56 @@ function search_vins_and_set_seller(frm, vins, buy_from, callback) {
 
 function clear_seller_if_no_vins(frm) {
 	const has_vins = (frm.doc.table_vsmr || []).some((r) => (r.vin_serial_no || "").trim());
-	if (!has_vins && frm.doc.customer) {
-		frm.set_value("customer", null);
+	if (!has_vins) {
+		clear_seller_if_table_empty(frm);
 	}
-	if (!has_vins && frm.doc.dealer) {
-		frm.set_value("dealer", null);
+}
+
+function clear_seller_if_table_empty(frm) {
+	if ((frm.doc.table_vsmr || []).length === 0) {
+		if (frm.doc.buy_from === "Customer") {
+			frm.set_value("customer", null);
+		}
+		if (frm.doc.buy_from === "Dealer") {
+			frm.set_value("dealer", null);
+		}
 	}
 }
 
 function handle_table_change(frm) {
 	frm._seller_search_done = false;
+	remove_empty_vin_rows(frm);
 	clear_seller_if_no_vins(frm);
 	calculate_totals(frm);
 	if (frm.doc.offer_price_incl && frm.doc.offer_price_incl > 0) {
 		calculate_offer_price_from_incl(frm);
+	}
+}
+
+function remove_empty_vin_rows(frm) {
+	const rows = frm.doc.table_vsmr || [];
+	let removed = false;
+
+	for (let i = rows.length - 1; i >= 0; i--) {
+		if (!((rows[i].vin_serial_no || "").trim())) {
+			rows.splice(i, 1);
+			removed = true;
+		}
+	}
+
+	if (removed) {
+		frm.refresh_field("table_vsmr");
+	}
+
+	return removed;
+}
+
+function remove_row_by_name(frm, row_name) {
+	const rows = frm.doc.table_vsmr || [];
+	const index = rows.findIndex((r) => r.name === row_name);
+	if (index !== -1) {
+		rows.splice(index, 1);
+		frm.refresh_field("table_vsmr");
 	}
 }
 
