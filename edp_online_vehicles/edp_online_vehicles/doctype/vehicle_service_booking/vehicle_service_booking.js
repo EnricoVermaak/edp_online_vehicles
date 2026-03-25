@@ -198,7 +198,7 @@ frappe.ui.form.on("Vehicle Service Booking", {
             frappe.db.get_value("Service Schedules", frm.doc.service_type, "interval")
                 .then(r => {
                     if (!r || !r.message) return;
-                    let interval = parseInt(r.message.interval || 0, 10);
+                    let interval = parseInt(String(r.message.interval || 0).replace(/ /g, ""), 10);
                     return frappe.db.get_value("Model Administration", frm.doc.model, [
                         "service_type_max_allowance",
                         "service_type_minimum_allowance"

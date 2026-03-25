@@ -107,6 +107,12 @@ class VehiclesService(Document):
             return
 
         interval = frappe.db.get_value("Service Schedules", self.service_type, "interval") or 0
+        try:
+            interval = int(str(interval).replace(" ", ""))
+        except (TypeError, ValueError):
+            self.system_status = None
+            return
+
         model_data = frappe.db.get_value(
             "Model Administration",
             self.model,
@@ -117,8 +123,8 @@ class VehiclesService(Document):
         max_allowance = int(model_data.get("service_type_max_allowance") or 0)
         min_allowance = int(model_data.get("service_type_minimum_allowance") or 0)
 
-        min_odo = int(interval) - min_allowance
-        max_odo = int(interval) + max_allowance
+        min_odo = interval - min_allowance
+        max_odo = interval + max_allowance
         odo = int(self.odo_reading_hours or 0)
 
         if min_odo <= odo <= max_odo:
@@ -132,6 +138,11 @@ class VehiclesService(Document):
             return
 
         interval = frappe.db.get_value("Service Schedules", self.service_type, "interval") or 0
+        try:
+            interval = int(str(interval).replace(" ", ""))
+        except (TypeError, ValueError):
+            return
+
         model_data = frappe.db.get_value(
             "Model Administration",
             self.model,
@@ -142,8 +153,8 @@ class VehiclesService(Document):
         max_allowance = int(model_data.get("service_type_max_allowance") or 0)
         min_allowance = int(model_data.get("service_type_minimum_allowance") or 0)
 
-        min_odo = int(interval) - min_allowance
-        max_odo = int(interval) + max_allowance
+        min_odo = interval - min_allowance
+        max_odo = interval + max_allowance
         odo = int(self.odo_reading_hours or 0)
 
         if odo < min_odo:

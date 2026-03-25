@@ -546,7 +546,7 @@ frappe.ui.form.on("Vehicles Service", {
 		// Validate Odo range
 		frappe.db.get_value("Service Schedules", frm.doc.service_type, "interval").then((r) => {
 			if (!r?.message?.interval) return;
-			let interval = r.message.interval;
+			let interval = parseInt(String(r.message.interval).replace(/ /g, ""), 10);
 
 			frappe.db.get_value("Model Administration", frm.doc.model, ["service_type_max_allowance", "service_type_minimum_allowance"]).then((r2) => {
 				let max = parseInt(r2.message?.service_type_max_allowance || 0);
