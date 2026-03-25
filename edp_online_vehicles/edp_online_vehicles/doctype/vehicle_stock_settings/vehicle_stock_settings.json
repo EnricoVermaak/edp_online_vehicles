@@ -75,6 +75,7 @@
   "sap_token",
   "sap_token_expires_at",
   "sap_token_fetched_at",
+  "refresh_sap_token",
   "evolve_section",
   "interface_code",
   "credentails_section",
@@ -462,6 +463,11 @@
    "fieldtype": "Datetime",
    "label": "SAP Token Fetched At",
    "read_only": 1
+  },
+  {
+   "fieldname": "refresh_sap_token",
+   "fieldtype": "Button",
+   "label": "Refresh SAP Token"
   },
   {
    "fieldname": "integration_servers",
