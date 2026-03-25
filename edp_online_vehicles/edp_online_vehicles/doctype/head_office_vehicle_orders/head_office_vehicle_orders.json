@@ -268,7 +268,8 @@
    "depends_on": "eval: doc.vinserial_no",
    "fieldname": "price_excl",
    "fieldtype": "Currency",
-   "label": "Price (Excl)"
+   "label": "Price (Excl)",
+   "read_only": 1
   },
   {
    "fieldname": "section_break_lacy",
@@ -413,7 +414,8 @@
    "default": "0",
    "fieldname": "discount_amount_excl",
    "fieldtype": "Currency",
-   "label": "Discount Amount (Excl)"
+   "label": "Discount Amount (Excl)",
+   "read_only": 1
   },
   {
    "fieldname": "total_excl",
