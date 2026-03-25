@@ -8,48 +8,25 @@ from edp_online_vehicles.events.auto_move_stock import (
 	auto_move_stock_hq,
 	auto_move_stock_hq_transit,
 	auto_move_stock_to_ho,
+	ensure_vehicle_serial_in_ho_default_warehouse,
 )
 from frappe.desk.doctype.tag.tag import remove_tag
+from frappe.utils.file_manager import remove_all
 
 from frappe.model.document import Document
 from frappe.utils import cint, now_datetime
 
 
 class HeadOfficeVehicleOrders(Document):
-	def validate(self):
-		if self.credit_note_no:
-			return
-
-		move_stock = frappe.db.get_value("Vehicles Order Status", {"name": self.status}, "auto_move_stock")
-		in_transit = frappe.db.get_value(
-			"Vehicles Order Status", {"name": self.status}, "in_transit_warehouse"
-		)
-
-		if move_stock:
-			if self.vinserial_no:
-				stock_doc = frappe.get_doc("Vehicle Stock", self.vinserial_no)
-
-				if stock_doc.dealer == self.order_placed_to:
-					auto_move_stock_hq(
-						self.vinserial_no,
-						self.order_placed_to,
-						self.order_placed_by,
-						self.model,
-						self.price_excl,
-					)
-
-		if in_transit:
-			if self.vinserial_no:
-				auto_move_stock_hq_transit(
-					self.vinserial_no, self.order_placed_to, self.order_placed_by, self.model, self.price_excl
-				)
-
 	def on_update(self):
+		status_changed = not self.is_new() and self.has_value_changed("status")
+
+		if status_changed and self.vinserial_no:
+			self._apply_vehicles_order_status_stock_rules()
+			self._apply_auto_stock_moves()
+
 		if self.credit_note_no:
 			return
-
-		if not self.is_new() and self.has_value_changed("status") and self.vinserial_no:
-			self._apply_vehicles_order_status_stock_rules()
 
 		submit_doc = frappe.db.get_value(
 			"Vehicles Order Status", {"name": self.status}, "automatically_submit_document"
@@ -58,7 +35,7 @@ class HeadOfficeVehicleOrders(Document):
 		if submit_doc:
 			self.submit()
 
-		if not self.is_new() and self.has_value_changed("status") and self.vinserial_no:
+		if status_changed and self.vinserial_no:
 			in_transit = frappe.db.get_value("Vehicles Order Status", self.status, "in_transit_warehouse")
 			move_stock = frappe.db.get_value("Vehicles Order Status", self.status, "auto_move_stock")
 
@@ -88,6 +65,26 @@ class HeadOfficeVehicleOrders(Document):
 		elif self.shipment_stock:
 			frappe.db.set_value("Vehicles Shipment Items", {"vin_serial_no": self.shipment_stock}, "reserve_to_order", self.name)
 
+	def _apply_auto_stock_moves(self):
+		move_stock = frappe.db.get_value("Vehicles Order Status", self.status, "auto_move_stock")
+		in_transit = frappe.db.get_value("Vehicles Order Status", self.status, "in_transit_warehouse")
+
+		if move_stock and frappe.db.exists("Vehicle Stock", self.vinserial_no):
+			stock_doc = frappe.get_doc("Vehicle Stock", self.vinserial_no)
+			if stock_doc.dealer == self.order_placed_to:
+				auto_move_stock_hq(
+					self.vinserial_no,
+					self.order_placed_to,
+					self.order_placed_by,
+					self.model,
+					self.price_excl,
+				)
+
+		if in_transit:
+			auto_move_stock_hq_transit(
+				self.vinserial_no, self.order_placed_to, self.order_placed_by, self.model, self.price_excl
+			)
+
 	def _apply_vehicles_order_status_stock_rules(self):
 		move_to_ho = frappe.db.get_value("Vehicles Order Status", self.status, "auto_move_vehicle_to_head_office_stock")
 		remove_vin = frappe.db.get_value("Vehicles Order Status", self.status, "remove_vin_from_order")
@@ -109,6 +106,7 @@ class HeadOfficeVehicleOrders(Document):
 
 	def _unallocate_vin(self, previous_vin, availability_status="Available"):
 		if frappe.db.exists("Vehicle Stock", previous_vin):
+			remove_all("Vehicle Stock", previous_vin, from_delete=True)
 			stock_doc = frappe.get_doc("Vehicle Stock", previous_vin)
 			stock_doc.availability_status = availability_status
 			stock_doc.hq_order_no = None
@@ -120,6 +118,10 @@ class HeadOfficeVehicleOrders(Document):
 			stock_doc.flags.ignore_version = True
 			stock_doc.flags.from_order_unalloc = True
 			stock_doc.save(ignore_permissions=True)
+
+			ensure_vehicle_serial_in_ho_default_warehouse(
+				previous_vin, self.order_placed_to, self.model, self.price_excl
+			)
 
 		for docname in frappe.db.get_all("Reserved Vehicles", filters={"vin_serial_no": previous_vin, "status": "Reserved"}, pluck="name"):
 			rdoc = frappe.get_doc("Reserved Vehicles", docname)
@@ -464,6 +466,7 @@ class HeadOfficeVehicleOrders(Document):
 		stock_doc = frappe.get_doc("Vehicle Stock", previous_vinno_value)
 
 		if stock_doc:
+			remove_all("Vehicle Stock", previous_vinno_value, from_delete=True)
 			reserve_docs = frappe.db.get_all(
 				"Reserved Vehicles",
 				filters={"vin_serial_no": previous_vinno_value, "status": "Reserved"},

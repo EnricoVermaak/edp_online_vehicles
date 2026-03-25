@@ -12,7 +12,8 @@
   "automatically_allocate_received_shipments",
   "allocate_from_date",
   "allocate_to_date",
-  "automatically_set_to_back_order"
+  "automatically_set_to_back_order",
+  "payment_terms"
  ],
  "fields": [
   {
@@ -56,11 +57,16 @@
    "fieldname": "automatically_set_to_back_order",
    "fieldtype": "Check",
    "label": "Automatically set to Back Order"
+  },
+  {
+   "fieldname": "payment_terms",
+   "fieldtype": "Data",
+   "label": "Payment Term"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-06-09 14:14:07.116437",
+ "modified": "2026-03-24 16:37:02.414982",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicles Order Purpose",
@@ -80,6 +86,7 @@
    "write": 1
   }
  ],
+ "row_format": "Dynamic",
  "search_fields": "description",
  "show_title_field_in_link": 1,
  "sort_field": "modified",

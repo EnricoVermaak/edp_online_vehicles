@@ -485,11 +485,75 @@ def auto_move_stock_hq_cancel(vinno, hq, dealer, model, rate, hq_comment):
 	return "Success"
 
 
-def auto_move_stock_to_ho(vinno, ho_company, model, rate):
-	"""Move vehicle from its current dealer back to head office (ho_company).
-	No-op if already at ho_company."""
+def ensure_vehicle_serial_in_ho_default_warehouse(vinno, ho_company, model, rate):
+	if not vinno or not ho_company or not frappe.db.exists("Vehicle Stock", vinno):
+		return
+	if not frappe.db.exists("Company", ho_company):
+		return
+
 	stock_doc = frappe.get_doc("Vehicle Stock", vinno, ignore_permissions=True)
-	if not stock_doc.dealer or stock_doc.dealer == ho_company:
+	if stock_doc.dealer != ho_company:
+		return
+
+	ho_com_doc = frappe.get_doc("Company", ho_company, ignore_permissions=True)
+	if not ho_com_doc.custom_default_vehicles_stock_warehouse:
+		ho_com_doc.custom_default_vehicles_stock_warehouse = "Stores - " + ho_com_doc.abbr
+		ho_com_doc.save(ignore_permissions=True)
+
+	default_wh = ho_com_doc.custom_default_vehicles_stock_warehouse
+	item_code = model or stock_doc.model
+	if not item_code:
+		return
+
+	basic_rate = rate or 0
+	serial_doc = frappe.get_doc("Serial No", vinno, ignore_permissions=True)
+	current_wh = serial_doc.warehouse
+
+	if current_wh != default_wh:
+		transfer = frappe.new_doc("Stock Entry")
+		transfer.stock_entry_type = "Material Transfer"
+		transfer.company = ho_company
+		transfer.append(
+			"items",
+			{
+				"s_warehouse": current_wh,
+				"t_warehouse": default_wh,
+				"item_code": item_code,
+				"qty": 1,
+				"uom": "Unit",
+				"basic_rate": basic_rate,
+				"use_serial_batch_fields": 1,
+				"serial_no": vinno,
+				"allow_zero_valuation_rate": 1,
+			},
+		)
+		transfer.insert(ignore_permissions=True)
+		transfer.submit()
+		serial_doc = frappe.get_doc("Serial No", vinno, ignore_permissions=True)
+
+	if serial_doc.warehouse != default_wh:
+		return
+
+	stock_doc.reload()
+	changed = False
+	if stock_doc.in_transit_date:
+		stock_doc.in_transit_date = None
+		changed = True
+	if (stock_doc.target_warehouse or "") != default_wh:
+		stock_doc.target_warehouse = default_wh
+		changed = True
+	if changed:
+		stock_doc.flags.ignore_version = True
+		stock_doc.save(ignore_permissions=True)
+
+
+def auto_move_stock_to_ho(vinno, ho_company, model, rate):
+	stock_doc = frappe.get_doc("Vehicle Stock", vinno, ignore_permissions=True)
+	if not stock_doc.dealer:
+		return
+
+	if stock_doc.dealer == ho_company:
+		ensure_vehicle_serial_in_ho_default_warehouse(vinno, ho_company, model, rate)
 		return
 
 	from_dealer = stock_doc.dealer
@@ -535,3 +599,5 @@ def auto_move_stock_to_ho(vinno, ho_company, model, rate):
 	stock_doc.dealer = ho_company
 	stock_doc.flags.ignore_version = True
 	stock_doc.save(ignore_permissions=True)
+
+	ensure_vehicle_serial_in_ho_default_warehouse(vinno, ho_company, model, rate)
