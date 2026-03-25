@@ -21,12 +21,17 @@ frappe.ui.form.on("Vehicle Buy Back", {
 			calculate_offer_price_from_incl(frm);
 		}
 
-		// Auto-fill customer from VINs if not already set
+		// Auto-fill seller from VINs if not already set
 		const vins_for_search = (frm.doc.table_vsmr || []).map(r => r.vin_serial_no).filter(v => v);
-		if (vins_for_search.length && !frm.doc.customer && !frm._customer_search_done) {
+		const needs_seller_lookup = (
+			(frm.doc.buy_from === "Customer" && !frm.doc.customer) ||
+			(frm.doc.buy_from === "Dealer" && !frm.doc.dealer)
+		);
+
+		if (vins_for_search.length && needs_seller_lookup && !frm._seller_search_done) {
 			frappe.validated = false;
-			search_vins_and_set_customer(frm, vins_for_search, function() {
-				frm._customer_search_done = true;
+			search_vins_and_set_seller(frm, vins_for_search, frm.doc.buy_from, function() {
+				frm._seller_search_done = true;
 				frappe.validated = true;
 				frm.save();
 			});
@@ -51,7 +56,17 @@ frappe.ui.form.on("Vehicle Buy Back", {
 	buy_from(frm) {
 		if (frm._is_head_office === false && frm.doc.buy_from !== "Customer") {
 			frm.set_value("buy_from", "Customer");
+			return;
 		}
+
+		if (frm.doc.buy_from === "Dealer" && frm.doc.customer) {
+			frm.set_value("customer", null);
+		}
+
+		if (frm.doc.buy_from === "Customer" && frm.doc.dealer) {
+			frm.set_value("dealer", null);
+		}
+
 		frm.refresh_field("table_vsmr");
 	},
 
@@ -71,6 +86,7 @@ function apply_form_defaults(frm) {
 	}
 
 	set_default_purchasing_dealer(frm);
+	clear_auto_default_buy_from_dealer(frm);
 	apply_buy_from_company_rules(frm);
 	if (!frm.doc.vat || frm.doc.vat == 0) {
 		frm.set_value("vat", 15);
@@ -82,6 +98,16 @@ function set_default_purchasing_dealer(frm) {
 	const default_company = frappe.defaults.get_default("company");
 	if (default_company) {
 		frm.set_value("purchasing_dealer", default_company);
+	}
+}
+
+function clear_auto_default_buy_from_dealer(frm) {
+	if (!frm.is_new() || frm._dealer_default_checked) return;
+	frm._dealer_default_checked = true;
+
+	const default_company = frappe.defaults.get_default("company");
+	if (default_company && frm.doc.dealer === default_company) {
+		frm.set_value("dealer", null);
 	}
 }
 
@@ -140,19 +166,38 @@ frappe.ui.form.on("Vehicle Buy Back List", {
 			}
 
 			const vehicle_status = ((vehicle.availability_status || "") + "").trim().toLowerCase();
-			if (vehicle_status !== "sold") {
-				await reject_vin(
-					frm,
-					cdt,
-					cdn,
-					"VIN {0} cannot be added because its status is {1}. Only Sold vehicles are allowed.",
-					[vin, vehicle.availability_status || __("Unknown")]
-				);
-				return;
+			// Buy from customer availablity status
+			if (frm.doc.buy_from === "Customer"){
+				if (vehicle_status !== "sold") {
+					await reject_vin(
+						frm,
+						cdt,
+						cdn,
+						"VIN {0} cannot be added because its status is {1}. Only Sold vehicles are allowed.",
+						[vin, vehicle.availability_status || __("Unknown")]
+					);
+					return;
+				}
 			}
 
+			// Buy from dealer availablity status
+			if (frm.doc.buy_from === "Dealer"){
+				if (vehicle_status !== "available" && vehicle_status !== "reserved") {
+					await reject_vin(
+						frm,
+						cdt,
+						cdn,
+						"VIN {0} cannot be added because its status is {1}. Only Available/Reserved vehicles are allowed.",
+						[vin, vehicle.availability_status || __("Unknown")]
+					);
+					return;
+				}
+			}
+
+
+
 			const vin_customer = vehicle.customer || null;
-			if (frm.doc.customer && vin_customer && frm.doc.customer !== vin_customer) {
+			if (frm.doc.buy_from === "Customer" && frm.doc.customer && vin_customer && frm.doc.customer !== vin_customer) {
 				await reject_vin(
 					frm,
 					cdt,
@@ -163,9 +208,26 @@ frappe.ui.form.on("Vehicle Buy Back List", {
 				return;
 			}
 
-			if (!frm.doc.customer && vin_customer) {
+			if (frm.doc.buy_from === "Customer" && !frm.doc.customer && vin_customer) {
 				await frm.set_value("customer", vin_customer);
 				await frm.set_value("buy_from", "Customer");
+			}
+
+			const vin_dealer = vehicle.dealer || null;
+			if (frm.doc.buy_from === "Dealer" && frm.doc.dealer && vin_dealer && frm.doc.dealer !== vin_dealer) {
+				await reject_vin(
+					frm,
+					cdt,
+					cdn,
+					"VIN {0} belongs to dealer {1}, but this Buy Back dealer is {2}.",
+					[vin, vin_dealer, frm.doc.dealer]
+				);
+				return;
+			}
+			
+			if (frm.doc.buy_from === "Dealer" && !frm.doc.dealer && vin_dealer) {
+				await frm.set_value("dealer", vin_dealer);
+				await frm.set_value("buy_from", "Dealer");
 			}
 
 			await set_row_values(cdt, cdn, {
@@ -193,41 +255,72 @@ frappe.ui.form.on("Vehicle Buy Back List", {
 	}
 });
 
-function search_vins_and_set_customer(frm, vins, callback) {
+function search_vins_and_set_seller(frm, vins, buy_from, callback) {
 	frappe.call({
 		method: "edp_online_vehicles.edp_online_vehicles.doctype.vehicle_buy_back.vehicle_buy_back.search_vins",
-		args: { vins: vins },
+		args: { vins: vins,
+				buy_from: buy_from
+		 	},
 		callback: function(r) {
 			if (r.exc || !r.message) {
-				frappe.msgprint(__("Error looking up VIN customers."));
+				frappe.msgprint(__("Error looking up VINs."));
 				if (callback) callback(null);
 				return;
 			}
 			const result = r.message;
-			if (result.status === "single") {
-				frm.set_value("customer", result.customer);
-				frm.set_value("buy_from", "Customer");
-				frappe.show_alert({ message: __("Customer set to {0}", [result.customer]), indicator: "green" });
-			} else if (result.status === "multiple") {
-				frappe.msgprint(__("VINs belong to multiple customers: {0}. Please set the customer manually.", [result.customers.join(", ")]));
-			} else {
-				frappe.msgprint(__("No customer found on any of the selected VINs."));
+
+			// Only set customer if the buy back is from a customer.
+			if (buy_from === "Customer") {
+
+				if (result.status === "single") {
+					frm.set_value("customer", result.customer);
+					frm.set_value("buy_from", "Customer");
+					frappe.show_alert({ message: __("Customer set to {0}", [result.customer]), indicator: "green" });
+
+				} else if (result.status === "multiple") {
+					frappe.msgprint(__("VINs belong to multiple customers: {0}.", [result.customers.join(", ")]));
+
+				} else {
+					frappe.msgprint(__("No customer found on any of the selected VINs."));
+				}
+
+				if (callback) callback(result);
 			}
-			if (callback) callback(result);
+
+			// Only set dealer if the buy back is from a dealer.
+			if (buy_from === "Dealer") {
+
+				if (result.status === "single") {
+					frm.set_value("dealer", result.dealer);
+					frm.set_value("buy_from", "Dealer");
+					frappe.show_alert({ message: __("Dealer set to {0}", [result.dealer]), indicator: "green" });
+
+				} else if (result.status === "multiple") {
+					frappe.msgprint(__("VINs belong to multiple dealers: {0}.", [result.dealers.join(", ")]));
+
+				} else {
+					frappe.msgprint(__("No dealer found on any of the selected VINs."));
+				}
+
+				if (callback) callback(result);
+			}
 		}
 	});
 }
 
-function clear_customer_if_no_vins(frm) {
+function clear_seller_if_no_vins(frm) {
 	const has_vins = (frm.doc.table_vsmr || []).some((r) => (r.vin_serial_no || "").trim());
 	if (!has_vins && frm.doc.customer) {
 		frm.set_value("customer", null);
 	}
+	if (!has_vins && frm.doc.dealer) {
+		frm.set_value("dealer", null);
+	}
 }
 
 function handle_table_change(frm) {
-	frm._customer_search_done = false;
-	clear_customer_if_no_vins(frm);
+	frm._seller_search_done = false;
+	clear_seller_if_no_vins(frm);
 	calculate_totals(frm);
 	if (frm.doc.offer_price_incl && frm.doc.offer_price_incl > 0) {
 		calculate_offer_price_from_incl(frm);
@@ -237,7 +330,7 @@ function handle_table_change(frm) {
 async function reject_vin(frm, cdt, cdn, message, messageArgs) {
 	frappe.msgprint(__(message, messageArgs));
 	await frappe.model.set_value(cdt, cdn, "vin_serial_no", null);
-	clear_customer_if_no_vins(frm);
+	clear_seller_if_no_vins(frm);
 }
 
 async function set_row_values(cdt, cdn, values) {

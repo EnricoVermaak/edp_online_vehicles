@@ -148,7 +148,7 @@ class HeadOfficeVehicleOrders(Document):
 		tracking.insert(ignore_permissions=True)
 
 	def before_submit(self):
-		if self.status != "Delivered" or self.status != "Canceled":
+		if self.status not in {"Delivered", "Cancelled", "Canceled"}:
 			frappe.throw(
 				"You cannot submit this Order as it's status hasn't been marked 'Delivered', or 'Cancelled'"
 			)

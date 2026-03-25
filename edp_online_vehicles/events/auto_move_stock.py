@@ -3,12 +3,33 @@ from datetime import datetime
 import frappe
 
 
+def _resolve_vehicle_source_warehouse(vinno, stock_doc=None, serial_doc=None):
+	warehouse = None
+
+	if serial_doc and serial_doc.warehouse:
+		warehouse = serial_doc.warehouse
+	elif stock_doc and stock_doc.target_warehouse:
+		warehouse = stock_doc.target_warehouse
+	else:
+		warehouse = frappe.db.get_value("Vehicle Stock", vinno, "target_warehouse")
+
+	if warehouse and serial_doc and serial_doc.warehouse != warehouse:
+		serial_doc.db_set("warehouse", warehouse, update_modified=False)
+		serial_doc.warehouse = warehouse
+
+	return warehouse
+
+
 @frappe.whitelist()
 def auto_move_stock_hq(vinno, hq, dealer, model, rate):
 	try:
 		stock_doc = frappe.get_doc("Vehicle Stock", vinno, ignore_permissions=True)
 		com_doc = frappe.get_doc("Company", dealer, ignore_permissions=True)
 		serial_doc = frappe.get_doc("Serial No", vinno, ignore_permissions=True)
+		current_warehouse = _resolve_vehicle_source_warehouse(vinno, stock_doc=stock_doc, serial_doc=serial_doc)
+
+		if not current_warehouse:
+			frappe.throw(f"Could not determine source warehouse for VIN {vinno}.")
 
 		if not com_doc.custom_default_vehicles_stock_warehouse:
 			com_doc.custom_default_vehicles_stock_warehouse = "Stores - " + com_doc.abbr
@@ -22,7 +43,7 @@ def auto_move_stock_hq(vinno, hq, dealer, model, rate):
 		new_issue.append(
 			"items",
 			{
-				"s_warehouse": serial_doc.warehouse,
+				"s_warehouse": current_warehouse,
 				"item_code": model,
 				"qty": 1,
 				"uom": "Unit",
@@ -110,6 +131,10 @@ def auto_move_stock_hq_transit(vinno, hq, dealer, model, rate):
 	stock_doc = frappe.get_doc("Vehicle Stock", vinno, ignore_permissions=True)
 	com_doc = frappe.get_doc("Company", hq, ignore_permissions=True)
 	serial_doc = frappe.get_doc("Serial No", vinno, ignore_permissions=True)
+	current_warehouse = _resolve_vehicle_source_warehouse(vinno, stock_doc=stock_doc, serial_doc=serial_doc)
+
+	if not current_warehouse:
+		frappe.throw(f"Could not determine source warehouse for VIN {vinno}.")
 
 	transit_warehouse = "Goods In Transit - " + str(com_doc.abbr)
 
@@ -122,7 +147,7 @@ def auto_move_stock_hq_transit(vinno, hq, dealer, model, rate):
 	new_transfer.append(
 		"items",
 		{
-			"s_warehouse": serial_doc.warehouse,
+			"s_warehouse": current_warehouse,
 			"t_warehouse": transit_warehouse,
 			"item_code": model,
 			"qty": 1,
@@ -180,6 +205,10 @@ def auto_move_stock_dealer(vinno, company, dealer, model, rate):
 	stock_doc = frappe.get_doc("Vehicle Stock", vinno, ignore_permissions=True)
 	com_doc = frappe.get_doc("Company", dealer, ignore_permissions=True)
 	serial_doc = frappe.get_doc("Serial No", vinno, ignore_permissions=True)
+	current_warehouse = _resolve_vehicle_source_warehouse(vinno, stock_doc=stock_doc, serial_doc=serial_doc)
+
+	if not current_warehouse:
+		frappe.throw(f"Could not determine source warehouse for VIN {vinno}.")
 
 	if not com_doc.custom_default_vehicles_stock_warehouse:
 		com_doc.custom_default_vehicles_stock_warehouse = "Stores - " + com_doc.abbr
@@ -193,7 +222,7 @@ def auto_move_stock_dealer(vinno, company, dealer, model, rate):
 	new_issue.append(
 		"items",
 		{
-			"s_warehouse": serial_doc.warehouse,
+			"s_warehouse": current_warehouse,
 			"item_code": model,
 			"qty": 1,
 			"uom": "Unit",
@@ -364,6 +393,10 @@ def auto_move_stock_hq_cancel(vinno, hq, dealer, model, rate, hq_comment):
 		stock_doc = frappe.get_doc("Vehicle Stock", vinno, ignore_permissions=True)
 		com_doc = frappe.get_doc("Company", dealer, ignore_permissions=True)
 		serial_doc = frappe.get_doc("Serial No", vinno, ignore_permissions=True)
+		current_warehouse = _resolve_vehicle_source_warehouse(vinno, stock_doc=stock_doc, serial_doc=serial_doc)
+
+		if not current_warehouse:
+			frappe.throw(f"Could not determine source warehouse for VIN {vinno}.")
 
 		if not com_doc.custom_default_vehicles_stock_warehouse:
 			com_doc.custom_default_vehicles_stock_warehouse = "Stores - " + com_doc.abbr
@@ -377,7 +410,7 @@ def auto_move_stock_hq_cancel(vinno, hq, dealer, model, rate, hq_comment):
 		new_issue.append(
 			"items",
 			{
-				"s_warehouse": serial_doc.warehouse,
+				"s_warehouse": current_warehouse,
 				"item_code": model,
 				"qty": 1,
 				"uom": "Unit",
@@ -461,6 +494,11 @@ def auto_move_stock_to_ho(vinno, ho_company, model, rate):
 
 	from_dealer = stock_doc.dealer
 	serial_doc = frappe.get_doc("Serial No", vinno, ignore_permissions=True)
+	current_warehouse = _resolve_vehicle_source_warehouse(vinno, stock_doc=stock_doc, serial_doc=serial_doc)
+
+	if not current_warehouse:
+		frappe.throw(f"Could not determine source warehouse for VIN {vinno}.")
+
 	ho_com_doc = frappe.get_doc("Company", ho_company, ignore_permissions=True)
 	if not ho_com_doc.custom_default_vehicles_stock_warehouse:
 		ho_com_doc.custom_default_vehicles_stock_warehouse = "Stores - " + ho_com_doc.abbr
@@ -470,7 +508,7 @@ def auto_move_stock_to_ho(vinno, ho_company, model, rate):
 	issue.stock_entry_type = "Material Issue"
 	issue.company = from_dealer
 	issue.append("items", {
-		"s_warehouse": serial_doc.warehouse,
+		"s_warehouse": current_warehouse,
 		"item_code": model, "qty": 1, "uom": "Unit",
 		"basic_rate": rate or 0,
 		"use_serial_batch_fields": 1, "serial_no": vinno,
