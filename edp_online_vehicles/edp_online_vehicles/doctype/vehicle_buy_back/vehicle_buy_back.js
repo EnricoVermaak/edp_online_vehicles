@@ -4,6 +4,24 @@ frappe.ui.form.on("Vehicle Buy Back", {
 		sync_seller_field_visibility(frm);
 
 		setup_action_buttons(frm);
+		
+		// If the document is submitted
+		if (frm.doc.docstatus === 1) { 
+			frm.disable_save();
+		} else {
+			// Hide the submit button
+			frm.disable_save();
+
+			// Ensure the save button is still available
+			frm.page.set_primary_action(__("Save"), () => {
+				frm.save();
+			});
+		}
+
+		// Ensure the save button is still available
+		frm.page.set_primary_action(__("Save"), () => {
+			frm.save();
+		});
 	},
 
 	onload(frm) {
