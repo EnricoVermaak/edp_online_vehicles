@@ -125,9 +125,9 @@ frappe.ui.form.on("Vehicles Service", {
 										}
 									},
 									callback: function(res) {
-										if (!res.results || res.results.length === 0) {
-											frappe.throw(__("Vehicle is outside of acceptable service range"));
-										}
+										// if (!res.results || res.results.length === 0) {
+										// 	frappe.throw(__("Vehicle is outside of acceptable service range"));
+										// }
 									}
 								});
 							}
@@ -268,7 +268,7 @@ frappe.ui.form.on("Vehicles Service", {
 	},
 
 	service_type: async function (frm) {
-		frappe.ui.form.on('Vehicle Service', {
+		frappe.ui.form.on('Vehicles Service', {
 			refresh: function(frm) {
 				frappe.ui.form.on('service_labour_items', {
 					item: function(frm, cdt, cdn) {

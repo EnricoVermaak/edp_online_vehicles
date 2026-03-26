@@ -357,7 +357,7 @@ frappe.ui.form.on("Vehicles Shipment", {
 					}, 120);
 				});
 
-			
+
 
 
 			}, __("Actions"));
@@ -439,29 +439,32 @@ frappe.ui.form.on("Vehicles Shipment", {
 				}
 			}, __("Actions"));
 
-			frm.add_custom_button(__("Receive All"), function () {
-				const all_items = frm.doc.vehicles_shipment_items || [];
-				const pending = all_items.filter(r => r.vin_serial_no && r.status !== "Received");
+			frm.add_custom_button(__("Receive All"), () => {
+				const rows_without_vin = frm.doc.vehicles_shipment_items.filter(row => !row.vin_serial_no);
 
-				if (!pending.length) {
-					frappe.msgprint(__("All vehicles in this shipment have already been received."));
+				if (rows_without_vin.length === frm.doc.vehicles_shipment_items.length) {
+					frappe.msgprint({
+						message: __("Cannot receive vehicles because none of the shipment items have a VIN assigned. Please assign VINs to proceed."),
+						indicator: "orange",
+						title: "Receive All — No VINs Assigned",
+					});
 					return;
 				}
 
-				const missing_colour = pending.filter(r => !r.colour);
+				const missing_colour = rows_without_vin.filter(r => !r.colour);
 				if (missing_colour.length) {
 					frappe.throw(__(`${missing_colour.length} vehicle(s) are missing a Colour. Please fill in all colours before using Receive All.`));
 					return;
 				}
 
-				const missing_warehouse = pending.filter(r => !r.target_warehouse && !frm.doc.target_warehouse);
+				const missing_warehouse = rows_without_vin.filter(r => !r.target_warehouse && !frm.doc.target_warehouse);
 				if (missing_warehouse.length) {
 					frappe.throw(__("Some vehicles are missing a Target Warehouse and no header warehouse is set."));
 					return;
 				}
 
 				frappe.confirm(
-					__(`This will receive all ${pending.length} pending vehicle(s) as a background job. Continue?`),
+					__(`This will receive all ${rows_without_vin.length} pending vehicle(s) as a background job. Continue?`),
 					() => {
 						frappe.dom.freeze(__("Queuing background job\u2026"));
 						frm.call("receive_all_in_background").then(r => {
