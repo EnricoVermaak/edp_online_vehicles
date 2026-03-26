@@ -537,17 +537,16 @@ frappe.ui.form.on("Vehicle Order", {
 		const rows_to_update = (frm.doc.vehicles_basket || []).filter(row => row.model && !row.colour);
 
 		if (rows_to_update.length > 0) {
-			// Process all missing colours as a single batch
 			Promise.all(rows_to_update.map(row => {
-				return frappe.db.get_value("Model Colour", { model: row.model, default: 1 }, "name")
-					.then(r => {
-						if (r.message && r.message.name) {
-							// Use frappe.model.set_value which is cleaner for child tables
-							frappe.model.set_value(row.doctype, row.name, "colour", r.message.name);
-						}
-					});
+				return frappe.call({
+					method: "edp_online_vehicles.edp_online_vehicles.doctype.vehicle_order.vehicle_order.get_default_model_colour",
+					args: { model: row.model },
+				}).then(r => {
+					if (r.message) {
+						frappe.model.set_value(row.doctype, row.name, "colour", r.message);
+					}
+				});
 			})).then(() => {
-				// ONLY refresh once all database calls for colours are finished
 				frm.refresh_field("vehicles_basket");
 			});
 		}
@@ -1708,11 +1707,12 @@ frappe.ui.form.on("Vehicles Order Item", {
 		var row = locals[cdt][cdn];
 
 		if (row.model) {
-			frappe.db.get_value('Model Colour', { model: row.model, default: 1 }, 'name').then(r => {
-				let colour = r.message.name
-
-				if (r.message && r.message.name) {
-					frappe.model.set_value(cdt, cdn, "colour", colour);
+			frappe.call({
+				method: "edp_online_vehicles.edp_online_vehicles.doctype.vehicle_order.vehicle_order.get_default_model_colour",
+				args: { model: row.model },
+			}).then(r => {
+				if (r.message) {
+					frappe.model.set_value(cdt, cdn, "colour", r.message);
 				} else {
 					frappe.model.set_value(cdt, cdn, "colour", '');
 				}
