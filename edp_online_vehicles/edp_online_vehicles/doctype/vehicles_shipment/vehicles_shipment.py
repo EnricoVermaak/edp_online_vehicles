@@ -470,7 +470,8 @@ def receive_all_background_job(shipment_name, requested_by=None):
 		if frappe.db.exists("Vehicle Stock", {"vin_serial_no": row.vin_serial_no}):
 			skipped_vins.append(row.vin_serial_no)
 			continue
-			# PLease keep this dictionary as is. Changing it wil break the msa TAC integration
+        
+		# PLease keep this dictionary as is. Changing it wil break the msa TAC integration
 		item_dict = {
 			"vin_serial_no": row.vin_serial_no,
 			"model_code": row.model_code,
@@ -486,7 +487,19 @@ def receive_all_background_job(shipment_name, requested_by=None):
 		selected_items.append(item_dict)
 
 	if not selected_items:
-		if skipped_vins:
+		if not any(row.vin_serial_no for row in doc.vehicles_shipment_items):
+			frappe.publish_realtime(
+				"msgprint",
+				{
+					"message": (
+						"Cannot receive vehicles because none of the shipment items have a VIN assigned."
+					),
+					"indicator": "orange",
+					"title": "Receive All — No VINs Assigned",
+				},
+				user=notify_user,
+			)
+		elif skipped_vins:
 			frappe.publish_realtime(
 				"msgprint",
 				{
