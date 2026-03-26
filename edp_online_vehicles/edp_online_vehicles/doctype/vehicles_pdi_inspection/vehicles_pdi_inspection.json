@@ -60,19 +60,22 @@
    "fetch_from": "vin_serial_no.stock_no",
    "fieldname": "stock_no",
    "fieldtype": "Data",
-   "label": "Stock No"
+   "label": "Stock No",
+   "read_only": 1
   },
   {
    "fetch_from": "vin_serial_no.engine_no",
    "fieldname": "engine_no",
    "fieldtype": "Data",
-   "label": "Engine No"
+   "label": "Engine No",
+   "read_only": 1
   },
   {
    "fetch_from": "vin_serial_no.brand",
    "fieldname": "make",
    "fieldtype": "Data",
-   "label": "Make"
+   "label": "Make",
+   "read_only": 1
   },
   {
    "fieldname": "column_break_1tuf",
@@ -82,25 +85,29 @@
    "fetch_from": "vin_serial_no.description",
    "fieldname": "description",
    "fieldtype": "Data",
-   "label": "Description"
+   "label": "Description",
+   "read_only": 1
   },
   {
    "fetch_from": "vin_serial_no.model",
    "fieldname": "model",
    "fieldtype": "Data",
-   "label": "Model"
+   "label": "Model",
+   "read_only": 1
   },
   {
    "fetch_from": "vin_serial_no.model_year",
    "fieldname": "model_year",
    "fieldtype": "Data",
-   "label": "Model Year"
+   "label": "Model Year",
+   "read_only": 1
   },
   {
    "fetch_from": "vin_serial_no.colour",
    "fieldname": "colour",
    "fieldtype": "Data",
-   "label": "Colour"
+   "label": "Colour",
+   "read_only": 1
   },
   {
    "fieldname": "section_break_xjhl",
@@ -201,6 +208,7 @@
    "in_standard_filter": 1,
    "label": "Dealer",
    "options": "Company",
+   "read_only": 1,
    "reqd": 1
   },
   {
@@ -266,11 +274,11 @@
    "link_fieldname": "pdi_inspection"
   }
  ],
- "modified": "2026-01-23 13:14:22.020373",
+ "modified": "2026-03-25 09:00:47.269338",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicles PDI Inspection",
- "naming_rule": "Expression",
+ "naming_rule": "Expression (old style)",
  "owner": "Administrator",
  "permissions": [
   {

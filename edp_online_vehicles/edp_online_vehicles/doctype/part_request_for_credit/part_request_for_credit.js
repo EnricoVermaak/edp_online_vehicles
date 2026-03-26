@@ -3,6 +3,8 @@
 
 frappe.ui.form.on("Part Request For Credit", {
 	refresh(frm) {
+		calc_totals(frm);
+
 		frm.set_query("order_no", "table_cxdf", function (doc, cdt, cdn) {
 			let d = locals[cdt][cdn];
 
@@ -38,3 +40,28 @@ frappe.ui.form.on("Part Request For Credit", {
 		}
 	},
 });
+frappe.ui.form.on("table_cxdf",{
+		return_qty: function(frm){
+			calc_totals(frm);
+		},
+		approved_qty: function(frm){
+			calc_totals(frm);
+		},
+		table_cxdf_remove: function(frm){
+			calc_totals(frm);
+		},
+		table_cxdf_add: function(frm){
+			calc_totals(frm);
+		},
+	});
+function calc_totals(frm){
+	let total_requested = 0;
+	let total_approved = 0;
+
+	(frm.doc.table_cxdf || []).forEach(row => {
+		total_requested += row.return_qty || 0;
+		total_approved += row.approved_qty || 0;
+	});
+	frm.set_value("total_parts", total_requested);
+	frm.set_value("total_qty_parts_return_approved", total_approved);
+}

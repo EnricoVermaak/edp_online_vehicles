@@ -28,9 +28,10 @@ class VehiclesService(Document):
         setting_doc.save(ignore_permissions=True)
         frappe.db.commit()
 
-        if self.has_value_changed("service_status") and self.service_status in ["Pending", "Approved"]:
-            if self.email_template:
-                self.send_hq_service_notification()
+        if self.has_value_changed("service_status"):
+            status_record = frappe.get_doc("Service Status", self.service_status)
+            if status_record.email_template:
+                self.send_hq_service_notification(template = status_record.email_template)
             else:
                 pass
         self.update_vehicle_status()
@@ -301,12 +302,15 @@ class VehiclesService(Document):
         if self.job_card_no:
             frappe.db.set_single_value("Vehicle Service Settings","last_auto_job_card_no",self.job_card_no)
             
-    def send_hq_service_notification(self):
-        template_content = frappe.db.get_value('Service Status', self.service_status, 'email_template')
+    def send_hq_service_notification(self, template = None):
         """Logic for Vehicle Service notifications to Head Office."""
         if not self.service_status:
             return
         status_doc = frappe.get_doc('Service Status', self.service_status)
+        
+        template_content = template or status_doc.email_template
+        if not template_content:
+            return
         
         recipients = [row.user for row in status_doc.get("email_recipients", []) if row.user]
         
@@ -328,7 +332,7 @@ class VehiclesService(Document):
                 recipients,           
                 template_content,             
                 context,                  
-                'Vehicle Service', 
+                'Vehicles Service', 
                 self.name                 
             )
             
