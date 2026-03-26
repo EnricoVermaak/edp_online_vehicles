@@ -10,6 +10,11 @@ from frappe.model.naming import make_autoname
 from frappe.utils import getdate, now_datetime
 
 
+@frappe.whitelist()
+def get_default_model_colour(model):
+	return frappe.db.get_value("Model Colour", {"model": model, "default": 1}, "name")
+
+
 class VehicleOrder(Document):
 	def before_insert(self):
 		if not self.dealer_order_no:
