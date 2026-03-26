@@ -18,7 +18,8 @@
   "invoice_no",
   "invoice_date",
   "reason",
-  "status"
+  "status",
+  "item_price"
  ],
  "fields": [
   {
@@ -120,17 +121,25 @@
    "in_list_view": 1,
    "label": "Approved Qty",
    "non_negative": 1
+  },
+  {
+   "fieldname": "item_price",
+   "fieldtype": "Currency",
+   "label": "Item Price",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-03-14 08:30:58.236946",
+ "modified": "2026-03-26 12:07:45.289605",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Part Request For Credit Item",
  "owner": "Administrator",
  "permissions": [],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": []
