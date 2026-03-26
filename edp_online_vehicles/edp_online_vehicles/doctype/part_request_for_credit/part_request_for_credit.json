@@ -1,6 +1,7 @@
 {
  "actions": [],
  "allow_rename": 1,
+ "autoname": "RFC-.######",
  "creation": "2025-02-26 15:49:03.098726",
  "doctype": "DocType",
  "engine": "InnoDB",
@@ -13,6 +14,7 @@
   "status",
   "return_basket_section",
   "table_cxdf",
+  "rfc_reason",
   "section_break_jblo",
   "column_break_fapt",
   "total_parts",
@@ -216,15 +218,22 @@
    "print_hide": 1,
    "read_only": 1,
    "search_index": 1
+  },
+  {
+   "fieldname": "rfc_reason",
+   "fieldtype": "Small Text",
+   "label": "Reason",
+   "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-02-28 12:06:00.795340",
+ "modified": "2026-03-26 15:49:04.145212",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Part Request For Credit",
+ "naming_rule": "Expression",
  "owner": "Administrator",
  "permissions": [
   {
@@ -240,6 +249,7 @@
    "write": 1
   }
  ],
+ "row_format": "Dynamic",
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": [],
