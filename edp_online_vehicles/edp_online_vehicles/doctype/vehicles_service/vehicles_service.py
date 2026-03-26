@@ -3,7 +3,7 @@
 
 import frappe
 from frappe import _
-from frappe.utils import getdate, add_months, add_days, date_diff
+from frappe.utils import getdate, add_months, add_days, date_diff, flt
 from frappe.model.document import Document
 from frappe.model.mapper import get_mapped_doc
 from edp_online_vehicles.events.send_email import send_custom_email_from_template
@@ -29,7 +29,7 @@ class VehiclesService(Document):
         frappe.db.commit()
 
         if self.has_value_changed("service_status") and self.service_status in ["Pending", "Approved"]:
-            if self.email_template:
+            if hasattr(self, 'email_template') and self.email_template:
                 self.send_hq_service_notification()
             else:
                 pass
@@ -168,6 +168,66 @@ class VehiclesService(Document):
                 "Your vehicle's mileage has exceeded the current service range. "
                 "Please select the upcoming service schedule to maintain optimal performance."
             )
+
+    def load_schedule_items(self):
+        """Populate labour and parts items from Service Schedule based on service_type."""
+        if not self.service_type:
+            return
+
+        try:
+            schedule_doc = frappe.get_doc("Service Schedules", self.service_type)
+        except frappe.DoesNotExistError:
+            return
+
+        # Clear existing labour items
+        self.service_labour_items = []
+        self.non_oem_labour_items = []
+        
+        # Clear existing parts items
+        self.service_parts_items = []
+        self.non_oem_parts_items = []
+
+        # Get dealer/company for labour rate
+        company = self.dealer or None
+        base_labour_rate = 0
+        if company:
+            base_labour_rate = frappe.db.get_value(
+                "Company", 
+                company, 
+                "custom_service_labour_rate"
+            ) or 0
+
+        # Load labour items from schedule
+        if schedule_doc.service_labour_items:
+            for labour in schedule_doc.service_labour_items:
+                # Calculate rate with GP
+                rate = base_labour_rate
+                if labour.item:
+                    gp_pct = frappe.db.get_value(
+                        "Item",
+                        labour.item,
+                        "custom_service_gp"
+                    ) or 0
+                    rate = base_labour_rate + (base_labour_rate * gp_pct / 100)
+
+                row = self.append("service_labour_items", {
+                    "item": labour.item,
+                    "description": labour.description or "",
+                    "duration_hours": flt(labour.duration_hours or 1),
+                    "rate_hour": rate,
+                    "total_excl": rate * flt(labour.duration_hours or 1),
+                })
+
+        # Load parts items from schedule
+        if schedule_doc.service_parts_items:
+            for part in schedule_doc.service_parts_items:
+                row = self.append("service_parts_items", {
+                    "item": part.item,
+                    "description": part.description or "",
+                    "qty": flt(part.qty or 1),
+                    "price_excl": flt(part.price_excl or 0),
+                    "total_excl": flt(part.total_excl or 0),
+                })
 
     def before_save(self):
         for row in self.attach_documents:
@@ -333,7 +393,39 @@ class VehiclesService(Document):
             )
             
     def validate(self):
+        # Validate odo cannot be lower than Vehicle Stock (unless rollback allowed)
+        self._validate_odo_not_lower_than_stock()
+
+        # Enforce system status and service range rules
+        self._set_system_status_from_odo_range()
+        self._enforce_odo_range_block()
+
+        # Existing allowance/service period checks
         self.check_service_allowance()
+
+    def _validate_odo_not_lower_than_stock(self):
+        if not self.vin_serial_no or self.odo_reading_hours in (None, ""):
+            return
+
+        try:
+            new_odo = float(self.odo_reading_hours)
+        except (TypeError, ValueError):
+            return
+
+        stock_odo = frappe.db.get_value("Vehicle Stock", self.vin_serial_no, "odo_reading") or 0
+        rollback_allowed = False
+        try:
+            rollback_allowed = bool(frappe.db.get_single_value(
+                "Vehicle Service Settings",
+                "allow_service_odo_reading_roll_back",
+            ))
+        except Exception:
+            rollback_allowed = False
+
+        if new_odo < float(stock_odo) and not rollback_allowed:
+            frappe.throw(
+                _(f"Odometer reading cannot be lower than Vehicle Stock ODO ({stock_odo}).")
+            )
     
     def check_service_allowance(self):
         if not self.vin_serial_no or not self.service_date:
