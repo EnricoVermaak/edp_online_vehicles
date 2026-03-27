@@ -1,0 +1,54 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2026-03-26 16:39:52.796723",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "price_list",
+  "rate_excl",
+  "rate_incl"
+ ],
+ "fields": [
+  {
+   "fieldname": "price_list",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Price List",
+   "options": "Price List",
+   "reqd": 1
+  },
+  {
+   "fieldname": "rate_excl",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Rate (VAT Excl)",
+   "non_negative": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "rate_incl",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Rate (VAT Incl)",
+   "non_negative": 1,
+   "reqd": 1
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2026-03-26 16:42:34.250685",
+ "modified_by": "Administrator",
+ "module": "Edp Online Vehicles",
+ "name": "Items Details Price Lists",
+ "owner": "Administrator",
+ "permissions": [],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
