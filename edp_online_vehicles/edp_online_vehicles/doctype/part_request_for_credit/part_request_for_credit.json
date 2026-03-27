@@ -1,7 +1,7 @@
 {
  "actions": [],
  "allow_rename": 1,
- "autoname": "RFC-.######",
+ "autoname": "RFC.######",
  "creation": "2025-02-26 15:49:03.098726",
  "doctype": "DocType",
  "engine": "InnoDB",
@@ -229,7 +229,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-03-26 15:49:04.145212",
+ "modified": "2026-03-26 16:37:19.100950",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Part Request For Credit",
