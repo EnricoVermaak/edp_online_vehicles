@@ -331,7 +331,8 @@
    "in_preview": 1,
    "in_standard_filter": 1,
    "label": "Status",
-   "options": "Vehicles Order Status"
+   "options": "Vehicles Order Status",
+   "read_only": 1
   },
   {
    "fieldname": "requested_delivery_date",
@@ -598,7 +599,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-03-19 17:46:56.507723",
+ "modified": "2026-03-27 09:44:00.633523",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Head Office Vehicle Orders",

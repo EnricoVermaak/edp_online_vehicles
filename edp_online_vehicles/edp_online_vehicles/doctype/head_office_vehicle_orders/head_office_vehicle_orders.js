@@ -14,38 +14,21 @@ function update_pricing_total_excl(frm) {
 
 frappe.ui.form.on("Head Office Vehicle Orders", {
 	refresh(frm) {
-		let status_order = [];
-		let myPromise = new Promise((resolve, reject) => {
-			setTimeout(() => {
-				frappe.db
-					.get_doc("Vehicle Stock Settings")
-					.then((doc) => {
-						status_order = doc.vehicle_order_status_order;
-						resolve(status_order);
-					})
-					.catch((err) => {
-						reject(err);
-					});
-			}, 1000);
-		});
+		frm.call("get_status_list", {
+			user_default_company: "LDV South Africa"
+		}).then(r => {
+			if (r.message && r.message.length) {
 
-		myPromise.then(() => {
-			status_order = status_order
-				.slice(0, status_order.length)
-				.map((item) => item.status);
+				r.message.forEach(row => {
+					if (!row.button_label || !row.status) return;
 
-			status_order = status_order
-				.map((status) => `'${status}'`)
-				.join(", ");
-
-			frm.set_query("status", function () {
-				return {
-					query: "edp_online_vehicles.events.vehicle_sale_status.get_HQ_status_order",
-					filters: {
-						status_order: status_order,
-					},
-				};
-			});
+					frm.add_custom_button(__(row.button_label), () => {
+						frm.set_value("status", row.status).then(() => {
+							frm.save();
+						});
+					},"Update Order");
+				});
+			}
 		});
 
 		if (frm.is_new() && !frm.doc.status) {
@@ -744,7 +727,7 @@ frappe.ui.form.on("Head Office Vehicle Orders", {
 								});
 							});
 						}
-						
+
 						if (frm.doc.shipment_stock) {
 							frappe.call({
 								method: "edp_online_vehicles.events.get_available_orders.unallocate_shipment",
@@ -778,107 +761,107 @@ frappe.ui.form.on("Head Office Vehicle Orders", {
 	},
 
 	change_model: function (frm) {
-        if (frm.doc.vinserial_no) {
-            frappe.msgprint(
-                "A Vin/Serial No is already allocated to this order. Please un-allocate the Vin/Serial No before changing the model.",
-            );
-            return;
-        }
+		if (frm.doc.vinserial_no) {
+			frappe.msgprint(
+				"A Vin/Serial No is already allocated to this order. Please un-allocate the Vin/Serial No before changing the model.",
+			);
+			return;
+		}
 
-        const dialog = new frappe.ui.Dialog({
-            title: __("Reason"),
-            fields: [
-                {
-                    label: "New Model",
-                    fieldname: "new_model",
-                    fieldtype: "Link",
-                    options: "Model Administration",
-                    reqd: 1,
-                    change: function () {
-                        let model = dialog.get_value("new_model");
+		const dialog = new frappe.ui.Dialog({
+			title: __("Reason"),
+			fields: [
+				{
+					label: "New Model",
+					fieldname: "new_model",
+					fieldtype: "Link",
+					options: "Model Administration",
+					reqd: 1,
+					change: function () {
+						let model = dialog.get_value("new_model");
 
-                        if (model) {
-                            dialog.set_df_property("new_colour", "filters", { model: model });
-                            dialog.set_value("new_colour", "");
+						if (model) {
+							dialog.set_df_property("new_colour", "filters", { model: model });
+							dialog.set_value("new_colour", "");
 
-                            // Auto-select the default colour for this model if one is set
-                            frappe.db
-                                .get_value(
-                                    "Model Colour",
-                                    { model: model, default: 1 },
-                                    "name",
-                                )
-                                .then((r) => {
-                                    const msg = r && r.message;
-                                    const default_name = msg && (msg.name || (typeof msg === "string" ? msg : null));
-                                    if (default_name) {
-                                        dialog.set_value("new_colour", default_name);
-                                    }
-                                });
-                        } else {
-                            dialog.set_value("new_colour", "");
-                        }
-                    },
-                },
-                {
-                    label: "Available Colour",
-                    fieldname: "new_colour",
-                    fieldtype: "Link",
-                    options: "Model Colour",
-                    reqd: 1,
-                },
-                {
-                    label: "Please provide a reason for changing the model.",
-                    fieldname: "comment",
-                    fieldtype: "Small Text",
-                    reqd: 1,
-                },
-            ],
+							// Auto-select the default colour for this model if one is set
+							frappe.db
+								.get_value(
+									"Model Colour",
+									{ model: model, default: 1 },
+									"name",
+								)
+								.then((r) => {
+									const msg = r && r.message;
+									const default_name = msg && (msg.name || (typeof msg === "string" ? msg : null));
+									if (default_name) {
+										dialog.set_value("new_colour", default_name);
+									}
+								});
+						} else {
+							dialog.set_value("new_colour", "");
+						}
+					},
+				},
+				{
+					label: "Available Colour",
+					fieldname: "new_colour",
+					fieldtype: "Link",
+					options: "Model Colour",
+					reqd: 1,
+				},
+				{
+					label: "Please provide a reason for changing the model.",
+					fieldname: "comment",
+					fieldtype: "Small Text",
+					reqd: 1,
+				},
+			],
 
-            primary_action_label: "Submit",
-            async primary_action(values) {
-                if (!values.comment || !values.new_model || !values.new_colour) {
-                    frappe.msgprint(__("All fields are required."));
-                    return;
-                }
+			primary_action_label: "Submit",
+			async primary_action(values) {
+				if (!values.comment || !values.new_model || !values.new_colour) {
+					frappe.msgprint(__("All fields are required."));
+					return;
+				}
 
-                try {
-                    const [colour_res, desc_res] = await Promise.all([
-                        frappe.db.get_value("Model Colour", values.new_colour, "colour"),
-                        frappe.db.get_value("Model Administration", values.new_model, "model_description"),
-                    ]);
-                    const msg = (r) => (r && r.message ? r.message : {});
-                    const colour = msg(colour_res).colour || "";
-                    const description = msg(desc_res).model_description || "";
+				try {
+					const [colour_res, desc_res] = await Promise.all([
+						frappe.db.get_value("Model Colour", values.new_colour, "colour"),
+						frappe.db.get_value("Model Administration", values.new_model, "model_description"),
+					]);
+					const msg = (r) => (r && r.message ? r.message : {});
+					const colour = msg(colour_res).colour || "";
+					const description = msg(desc_res).model_description || "";
 
-                    await Promise.all([
-                        frm.set_value("model", values.new_model),
-                        frm.set_value("colour", colour),
-                        frm.set_value("description", description),
-                    ]);
+					await Promise.all([
+						frm.set_value("model", values.new_model),
+						frm.set_value("colour", colour),
+						frm.set_value("description", description),
+					]);
 
-                    frm.refresh_field("model");
-                    frm.refresh_field("colour");
-                    frm.refresh_field("description");
+					frm.refresh_field("model");
+					frm.refresh_field("colour");
+					frm.refresh_field("description");
 
-                    await frm.call("post_comment", { comment: values.comment });
-                    await frm.save();
+					await frm.call("post_comment", { comment: values.comment });
+					await frm.save();
 
-                    frappe.show_alert({
-                        message: __("Model updated successfully."),
-                        indicator: "green",
-                    }, 5);
-                    dialog.hide();
-                } catch (err) {
-                    frappe.show_alert({
-                        message: (err && err.message) || __("Failed to update model."),
-                        indicator: "red",
-                    }, 5);
-                }
-            },
-        });
-        dialog.show();
-    },
+					frappe.show_alert({
+						message: __("Model updated successfully."),
+						indicator: "green",
+					}, 5);
+					dialog.hide();
+				} catch (err) {
+					frappe.show_alert({
+						message: (err && err.message) || __("Failed to update model."),
+						indicator: "red",
+					}, 5);
+				}
+			},
+		});
+		dialog.show();
+	},
 
 	status(frm) {
 		toggle_vin_serial_requirement(frm);

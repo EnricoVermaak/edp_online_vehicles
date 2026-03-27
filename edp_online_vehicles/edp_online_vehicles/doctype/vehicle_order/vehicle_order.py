@@ -148,54 +148,140 @@ class VehicleOrder(Document):
 		return f"{prefix}{str(next_seq).zfill(6)}"
 	
 	@frappe.whitelist()
-	def check_stock_availability(self):
-		pass
+	def get_row_stock_info(self, row):
+		has_stock = self.row_has_stock(row)
+		dealers = self.get_dealer_options(row, has_stock)
+		if row.get("purpose"):
+			automatically_set_to_back_order = frappe.db.get_value(
+				"Vehicles Order Purpose",
+				row.get("purpose"),
+				"automatically_set_to_back_order",
+			)
+
+			if automatically_set_to_back_order:
+				has_stock = False
+
+		return{
+			"has_stock" : has_stock,
+			"dealers" : dealers	
+		}
 
 	@frappe.whitelist()
 	def row_has_stock(self, row):
-		hq_companies = frappe.db.get_all("Company", {"custom_head_office": 1}, pluck="name")
-
-		warehosues = frappe.get_all(
+		hq_companies = frappe.get_all(
+			"Company",
+			filters={"custom_head_office": 1},
+			pluck="name",
+		)
+		warehouses = frappe.get_all(
 			"Warehouse",
-			filters={"custom_visible_for_vehicles_orders": 1, "company": com_name.name},
-			pluck=["name"],
-		)
-
-		model = row.model
-
-		filters = {
-				"dealer": ["in", hq_companies],
-				"target_warehouse": ["in", warehosues],
-				"model": model,
-				"availability_status": "Available",
+			filters={
+				"custom_visible_for_vehicles_orders": 1,
+				"company": ["in",hq_companies]
 			},
-
-
-		colour = row.colour 
-
-		count = frappe.db.count(
-			"Vehicle Stock",
-			filters
+			pluck="name",
 		)
+
+		if not hq_companies or not warehouses or not row.get("model"):
+			return False
+
+		base_filters = {
+			"dealer": ["in", hq_companies],
+			"target_warehouse": ["in", warehouses],
+			"model": row.get("model"),
+			"availability_status": "Available",
+		}
+
+		# return base_filters
+
+		count = frappe.db.count("Vehicle Stock", filters=base_filters)
+
+		colour = row.get("colour")
+		colour_count = 0
 
 		if colour:
-			filters.append("colour": colour,)
-			colour_count = frappe.db.count(
-				"Vehicle Stock",
-				filters
+			colour_filters = base_filters.copy()
+			colour_filters["colour"] = colour
+			colour_count = frappe.db.count("Vehicle Stock", filters=colour_filters)
+
+		# return {
+		# 	"count": count,
+		# 	"colour_count": colour_count
+		# }
+		count = 0
+		for unit in self.vehicles_basket:
+			# return unit
+			count+=1
+
+			
+			if unit.model != row.get("model"):
+				continue
+
+			if getattr(unit, "order_from", None) != "Warehouse":
+				continue
+
+			if colour:
+				
+				if unit.colour == colour:
+					# if count == 2:
+					# return {
+					# 		"unit.colour": unit.colour,
+					# 		"colour": colour,
+					# 		"colour_count": colour_count
+					# 	}
+
+					colour_count -= 1
+				else:
+					count -= 1
+			else:
+				count -= 1
+
+		if colour:
+			return colour_count >= 0
+
+		return count >= 0
+
+
+
+	def get_dealer_options(self, row, has_stock):
+		warehouse_companies = []
+
+		hq_companies = frappe.get_all(
+			"Company",
+			filters={"custom_head_office": 1},
+			pluck="name",
+		)
+
+		if not has_stock:
+
+			allow_dealer_to_dealer_orders = frappe.db.get_single_value(
+				"Vehicle Stock Settings",
+				"allow_dealer_to_dealer_orders",
 			)
 
+			if allow_dealer_to_dealer_orders:
 
-		for unit in self.vehicles_basket:
-			if not unit == row and unit.model == row.model and order_from == "Warehouse":
+				warehouses = sorted(set(frappe.get_all(
+					"Warehouse",
+					filters={"custom_visible_for_vehicles_orders": 1,"company":["not in",hq_companies]},
+					pluck="name",
+				)))		
 
+				base_filters = {
+					"target_warehouse": ["in", warehouses],
+					"model": row.get("model"),
+					"availability_status": "Available",
+				}
 
+				warehouse_companies = frappe.db.get_all(
+					"Vehicle Stock",
+					filters=base_filters,
+					pluck="dealer"
+				)
 
+				warehouse_companies = sorted(set(warehouse_companies))
 
-	# com_name = frappe.db.get_value("Company", {"custom_head_office": 1}, ["name"], as_dict=1)
+		companies = list(dict.fromkeys(hq_companies + warehouse_companies))
 
-	return frappe.get_all(
-		"Warehouse",
-		filters={"custom_visible_for_vehicles_orders": 1, "company": com_name.name},
-		fields=["name", "company"],
-	)
+		return companies
+

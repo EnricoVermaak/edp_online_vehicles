@@ -8,7 +8,8 @@
  "engine": "InnoDB",
  "field_order": [
   "plan",
-  "code"
+  "code",
+  "ifp_days"
  ],
  "fields": [
   {
@@ -23,18 +24,25 @@
    "fieldtype": "Data",
    "in_list_view": 1,
    "label": "Code"
+  },
+  {
+   "fieldname": "ifp_days",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "IFP Days"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-08-15 12:43:46.305094",
+ "modified": "2026-03-27 09:05:58.731285",
  "modified_by": "Administrator",
- "module": "EDP Online Vehicles",
+ "module": "Edp Online Vehicles",
  "name": "Plan Codes",
  "naming_rule": "By fieldname",
  "owner": "Administrator",
  "permissions": [],
+ "row_format": "Dynamic",
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": []

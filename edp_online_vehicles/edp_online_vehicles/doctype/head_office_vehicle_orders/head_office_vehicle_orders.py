@@ -545,7 +545,32 @@ class HeadOfficeVehicleOrders(Document):
 			self.flags.ignore_version = True
 			self.add_comment("Comment", comment)
 
+	@frappe.whitelist()
+	def get_status_list(self, user_default_company):
+		is_head_office = frappe.db.get_value(
+        	"Company",
+        	user_default_company,
+        	"custom_head_office"
+	    )
+		
+		parent_doc = frappe.get_doc("Vehicles Order Status", self.status)
+		
+		if is_head_office:
+			status_list = parent_doc.status_visble_to_head_office
+		else:
+			status_list = parent_doc.status_visble_to_dealers
 
+		clean_list = []
+
+		for row in status_list:
+			label = row.button_label if row.button_label else row.status
+			
+			clean_list.append({
+        		"button_label": label,
+        		"status": row.status
+    		})
+			
+		return clean_list
 
 def _fire_on_vehicle_allocated(order_name, vinserial_no, model_delivered, model_description, colour_delivered, order_placed_by):
 	for method in frappe.get_hooks("on_vehicle_allocated"):

@@ -101,6 +101,7 @@
   "show_on_vehicles_stock_availability",
   "mark_as_discontinued",
   "automatically_reserve_model",
+  "ifp_days",
   "column_break_mzfn",
   "manuals_available",
   "enable_enatis_registration",
@@ -766,6 +767,11 @@
    "fieldname": "add_interior_colour",
    "fieldtype": "Button",
    "label": "Add Colour"
+  },
+  {
+   "fieldname": "ifp_days",
+   "fieldtype": "Select",
+   "label": "IFP Days"
   }
  ],
  "image_field": "model_default_image",
@@ -792,7 +798,7 @@
    "link_fieldname": "model"
   }
  ],
- "modified": "2026-03-02 13:56:34.992462",
+ "modified": "2026-03-27 09:07:32.113058",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Model Administration",
