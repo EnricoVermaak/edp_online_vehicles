@@ -14,7 +14,7 @@ class DealerClaims(Document):
 				frappe.throw("Claim status cannot be set to 'Approved for Remittance' for new claims.")
 			else:
 				previous_status = frappe.db.get_value("Dealer Claims", self.name, "claim_status")
-				if previous_status != "Submitted for HOD Approval":
+				if previous_status != self.claim_status and previous_status != "Submitted for HOD Approval":
 					frappe.throw("Claim status can only be changed to 'Approved for Remittance' when the current status is 'Submitted for HOD Approval'.")
 		
 		if self.claim_status == "Claim Pending Info" and not self.claim_pending_info_date:
@@ -386,31 +386,34 @@ def update_claim_age():
 
 	for c in claims:
 		try:
-			doc = frappe.get_doc("Dealer Claims", c.name)
+			claim_start = c.creation.date() if isinstance(c.creation, datetime) else c.creation
+			if isinstance(claim_start, datetime):
+				claim_start = claim_start.date()
 
-			# ---  Claim Age (days since created) ---
-			claim_start = doc.creation.date()
-			doc.claim_age = (today - claim_start).days
+			updates = {
+				"claim_age": (today - claim_start).days,
+				"pending_info_age": 0,
+				"updated_claim_age": 0,
+			}
 
-			# ---  Pending Info Age (days since claim_pending_info_date) ---
-			if doc.claim_pending_info_date:
-				pending_start = doc.claim_pending_info_date.date()
-				doc.pending_info_age = (today - pending_start).days
-			else:
-				doc.pending_info_age = 0
+			if c.claim_pending_info_date:
+				pending_start = c.claim_pending_info_date
+				if isinstance(pending_start, datetime):
+					pending_start = pending_start.date()
+				updates["pending_info_age"] = (today - pending_start).days
 
-			# ---  Updated Claim Age (days since claim_updated_date) ---
-			if doc.claim_updated_date:
-				updated_start = doc.claim_updated_date.date()
-				doc.updated_claim_age = (today - updated_start).days
-			else:
-				doc.updated_claim_age = 0
+			if c.claim_updated_date:
+				updated_start = c.claim_updated_date
+				if isinstance(updated_start, datetime):
+					updated_start = updated_start.date()
+				updates["updated_claim_age"] = (today - updated_start).days
 
-			doc.save(ignore_permissions=True, ignore_version=True)
-			frappe.db.commit()
+			frappe.db.set_value("Dealer Claims", c.name, updates, update_modified=False)
 
 		except Exception as e:
 			frappe.log_error(message=str(e), title="Claim Age (Days) Update Error")
+
+	frappe.db.commit()
 
 @frappe.whitelist()
 def get_retail_date(vin_serial_no):
