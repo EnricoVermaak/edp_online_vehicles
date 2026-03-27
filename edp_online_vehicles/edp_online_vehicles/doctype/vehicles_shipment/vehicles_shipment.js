@@ -5,43 +5,46 @@ let stockNo = "";
 
 frappe.ui.form.on("Vehicles Shipment", {
 	refresh(frm) {
-		// if (frm.doc.docstatus === 0 && !frm._upload_import_inited) {
-		// 	frm._upload_import_inited = true;
-		// 	frappe.db
-		// 		.get_single_value("Vehicle Stock Settings", "enable_upload_import")
-		// 		.then((enabled) => {
-		// 			if (!enabled) {
-		// 				frm._upload_import_inited = false;
-		// 				return;
-		// 			}
-		// 			frappe.call({
-		// 				method:
-		// 					"edp_online_vehicles.edp_online_vehicles.doctype.vehicles_shipment.vehicles_shipment.get_import_layout_titles",
-		// 				args: {},
-		// 				callback(r) {
-		// 					const titles = (r && r.message) || [];
-		// 					if (!titles.length) {
-		// 						frm.add_custom_button(__("Upload Import"), () => {
-		// 							frappe.msgprint({
-		// 								message: __(
-		// 									"No import layouts defined. Add rows with Import Layout Title in Vehicle Stock Settings > Shipment CSV Import Layouts.",
-		// 								),
-		// 								indicator: "orange",
-		// 							});
-		// 						}, __("Actions"));
-		// 						return;
-		// 					}
-		// 					titles.forEach((layout_title) => {
-		// 						frm.add_custom_button(
-		// 							layout_title,
-		// 							() => open_dms_import_upload(frm, layout_title),
-		// 							__("Upload Import"),
-		// 						);
-		// 					});
-		// 				},
-		// 			});
-		// 		});
-		// }
+		if (frm.fields_dict.upload_import) {
+			frm.toggle_display("upload_import", false);
+		}
+
+		if (frm.doc.docstatus === 0 && !frm._upload_import_inited) {
+			frm._upload_import_inited = true;
+			frappe.db
+				.get_single_value("Vehicle Stock Settings", "enable_upload_import")
+				.then((enabled) => {
+					if (!enabled) {
+						return;
+					}
+					frappe.call({
+						method:
+							"edp_online_vehicles.edp_online_vehicles.doctype.vehicles_shipment.vehicles_shipment.get_import_layout_titles",
+						args: {},
+						callback(r) {
+							const titles = (r && r.message) || [];
+							if (!titles.length) {
+								frm.add_custom_button(__("Upload Import"), () => {
+									frappe.msgprint({
+										message: __(
+											"No import layouts defined. Add rows with Import Layout Title in Vehicle Stock Settings > Shipment CSV Import Layouts.",
+										),
+										indicator: "orange",
+									});
+								}, __("Actions"));
+								return;
+							}
+							titles.forEach((layout_title) => {
+								frm.add_custom_button(
+									layout_title,
+									() => open_dms_import_upload(frm, layout_title),
+									__("Upload Import"),
+								);
+							});
+						},
+					});
+				});
+		}
 
 		let grid = frm.fields_dict["vehicles_shipment_items"].grid;
 
@@ -427,23 +430,6 @@ frappe.ui.form.on("Vehicles Shipment", {
 
 									frappe.dom.unfreeze();
 									frm.save_or_update();
-
-									const host = window.location.hostname;
-									const isMahindra = [
-										"msademo.edponline.co.za",
-										"msa.edponline.co.za",
-										"mahindra.localhost",
-									].includes(host);
-
-									if (isMahindra) {
-										frappe.call({
-											method:
-												"edp_api.api.TAC.tac_integration.tac_landing_outgoing",
-											args: {
-												selected_items: JSON.stringify(selected_items),
-											},
-										});
-									}
 								}
 							}
 						}).catch(() => frappe.dom.unfreeze());
@@ -830,6 +816,22 @@ frappe.ui.form.on("Vehicles Shipment Items", {
 });
 
 function open_dms_import_upload(frm, layout_title) {
+	frappe.db
+		.get_single_value("Vehicle Stock Settings", "enable_upload_import")
+		.then((enabled) => {
+			if (!enabled) {
+				frappe.msgprint({
+					message: __("Shipment CSV import is disabled in Vehicle Stock Settings."),
+					title: __("Upload Import"),
+					indicator: "orange",
+				});
+				return;
+			}
+			open_dms_import_upload_after_flag(frm, layout_title);
+		});
+}
+
+function open_dms_import_upload_after_flag(frm, layout_title) {
 	frappe.call({
 		method:
 			"edp_online_vehicles.edp_online_vehicles.doctype.vehicles_shipment.vehicles_shipment.get_import_layout_mappings",

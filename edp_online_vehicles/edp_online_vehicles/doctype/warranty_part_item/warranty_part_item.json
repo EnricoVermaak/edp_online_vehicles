@@ -25,7 +25,8 @@
   "section_break_devc",
   "faulty_part1",
   "column_break_ydhn",
-  "faulty_part2"
+  "faulty_part2",
+  "hq_part_order"
  ],
  "fields": [
   {
@@ -150,6 +151,15 @@
    "fieldname": "item_warranty_gp",
    "fieldtype": "Float",
    "label": "Item GP%"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "hq_part_order",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "HQ Part Order",
+   "options": "HQ Part Order",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,

@@ -84,6 +84,161 @@ var VS_CONFIG = {
 edp_vehicles.pricing.bind_child_events(VS_CONFIG);
 
 frappe.ui.form.on("Vehicles Service", {
+	vin_serial_no: function(frm) {
+				frm.set_query("vin_serial_no", function() {
+			return {
+				filters: {
+					availability_status: "Sold"
+				}
+			};
+		});
+			if (frm.doc.vin_serial_no && frm.is_new()) {
+				frappe.call({
+					method: "edp_online_vehicles.events.create_vehicle_service.find_and_link_open_booking",
+					args: { vin_serial_no: frm.doc.vin_serial_no, current_service_name: frm.doc.name },
+					callback: function (r) {
+						if (r.message && r.message.found) {
+							frm.set_value("service_booking", r.message.booking_name);
+							frm.set_value("booking_name", r.message.booking_name);
+							let booking_st = r.message.service_type;
+							if (booking_st && !(booking_st.endsWith("-Other") && !frm.__create_other)) {
+								frm.set_value("service_type", booking_st);
+							}
+							frappe.show_alert({
+								message: __("Linked to open booking: {0}", [r.message.booking_name]),
+								indicator: "green"
+							}, 5);
+						} else {
+							// Check if "Other" service schedule creation is disabled
+							if (frm.__create_other === 0) {
+								frappe.call({
+									method: "edp_online_vehicles.events.service_type.service_type_query",
+									args: {
+										doctype: "Service Schedules",
+										txt: "",
+										searchfield: "name",
+										start: 0,
+										page_len: 1,
+										filters: {
+											model_code: frm.doc.model,
+											vin_serial_no: frm.doc.vin_serial_no
+										}
+									},
+									callback: function(res) {
+										if (!res.results || res.results.length === 0) {
+											frappe.throw(__("Vehicle is outside of acceptable service range"));
+										}
+									}
+								});
+							}
+
+							// Set model if not already set
+							frappe.db.get_value("Vehicle Stock", frm.doc.vin_serial_no, "model")
+								.then((res) => {
+									if (res.message?.model) {
+										frm.set_value("model", res.message.model);
+									}
+								});
+
+							// Fallback in case frm.doc.model was still empty
+							if (!frm.doc.model) {
+								frappe.db.get_value("Vehicle Stock", frm.doc.vin_serial_no, "model")
+									.then((res) => {
+										if (res.message?.model) {
+											frm.set_value("model", res.message.model);
+										}
+									});
+							}
+						}
+					}
+				});
+			}
+		const dt = frm.doctype;
+		const dn = frm.doc.name;
+
+		if (frm.is_new()) {
+			frappe.db.get_list("Vehicle Stock", {
+				filters: { vin_serial_no: frm.doc.vin_serial_no, availability_status: "Stolen" },
+				fields: ["name"],
+			}).then((existing_services) => {
+				if (existing_services.length > 0) {
+					frm.set_value("vin_serial_no", null);
+					frappe.throw("This vehicle was reported as stolen. Please contact Head Office immediately for more information");
+				} else {
+					let seven_days_ago = frappe.datetime.add_days(frappe.datetime.get_today(), -7);
+					frappe.db.get_list("Vehicles Service", {
+						filters: { vin_serial_no: frm.doc.vin_serial_no, creation: [">=", seven_days_ago] },
+						fields: ["name"],
+					}).then((existing_services) => {
+						if (existing_services.length > 0) {
+							frappe.msgprint("Please be aware that a service request for this vehicle has been submitted within the last 7 days.");
+						}
+					});
+				}
+			});
+		}
+
+		if (!frm.doc.odo_reading_hours) {
+			frm.doc.odo_reading_hours = null;
+			frm.refresh_field("odo_reading_hours");
+		}
+		if (frm.__create_other === 1) {
+            // Promise.all([
+            //     frappe.call({ method: "edp_online_vehicles.events.service_type.check_service_date", args: { vin: frm.doc.vin_serial_no }}),
+            //     frappe.call({ method: "edp_online_vehicles.events.service_type.check_warranty_date", args: { vin: frm.doc.vin_serial_no }})
+            // ]).then(([service_res, warranty_res]) => {
+            //     const s_inv = service_res.message && !service_res.message.is_valid;
+            //     const w_inv = warranty_res.message && !warranty_res.message.is_valid;
+
+            //     if ((s_inv || w_inv) && (!frm.doc.service_type || !frm.doc.service_type.endsWith("-Other"))) {
+            //         frappe.db.get_value("Vehicle Stock", frm.doc.vin_serial_no, "model").then((res) => {
+            //             if (res.message?.model) {
+            //                 frm.set_value("service_type", `SS-${res.message.model}-Other`);
+            //             }
+            //         });
+            //     }
+            // });
+        }
+
+			if (frm.doc.vin_serial_no) {
+				_check_recall_campaign_for_service(frm);
+			}
+		
+        if (!frm.doc.vin_serial_no) return;
+
+        Promise.all([
+            frappe.call({
+                method: "edp_online_vehicles.events.service_type.check_service_date",
+                args: { vin: frm.doc.vin_serial_no }
+            }),
+            frappe.call({
+                method: "edp_online_vehicles.events.service_type.check_warranty_date",
+                args: { vin: frm.doc.vin_serial_no }
+            })
+        ]).then(([service_res, warranty_res]) => {
+            const service_invalid = service_res.message && !service_res.message.is_valid;
+            const warranty_invalid = warranty_res.message && !warranty_res.message.is_valid;
+
+            if (!service_invalid && !warranty_invalid) return;
+
+            if (frm.__create_other === 1) {
+                
+                const parts = [];
+                if (service_invalid) parts.push("service period");
+                if (warranty_invalid) parts.push("warranty period");
+                
+				
+				setTimeout(() => {
+					frappe.db.get_value("Vehicle Stock", frm.doc.vin_serial_no, "model").then((r) => {
+						if (r?.message?.model) {
+							frm.set_value("service_type", `SS-${r.message.model}-Other`);
+						}
+					});
+				}, 500);
+
+            } 
+        });
+    },
 	service_status: function (frm) {
 		if (!frm.doc.service_status) {
 			frm.refresh_field('attach_documents');
@@ -113,6 +268,11 @@ frappe.ui.form.on("Vehicles Service", {
 	},
 
 	service_type: async function (frm) {
+		if (frm.doc.service_type && frm.doc.service_type.endsWith("-Other") && frm.__create_other !== 1){
+			frappe.msgprint(__("'Other' service schedules are currently disabled in Vehicle Service Settngs." ));
+			frm.set_value("service_type", "");
+			return;
+		}
 		if (!frm.doc.service_type) {
 			frm.clear_table("service_parts_items");
 			frm.clear_table("service_labour_items");
@@ -155,6 +315,7 @@ frappe.ui.form.on("Vehicles Service", {
 
 
 	onload(frm) {
+		frm.__create_other = 0;
 		frappe.db.get_doc("Vehicle Service Settings").then((settings) => {
 			frm.__create_other = settings.create_other_service_schedule || 0;
 
@@ -170,6 +331,9 @@ frappe.ui.form.on("Vehicles Service", {
 			}
 			frm.refresh_field("attach_documents");
 		});
+		// if (frm.is_new()){
+		// 	frm.set_value("odo_reading_hours", null);
+		// }
 		if (frm.doc.vehicles_incidents) {
 			frappe.db
 				.get_doc("Vehicles Incidents", frm.doc.vehicles_incidents)
@@ -196,7 +360,7 @@ frappe.ui.form.on("Vehicles Service", {
 		});
 
 		if (frm.is_new()) {
-			frm.doc.dealer = frappe.defaults.get_default("company");
+			frm.set_value("dealer", frappe.defaults.get_default("company"));
 			frappe.db.get_list("Service Status", {
 				filters: { is_default_status: 1 },
 				fields: ["name"],
@@ -296,153 +460,6 @@ frappe.ui.form.on("Vehicles Service", {
 		// 	edp_online_vehicles.vehicles_service.add_scan_button(frm);
 		// }
 	},
-	refresh: function(frm) {
-        frm.set_query("vin_serial_no", function() {
-			return {
-				filters: {
-					availability_status: "Sold"
-				}
-			};
-		});
-	},
-
-	after_save(frm) {
-		frappe.call({
-			method: "edp_online_vehicles.events.change_vehicles_status.service_status_change",
-			args: { vinno: frm.doc.vin_serial_no, status: frm.doc.service_status },
-			callback: function (r) {
-				if (r.message) {
-					frappe.show_alert({ message: r.message }, 5);
-					frappe.db.get_list("Service Status", {
-						filters: { automatically_submit_document: 1 },
-						fields: ["name"],
-					}).then((statuses) => {
-						if (statuses.length > 0) {
-							let status = statuses.map((s) => s.name);
-							if (status == frm.doc.service_status) {
-								frappe.call({
-									method: "edp_online_vehicles.events.submit_document.submit_service_document",
-									args: { doc: frm.doc.name },
-									callback: function (r) {
-										if (r.message) {
-											frm.reload_doc().then(() => {
-												frappe.show_alert({ message: r.message }, 5);
-											});
-										}
-									},
-								});
-							}
-						}
-					});
-				}
-			},
-		});
-	},
-
-
-	vin_serial_no(frm) {
-				frm.set_query("vin_serial_no", function() {
-			return {
-				filters: {
-					availability_status: "Sold"
-				}
-			};
-		});
-		if (frm.doc.vin_serial_no && frm.is_new()) {
-			frappe.call({
-				method: "edp_online_vehicles.events.create_vehicle_service.find_and_link_open_booking",
-				args: { vin_serial_no: frm.doc.vin_serial_no, current_service_name: frm.doc.name },
-				callback: function (r) {
-					if (r.message && r.message.found) {
-						frm.set_value("service_booking", r.message.booking_name);
-						frm.set_value("booking_name", r.message.booking_name);
-						let booking_st = r.message.service_type;
-						if (booking_st && !(booking_st.endsWith("-Other") && !frm.__create_other)) {
-							frm.set_value("service_type", booking_st);
-						}
-						frappe.show_alert({
-							message: __("Linked to open booking: {0}", [r.message.booking_name]),
-							indicator: "green"
-						}, 5);
-					} else {
-						if (!frm.doc.model) {
-							frappe.db.get_value("Vehicle Stock", frm.doc.vin_serial_no, "model")
-								.then((res) => {
-									if (res.message && res.message.model) {
-										frm.set_value("model", res.message.model);
-									}
-								});
-						}
-					}
-				}
-			});
-		}
-
-		const dt = frm.doctype;
-		const dn = frm.doc.name;
-
-		if (frm.is_new()) {
-			frappe.db.get_list("Vehicle Stock", {
-				filters: { vin_serial_no: frm.doc.vin_serial_no, availability_status: "Stolen" },
-				fields: ["name"],
-			}).then((existing_services) => {
-				if (existing_services.length > 0) {
-					frm.set_value("vin_serial_no", null);
-					frappe.throw("This vehicle was reported as stolen. Please contact Head Office immediately for more information");
-				} else {
-					let seven_days_ago = frappe.datetime.add_days(frappe.datetime.get_today(), -7);
-					frappe.db.get_list("Vehicles Service", {
-						filters: { vin_serial_no: frm.doc.vin_serial_no, creation: [">=", seven_days_ago] },
-						fields: ["name"],
-					}).then((existing_services) => {
-						if (existing_services.length > 0) {
-							frappe.msgprint("Please be aware that a service request for this vehicle has been submitted within the last 7 days.");
-						}
-					});
-				}
-			});
-		}
-
-		if (!frm.doc.odo_reading_hours) {
-			frm.doc.odo_reading_hours = null;
-			frm.refresh_field("odo_reading_hours");
-		}
-
-		if (frm.doc.vin_serial_no && frm.__create_other) {
-			frappe.call({
-				method: "edp_online_vehicles.events.service_type.check_service_date",
-				args: { vin: frm.doc.vin_serial_no },
-				callback: function (service_res) {
-					frappe.call({
-						method: "edp_online_vehicles.events.service_type.check_warranty_date",
-						args: { vin: frm.doc.vin_serial_no },
-						callback: function (warranty_res) {
-							const service_invalid = service_res.message && !service_res.message.is_valid;
-							const warranty_invalid = warranty_res.message && !warranty_res.message.is_valid;
-							if (!service_invalid && !warranty_invalid) return;
-							if (frm.doc.service_type && frm.doc.service_type.endsWith("-Other")) return;
-
-							const parts = [];
-							if (service_invalid) parts.push("service period");
-							if (warranty_invalid) parts.push("warranty period");
-							frappe.msgprint("Please note the selected vehicle falls outside the allocated " +
-								parts.join(" and ") + " parameters. Please contact Head Office for more information.");
-
-							frappe.db.get_value("Vehicle Stock", frm.doc.vin_serial_no, "model").then((res) => {
-								let model = res.message.model;
-								frappe.model.set_value(dt, dn, "service_type", `SS-${model}-Other`);
-								frm.refresh_field("service_type");
-							});
-						},
-					});
-				},
-			});
-		}
-
-		if (frm.doc.vin_serial_no) {
-			_check_recall_campaign_for_service(frm);
-		}
-	},
 
 	inspection_template(frm) {
 		if (frm.doc.inspection_template) {
@@ -478,55 +495,42 @@ frappe.ui.form.on("Vehicles Service", {
 		const dt = frm.doctype;
 		const dn = frm.doc.name;
 
-		if (!frm.doc.service_type) {
-			frappe.model.set_value(dt, dn, "system_status", null);
-			frappe.msgprint("Please select a Service Type and VIN/Serial No before setting the Odo Reading");
-			frm.doc.odo_reading_hours = null;
-			frm.refresh_field("odo_reading_hours");
-			return;
-		}
 
-		if (frm.doc.odo_reading_hours > 0 && frm.doc.model) {
-			frappe.db.get_value("Service Schedules", frm.doc.service_type, "interval").then((r) => {
-				if (!r || !r.message || r.message.interval == null) return;
-				let interval = r.message.interval;
-				return frappe.db.get_value("Model Administration", frm.doc.model, [
-					"service_type_max_allowance",
-					"service_type_minimum_allowance",
-				]).then((r2) => {
-					if (!r2 || !r2.message) return;
-					let max_allowance = parseInt(r2.message.service_type_max_allowance || 0, 10);
-					let min_allowance = parseInt(r2.message.service_type_minimum_allowance || 0, 10);
-					let min_odo_value = parseInt(interval, 10) - min_allowance;
-					let max_odo_value = parseInt(interval, 10) + max_allowance;
-					let odo = parseInt(frm.doc.odo_reading_hours, 10);
+		if (frm.doc.odo_reading_hours === 0) return; // Ignore the initial 0 if it happens
 
-					if (!Number.isNaN(odo)) {
-						const in_range = odo >= min_odo_value && odo <= max_odo_value;
-						frappe.model.set_value(dt, dn, "system_status", in_range ? "Conditionally Approved" : "Conditionally Declined");
-						frm.refresh_field("system_status");
-					}
+		if (!frm.doc.service_type || !frm.doc.vin_serial_no) {
+            frappe.msgprint(__("Please select a Service Type and VIN before setting Odo."));
+            frm.set_value("odo_reading_hours", null);
+            return;
+        }
 
-					if (odo < min_odo_value) {
-						if (!frm.doc.vin_serial_no) {
-							frappe.msgprint("Please select VIN/Serial No first before entering odo reading.");
-							return;
-						}
-						if (frm.__create_other) {
-							frappe.db.get_value("Vehicle Stock", frm.doc.vin_serial_no, "model").then((res) => {
-								if (res && res.message && res.message.model) {
-									frappe.model.set_value(dt, dn, "service_type", `SS-${res.message.model}-Other`);
-									frm.refresh_field("service_type");
-								}
-							}).catch(() => frappe.msgprint("Could not fetch model for the selected VIN."));
-						}
-						frappe.msgprint("Your vehicle hasn't reached its service threshold yet. Please check back when it meets the minimum mileage requirement.");
-					} else if (odo > max_odo_value) {
-						frappe.msgprint("Your vehicle's mileage has exceeded the current service range. Please select the upcoming service schedule.");
-					}
-				});
-			});
-		}
+        // Validate Odo range
+        frappe.db.get_value("Service Schedules", frm.doc.service_type, "interval").then((r) => {
+            if (!r?.message?.interval) return;
+            let interval = r.message.interval;
+
+            frappe.db.get_value("Model Administration", frm.doc.model, ["service_type_max_allowance", "service_type_minimum_allowance"]).then((r2) => {
+                let max = parseInt(r2.message?.service_type_max_allowance || 0);
+                let min = parseInt(r2.message?.service_type_minimum_allowance || 0);
+                let odo = parseInt(frm.doc.odo_reading_hours);
+
+                let min_odo = interval - min;
+                let max_odo = interval + max;
+
+                const in_range = odo >= min_odo && odo <= max_odo;
+                frm.set_value("system_status", in_range ? "Conditionally Approved" : "Conditionally Declined");
+
+                // ONLY auto-fill "Other" if the checkbox is 1
+                if (odo < min_odo && frm.__create_other === 1) {
+                    frappe.db.get_value("Vehicle Stock", frm.doc.vin_serial_no, "model").then((res) => {
+                        if (res.message?.model) {
+                            frm.set_value("service_type", `SS-${res.message.model}-Other`);
+                        }
+                    });
+                }
+            });
+        });
+
 
 		if (!frm.doc.vin_serial_no || !frm.doc.odo_reading_hours) return;
 

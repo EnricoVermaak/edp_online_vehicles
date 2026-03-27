@@ -15,7 +15,7 @@ def get_columns():
 	columns = [
 		{"fieldname": "customer", "label": _("Customer"), "fieldtype": "Data", "width": 150},
 		{
-			"fieldname": "vinserial_no",
+			"fieldname": "vin_serial_no",
 			"label": _("Vehicles VIN No/ Serial No"),
 			"fieldtype": "Data",
 			"width": 150,
@@ -53,14 +53,16 @@ def get_columns():
 
 def get_data(filters):
 	services = frappe.qb.DocType("Vehicles Service")
+	stock = frappe.qb.DocType("Vehicle Stock")
 
 	query = (
 		frappe.qb.from_(services)
+		.left_join(stock).on(stock.name == services.vin_serial_no)
 		.select(
 			services.customer,
-			services.vinserial_no,
+			services.vin_serial_no,
 			services.odo_reading_hours,
-			services.current_location,
+			stock.current_location,
 			services.service_date,
 			services.service_type,
 			services.parts_total_excl,

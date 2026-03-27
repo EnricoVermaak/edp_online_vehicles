@@ -25,9 +25,7 @@ def update_part_order_time():
 			time_diff = now_dt - frappe.utils.get_datetime(hq_doc.creation)
 			new_delivery_time_str = timedelta_to_hhmmss(time_diff)
 
-			hq_doc.order_delivery_time = new_delivery_time_str
-
-			hq_doc.save(ignore_permissions=True)
+			hq_doc.db_set("order_delivery_time", new_delivery_time_str, update_modified=False)
 
 	for order in d2d_orders:
 		d2d_doc = frappe.get_doc("D2D Part Order", order)
@@ -38,9 +36,7 @@ def update_part_order_time():
 			time_diff = now_dt - frappe.utils.get_datetime(d2d_doc.creation)
 			new_delivery_time_str = timedelta_to_hhmmss(time_diff)
 
-			d2d_doc.order_delivery_time = new_delivery_time_str
-
-			d2d_doc.save(ignore_permissions=True)
+			d2d_doc.db_set("order_delivery_time", new_delivery_time_str, update_modified=False)
 
 	for order in part_orders:
 		order_doc = frappe.get_doc("Part Order", order)
@@ -51,9 +47,7 @@ def update_part_order_time():
 			time_diff = now_dt - frappe.utils.get_datetime(order_doc.creation)
 			new_delivery_time_str = timedelta_to_hhmmss(time_diff)
 
-			order_doc.order_delivery_time = new_delivery_time_str
-
-			order_doc.save(ignore_permissions=True)
+			order_doc.db_set("order_delivery_time", new_delivery_time_str, update_modified=False)
 
 	frappe.db.commit()
 	return

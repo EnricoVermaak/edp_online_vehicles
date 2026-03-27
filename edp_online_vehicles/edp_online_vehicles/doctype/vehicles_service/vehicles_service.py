@@ -2,8 +2,11 @@
 # For license information, please see license.txt
 
 import frappe
+from frappe import _
+from frappe.utils import getdate, add_months, add_days, date_diff
 from frappe.model.document import Document
 from frappe.model.mapper import get_mapped_doc
+from edp_online_vehicles.events.send_email import send_custom_email_from_template
 
 
 class VehiclesService(Document):
@@ -25,6 +28,28 @@ class VehiclesService(Document):
         setting_doc.save(ignore_permissions=True)
         frappe.db.commit()
 
+        if self.has_value_changed("service_status"):
+            self.send_hq_service_notification()
+        self.update_vehicle_status()
+
+        self.check_and_auto_submit()
+
+    def update_vehicle_status(self):
+        from edp_online_vehicles.events.change_vehicles_status import service_status_change
+        
+        if self.vin_serial_no and self.service_status:
+            service_status_change(vinno=self.vin_serial_no, status=self.service_status)
+
+    def check_and_auto_submit(self):
+        if self.docstatus == 0:
+            auto_submit = frappe.db.get_value("Service Status", 
+                self.service_status, "automatically_submit_document")
+            
+            if auto_submit:
+                self.flags.ignore_validate_update_after_submit = True
+                self.submit()
+                frappe.msgprint(f"Document {self.name} has been automatically submitted.")
+            
     def _sync_booking_status_from_mapping(self):
         if not self.booking_name or not self.service_status:
             return
@@ -261,7 +286,70 @@ class VehiclesService(Document):
     def after_insert(self):
         if self.job_card_no:
             frappe.db.set_single_value("Vehicle Service Settings","last_auto_job_card_no",self.job_card_no)
+            
+    def send_hq_service_notification(self):
+        """Logic for Vehicle Service notifications to Head Office."""
+        if not self.service_status:
+            return
+        status_doc = frappe.get_doc('Service Status', self.service_status)
+        
+        recipients = [row.user for row in status_doc.get("email_recipients", []) if row.user]
+        
+        if self.owner and self.owner not in recipients:
+            recipients.append(self.owner)
+        
+        if recipients:
+            context = {
+                "vin_serial_no": self.vin_serial_no,
+                "model_description": self.model_description,
+                "service_type": self.service_type,
+                "odo_reading_hours": self.odo_reading_hours,
+                "dealer": self.dealer,
+                "service_status": self.service_status,
+                "job_card_no": self.job_card_no
+            }
+            send_custom_email_from_template(
+                recipients,           
+                "Test Mail",             
+                context,                  
+                'Vehicle Service', 
+                self.name                 
+            )
+            
+    def validate(self):
+        self.check_service_allowance()
+    
+    def check_service_allowance(self):
+        if not self.vin_serial_no or not self.service_date:
+            return
 
+        allowance_days = frappe.db.get_single_value("Vehicle Service Settings", "service_allowance_days") or 0
+        
+        vehicle_dates = frappe.db.get_value("Vehicle Stock", 
+            {"vin_serial_no": self.vin_serial_no},
+            ["service_start_date", "service_end_date"],
+            as_dict=True)
+
+        if vehicle_dates and vehicle_dates.service_end_date:
+            cut_off = add_days(vehicle_dates.service_end_date, allowance_days)
+            current_service_date = getdate(self.service_date)
+
+            if current_service_date > cut_off:
+                overdue_by = date_diff(current_service_date, cut_off)
+                
+                frappe.throw(
+                    msg=_("Cannot save: This service is overdue by {0} days. "
+                        "The service window ended on {1}. With a {2}-day allowance, "
+                        "the final deadline was {3}.")
+                    .format(
+                        overdue_by,
+                        frappe.format(vehicle_dates.service_end_date, "Date"),
+                        allowance_days,
+                        frappe.format(cut_off, "Date")
+                    ),
+                    title=_("Service Period Expired")
+                )
+                
 @frappe.whitelist()
 def create_internal_docs_notes(source_name, target_doc=None):
     doc = get_mapped_doc(

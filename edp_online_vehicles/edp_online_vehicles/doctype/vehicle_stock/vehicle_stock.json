@@ -115,6 +115,7 @@
   "service_start_date",
   "service_end_date",
   "image",
+  "third_party_service",
   "section_break_llyx",
   "last_service_hours",
   "column_break_wjfr",
@@ -313,7 +314,8 @@
   {
    "fieldname": "ho_date_received",
    "fieldtype": "Date",
-   "label": "HO Received Date"
+   "label": "HO Received Date",
+   "permlevel": 1
   },
   {
    "fieldname": "warranty_tab",
@@ -783,7 +785,8 @@
   {
    "fieldname": "model_conversion_date",
    "fieldtype": "Date",
-   "label": "Model Conversion Date"
+   "label": "Model Conversion Date",
+   "permlevel": 1
   },
   {
    "fieldname": "in_transit_date",
@@ -803,12 +806,14 @@
    "fieldname": "head_office_age",
    "fieldtype": "Int",
    "label": "Head Office Age",
+   "permlevel": 1,
    "read_only": 1
   },
   {
    "fieldname": "model_conversion_age",
    "fieldtype": "Int",
    "label": "Model Conversion Age",
+   "permlevel": 1,
    "read_only": 1
   },
   {
@@ -827,6 +832,7 @@
    "fieldname": "total_age",
    "fieldtype": "Int",
    "label": "Total Age",
+   "permlevel": 1,
    "read_only": 1
   },
   {
@@ -839,6 +845,12 @@
    "fieldname": "register_no",
    "fieldtype": "Data",
    "label": "Vehicle Registration No"
+  },
+  {
+   "default": "0",
+   "fieldname": "third_party_service",
+   "fieldtype": "Check",
+   "label": "Third Party Service "
   }
  ],
  "grid_page_length": 50,
@@ -891,7 +903,7 @@
    "link_fieldname": "vin_serial_no"
   }
  ],
- "modified": "2026-03-13 13:52:41.980609",
+ "modified": "2026-03-20 10:55:38.457654",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicle Stock",

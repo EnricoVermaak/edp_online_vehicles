@@ -101,6 +101,11 @@
    "fieldname": "create_other_service_schedule",
    "fieldtype": "Check",
    "label": "Allow Other Service Schedule"
+  },
+  {
+   "fieldname": "service_allowance_days",
+   "fieldtype": "Int",
+   "label": "Service allowance (days)"
   }
  ],
  "index_web_pages_for_search": 1,

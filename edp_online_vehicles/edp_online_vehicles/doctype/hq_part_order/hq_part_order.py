@@ -8,13 +8,20 @@ from frappe.utils import now_datetime, today, flt
 
 
 def get_company_warehouse(company):
+
 	wh = frappe.db.get_value(
 		"Company", company, "custom_default_vehicles_stock_warehouse"
 	)
 	if not wh:
+		abbr = frappe.db.get_value("Company", company, "abbr")
+		fallback = f"Stores - {abbr}"
+		if frappe.db.exists("Warehouse", fallback):
+			wh = fallback
+	if not wh:
 		frappe.throw(
-			f"Default Vehicles Stock Warehouse is not set on Company <b>{company}</b>. "
-			"Please set it under Company > Settings before proceeding."
+			f"No warehouse found for Company <b>{company}</b>. "
+			"Please set Default Vehicles Stock Warehouse under Company > Settings, "
+			"or ensure a 'Stores' warehouse exists for this company."
 		)
 	return wh
 
@@ -69,6 +76,7 @@ class HQPartOrder(Document):
 		so.submit()
 
 	def _create_material_request_for_back_orders(self):
+		"""Create a Material Request (Purchase) for items marked as BackOrder."""
 		back_order_items = [
 			item for item in self.table_ugma
 			if (item.order_from or "").strip() == "BackOrder"
@@ -157,8 +165,8 @@ class HQPartOrder(Document):
 				undelivered_billing += price_list * remaining
 				undelivered_qty += remaining
 
-		self.total_undelivered_parts_qty = undelivered_qty
-		self.total_undelivered_parts_dealer_billing_excl = undelivered_billing
+		self.total_undelivered_parts_qty = int(undelivered_qty)
+		self.total_undelivered_parts_dealer_billing_excl = flt(undelivered_billing, 2)
 
 		delivered_billing = 0
 		delivered_qty = 0
@@ -171,15 +179,17 @@ class HQPartOrder(Document):
 				delivered_billing += price_list * flt(row.qty_delivered)
 				delivered_qty += flt(row.qty_delivered)
 
-		self.total_delivered_parts_qty = delivered_qty
-		self.total_delivered_parts_dealer_billing_excl = delivered_billing
+		self.total_delivered_parts_qty = int(delivered_qty)
+		self.total_delivered_parts_dealer_billing_excl = flt(delivered_billing, 2)
 
 		if not self.total_qty_parts_ordered:
 			self.total_qty_parts_ordered = 0
 
 		if flt(self.total_qty_parts_ordered) > 0:
-			self.total_qty_parts_delivered = flt(self.total_qty_parts_ordered) - undelivered_qty
-			self._order_delivered = (flt(self.total_qty_parts_delivered) / flt(self.total_qty_parts_ordered)) * 100
+			self.total_qty_parts_delivered = int(flt(self.total_qty_parts_ordered) - undelivered_qty)
+			self._order_delivered = flt(
+				(flt(self.total_qty_parts_delivered) / flt(self.total_qty_parts_ordered)) * 100, 9
+			)
 		else:
 			self.total_qty_parts_delivered = 0
 			self._order_delivered = 0
