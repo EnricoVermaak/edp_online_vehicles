@@ -226,16 +226,62 @@ frappe.ui.form.on("Vehicle Stock", {
 			},
 			"Action",
 		);
-		if (!frm.doc.request_release) {
+		if (
+			!frm.is_new() &&
+			frm.doc.availability_status === "Sold" &&
+			!frm.doc.request_release &&
+			!frm.doc.natis_release_date
+		) {
 			frm.add_custom_button(
-				"NATIS Release",
+				__("NATIS Release"),
 				function () {
-					let today = frappe.datetime.nowdate();
-					frm.set_value("request_release", 1);
-					frm.set_value("natis_release_date", today);
-					frm.save();
+					frappe.confirm(
+						__(
+							"Release vehicle {0} to eNaTIS? This action cannot be undone.",
+							[frm.doc.vin_serial_no || frm.doc.name]
+						),
+						function () {
+							frappe.call({
+								method: "edp_api.api.enatis.enatis.natis_release",
+								args: { docname: frm.doc.name },
+								freeze: true,
+								freeze_message: __("Releasing to eNaTIS..."),
+								callback: function (r) {
+									const m = r.message || {};
+									if (m.success) {
+										frappe.show_alert(
+											{
+												message: __(
+													"eNaTIS Release successful. Reg: {0}",
+													[m.mv_reg_no || "N/A"]
+												),
+												indicator: "green",
+											},
+											10,
+										);
+									} else {
+										frappe.msgprint({
+											title: __("eNaTIS Release Failed"),
+											message: __(
+												"The eNaTIS release was not successful.<br><br><b>Error:</b> {0}<br><b>Code:</b> {1}",
+												[
+													m.error_description || "Unknown error",
+													m.error_code || "N/A",
+												]
+											),
+											indicator: "red",
+										});
+									}
+									frm.reload_doc();
+								},
+								error: function () {
+									frm.reload_doc();
+								},
+							});
+						},
+					);
 				},
-				"Action"
+				"Action",
 			);
 		}
 
