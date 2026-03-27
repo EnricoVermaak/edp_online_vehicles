@@ -102,6 +102,8 @@ frappe.ui.form.on("Dealer Claims", {
 		var is_claim_administrator = frappe.user.has_role("Claim Administrator");
 		var is_read_only_status = frm.doc.claim_status && !allowed_statuses.includes(frm.doc.claim_status);
 
+		frm._is_locked = !is_claim_administrator && is_read_only_status;
+
 		if (is_claim_administrator) {
 			frm.set_df_property("claim_status", "read_only", 0);
 		} else {
@@ -437,7 +439,7 @@ frappe.ui.form.on("Dealer Claims", {
 							frm.toggle_reqd("table_zhls", mandatory_part);
 							frm.refresh_field("table_zhls");
 
-							if (mandatory_part) {
+							if (mandatory_part || frm._is_locked) {
 								frm.set_df_property("claim_amt", "read_only", 1);
 							} else {
 								frm.set_df_property("claim_amt", "read_only", 0);
@@ -593,9 +595,11 @@ frappe.ui.form.on("Dealer Claims", {
 			frm.toggle_reqd("table_zhls", mandatory_part);
 			frm.refresh_field("table_zhls");
 
-			if (mandatory_part) {
+			if (mandatory_part || frm._is_locked) {
 				frm.set_df_property("claim_amt", "read_only", 1);
-				frm.set_value("claim_amt", 0);
+				if (mandatory_part) {
+					frm.set_value("claim_amt", 0);
+				}
 			} else {
 				frm.set_df_property("claim_amt", "read_only", 0);
 			}

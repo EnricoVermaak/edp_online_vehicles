@@ -78,6 +78,13 @@
   "refresh_sap_token",
   "evolve_section",
   "interface_code",
+  "enatis_section",
+  "enable_enatis_integration",
+  "natis_oem",
+  "natis_use_dealer_brn_only",
+  "column_break_enatis",
+  "enatis_api_url",
+  "enatis_api_key",
   "credentails_section",
   "credentails",
   "servers_section",
@@ -491,6 +498,55 @@
    "label": "Evolve Interface Code"
   },
   {
+   "fieldname": "enatis_section",
+   "fieldtype": "Section Break",
+   "label": "eNaTIS"
+  },
+  {
+   "default": "0",
+   "description": "Enable integration with the eNaTIS MIB API for vehicle registration queries.",
+   "fieldname": "enable_enatis_integration",
+   "fieldtype": "Check",
+   "label": "Enable eNaTIS Integration"
+  },
+  {
+   "depends_on": "eval: doc.enable_enatis_integration == 1",
+   "description": "OEM folder name passed to the eNaTIS MIB API (same as NatisConnection OEM config.)",
+   "fieldname": "natis_oem",
+   "fieldtype": "Data",
+   "label": "Natis OEM",
+   "mandatory_depends_on": "eval: doc.enable_enatis_integration == 1"
+  },
+  {
+   "default": "0",
+   "depends_on": "eval: doc.enable_enatis_integration == 1",
+   "description": "When checked, eNaTIS release always uses the dealer\u2019s Business Registration Number (BRN) as Title Holder / Owner instead of the individual customer\u2019s ID.",
+   "fieldname": "natis_use_dealer_brn_only",
+   "fieldtype": "Check",
+   "label": "Use Dealer BRN Only"
+  },
+  {
+   "depends_on": "eval: doc.enable_enatis_integration == 1",
+   "fieldname": "column_break_enatis",
+   "fieldtype": "Column Break"
+  },
+  {
+   "depends_on": "eval: doc.enable_enatis_integration == 1",
+   "description": "Base URL of the eNaTIS MIB API service",
+   "fieldname": "enatis_api_url",
+   "fieldtype": "Data",
+   "label": "eNaTIS API URL",
+   "mandatory_depends_on": "eval: doc.enable_enatis_integration == 1"
+  },
+  {
+   "depends_on": "eval: doc.enable_enatis_integration == 1",
+   "description": "API key sent as X-API-Key header to the eNaTIS MIB API service.",
+   "fieldname": "enatis_api_key",
+   "fieldtype": "Password",
+   "label": "eNaTIS API Key",
+   "mandatory_depends_on": "eval: doc.enable_enatis_integration == 1"
+  },
+  {
    "default": "0",
    "description": "If selected, dealer reference numbers will be generated using the Vehicle Order No Prefix.",
    "fieldname": "auto_generate_dealer_reference_number",
@@ -545,7 +601,7 @@
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2026-03-18 17:03:06.507711",
+ "modified": "2026-03-26 22:00:00.000000",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicle Stock Settings",

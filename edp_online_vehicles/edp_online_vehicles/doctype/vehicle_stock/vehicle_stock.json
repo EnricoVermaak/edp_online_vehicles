@@ -29,6 +29,8 @@
   "register_no",
   "natis_code",
   "natis_release_date",
+  "natis_introduced",
+  "natis_introduced_date",
   "fleet_no",
   "request_release",
   "column_break_1tyr",
@@ -556,6 +558,19 @@
    "read_only": 1
   },
   {
+   "default": "0",
+   "fieldname": "natis_introduced",
+   "fieldtype": "Check",
+   "label": "eNaTIS Introduced",
+   "read_only": 1
+  },
+  {
+   "fieldname": "natis_introduced_date",
+   "fieldtype": "Date",
+   "label": "eNaTIS Introduced Date",
+   "read_only": 1
+  },
+  {
    "fieldname": "section_break_eern",
    "fieldtype": "Section Break"
   },
@@ -889,7 +904,7 @@
    "link_fieldname": "vin_serial_no"
   }
  ],
- "modified": "2026-03-26 11:05:00.413556",
+ "modified": "2026-03-26 23:00:00.000000",
  "modified_by": "Administrator",
  "module": "Edp Online Vehicles",
  "name": "Vehicle Stock",

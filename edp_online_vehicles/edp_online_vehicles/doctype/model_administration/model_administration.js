@@ -4,29 +4,37 @@
 var colours = [];
 
 frappe.ui.form.on("Model Administration", {
-	refresh(frm) {},
-	onload(frm, dt, dn) {
-		colours = frm.doc["model_colours"].map((row) => ({
-			colour: row.colour,
-		}));
+    onload(frm, dt, dn) {
+        colours = frm.doc["model_colours"].map((row) => ({
+            colour: row.colour,
+        }));
         // Track initial state of interior colours child table
         interior_colours = frm.doc["interior_colours"]
             ? frm.doc["interior_colours"].map((row) => ({ colour: row.colour }))
             : [];
-	},
-	before_save(frm) {
-		if (frm.is_new()) {
-			frappe.call({
-				method: "edp_online_vehicles.events.hover_tooltip_data.set_model_admin_image",
-				args: {
-					model: frm.doc.name,
-				},
-				callback: function (r) {
-					frm.doc.model_default_image = r.message;
-				},
-			});
-		}
-	},
+
+        frappe.call({
+            method: "edp_online_vehicles.events.model_administration.get_ifp_options",
+            callback: function (r) {
+                if (r.message) {
+                    frm.set_df_property("ifp_days", "options", r.message.join("\n"));
+                }
+            }
+        });
+    },
+    before_save(frm) {
+        if (frm.is_new()) {
+            frappe.call({
+                method: "edp_online_vehicles.events.hover_tooltip_data.set_model_admin_image",
+                args: {
+                    model: frm.doc.name,
+                },
+                callback: function (r) {
+                    frm.doc.model_default_image = r.message;
+                },
+            });
+        }
+    },
 });
 
 
@@ -56,7 +64,7 @@ frappe.ui.form.on("Model Administration", {
                     fieldtype: "Button",
                     label: "Edit Full Form",
                     click() {
-                        frappe.model.with_doctype("Model Colour", function() {
+                        frappe.model.with_doctype("Model Colour", function () {
                             let doc = frappe.model.get_new_doc("Model Colour");
                             doc.model = d.get_value("model");
                             doc.colour = d.get_value("colour");
@@ -78,7 +86,7 @@ frappe.ui.form.on("Model Administration", {
                                 colour: values.colour
                             }
                         },
-                        callback: function(r) {
+                        callback: function (r) {
                             if (!r.exc) {
                                 frappe.msgprint(`New Model Colour <b>${r.message.name}</b> created`);
                                 frm.reload_doc();
@@ -125,7 +133,7 @@ frappe.ui.form.on("Model Administration", {
                     fieldtype: "Button",
                     label: "Edit Full Form",
                     click() {
-                        frappe.model.with_doctype("Interior Model Colour", function() {
+                        frappe.model.with_doctype("Interior Model Colour", function () {
                             let doc = frappe.model.get_new_doc("Interior Model Colour");
                             doc.model = d.get_value("model");
                             doc.colour = d.get_value("colour");
@@ -147,7 +155,7 @@ frappe.ui.form.on("Model Administration", {
                                 colour: values.colour
                             }
                         },
-                        callback: function(r) {
+                        callback: function (r) {
                             if (!r.exc) {
                                 frappe.msgprint(`New Interior Model Colour <b>${r.message.name}</b> created`);
                                 frm.reload_doc();
@@ -173,49 +181,49 @@ frappe.ui.form.on("Model Administration", {
 
 
 frappe.ui.form.on("Model Colours", {
-	model_colours_remove(frm) {
-		// Create a new array from the current state of the model_colours child table
-		let updated_colours = frm.doc["model_colours"].map((row) => ({
-			colour: row.colour,
-		}));
+    model_colours_remove(frm) {
+        // Create a new array from the current state of the model_colours child table
+        let updated_colours = frm.doc["model_colours"].map((row) => ({
+            colour: row.colour,
+        }));
 
-		// Find all removed colors by comparing the original colours array with the updated_colours array
-		let removed_colours = colours
-			.filter(
-				(original) =>
-					!updated_colours.some(
-						(updated) => updated.colour === original.colour,
-					),
-			)
-			.map((item) => item.colour);
+        // Find all removed colors by comparing the original colours array with the updated_colours array
+        let removed_colours = colours
+            .filter(
+                (original) =>
+                    !updated_colours.some(
+                        (updated) => updated.colour === original.colour,
+                    ),
+            )
+            .map((item) => item.colour);
 
-		if (removed_colours.length > 0) {
-			console.log("Removed colours:", removed_colours);
+        if (removed_colours.length > 0) {
+            console.log("Removed colours:", removed_colours);
 
-			// Call the backend method once with all removed colours
-			frappe.call({
-				method: "edp_online_vehicles.events.delete_document.delete_model_colours",
-				args: {
-					colours: JSON.stringify(removed_colours),
-					model: frm.doc.name,
-				},
-				callback: function (r) {
-					if (r.message) {
-						frappe.show_alert(
-							{
-								message: `${removed_colours.length} Model Colour(s) successfully deleted`,
-								indicator: "green",
-							},
-							5,
-						);
-					}
-				},
-			});
-		}
+            // Call the backend method once with all removed colours
+            frappe.call({
+                method: "edp_online_vehicles.events.delete_document.delete_model_colours",
+                args: {
+                    colours: JSON.stringify(removed_colours),
+                    model: frm.doc.name,
+                },
+                callback: function (r) {
+                    if (r.message) {
+                        frappe.show_alert(
+                            {
+                                message: `${removed_colours.length} Model Colour(s) successfully deleted`,
+                                indicator: "green",
+                            },
+                            5,
+                        );
+                    }
+                },
+            });
+        }
 
-		// Update the colours array to match the updated child table
-		colours = updated_colours;
-	},
+        // Update the colours array to match the updated child table
+        colours = updated_colours;
+    },
 });
 
 

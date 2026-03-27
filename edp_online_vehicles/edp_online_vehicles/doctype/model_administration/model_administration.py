@@ -1,6 +1,7 @@
 import re
 import frappe
 from frappe.model.document import Document
+
 class ModelAdministration(Document):
 
     def after_insert(self):
@@ -43,11 +44,10 @@ class ModelAdministration(Document):
             new_doc.insert(ignore_permissions=True)
 
         frappe.db.commit()
-        
+
         if not self.model_default_image:
             stock_settings = frappe.get_doc("Vehicle Stock Settings")
             self.db_set("model_default_image", stock_settings.default_model_image)
-                  
 
     def after_save(self):
         for row in self.model_colours:
@@ -57,10 +57,6 @@ class ModelAdministration(Document):
                 if not frappe.db.exists("Model Colour", colour_name):
                     new_colour = frappe.new_doc("Model Colour")
                     new_colour.model = self.model_code
-                    # new_colour.colour = row.colour
-                    # new_colour.oem_colour_code = row.oem_colour_code
-                    # new_colour.naamsa_colour_code = row.naamsa_colour_code
-                    # new_colour.natis_colour_code = row.natis_colour_code
                     new_colour.insert(ignore_permissions=True)
                 else:
                     colour_doc = frappe.get_doc("Model Colour", colour_name)
@@ -89,6 +85,8 @@ class ModelAdministration(Document):
         self.service_type_minimum_allowance = min_allowance
 
     def before_save(self):
-        automatically_reserve_stock = frappe.db.get_single_value("Vehicle Stock Settings","automatically_reserve_stock")
+        automatically_reserve_stock = frappe.db.get_single_value(
+            "Vehicle Stock Settings", "automatically_reserve_stock"
+        )
         if automatically_reserve_stock:
             self.automatically_reserve_model = 1

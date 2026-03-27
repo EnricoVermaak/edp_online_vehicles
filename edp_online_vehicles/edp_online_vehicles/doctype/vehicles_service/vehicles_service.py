@@ -231,10 +231,41 @@ class VehiclesService(Document):
 				})
 
 	def before_save(self):
+		from edp_api.api.service.file_handler import resolve_file, is_base64
+
 		for row in self.attach_documents:
 			file_url = row.document
 
-			if file_url:
+			if file_url and isinstance(file_url, str):
+				# If the client provided a base64 string or data URI, save it as a File first
+				if file_url.startswith("data:") or is_base64(file_url):
+					try:
+						resolved = resolve_file(file_url, "attach_documents", self.name, return_filename=False)
+						# If resolve_file returned a tuple (url, name), extract url
+						if isinstance(resolved, tuple):
+							file_url = resolved[0]
+						else:
+							file_url = resolved
+					except Exception:
+						# Fall back to original value; subsequent code will raise a validation error
+						pass
+				# Normalize full site URLs to relative paths
+				from frappe.utils import get_url
+				try:
+					site = get_url()
+					if file_url.startswith(site):
+						file_url = file_url[len(site):]
+				except Exception:
+					pass
+
+				# Ensure leading slash for file paths like 'private/files/..' -> '/private/files/...'
+				if (file_url.startswith("files/") or file_url.startswith("private/files/")):
+					file_url = "/" + file_url
+
+				# Update the row with normalized value
+				row.document = file_url
+
+				# Check for an existing File attached to this document
 				existing_file = frappe.db.exists(
 					{
 						"doctype": "File",
@@ -244,16 +275,25 @@ class VehiclesService(Document):
 					}
 				)
 				if not existing_file:
-					file_doc = frappe.get_doc(
-						{
-							"doctype": "File",
-							"file_url": file_url,
+					# If a File with this file_url exists but is not attached to this doc, attach it instead of inserting a new one
+					existing_by_url = frappe.db.get_value("File", {"file_url": file_url}, "name")
+					if existing_by_url:
+						frappe.db.set_value("File", existing_by_url, {
 							"attached_to_doctype": self.doctype,
 							"attached_to_name": self.name,
-						}
-					)
-					file_doc.insert(ignore_permissions=True)
-					frappe.db.commit()
+						})
+						frappe.db.commit()
+					else:
+						file_doc = frappe.get_doc(
+							{
+								"doctype": "File",
+								"file_url": file_url,
+								"attached_to_doctype": self.doctype,
+								"attached_to_name": self.name,
+							}
+						)
+						file_doc.insert(ignore_permissions=True)
+						frappe.db.commit()
 					# frappe.msgprint(f"File {file_url} attached successfully.")
 
 	def on_submit(self):
