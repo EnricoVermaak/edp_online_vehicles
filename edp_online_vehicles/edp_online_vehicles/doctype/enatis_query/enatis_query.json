@@ -1,0 +1,245 @@
+{
+ "actions": [],
+ "allow_rename": 0,
+ "creation": "2026-03-26 12:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "query_section",
+  "vin",
+  "query_action_section",
+  "query_vehicle",
+  "result_section",
+  "status",
+  "column_break_result",
+  "queried_at",
+  "registration_section",
+  "mv_reg_no",
+  "column_break_reg",
+  "mv_cert_no",
+  "vehicle_details_section",
+  "mv_model_n",
+  "mv_state_cd",
+  "mv_state_desc",
+  "column_break_vehicle",
+  "mv_main_colour",
+  "mv_tare",
+  "mv_engine_no",
+  "owner_section",
+  "mv_title_holder",
+  "column_break_owner",
+  "mv_owner",
+  "error_section",
+  "error_code",
+  "error_field",
+  "column_break_error",
+  "error_description"
+ ],
+ "fields": [
+  {
+   "fieldname": "query_section",
+   "fieldtype": "Section Break",
+   "label": "Query"
+  },
+  {
+   "fieldname": "vin",
+   "fieldtype": "Data",
+   "label": "VIN / Chassis No",
+   "reqd": 1
+  },
+  {
+   "fieldname": "query_action_section",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "query_vehicle",
+   "fieldtype": "Button",
+   "label": "Query Vehicle"
+  },
+  {
+   "fieldname": "result_section",
+   "fieldtype": "Section Break",
+   "label": "Result"
+  },
+  {
+   "default": "Pending",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "Pending\nSuccess\nFailed",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_result",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "queried_at",
+   "fieldtype": "Datetime",
+   "label": "Queried At",
+   "read_only": 1
+  },
+  {
+   "fieldname": "registration_section",
+   "fieldtype": "Section Break",
+   "label": "Registration Details"
+  },
+  {
+   "fieldname": "mv_reg_no",
+   "fieldtype": "Data",
+   "label": "Registration No (MVRegN)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_reg",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "mv_cert_no",
+   "fieldtype": "Data",
+   "label": "Certificate No (MVCertN)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "error_section",
+   "fieldtype": "Section Break",
+   "collapsible": 1,
+   "collapsible_depends_on": "eval: !doc.error_code && !doc.error_description",
+   "label": "Error Details"
+  },
+  {
+   "fieldname": "error_code",
+   "fieldtype": "Data",
+   "label": "Error Code",
+   "read_only": 1
+  },
+  {
+   "fieldname": "error_field",
+   "fieldtype": "Data",
+   "label": "Error Field",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_error",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "error_description",
+   "fieldtype": "Small Text",
+   "label": "Error Description",
+   "read_only": 1
+  },
+  {
+   "fieldname": "vehicle_details_section",
+   "fieldtype": "Section Break",
+   "collapsible": 1,
+   "collapsible_depends_on": "eval: !doc.mv_model_n && !doc.mv_state_cd",
+   "label": "Vehicle Details"
+  },
+  {
+   "fieldname": "mv_model_n",
+   "fieldtype": "Data",
+   "label": "Model (NATIS Code)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "mv_state_cd",
+   "fieldtype": "Data",
+   "label": "MV State Code",
+   "read_only": 1
+  },
+  {
+   "fieldname": "mv_state_desc",
+   "fieldtype": "Data",
+   "label": "MV State Description",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_vehicle",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "mv_main_colour",
+   "fieldtype": "Data",
+   "label": "Main Colour",
+   "read_only": 1
+  },
+  {
+   "fieldname": "mv_tare",
+   "fieldtype": "Data",
+   "label": "Tare",
+   "read_only": 1
+  },
+  {
+   "fieldname": "mv_engine_no",
+   "fieldtype": "Data",
+   "label": "Engine No",
+   "read_only": 1
+  },
+  {
+   "fieldname": "owner_section",
+   "fieldtype": "Section Break",
+   "collapsible": 1,
+   "collapsible_depends_on": "eval: !doc.mv_title_holder && !doc.mv_owner",
+   "label": "Title Holder / Owner"
+  },
+  {
+   "fieldname": "mv_title_holder",
+   "fieldtype": "Data",
+   "label": "Title Holder",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_owner",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "mv_owner",
+   "fieldtype": "Data",
+   "label": "Owner",
+   "read_only": 1
+  }
+ ],
+ "grid_page_length": 50,
+ "hide_toolbar": 1,
+ "index_web_pages_for_search": 0,
+ "is_virtual": 0,
+ "issingle": 1,
+ "links": [],
+ "modified": "2026-03-26 16:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Edp Online Vehicles",
+ "name": "eNaTIS Query",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Vehicles Administrator",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 0
+}

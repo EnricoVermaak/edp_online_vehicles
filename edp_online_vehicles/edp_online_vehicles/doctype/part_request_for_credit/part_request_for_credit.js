@@ -43,6 +43,7 @@ frappe.ui.form.on("Part Request For Credit", {
 frappe.ui.form.on("Part Request For Credit Item", {
     part_ordered: function(row_frm, cdt, cdn) {
         let row = locals[cdt][cdn];
+		frappe.model.set_value(cdt, cdn, "approved_qty", 0);
 
         if (row.part_ordered) {
             frappe.db.get_value("Item Price", {
@@ -56,9 +57,18 @@ frappe.ui.form.on("Part Request For Credit Item", {
                 
                 calc_totals(row_frm);
             });
-        }
-    },
+        }else {
+			frappe.model.set_value(cdt, cdn, "item_price", 0);
+			frappe.model.set_value(cdt, cdn, "return_qty", 0);
+			frappe.model.set_value(cdt, cdn, "approved_qty", 0);
 
+			calc_totals(row_frm);
+		}
+    },
+	part_received: function(frm, cdt, cdn) {
+		frappe.model.set_value(cdt, cdn, "approved_qty", 0);
+		calc_totals(frm);
+	},
     return_qty: function(frm) { calc_totals(frm); },
     approved_qty: function(frm) { calc_totals(frm); },
     table_cxdf_remove: function(frm) { calc_totals(frm); }

@@ -12,6 +12,7 @@ import time
 
 class VehicleStock(Document):
     def validate(self):
+
         # -------- Remove duplicates in table_pcgj based on warranty_plan_description --------
         seen = set()
         unique_rows_pcgj = []
@@ -89,6 +90,7 @@ class VehicleStock(Document):
             self.model_conversion_date = conversion_records[0].conversion_date
 
     def on_update(self):
+
         self._handle_deleted_warranty_plans()
         self._handle_added_warranty_plans()
 
