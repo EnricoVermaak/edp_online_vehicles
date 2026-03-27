@@ -7,4 +7,3 @@
 edp_online_vehicles.patches.add_serial_no_index_to_stock_entry_detail
 edp_online_vehicles.patches.update_evaluation_rate
 edp_online_vehicles.patches.remove_custom_is_head_office
-#edp_online_vehicles.patches.enatis_query_single_cleanup
