@@ -5,11 +5,15 @@ from datetime import datetime
 
 import frappe
 from frappe.model.document import Document
+from frappe.utils.file_manager import remove_all
 
 
 class VehicleRequestForCredit(Document):
 	def validate(self):
 		if self.status == "Approved":
+			if self.flags.get("skip_credit_unallocate"):
+				return
+
 			hq_order_doc = frappe.get_doc("Head Office Vehicle Orders", self.order_no)
 
 			if hq_order_doc:
@@ -28,6 +32,7 @@ class VehicleRequestForCredit(Document):
 				stock_doc = frappe.get_doc("Vehicle Stock", self.vin_serial_no)
 
 				if stock_doc:
+					remove_all("Vehicle Stock", self.vin_serial_no, from_delete=True)
 					reserve_docs = frappe.db.get_all(
 						"Reserved Vehicles",
 						filters={"vin_serial_no": self.vin_serial_no, "status": "Reserved"},

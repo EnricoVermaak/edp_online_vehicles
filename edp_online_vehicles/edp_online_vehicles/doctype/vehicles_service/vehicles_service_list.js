@@ -1,16 +1,24 @@
             frappe.listview_settings['Vehicles Service'] = {
                 onload: function(listview) {
 
-                    if (frappe.user_roles.includes("Head Office")) {
-                        frappe.defaults.get_default("company")
-                        listview.page.add_inner_button(__("Update to Remittance"), () => {
-                            show_bulk_update_dialog(listview, "Payment Request", "Remittance");
-                        });
+                const company = frappe.defaults.get_default("company");
 
-                        listview.page.add_inner_button(__("Update to Paid"), () => {
-                            show_bulk_update_dialog(listview, "Remittance", "Paid");
+                if (company) {
+                    frappe.db.get_value("Company", company, "custom_head_office")
+                        .then(r => {
+                            if (r.message && r.message.custom_head_office) {
+
+                                listview.page.add_inner_button(__("Update to Remittance"), () => {
+                                    show_bulk_update_dialog(listview, "Payment Request", "Remittance");
+                                });
+
+                                listview.page.add_inner_button(__("Update to Paid"), () => {
+                                    show_bulk_update_dialog(listview, "Remittance", "Paid");
+                                });
+
+                            }
                         });
-                    }
+                }
 
                 setTimeout(() => {
                     const vinHeader = $('span[data-sort-by="vin_serial_no"]');
@@ -66,62 +74,65 @@
             }
         };
 
+                    function show_bulk_update_dialog(listview, source_status, target_status) {
 
-            function show_bulk_update_dialog(listview, source_status, target_status) {
-                let dealers = [...new Set(listview.data.map(d => d.dealer))].filter(Boolean).sort();
-
-                const d = new frappe.ui.Dialog({
-                    title: __(`Bulk Update: ${target_status}`),
-                    size: "large",
-                    fields: [
-                        {
-                            label: __("Select Dealer"),
-                            fieldname: "dealer",
-                            fieldtype: "Select",
-                            options: ["", ...dealers], // Adds a blank option at the top
-                            reqd: 1,
-                            onchange: function() {
-                                const dealer = d.get_value("dealer");
-                                if (dealer) {
-                                    fetch_and_render_services(d, dealer, source_status);
+                        const d = new frappe.ui.Dialog({
+                            title: __(`Bulk Update: ${target_status}`),
+                            size: "large",
+                            fields: [
+                                {
+                                    label: __("Select Dealer"),
+                                    fieldname: "dealer",
+                                    fieldtype: "Link",
+                                    options: "Company", 
+                                    reqd: 1,
+                                    onchange: function() {
+                                        const dealer = d.get_value("dealer");
+                                        if (!dealer) {
+                                            d.get_field("services_html").$wrapper.empty();
+                                            return;
+                                        }
+                                        fetch_and_render_services(d, dealer, source_status);
+                                    }
+                                },
+                                { 
+                                    fieldtype: "HTML", 
+                                    fieldname: "services_html" 
                                 }
-                            }
-                        },
-                        { fieldtype: "HTML", fieldname: "services_html" }
-                    ],
-                    primary_action_label: __(`Update to ${target_status}`),
-                    primary_action() {
-                        const selected = d.fields_dict.services_html.$wrapper
-                            .find('input.js-service-select:checked')
-                            .map(function() { return $(this).attr("data-name"); })
-                            .get();
+                            ],
+                            primary_action_label: __(`Update to ${target_status}`),
+                            primary_action() {
+                                const selected = d.fields_dict.services_html.$wrapper
+                                    .find('input.js-service-select:checked')
+                                    .map(function() { return $(this).attr("data-name"); })
+                                    .get();
 
-                        if (!selected.length) {
-                            frappe.msgprint(__("Please select at least one service."));
-                            return;
-                        }
+                                if (!selected.length) {
+                                    frappe.msgprint(__("Please select at least one service."));
+                                    return;
+                                }
 
-                        frappe.confirm(`Update ${selected.length} records to ${target_status}?`, () => {
-                            const updates = selected.map(docname => {
-                                return frappe.db.set_value("Vehicles Service", docname, "service_status", target_status);
-                            });
-
-                            Promise.all(updates).then(() => {
-                                frappe.show_alert({ 
-                                    message: __("{0} Records Updated to {1}", [selected.length, target_status]), 
-                                    indicator: 'green' 
+                                frappe.confirm(`Update ${selected.length} records to ${target_status}?`, () => {
+                                    frappe.call({
+                                        method: "edp_online_vehicles.edp_online_vehicles.doctype.vehicles_service.vehicles_service.bulk_update_service_status",
+                                        args: {
+                                            names: selected,
+                                            target_status: target_status
+                                        },
+                                        callback: function(r) {
+                                            frappe.show_alert({
+                                                message: __("{0} Records Updated to {1}", [selected.length, target_status]),
+                                                indicator: "green"
+                                            });
+                                            d.hide();
+                                            listview.refresh();
+                                        }
+                                    });
                                 });
-                                d.hide();
-                                listview.refresh();
-                            }).catch(err => {
-                                console.error(err);
-                                frappe.msgprint(__("An error occurred during the update. Check the console."));
-                            });
+                            }
                         });
+                        d.show();
                     }
-                });
-                d.show();
-            }
 
         function fetch_and_render_services(dialog, dealer, status) {
             frappe.db.get_list("Vehicles Service", {
@@ -152,7 +163,8 @@
                     <td>${row.name}</td>
                     <td>${row.service_status}</td>
                 </tr>
-            `).join("");
+            `)
+            .join("");
 
             return `
                 <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">

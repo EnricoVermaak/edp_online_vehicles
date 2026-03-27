@@ -17,7 +17,7 @@ class VehicleServiceBooking(Document):
 			return
 		interval = frappe.db.get_value("Service Schedules", self.service_type, "interval") or 0
 		try:
-			interval_int = int(interval)
+			interval_int = int(str(interval).replace(" ", ""))
 		except (TypeError, ValueError):
 			self.system_status = None
 			return

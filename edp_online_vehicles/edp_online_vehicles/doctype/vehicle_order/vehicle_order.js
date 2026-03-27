@@ -459,17 +459,16 @@ frappe.ui.form.on("Vehicle Order", {
 		const rows_to_update = (frm.doc.vehicles_basket || []).filter(row => row.model && !row.colour);
 
 		if (rows_to_update.length > 0) {
-			// Process all missing colours as a single batch
 			Promise.all(rows_to_update.map(row => {
-				return frappe.db.get_value("Model Colour", { model: row.model, default: 1 }, "name")
-					.then(r => {
-						if (r.message && r.message.name) {
-							// Use frappe.model.set_value which is cleaner for child tables
-							frappe.model.set_value(row.doctype, row.name, "colour", r.message.name);
-						}
-					});
+				return frappe.call({
+					method: "edp_online_vehicles.edp_online_vehicles.doctype.vehicle_order.vehicle_order.get_default_model_colour",
+					args: { model: row.model },
+				}).then(r => {
+					if (r.message) {
+						frappe.model.set_value(row.doctype, row.name, "colour", r.message);
+					}
+				});
 			})).then(() => {
-				// ONLY refresh once all database calls for colours are finished
 				frm.refresh_field("vehicles_basket");
 			});
 		}
@@ -882,6 +881,348 @@ frappe.ui.form.on("Vehicles Order Item", {
 		var row = locals[cdt][cdn];
 
 		if (row.model) {
+			frappe.db.get_value('Model Colour', { model: row.model, default: 1 }, 'name').then(r => {
+				let colour = r.message.name
+
+				if (r.message && r.message.name) {
+					frappe.model.set_value(cdt, cdn, "colour", colour);
+				} else {
+					frappe.model.set_value(cdt, cdn, "colour", '');
+				}
+			});
+		}
+
+		if (row.place_back_order) {
+			frappe.model.set_value(cdt, cdn, "place_back_order", 0);
+		}
+
+		// Temporarily disable the 'dealer' event
+		frm.fields_dict["vehicles_basket"].grid.fields_map[
+			"dealer"
+		].ignore_change = true;
+
+		// Clear the dealer field without triggering the event
+		frappe.model.set_value(cdt, cdn, "dealer", null);
+		frm.fields_dict["vehicles_basket"].grid.update_docfield_property(
+			"dealer",
+			"description",
+			"",
+		);
+
+		// Re-enable the 'dealer' event
+		frm.fields_dict["vehicles_basket"].grid.fields_map[
+			"dealer"
+		].ignore_change = false;
+
+		if (row.model) {
+			frappe.call({
+				method: "edp_online_vehicles.events.get_warehouse_data.get_model_details",
+				args: {
+					model: row.model,
+				},
+				callback: function (r) {
+					if (r.message) {
+						let model_desc = r.message[0].description;
+						let model_year = r.message[0].model_year;
+						let model_price = r.message[0].model_price;
+
+						frappe.model.set_value(
+							cdt,
+							cdn,
+							"description",
+							model_desc,
+						);
+						frappe.model.set_value(
+							cdt,
+							cdn,
+							"model_year",
+							model_year,
+						);
+						frappe.model.set_value(
+							cdt,
+							cdn,
+							"price_excl",
+							model_price,
+						);
+
+						frm.refresh_field("vehicles_basket");
+					}
+				},
+			});
+
+			frappe.call({
+				method: "edp_online_vehicles.events.get_warehouse_data.get_visible_HQ_warehouses",
+				callback: function (r) {
+					if (r.message && r.message.length > 0) {
+						let warehouse_names = r.message.map((w) => w.name);
+						let hq_company = r.message[0].company;
+
+						frappe.call({
+							method: "edp_online_vehicles.events.get_warehouse_data.check_warehouses",
+							args: {
+								dealers: [hq_company],
+								warehouse_names: warehouse_names,
+								model: row.model,
+							},
+							callback: function (r) {
+								if (r.message > 0) {
+									let basket = frm.doc.vehicles_basket || [];
+									let warehouseCount = basket
+										.filter(
+											(item) => item.model === row.model,
+										)
+										.filter(
+											(item) =>
+												item.order_from === "Warehouse",
+										)
+										.filter(
+											(item) => item.name !== row.name,
+										).length;
+
+									// if requested rows exceed available stock, force back-order
+									if (warehouseCount >= r.message) {
+										// reset to HQ + back-order
+										resetDealerField(frm);
+										updateDealerOptions(frm, [hq_company]);
+
+										frappe.model.set_value(
+											cdt,
+											cdn,
+											"dealer",
+											hq_company,
+										);
+										frm.fields_dict[
+											"vehicles_basket"
+										].grid.update_docfield_property(
+											"dealer",
+											"description",
+											"",
+										);
+
+										frappe.model.set_value(
+											cdt,
+											cdn,
+											"place_back_order",
+											1,
+										);
+										frappe.model.set_value(
+											cdt,
+											cdn,
+											"order_from",
+											"Back Order",
+										);
+										return;
+									}
+
+									updateDealerOptions(frm, [hq_company]);
+
+									frappe.model.set_value(
+										cdt,
+										cdn,
+										"dealer",
+										hq_company,
+									);
+									frappe.model.set_value(
+										cdt,
+										cdn,
+										"order_from",
+										"Warehouse",
+									);
+									frm.refresh_field("vehicles_basket");
+
+									if (row.order_from === "Warehouse") {
+										if (
+											frm.fields_dict[
+											"mandatory_documents"
+											] &&
+											frm.fields_dict[
+												"mandatory_documents"
+											].grid
+										) {
+											let grid =
+												frm.fields_dict[
+													"mandatory_documents"
+												].grid;
+
+											grid.fields_map["document"].reqd =
+												1;
+
+											frm.refresh_field(
+												"mandatory_documents",
+											);
+										}
+									}
+								} else {
+									frappe.db
+										.get_single_value(
+											"Vehicle Stock Settings",
+											"allow_dealer_to_dealer_orders",
+										)
+										.then((dealer_to_dealer) => {
+											if (dealer_to_dealer) {
+												frappe.call({
+													method: "edp_online_vehicles.events.get_warehouse_data.get_visible_Dealer_warehouses",
+													args: {
+														ordering_dealer:
+															frm.doc.dealer,
+													},
+													callback: function (r) {
+														if (
+															r.message &&
+															r.message.length > 0
+														) {
+															let warehouse_names =
+																r.message.map(
+																	(w) =>
+																		w.name,
+																);
+															let dealers =
+																r.message.map(
+																	(w) =>
+																		w.company,
+																);
+
+															frappe.call({
+																method: "edp_online_vehicles.events.get_warehouse_data.check_dealer_warehouses",
+																args: {
+																	dealers:
+																		dealers,
+																	warehouse_names:
+																		warehouse_names,
+																	model: row.model,
+																},
+																callback:
+																	function (
+																		r,
+																	) {
+																		let dealer =
+																			r.message.map(
+																				(
+																					d,
+																				) =>
+																					d.dealer,
+																			);
+																		let uniqueDealers =
+																			[
+																				...new Set(
+																					dealer,
+																				),
+																			];
+																		if (
+																			uniqueDealers.length >
+																			0
+																		) {
+																			updateDealerOptions(
+																				frm,
+																				uniqueDealers,
+																			);
+																			frappe.model.set_value(
+																				cdt,
+																				cdn,
+																				"order_from",
+																				"Action Required",
+																			);
+																			frm.refresh_field(
+																				"vehicles_basket",
+																			);
+																		} else {
+																			resetDealerField(
+																				frm,
+																			);
+																			updateDealerOptions(
+																				frm,
+																				[
+																					hq_company,
+																				],
+																			);
+
+																			frappe.model.set_value(
+																				cdt,
+																				cdn,
+																				"dealer",
+																				hq_company,
+																			);
+																			frm.fields_dict[
+																				"vehicles_basket"
+																			].grid.update_docfield_property(
+																				"dealer",
+																				"description",
+																				"",
+																			);
+
+																			frappe.model.set_value(
+																				cdt,
+																				cdn,
+																				"place_back_order",
+																				1,
+																			);
+																			frappe.model.set_value(
+																				cdt,
+																				cdn,
+																				"order_from",
+																				"Back Order",
+																			);
+																		}
+																	},
+															});
+														}
+													},
+												});
+											} else {
+												updateDealerOptions(frm, [
+													hq_company,
+												]);
+
+												frappe.model.set_value(
+													cdt,
+													cdn,
+													"dealer",
+													hq_company,
+												);
+												frm.fields_dict[
+													"vehicles_basket"
+												].grid.update_docfield_property(
+													"dealer",
+													"description",
+													"",
+												);
+
+												frappe.model.set_value(
+													cdt,
+													cdn,
+													"place_back_order",
+													1,
+												);
+												frappe.model.set_value(
+													cdt,
+													cdn,
+													"order_from",
+													"Back Order",
+												);
+											}
+										})
+										.catch((err) => {
+											console.error(
+												"Error fetching dealer_to_dealer setting:",
+												err,
+											);
+										});
+								}
+							},
+						});
+					} else {
+						frappe.show_alert(
+							{
+								message:
+									"No HQ warehouses available. Please ask Head Office to select an HQ Warehouse",
+								indicator: "orange",
+							},
+							30,
+						);
+					}
+				},
+			});
+
 			frappe.model.set_value(cdt, cdn, "status", "Pending");
 			check_and_update_order_type(frm, cdt, cdn)
 

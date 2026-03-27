@@ -95,7 +95,9 @@ def reverse_retail(docname):
 
 			new_tracking_doc.vin_serial_no = stock_doc.name
 			new_tracking_doc.action_summary = "Retail Reversed"
+			new_tracking_doc.type = "EDP Online"
 			new_tracking_doc.request_datetime = tracking_date_time
+			
 
 			new_tracking_doc.request = (
 				f"VIN/Serial No {stock_doc.name} had it's Retail Reversed by user {user}"

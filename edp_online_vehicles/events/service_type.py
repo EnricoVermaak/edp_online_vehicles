@@ -6,7 +6,9 @@ from frappe.utils import nowdate, getdate
 def service_type_query(doctype, txt, searchfield, start, page_len, filters):
     # Initialize filters for Service Schedules
     service_schedule_filters = {}
-
+    #Converting strings to dicts
+    if isinstance(filters, str):
+        filters = json.loads(filters)
     # Apply filters based on passed arguments
     if filters.get("model_code"):
         service_schedule_filters["model_code"] = filters.get("model_code")
@@ -50,7 +52,7 @@ def service_type_query(doctype, txt, searchfield, start, page_len, filters):
             service_interval = None
         else:
             try:
-                service_interval = int(interval_val)
+                service_interval = int(str(interval_val).replace(" ", ""))
                 is_numeric_interval = True
             except (ValueError, TypeError):
                 service_interval = interval_val

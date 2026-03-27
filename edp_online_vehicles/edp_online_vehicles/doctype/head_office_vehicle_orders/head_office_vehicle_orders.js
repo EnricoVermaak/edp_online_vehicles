@@ -183,7 +183,7 @@ frappe.ui.form.on("Head Office Vehicle Orders", {
 		}
 
 		if (frm.doc.vinserial_no !== previous_vinno_value) {
-			if (previous_vinno_value) {
+			if (previous_vinno_value && frm.doc.vinserial_no) {
 				frm.call("remove_allocated_vinno", {
 					previous_vinno_value,
 				}).then((r) => {

@@ -9,6 +9,7 @@
   "vehicles_tab",
   "section_break_mdlp",
   "vin_serial_no",
+  "model",
   "model_description",
   "service_type",
   "odo_reading_hours",
@@ -20,7 +21,6 @@
   "dms_approval_no",
   "vehicles_information_section",
   "engine_no",
-  "model",
   "brand",
   "licence_no",
   "licence_expiry_date",
@@ -153,10 +153,22 @@
    "search_index": 1
   },
   {
+   "fetch_from": "vin_serial_no.model",
+   "fetch_if_empty": 1,
+   "fieldname": "model",
+   "fieldtype": "Link",
+   "in_standard_filter": 1,
+   "label": "Model",
+   "options": "Model Administration",
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
    "fetch_from": "vin_serial_no.description",
    "fieldname": "model_description",
    "fieldtype": "Data",
-   "label": "Model Description"
+   "label": "Model Description",
+   "read_only": 1
   },
   {
    "depends_on": "eval:doc.vin_serial_no",
@@ -229,15 +241,6 @@
    "fieldname": "engine_no",
    "fieldtype": "Data",
    "label": "Engine No"
-  },
-  {
-   "fetch_from": "vin_serial_no.model",
-   "fieldname": "model",
-   "fieldtype": "Link",
-   "label": "Model",
-   "options": "Model Administration",
-   "read_only": 1,
-   "search_index": 1
   },
   {
    "fetch_from": "vin_serial_no.brand",
@@ -869,7 +872,8 @@
   {
    "fieldname": "connections_tab",
    "fieldtype": "Tab Break",
-   "label": "Connections"
+   "label": "Connections",
+   "show_dashboard": 1
   }
  ],
  "index_web_pages_for_search": 1,

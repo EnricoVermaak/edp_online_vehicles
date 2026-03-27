@@ -190,7 +190,7 @@ def update_vehicle_stock_odo(vin_serial_no, odo_reading_hours, doctype=None, doc
 def rollback_allowed(doctype=None, docname=None):
     
     # Vehicles Service
-    if doctype == "Vehicles Service" or "Vehicle Service Booking":
+    if doctype in ("Vehicles Service", "Vehicle Service Booking"):
         try:
             return frappe.db.get_single_value(
                 "Vehicle Service Settings",
